@@ -2339,7 +2339,6 @@ function DashboardAdministration({setActive}){
         </Card>
       </div>
     </div>
-  </div>
   );
 }
 
@@ -2410,7 +2409,6 @@ function DashboardFunktionaer(){
         </Card>
       </div>
     </div>
-  </div>
   );
 }
 
@@ -4069,15 +4067,10 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
             );
           })()}
         </div>
-        </div>
-  </div>
-    </div>
       </div>
     </div>
   );
 }
-
-
 
 
 
@@ -6008,9 +6001,6 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
       )}
       </div>
     </div>
-  </div>
-  </div>
-  </div>
   );
 }
 
