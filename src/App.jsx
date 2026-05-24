@@ -3357,8 +3357,8 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
             <span>Feldsichtbarkeit gemäss Rolle: <strong>{ROLES[role].label}</strong></span>
           </div>
         </div>
+      </div>
       </ModalOrSheet>
-
   );
 }
 
@@ -4064,6 +4064,9 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
             );
           })()}
         </div>
+      </div>
+      </div>
+      </div>
       </div>
     </ModalOrSheet>
   );
@@ -5014,6 +5017,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             </div>
             </>
             )}
+          </div>
           </div>
         </ModalOrSheet>
       )}
