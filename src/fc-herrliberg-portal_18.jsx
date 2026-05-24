@@ -8940,7 +8940,7 @@ export default function App(){
   }
 
   // Lade-Screen (initial oder während dbUser lädt nach Login)
-  if(session===undefined || (session && !dbUser && supabase)){
+  if(session===undefined){
     return(
       <div style={{minHeight:"100vh",background:GR,display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{textAlign:"center"}}>
