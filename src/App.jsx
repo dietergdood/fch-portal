@@ -4064,13 +4064,16 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
             );
           })()}
         </div>
-      </div>
-      </div>
-      </div>
+        </div>
+  </div>
+    </div>
       </div>
     </ModalOrSheet>
   );
 }
+
+
+
 
 
 function ScheduleTab({role,team,initialSelected}){
