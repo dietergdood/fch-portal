@@ -1865,13 +1865,13 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
   const [open,setOpen]=useState(false);
   const currentRole=activeSubRole||account.primaryRole;
   const cur=ROLES[currentRole];
-  const hasMultiRoles=account.rolen.length>1;
+  const hasMultiRoles=account.rollen.length>1;
   return(
     <>
       <button onClick={()=>setOpen(true)} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 14px",borderRadius:10,border:`1.5px solid ${cur.color}`,background:cur.color+"12",cursor:"pointer"}}>
         <span style={{fontSize:15}}>{cur.icon}</span>
         <span style={{fontSize:13,fontWeight:700,color:cur.color}}>{cur.label}</span>
-        {hasMultiRoles&&<span style={{fontSize:10,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rolen.length}</span>}
+        {hasMultiRoles&&<span style={{fontSize:10,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rollen.length}</span>}
         <span style={{fontSize:11,color:cur.color,opacity:0.7}}>▾</span>
       </button>
       {open&&(
@@ -1886,11 +1886,11 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             </div>
 
             {/* Konten mit Mehrfach-Rollen */}
-            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rolen.length>1).length>0&&(
+            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length>1).length>0&&(
               <div style={{marginBottom:16}}>
                 <div style={{fontSize:11,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Konten mit Mehrfach-Rollen</div>
                 <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rolen.length>1).map(([key,a])=>{
+                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length>1).map(([key,a])=>{
                     const isActive=account===a;
                     return(
                       <div key={key} style={{border:`1.5px solid ${isActive?R:GB}`,borderRadius:10,padding:"10px 14px",background:isActive?R+"08":"#fafaf8"}}>
@@ -1905,7 +1905,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
                           {isActive&&<span style={{marginLeft:"auto",fontSize:10,color:R,fontWeight:700}}>AKTIVES KONTO</span>}
                         </div>
                         <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-                          {a.rolen.map(r=>{
+                          {a.rollen.map(r=>{
                             const rd=ROLES[r];
                             const isActiveSub=(isActive&&(activeSubRole||a.primaryRole)===r);
                             return(
@@ -1925,11 +1925,11 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             )}
 
             {/* Eltern mit Kindern */}
-            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rolen.length===1).length>0&&(
+            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rollen.length===1).length>0&&(
               <div style={{marginBottom:16}}>
                 <div style={{fontSize:11,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Eltern-Zugänge</div>
                 <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rolen.length===1).map(([key,a])=>{
+                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rollen.length===1).map(([key,a])=>{
                     const rd=ROLES[a.primaryRole];
                     const isActive=account===a;
                     return(
@@ -1956,7 +1956,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             <div>
               <div style={{fontSize:11,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Standard-Rollen (Demo)</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rolen.length===1&&a.kinder.length===0).map(([key,a])=>{
+                {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length===1&&a.kinder.length===0).map(([key,a])=>{
                   const rd=ROLES[a.primaryRole];
                   const isActive=account===a&&!activeSubRole;
                   const teamLabel=a.trainerTeams?a.trainerTeams[0]:a.team||null;
@@ -6896,7 +6896,7 @@ function PortalverwaltungView({initialTab="module"}){
   const felderNachKey={};
   felder.forEach(f=>{
     if(!felderNachKey[f.feld_key]) felderNachKey[f.feld_key]={label:f.feld_label||f.feld_key,rollen:{}};
-    felderNachKey[f.feld_key].rolen[f.role]=f.sichtbar;
+    felderNachKey[f.feld_key].rollen[f.role]=f.sichtbar;
   });
 
   return(
@@ -7074,7 +7074,7 @@ function PortalverwaltungView({initialTab="module"}){
                   <tr key={key} style={{borderTop:`0.5px solid ${GB}`,background:i%2===0?"#fff":"#fafaf8"}}>
                     <td style={{padding:"9px 13px",fontWeight:600}}>{data.label}</td>
                     {ROLLEN.map(rolle=>{
-                      const sichtbar=data.rolen[rolle]||false;
+                      const sichtbar=data.rollen[rolle]||false;
                       const isAdmin=rolle==="administrator";
                       return(
                         <td key={rolle} style={{padding:"9px 13px",textAlign:"center"}}>
