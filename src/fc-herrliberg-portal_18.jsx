@@ -3514,9 +3514,9 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
   const nCols = nDays * totalCols;
   const minColW = DAYS.length === 1 ? 100 : 52;
   const maxColW = DAYS.length === 1 ? 200 : 120;
-  const [containerW, setContainerW] = React.useState(800);
-  const containerRef = React.useRef(null);
-  React.useEffect(function(){
+  const [containerW, setContainerW] = useState(800);
+  const containerRef = useRef(null);
+  useEffect(function(){
     function measure(){
       if(containerRef.current){
         setContainerW(containerRef.current.offsetWidth - timeW - 4);
