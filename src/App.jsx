@@ -4710,17 +4710,22 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   </div>
                 </div>
 
-                {/* RSVP-Buttons unten */}
+                {/* RSVP-Buttons — segmentierter Toggle */}
                 {showRsvp&&(
-                  <div style={{borderTop:`0.5px solid ${GB}`,display:"flex",gap:0}} onClick={e=>e.stopPropagation()}>
-                    <button onClick={()=>setResp(ev.id,myId,isZu?null:"zu")}
-                      style={{flex:1,padding:"13px",border:"none",borderRight:`0.5px solid ${GB}`,background:isZu?"#16A34A":"#fff",color:isZu?"#fff":"#aaa",fontSize:13,fontWeight:600,cursor:"pointer",borderRadius:"0 0 0 14px",letterSpacing:0.1}}>
-                      {isZu?"✓ Zugesagt":"✓ Zusagen"}
-                    </button>
-                    <button onClick={()=>setResp(ev.id,myId,isAb?null:"ab")}
-                      style={{flex:1,padding:"13px",border:"none",background:isAb?"#DC2626":"#fff",color:isAb?"#fff":"#aaa",fontSize:13,fontWeight:600,cursor:"pointer",borderRadius:"0 0 14px 0",letterSpacing:0.1}}>
-                      {isAb?"✕ Abgesagt":"✕ Absagen"}
-                    </button>
+                  <div style={{padding:"10px 12px",borderTop:`0.5px solid ${GB}`}} onClick={e=>e.stopPropagation()}>
+                    <div style={{display:"flex",background:"#F3F3F1",borderRadius:10,padding:3,gap:2}}>
+                      <button onClick={()=>setResp(ev.id,myId,isZu?null:"zu")}
+                        style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isZu?"#16A34A":"transparent",color:isZu?"#fff":(!isZu&&!isAb)?"#888":"#bbb",fontSize:12,fontWeight:isZu?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
+                        <span style={{fontSize:14}}>👍</span>
+                        <span>{isZu?"Zugesagt":"Zusagen"}</span>
+                      </button>
+                      <div style={{width:1,background:GB,flexShrink:0,margin:"4px 0"}}/>
+                      <button onClick={()=>setResp(ev.id,myId,isAb?null:"ab")}
+                        style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isAb?"#DC2626":"transparent",color:isAb?"#fff":(!isZu&&!isAb)?"#888":"#bbb",fontSize:12,fontWeight:isAb?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
+                        <span style={{fontSize:14}}>👎</span>
+                        <span>{isAb?"Abgesagt":"Absagen"}</span>
+                      </button>
+                    </div>
                   </div>
                 )}
                 {showRsvp&&isAb&&(
@@ -5049,77 +5054,112 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           const dayNum=dayMonth.split(".")[0];
           const monNum=parseInt(dayMonth.split(".")[1])||0;
           const monName=MONTHS[monNum]||dayMonth.split(".")[1];
+          const isSpiel=ev.type==="Spiel";
+          const isVerein=ev.subtype==="Vereinsanlass";
+          const isVeranst=ev.type==="Veranstaltung"&&!isVerein;
+          const needsRichCard=isSpiel||isVerein||isVeranst;
+          const headerBg=isSpiel?"#1a3a2a":isVerein?"#4C1D95":"#78350F";
           return(
-            <div key={ev.id} onClick={()=>openEvent(ev.id)}
-              style={{background:isCancelled?"#FFF5F5":"#fff",border:`0.5px solid ${GB}`,borderRadius:14,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column"}}
+            <div key={ev.id}
+              style={{background:"#fff",border:`0.5px solid ${GB}`,borderRadius:14,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:"column",opacity:isCancelled?0.7:1}}
               onMouseEnter={e=>e.currentTarget.style.background="#FAFAF8"}
-              onMouseLeave={e=>e.currentTarget.style.background=isCancelled?"#FFF5F5":"#fff"}>
-              {/* Content */}
-              <div style={{flex:1,padding:"12px 14px",minWidth:0,display:"flex",alignItems:"center",gap:14}}>
-                {/* Datum-Block */}
-                <div style={{width:62,flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#F3F3F1",borderRadius:10,padding:"8px 6px"}}>
-                  <div style={{fontSize:10,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:0.5,marginBottom:2}}>{weekday}</div>
-                  <div style={{fontSize:19,fontWeight:700,color:"#1A1A1A",lineHeight:1}}>{dayNum}</div>
-                  <div style={{fontSize:10,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:0.5,marginTop:2}}>{monName}</div>
-                </div>
-                {/* Text */}
-                <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:3}}>
-                  <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                    <div style={{fontWeight:600,fontSize:14,color:isCancelled?"#aaa":"#1A1A1A",textDecoration:isCancelled?"line-through":"none"}}>
-                      {ev.opponent?"vs. "+ev.opponent:ev.type==="Training"?"Training · "+ev.team:ev.title||ev.type}
+              onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+
+              {needsRichCard?(
+                /* ── SPIEL / ANLASS: dunkler Header ── */
+                <>
+                  <div onClick={()=>openEvent(ev.id)} style={{background:headerBg,padding:"12px 14px",display:"flex",alignItems:"center",gap:0}}>
+                    <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minWidth:56,paddingRight:14}}>
+                      <div style={{fontSize:10,fontWeight:600,color:"rgba(255,255,255,0.5)",textTransform:"uppercase",letterSpacing:0.6}}>{weekday}</div>
+                      <div style={{fontSize:22,fontWeight:700,color:"#fff",lineHeight:1.1}}>{dayNum}.</div>
+                      <div style={{fontSize:10,fontWeight:600,color:"rgba(255,255,255,0.5)",textTransform:"uppercase",letterSpacing:0.4}}>{monName}</div>
                     </div>
-                    <span style={{background:accentColor+"18",color:accentColor,fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,flexShrink:0}}>
-                      {ev.subtype||ev.type}
-                    </span>
-                    {isCancelled&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R,flexShrink:0}}>⚠ Abgesagt</span>}
+                    <div style={{width:1,alignSelf:"stretch",background:"rgba(255,255,255,0.15)",marginRight:14,flexShrink:0}}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:700,fontSize:15,color:"#fff",lineHeight:1.25,textDecoration:isCancelled?"line-through":"none"}}>
+                        {ev.opponent?"vs. "+ev.opponent:ev.title||ev.type}
+                      </div>
+                      <div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginTop:2}}>
+                        {isSpiel?(ev.home?"Heimspiel":"Auswärtsspiel"):ev.subtype||ev.type}
+                        {isCancelled&&" · ⚠ Abgesagt"}
+                      </div>
+                    </div>
                   </div>
-                  {/* Meta */}
-                  <div style={{display:"flex",alignItems:"center",flexWrap:"wrap",gap:"2px 6px",fontSize:11,color:"#888"}}>
-                    <span>🕐 {ev.time} Uhr</span>
-                    {ev.type==="Spiel"&&ev.treffpunkt&&(<>
-                      <span style={{color:"#ddd"}}>·</span>
-                      <span>🎯 <span style={{fontWeight:600,color:"#666"}}>Treffpunkt: </span>{ev.treffpunkt}</span>
-                    </>)}
+                  <div onClick={()=>openEvent(ev.id)} style={{display:"flex",borderBottom:`0.5px solid ${GB}`}}>
+                    {[
+                      {label:"Treffen",time:ev.treffpunkt?(ev.treffpunkt.match(/\d{2}:\d{2}/)||[""])[0]||"—":"—"},
+                      {label:"Beginn", time:ev.time||"—"},
+                      {label:"Ende",   time:ev.endTime||"—"},
+                    ].map((t,i,arr)=>(
+                      <div key={i} style={{flex:1,padding:"12px 8px",borderRight:i<arr.length-1?`0.5px solid ${GB}`:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+                        <div style={{fontSize:9,fontWeight:700,color:"#bbb",textTransform:"uppercase",letterSpacing:0.8}}>{t.label}</div>
+                        <div style={{fontSize:19,fontWeight:700,color:"#1A1A1A",lineHeight:1}}>{t.time}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ):(
+                /* ── TRAINING / STANDARD: schlank wie Bild 2 ── */
+                <div onClick={()=>openEvent(ev.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:14}}>
+                  <div style={{width:58,flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#F3F3F1",borderRadius:10,padding:"8px 6px"}}>
+                    <div style={{fontSize:10,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:0.5,marginBottom:2}}>{weekday}</div>
+                    <div style={{fontSize:19,fontWeight:700,color:"#1A1A1A",lineHeight:1}}>{dayNum}</div>
+                    <div style={{fontSize:10,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:0.5,marginTop:2}}>{monName}</div>
+                  </div>
+                  <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:3}}>
+                    <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                      <div style={{fontWeight:600,fontSize:14,color:isCancelled?"#aaa":"#1A1A1A",textDecoration:isCancelled?"line-through":"none"}}>
+                        {ev.type==="Training"?"Training · "+ev.team:ev.title||ev.type}
+                      </div>
+                      <span style={{background:accentColor+"18",color:accentColor,fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,flexShrink:0}}>
+                        {ev.subtype||ev.type}
+                      </span>
+                      {isCancelled&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R}}>⚠ Abgesagt</span>}
+                    </div>
+                    <div style={{fontSize:11,color:"#888"}}>🕐 {ev.time} Uhr</div>
                   </div>
                 </div>
-              </div>
-              {/* RSVP-Statistik-Blöcke */}
+              )}
+
+              {/* Stat-Blöcke — immer, Aufgebot nur bei Spielen */}
               {!noRsvp&&(
-                <div style={{borderTop:`0.5px solid ${GB}`,display:"flex",background:"#FAFAF8"}} onClick={e=>e.stopPropagation()}>
+                <div style={{display:"flex",borderTop:`0.5px solid ${GB}`,borderBottom:`0.5px solid ${GB}`}} onClick={e=>e.stopPropagation()}>
                   {[
-                    {label:"Zugesagt",  value:c.zu,       color:GN,        bg:"#ECFDF5"},
-                    {label:"Abgesagt",  value:c.ab,       color:R,         bg:RL},
-                    {label:"Unentsch.", value:c.unent,    color:"#D97706", bg:"#FFF7ED"},
-                    {label:"Offen",     value:c.offen,    color:"#888",    bg:"#F3F4F6"},
-                    {label:"Aufgebot",  value:c.aufgebot, color:"#4F46E5", bg:"#EEF2FF"},
+                    {label:"Zusagen",  value:c.zu,    color:"#16A34A"},
+                    {label:"Absagen",  value:c.ab,    color:R},
+                    {label:"Unentsch.",value:c.unent, color:"#D97706"},
+                    {label:"Offen",    value:c.offen, color:"#999"},
+                    ...(isSpiel?[{label:"Aufgebot",value:c.aufgebot,color:"#4F46E5"}]:[]),
                   ].map((s,i,arr)=>(
-                    <div key={i} style={{
-                      flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-                      padding:"10px 2px",
-                      borderRight:i<arr.length-1?`0.5px solid ${GB}`:"none",
-                      background:s.value>0?s.bg:"transparent",
-                    }}>
-                      <div style={{fontSize:18,fontWeight:700,color:s.value>0?s.color:"#D1D5DB",lineHeight:1}}>{s.value}</div>
-                      <div style={{fontSize:9,color:s.value>0?s.color:"#C0BDB8",fontWeight:600,marginTop:4,textAlign:"center",letterSpacing:0.2,textTransform:"uppercase"}}>{s.label}</div>
+                    <div key={i} style={{flex:1,padding:"9px 2px",borderRight:i<arr.length-1?`0.5px solid ${GB}`:"none",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                      <div style={{fontSize:15,fontWeight:700,color:s.value>0?s.color:"#ddd",lineHeight:1}}>{s.value}</div>
+                      <div style={{fontSize:9,color:s.value>0?s.color:"#ccc",marginTop:3,textTransform:"uppercase",letterSpacing:0.3,fontWeight:600,opacity:0.8}}>{s.label}</div>
                     </div>
                   ))}
                 </div>
               )}
-              {/* RSVP-Buttons unten für Trainer */}
+
+              {/* RSVP-Toggle */}
               {!isAdmin&&!noRsvp&&myId&&(()=>{
                 const resp=getResp(ev.id,myId);
                 const isZu=resp.status==="zu";
                 const isAb=resp.status==="ab";
+                const none=!isZu&&!isAb;
                 return(
-                  <div style={{borderTop:`0.5px solid ${GB}`,display:"flex",gap:0}} onClick={e=>e.stopPropagation()}>
-                    <button onClick={()=>setResp(ev.id,myId,isZu?null:"zu")}
-                      style={{flex:1,padding:"13px",border:"none",borderRight:`0.5px solid ${GB}`,background:isZu?"#16A34A":"#fff",color:isZu?"#fff":"#aaa",fontSize:13,fontWeight:600,cursor:"pointer",borderRadius:"0 0 0 14px",letterSpacing:0.1}}>
-                      {isZu?"✓ Zugesagt":"✓ Zusagen"}
-                    </button>
-                    <button onClick={()=>setResp(ev.id,myId,isAb?null:"ab")}
-                      style={{flex:1,padding:"13px",border:"none",background:isAb?"#DC2626":"#fff",color:isAb?"#fff":"#aaa",fontSize:13,fontWeight:600,cursor:"pointer",borderRadius:"0 0 14px 0",letterSpacing:0.1}}>
-                      {isAb?"✕ Abgesagt":"✕ Absagen"}
-                    </button>
+                  <div style={{padding:"10px 12px",background:"#fff"}} onClick={e=>e.stopPropagation()}>
+                    <div style={{display:"flex",background:"#F3F3F1",borderRadius:10,padding:3,gap:2}}>
+                      <button onClick={()=>setResp(ev.id,myId,isZu?null:"zu")}
+                        style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isZu?"#16A34A":"transparent",color:isZu?"#fff":none?"#888":"#bbb",fontSize:12,fontWeight:isZu?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
+                        <span style={{fontSize:14}}>👍</span>
+                        <span>{isZu?"Zugesagt":"Zusagen"}</span>
+                      </button>
+                      <div style={{width:1,background:GB,flexShrink:0,margin:"4px 0"}}/>
+                      <button onClick={()=>setResp(ev.id,myId,isAb?null:"ab")}
+                        style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isAb?"#DC2626":"transparent",color:isAb?"#fff":none?"#888":"#bbb",fontSize:12,fontWeight:isAb?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
+                        <span style={{fontSize:14}}>👎</span>
+                        <span>{isAb?"Abgesagt":"Absagen"}</span>
+                      </button>
+                    </div>
                   </div>
                 );
               })()}
