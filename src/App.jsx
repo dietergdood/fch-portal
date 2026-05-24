@@ -5020,7 +5020,6 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             )}
           </div>
           </div>
-        </div>
       )}
 
       {/* Ereignisliste */}
