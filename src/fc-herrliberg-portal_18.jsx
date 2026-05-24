@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "./supabase.js";
+
+/* -- SUPABASE (optional, nur wenn supabase.js vorhanden) -- */
+let supabase = null;
+try {
+  const mod = await import("./supabase.js");
+  supabase = mod.supabase || null;
+} catch(e) { /* läuft ohne Supabase im Demo-Modus */ }
 
 /* -- FARBEN -- */
 const R="#C8102E",RL="#FEF2F2",BK="#1A1A1A",GR="#F5F5F3",GB="#E0DED8",BL="#2563EB",GN="#059669",AM="#D97706";
@@ -3550,257 +3556,209 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
   }
 
   return (
-    <div ref={containerRef} style={{width:"100%", minWidth: timeW + nDays*dayW, fontFamily:"inherit", fontSize:11}}>
+    <div ref={containerRef} style={{width:"100%", overflowX:"auto", WebkitOverflowScrolling:"touch", fontFamily:"inherit", fontSize:11}}>
+      <div style={{minWidth: timeW + nDays*dayW}}>
 
-      {/* Row 1: Wochentage */}
-      <div style={{display:"flex", background:"#fff", position:"sticky", top:0, zIndex:22, borderBottom:"1.5px solid #D1CFC8", height:44, boxSizing:"border-box", alignItems:"center"}}>
-        <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
-        {DAYS.map(function(day,di){
-          const d = dayDates[idxMap[di]];
-          const isToday = d.toDateString()===today.toDateString();
-          const hasSlots = (wochenSlots[idxMap[di]]||[]).length > 0;
-          return (
-            <div key={di} style={{
-              width:dayW, flexShrink:0,
-              borderRight:"1.5px solid #C8C5BC",
-              background: isToday ? "#EEF2FF" : "transparent",
-              textAlign:"center", padding:"4px 4px", height:"100%", boxSizing:"border-box",
-              display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"
-            }}>
-              <div style={{
-                fontSize:11, fontWeight:700, letterSpacing:0.5,
-                color: isToday ? "#4F46E5" : hasSlots ? BK : "#888580",
-                textTransform:"uppercase"
-              }}>{day}</div>
-              <div style={{
-                fontSize:10, marginTop:1,
-                color: isToday ? "#6366F1" : "#6B7280",
-                fontWeight: isToday ? 600 : 400
-              }}>{fmtDate(d)}</div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Row 2: Platz-Namen */}
-      <div style={{display:"flex", background:"#F7F6F2", position:"sticky", top:44, zIndex:21, borderBottom:"0.5px solid #DDD9CF", height:22, boxSizing:"border-box", alignItems:"center"}}>
-        <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
-        {DAYS.map(function(_,di){
-          const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
-          return aktivePlaetze.map(function(p,pi){
-            const spanCols = (p.haelften||[]).length||1;
-            const isLast = pi===aktivePlaetze.length-1;
+        {/* Headers */}
+        <div style={{display:"flex", background:"#fff", borderBottom:"1.5px solid #D1CFC8", height:44, boxSizing:"border-box", alignItems:"center"}}>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
+          {DAYS.map(function(day,di){
+            const d = dayDates[idxMap[di]];
+            const isToday = d.toDateString()===today.toDateString();
+            const hasSlots = (wochenSlots[idxMap[di]]||[]).length > 0;
             return (
-              <div key={di+"_"+p.id} style={{
-                width:spanCols*colW, flexShrink:0,
-                borderRight: isLast ? "1.5px solid #C8C5BC" : "1px solid #DDD9CF",
-                background: isToday ? "#E8ECFF" : "transparent",
-                textAlign:"center", padding:"2px 3px",
-                height:"100%", boxSizing:"border-box",
-                display:"flex", alignItems:"center", justifyContent:"center"
-              }}>
-                <div style={{
-                  fontSize:11, fontWeight:600, color:"#374151",
-                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"
-                }}>{p.name}</div>
-              </div>
-            );
-          });
-        })}
-      </div>
-
-      {/* Row 3: Hälften */}
-      <div style={{display:"flex", background:"#F2F1ED", position:"sticky", top:66, zIndex:20, borderBottom:"1.5px solid #C8C5BC", height:18, boxSizing:"border-box", alignItems:"center"}}>
-        <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
-        {DAYS.map(function(_,di){
-          const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
-          return alleCols.map(function(col,ci){
-            const isLast = ci===alleCols.length-1;
-            return (
-              <div key={di+"_"+col.key} style={{
-                width:colW, flexShrink:0,
-                borderRight: isLast ? "1.5px solid #C8C5BC" : "0.5px solid #DDD9CF",
-                background: isToday ? "#DDE1F8" : "transparent",
-                textAlign:"center", padding:"1px 2px",
-                height:"100%", boxSizing:"border-box",
-                display:"flex", alignItems:"center", justifyContent:"center"
-              }}>
-                <div style={{
-                  fontSize:10, fontWeight:500, color:"#6B7280",
-                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
-                  letterSpacing:0.3
-                }}>{col.haelfte||""}</div>
-              </div>
-            );
-          });
-        })}
-      </div>
-
-      {/* Grid */}
-      <div style={{display:"flex"}}>
-        {/* Zeitachse */}
-        <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", background:"#FAFAF8"}}>
-          {slots15.map(function(t,i){
-            const isHour = t%1===0;
-            const isHalf = Math.round((t%1)*60)===30;
-            return (
-              <div key={t} style={{
-                height:H15,
-                borderTop:i>0 ? "0.5px solid "+(isHour?"#D1CFC8":isHalf?"#E8E6DF":"#F0EFEB") : "none",
-                boxSizing:"border-box",
-                display:"flex", alignItems:"flex-start", justifyContent:"flex-end",
-                paddingRight:5, paddingTop:1
-              }}>
-                {isHour && <span style={{fontSize:11, color:"#9CA3AF", fontWeight:600, letterSpacing:-0.3}}>{fmtT15(t)}</span>}
-                {!isHour && <span style={{fontSize:10, color:"#D1D5DB", fontWeight:400}}>{fmtT15(t)}</span>}
+              <div key={di} style={{width:dayW, flexShrink:0, borderRight:"1.5px solid #C8C5BC", background:isToday?"#EEF2FF":"transparent", textAlign:"center", padding:"4px", height:"100%", boxSizing:"border-box", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+                <div style={{fontSize:11, fontWeight:700, letterSpacing:0.5, color:isToday?"#4F46E5":hasSlots?BK:"#888580", textTransform:"uppercase"}}>{day}</div>
+                <div style={{fontSize:10, marginTop:1, color:isToday?"#6366F1":"#6B7280", fontWeight:isToday?600:400}}>{fmtDate(d)}</div>
               </div>
             );
           })}
         </div>
 
-        {/* 7 Tage */}
-        {DAYS.map(function(day,di){
-          const realDi = idxMap[di];
-          const isToday = dayDates[realDi].toDateString()===today.toDateString();
-          const daySlots = (wochenSlots[realDi]||[]).filter(function(s){ return teamFilter==="alle"||s.team===teamFilter; });
-          const totalH = H15*slots15.length;
+        {/* Platz-Namen */}
+        <div style={{display:"flex", background:"#F7F6F2", borderBottom:"0.5px solid #DDD9CF", height:22, boxSizing:"border-box", alignItems:"center"}}>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
+          {DAYS.map(function(_,di){
+            const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
+            return aktivePlaetze.map(function(p,pi){
+              const spanCols = (p.haelften||[]).length||1;
+              const isLast = pi===aktivePlaetze.length-1;
+              return (
+                <div key={di+"_"+p.id} style={{width:spanCols*colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"1px solid #DDD9CF", background:isToday?"#E8ECFF":"transparent", textAlign:"center", padding:"2px 3px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
+                  <div style={{fontSize:11, fontWeight:600, color:"#374151", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{p.name}</div>
+                </div>
+              );
+            });
+          })}
+        </div>
 
-          return (
-            <div key={di} style={{display:"flex", borderRight:"1.5px solid #C8C5BC", background:isToday?"#F8F9FF":"transparent"}}>
-              {alleCols.map(function(col,ci){
-                const platzHaelften = col.platz.haelften||[];
-                const hasHaelften = platzHaelften.length > 0;
-                const isFirstHaelfte = hasHaelften && col.haelfte===platzHaelften[0];
-                const numHaelften = platzHaelften.length||1;
+        {/* Hälften */}
+        <div style={{display:"flex", background:"#F2F1ED", borderBottom:"1.5px solid #C8C5BC", height:18, boxSizing:"border-box", alignItems:"center"}}>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
+          {DAYS.map(function(_,di){
+            const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
+            return alleCols.map(function(col,ci){
+              const isLast = ci===alleCols.length-1;
+              return (
+                <div key={di+"_"+col.key} style={{width:colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"0.5px solid #DDD9CF", background:isToday?"#DDE1F8":"transparent", textAlign:"center", padding:"1px 2px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
+                  <div style={{fontSize:10, fontWeight:500, color:"#6B7280", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.haelfte||""}</div>
+                </div>
+              );
+            });
+          })}
+        </div>
 
-                const colSlots = daySlots.filter(function(s){
-                  if(!hasHaelften){
-                    return s.ort===col.platz.name || (s.end_ort&&s.end_ort===col.platz.name);
-                  }
+        {/* Grid */}
+        <div style={{display:"flex"}}>
 
-                  var p1platz = s.ort;
-                  var p2platz = s.end_ort||s.ort;
-                  var p1h = s.haelfte;
-                  var p2h = s.end_haelfte;
+          {/* Zeitachse */}
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", background:"#FAFAF8"}}>
+            {slots15.map(function(t,i){
+              const isHour = t%1===0;
+              const isHalf = Math.round((t%1)*60)===30;
+              return (
+                <div key={t} style={{
+                  height:H15,
+                  borderTop:i>0?"0.5px solid "+(isHour?"#D1CFC8":isHalf?"#E8E6DF":"#F0EFEB"):"none",
+                  boxSizing:"border-box",
+                  display:"flex", alignItems:"flex-start", justifyContent:"flex-end",
+                  paddingRight:5, paddingTop:1
+                }}>
+                  {isHour && <span style={{fontSize:11, color:"#9CA3AF", fontWeight:600, letterSpacing:-0.3}}>{fmtT15(t)}</span>}
+                  {!isHour && <span style={{fontSize:10, color:"#D1D5DB", fontWeight:400}}>{fmtT15(t)}</span>}
+                </div>
+              );
+            })}
+          </div>
 
-                  if(!s.wechsel_zeit){
-                    // No wechsel
-                    if(col.platz.name!==p1platz) return false;
-                    if(!p1h) return true; // Ganzer Platz - show in ALL haelfte cols
-                    return p1h===col.haelfte;
-                  }
+          {/* 7 Tage */}
+          {DAYS.map(function(day,di){
+            const realDi = idxMap[di];
+            const isToday = dayDates[realDi].toDateString()===today.toDateString();
+            const daySlots = (wochenSlots[realDi]||[]).filter(function(s){ return teamFilter==="alle"||s.team===teamFilter; });
+            const totalH = H15*slots15.length;
 
-                  // With wechsel: include col if Phase1 OR Phase2 belongs here
-                  var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.haelfte);
-                  var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.haelfte);
-                  return p1here || p2here;
-                });
+            return (
+              <div key={di} style={{display:"flex", borderRight:"1.5px solid #C8C5BC", background:isToday?"#F8F9FF":"transparent"}}>
+                {alleCols.map(function(col,ci){
+                  const platzHaelften = col.platz.haelften||[];
+                  const hasHaelften = platzHaelften.length > 0;
+                  const isFirstHaelfte = hasHaelften && col.haelfte===platzHaelften[0];
+                  const numHaelften = platzHaelften.length||1;
 
-                return (
-                  <div key={col.key}
-                    style={{width:colW, flexShrink:0, position:"relative", height:totalH, borderRight:ci<alleCols.length-1?"0.5px solid #E8E6DF":"none", cursor:canEdit?"crosshair":"default"}}
-                    onClick={canEdit ? function(e){
-                      if(e.target !== e.currentTarget) return; // only bare cell, not slot blocks
-                      var rect = e.currentTarget.getBoundingClientRect();
-                      var relY = e.clientY - rect.top;
-                      var rawTime = displayStart + relY / (H15*4);
-                      var snapped = Math.round(rawTime*4)/4; // snap to 15min
-                      snapped = Math.max(displayStart, Math.min(displayEnd-1, snapped));
-                      onNewSlot({
-                        wochentag: DAYS[di],
-                        start: snapped,
-                        end: Math.min(snapped+1.5, displayEnd),
-                        ort: col.platz.name,
-                        haelfte: col.haelfte||"",
-                      });
-                    } : undefined}>
-                    {slots15.map(function(t,i){
-                      const isHour = t%1===0;
-                      const isHalf = Math.round((t%1)*60)===30;
-                      return (
-                        <div key={t} style={{position:"absolute", top:i*H15, left:0, right:0, height:H15, borderTop:i>0?"0.5px solid "+(isHour?"#D1CFC8":isHalf?"#E8E6DF":"#F2F1ED"):"none", pointerEvents:"none"}}/>
-                      );
-                    })}
-                    {colSlots.map(function(s,si){
-                      const col2 = s.color||TEAM_COLORS[s.team]||BL;
-                      var blocks = [];
+                  const colSlots = daySlots.filter(function(s){
+                    if(!hasHaelften){
+                      return s.ort===col.platz.name || (s.end_ort&&s.end_ort===col.platz.name);
+                    }
+                    var p1platz = s.ort;
+                    var p2platz = s.end_ort||s.ort;
+                    var p1h = s.haelfte;
+                    var p2h = s.end_haelfte;
+                    if(!s.wechsel_zeit){
+                      if(col.platz.name!==p1platz) return false;
+                      if(!p1h) return true;
+                      return p1h===col.haelfte;
+                    }
+                    var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.haelfte);
+                    var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.haelfte);
+                    return p1here || p2here;
+                  });
 
-                      if(!s.wechsel_zeit){
-                        var isFullP = hasHaelften&&!s.haelfte;
-                        if(isFullP && !isFirstHaelfte){ /* skip, rendered from first */ }
-                        else {
-                          var sr = (isFullP && isFirstHaelfte) ? -(numHaelften-1)*colW-1 : 1;
-                          blocks.push({start:s.start, end:s.end, right:sr});
-                        }
-                      } else {
-                        var p1platz2=s.ort, p2platz2=s.end_ort||s.ort;
-                        var p1h=s.haelfte, p2h=s.end_haelfte;
-
-                        var p1here2 = col.platz.name===p1platz2 && (!p1h ? true : p1h===col.haelfte);
-                        var p2here2 = col.platz.name===p2platz2 && (!p2h ? true : p2h===col.haelfte);
-
-                        // Phase 1 block
-                        if(p1here2){
-                          var p1fullspan = !p1h && isFirstHaelfte;
-                          var p1skip = !p1h && !isFirstHaelfte;
-                          if(!p1skip){
-                            blocks.push({
-                              start: s.start,
-                              end: s.wechsel_zeit,
-                              right: p1fullspan ? -(numHaelften-1)*colW-1 : 1
-                            });
-                          }
-                        }
-
-                        // Phase 2 block
-                        if(p2here2){
-                          var p2fullspan = !p2h && isFirstHaelfte;
-                          var p2skip = !p2h && !isFirstHaelfte;
-                          if(!p2skip){
-                            blocks.push({
-                              start: s.wechsel_zeit,
-                              end: s.end,
-                              right: p2fullspan ? -(numHaelften-1)*colW-1 : 1
-                            });
-                          }
-                        }
-                      }
-
-                      return blocks.map(function(b,bi){
-                        var top = (b.start-displayStart)*H15*4;
-                        var h = (b.end-b.start)*H15*4-2;
+                  return (
+                    <div key={col.key}
+                      style={{width:colW, flexShrink:0, position:"relative", height:totalH, borderRight:ci<alleCols.length-1?"0.5px solid #E8E6DF":"none", cursor:canEdit?"crosshair":"default"}}
+                      onClick={canEdit ? function(e){
+                        if(e.target !== e.currentTarget) return;
+                        var rect = e.currentTarget.getBoundingClientRect();
+                        var relY = e.clientY - rect.top;
+                        var rawTime = displayStart + relY / (H15*4);
+                        var snapped = Math.round(rawTime*4)/4;
+                        snapped = Math.max(displayStart, Math.min(displayEnd-1, snapped));
+                        onNewSlot({
+                          wochentag: DAYS[di],
+                          start: snapped,
+                          end: Math.min(snapped+1.5, displayEnd),
+                          ort: col.platz.name,
+                          haelfte: col.haelfte||"",
+                        });
+                      } : undefined}>
+                      {slots15.map(function(t,i){
+                        const isHour = t%1===0;
+                        const isHalf = Math.round((t%1)*60)===30;
                         return (
-                          <div key={si+"_"+bi} onClick={function(){onClickSlot(s);}} title={s.team+" "+fmtT15(b.start)+"-"+fmtT15(b.end)}
-                            style={{
-                              position:"absolute", top:top+1, left:2, right:b.right<1?b.right:2,
-                              height:Math.max(h,14),
-                              background:col2,
-                              borderRadius:4,
-                              borderLeft:"3px solid rgba(255,255,255,0.35)",
-                              padding:"2px 4px",
-                              overflow:"hidden", cursor:"pointer",
-                              zIndex:b.right<1?2:1,
-                              boxSizing:"border-box",
-                              boxShadow:"0 1px 3px rgba(0,0,0,0.18)"
-                            }}>
-                            <div style={{color:"#fff", fontWeight:700, fontSize:9, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.2}}>{s.team}</div>
-                            {h>28 && <div style={{color:"rgba(255,255,255,0.82)", fontSize:8, letterSpacing:0.1}}>{fmtT15(b.start)}-{fmtT15(b.end)}</div>}
-                          </div>
+                          <div key={t} style={{position:"absolute", top:i*H15, left:0, right:0, height:H15, borderTop:i>0?"0.5px solid "+(isHour?"#D1CFC8":isHalf?"#E8E6DF":"#F2F1ED"):"none", pointerEvents:"none"}}/>
                         );
-                      });
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                      })}
+                      {colSlots.map(function(s,si){
+                        const col2 = s.color||TEAM_COLORS[s.team]||BL;
+                        var blocks = [];
+                        if(!s.wechsel_zeit){
+                          var isFullP = hasHaelften&&!s.haelfte;
+                          if(isFullP && !isFirstHaelfte){ /* skip */ }
+                          else {
+                            var sr = (isFullP && isFirstHaelfte) ? -(numHaelften-1)*colW-1 : 1;
+                            blocks.push({start:s.start, end:s.end, right:sr});
+                          }
+                        } else {
+                          var p1platz = s.ort;
+                          var p2platz = s.end_ort||s.ort;
+                          var p1h = s.haelfte;
+                          var p2h = s.end_haelfte;
+                          var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.haelfte);
+                          var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.haelfte);
+                          if(p1here){
+                            var isFullP1 = hasHaelften&&!p1h&&col.platz.name===p1platz;
+                            var sr1 = (isFullP1 && isFirstHaelfte) ? -(numHaelften-1)*colW-1 : 1;
+                            if(!isFullP1 || isFirstHaelfte){
+                              blocks.push({start:s.start, end:s.wechsel_zeit, right:sr1});
+                            }
+                          }
+                          if(p2here){
+                            var isFullP2 = hasHaelften&&!p2h&&col.platz.name===p2platz;
+                            var otherPlatz = col.platz.name===p2platz;
+                            var p2Cols = otherPlatz ? (p2platz===p1platz ? numHaelften : (TRAININGSPLAETZE.find(function(pp){return pp.name===p2platz;})||{}).haelften?.length||1) : 1;
+                            var sr2 = (isFullP2 && (isFirstHaelfte||!hasHaelften)) ? -(p2Cols-1)*colW-1 : 1;
+                            if(!isFullP2 || isFirstHaelfte || !hasHaelften){
+                              blocks.push({start:s.wechsel_zeit, end:s.end, right:sr2});
+                            }
+                          }
+                        }
+                        return blocks.map(function(b,bi){
+                          var top = (b.start-displayStart)*H15*4;
+                          var h = (b.end-b.start)*H15*4-2;
+                          return (
+                            <div key={si+"_"+bi} onClick={function(){onClickSlot(s);}} title={s.team+" "+fmtT15(b.start)+"-"+fmtT15(b.end)}
+                              style={{
+                                position:"absolute", top:top+1, left:2, right:b.right<1?b.right:2,
+                                height:Math.max(h,14),
+                                background:col2,
+                                borderRadius:4,
+                                borderLeft:"3px solid rgba(255,255,255,0.35)",
+                                padding:"2px 4px",
+                                overflow:"hidden", cursor:"pointer",
+                                zIndex:b.right<1?2:1,
+                                boxSizing:"border-box",
+                                boxShadow:"0 1px 3px rgba(0,0,0,0.18)"
+                              }}>
+                              <div style={{color:"#fff", fontWeight:700, fontSize:9, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.2}}>{s.team}</div>
+                              {h>28 && <div style={{color:"rgba(255,255,255,0.82)", fontSize:8, letterSpacing:0.1}}>{fmtT15(b.start)}-{fmtT15(b.end)}</div>}
+                            </div>
+                          );
+                        });
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+
+        </div>
+
       </div>
     </div>
   );
 }
-
-/* == TRAINING-GANTT == */
 function TrainingGantt({team: teamProp, role}){
   const START = 7, END = 22, H = 52;
   const isMobile = useIsMobile();
@@ -4346,7 +4304,7 @@ function TrainingGantt({team: teamProp, role}){
       </div>
 
       {/* Gantt Grid */}
-      <div style={{background:"#fff",border:"0.5px solid "+GB,borderRadius:12,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+      <div style={{background:"#fff",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden"}}>
           <PlatzGantt
             plan={plan}
             wochenSlots={ansicht==="tag" ? wochenSlots.map(function(ss,i){ return i===selectedDay?ss:[]; }) : wochenSlots}
@@ -8959,19 +8917,24 @@ export default function App(){
     if(!supabase){ setSession(null); return; }
     supabase.auth.getSession().then(({data:{session}})=>{
       setSession(session||null);
-      if(session) loadDbUser(session.user.id);
+      if(session) loadDbUser(session.user.id, session.user.email);
     });
     const {data:{subscription}}=supabase.auth.onAuthStateChange((_,session)=>{
       setSession(session||null);
-      if(session) loadDbUser(session.user.id);
+      if(session) loadDbUser(session.user.id, session.user.email);
       else setDbUser(null);
     });
     return ()=>subscription.unsubscribe();
   },[]);
 
-  async function loadDbUser(uid){
-    const {data}=await supabase.from("benutzer").select("*").eq("id",uid).single();
-    if(data) setDbUser(data);
+  async function loadDbUser(uid, email){
+    const {data} = await supabase.from("benutzer").select("*").eq("id",uid).single();
+    if(data){
+      setDbUser(data);
+    } else {
+      // Kein Eintrag in benutzer-Tabelle → Fallback mit email
+      setDbUser({id:uid, email:email||"", role:"spieler", teams:[], name:email||"Benutzer"});
+    }
   }
 
   async function handleLogout(){
@@ -8979,8 +8942,8 @@ export default function App(){
     setSession(null); setDbUser(null); setActive("dashboard");
   }
 
-  // Lade-Screen
-  if(session===undefined){
+  // Lade-Screen (initial oder während dbUser lädt nach Login)
+  if(session===undefined || (session && !dbUser && supabase)){
     return(
       <div style={{minHeight:"100vh",background:GR,display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{textAlign:"center"}}>
@@ -8999,16 +8962,16 @@ export default function App(){
   // Rolle aus DB-User oder Demo-Fallback
   const effectiveAccountKey = dbUser ? "db_user" : accountKey;
   const dbAccount = dbUser ? {
-    name: dbUser.name||dbUser.email,
-    rollen: [dbUser.role],
-    primaryRole: dbUser.role,
+    name: dbUser.name||dbUser.email||"Benutzer",
+    rollen: [dbUser.role||"spieler"],
+    primaryRole: dbUser.role||"spieler",
     kinder: [],
     teams: dbUser.teams||[],
-    email: dbUser.email,
+    email: dbUser.email||"",
   } : null;
 
   const account = dbAccount || USER_ACCOUNTS[accountKey] || USER_ACCOUNTS.trainer;
-  const role = activeSubRole || account.primaryRole;
+  const role = activeSubRole || account.primaryRole || "spieler";
   const kinder = account.kinder||[];
   const spielerTeam = account.teams?.length>0 ? account.teams : [];
   const trainerTeams = account.teams||["Cc-Junioren"];
