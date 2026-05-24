@@ -48,12 +48,12 @@ function ModalOrSheet({open,onClose,children,maxWidth=660}){
 
 /* -- ROLLEN-DEFINITIONEN -- */
 const ROLES = {
-  administrator: { label:"Administrator",    color:"#f8de09", icon:"⚙️", desc:"Vollzugriff auf alle Module, Einstellungen und Systemfunktionen" },
-  administration:{ label:"Administration",   color:"#f8de09", icon:"🗂️", desc:"Stammdaten, Datenqualität, Garderoben, Auswertungen, Exporte" },
-  funktionaer:   { label:"Funktionär/Vorstand", color:"#f8de09", icon:"📋", desc:"Teams, Auswertungen, Vereinsbusse, Material gemäss Aufschaltung" },
-  trainer:       { label:"Trainer",          color:"#f8de09", icon:"⚽", desc:"Eigene Teams, Trainings, Anwesenheiten, Material, Vereinsbus" },
-  spieler:       { label:"Spieler",          color:"#f8de09", icon:"🏃", desc:"Eigenes Team, Spielplan, Tabelle, Anwesenheit, Helfereinsätze" },
-  eltern:        { label:"Eltern",           color:"#f8de09", icon:"👤", desc:"Daten der Kinder, Termine, Abstimmungen, Helfereinsätze" },
+  administrator: { label:"Administrator",    color:"#f8de09", icon:"ti-settings", desc:"Vollzugriff auf alle Module, Einstellungen und Systemfunktionen" },
+  administration:{ label:"Administration",   color:"#f8de09", icon:"ti-briefcase", desc:"Stammdaten, Datenqualität, Garderoben, Auswertungen, Exporte" },
+  funktionaer:   { label:"Funktionär/Vorstand", color:"#f8de09", icon:"≡", desc:"Teams, Auswertungen, Vereinsbusse, Material gemäss Aufschaltung" },
+  trainer:       { label:"Trainer",          color:"#f8de09", icon:"ti-ball-football", desc:"Eigene Teams, Trainings, Anwesenheiten, Material, Vereinsbus" },
+  spieler:       { label:"Spieler",          color:"#f8de09", icon:"▶", desc:"Eigenes Team, Spielplan, Tabelle, Anwesenheit, Helfereinsätze" },
+  eltern:        { label:"Eltern",           color:"#f8de09", icon:"ti-user", desc:"Daten der Kinder, Termine, Abstimmungen, Helfereinsätze" },
 };
 /* -- SAFE ROLES LOOKUP -- */
 function getRole(role){
@@ -67,94 +67,88 @@ function getRole(role){
 /* -- NAV PRO ROLLE (gemäss Kap. 27) -- */
 const NAV_BY_ROLE = {
   administrator: [
-    {key:"dashboard",icon:"🏠",label:"Home"},
-    {key:"members",icon:"👥",label:"Mitglieder"},
-    {key:"users",icon:"🔑",label:"Benutzer & Rollen"},
-    {key:"fieldvis",icon:"👁️",label:"Feldsichtbarkeit"},
-    {key:"team",icon:"⚽",label:"Teams"},
-    {key:"training",icon:"📅",label:"Trainingsplan"},
-    {key:"schedule",icon:"🏆",label:"Spielplan/FVRZ"},
-    {key:"attendance_central",icon:"✅",label:"Anwesenheitsstatistik"},
-    {key:"news",icon:"📰",label:"News"},
-    {key:"events",icon:"📅",label:"Termine"},
-    {key:"helpers",icon:"🤝",label:"Helfereinsätze"},
-    {key:"buses",icon:"🚌",label:"Vereinsbusse"},
-    {key:"material",icon:"⚙️",label:"Material"},
-    {key:"lockers",icon:"🚪",label:"Garderoben"},
-    {key:"media",icon:"📸",label:"Medien & Berichte"},
-    {key:"exports",icon:"📤",label:"Exporte"},
-    {key:"sync",icon:"🔄",label:"Fairgate-Sync"},
-    {key:"audit",icon:"📜",label:"Audit-Logs"},
-    {key:"wiki",icon:"📖",label:"Wiki"},
-    {key:"docs",icon:"📁",label:"Dokumente"},
+    {key:"dashboard",          icon:"ti-layout-dashboard", label:"Home"},
+    {key:"members",            icon:"ti-users",            label:"Mitglieder"},
+    {key:"team",               icon:"ti-ball-football",    label:"Teams"},
+    {key:"training",           icon:"ti-calendar",         label:"Trainingsplan"},
+    {key:"schedule",           icon:"ti-flag",             label:"Spielplan/FVRZ"},
+    {key:"attendance_central", icon:"ti-chart-bar",        label:"Anwesenheitsstatistik"},
+    {key:"news",               icon:"ti-news",             label:"News"},
+    {key:"events",             icon:"ti-calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"ti-heart-handshake",  label:"Helfereinsätze"},
+    {key:"buses",              icon:"ti-bus",              label:"Vereinsbusse"},
+    {key:"material",           icon:"ti-package",          label:"Material"},
+    {key:"lockers",            icon:"ti-door-exit",        label:"Garderoben"},
+    {key:"media",              icon:"ti-speakerphone",     label:"Medien & Berichte"},
+    {key:"wiki",               icon:"ti-book",             label:"Wiki"},
+    {key:"docs",               icon:"ti-file-text",        label:"Dokumente"},
+    {key:"portal",             icon:"ti-settings",         label:"Portalverwaltung"},
   ],
   administration: [
-    {key:"dashboard",icon:"🏠",label:"Home"},
-    {key:"members",icon:"👥",label:"Mitglieder"},
-    {key:"team",icon:"⚽",label:"Teams"},
-    {key:"training",icon:"📅",label:"Trainingsplan"},
-    {key:"schedule",icon:"🏆",label:"Spielplan"},
-    {key:"attendance_central",icon:"✅",label:"Anwesenheitsstatistik"},
-    {key:"news",icon:"📰",label:"News"},
-    {key:"events",icon:"📅",label:"Termine"},
-    {key:"helpers",icon:"🤝",label:"Helfereinsätze"},
-    {key:"buses",icon:"🚌",label:"Vereinsbusse"},
-    {key:"material",icon:"⚙️",label:"Material"},
-    {key:"lockers",icon:"🚪",label:"Garderoben"},
-    {key:"media",icon:"📸",label:"Medien & Berichte"},
-    {key:"exports",icon:"📤",label:"Exporte"},
-    {key:"sync",icon:"🔄",label:"Fairgate-Sync"},
-    {key:"wiki",icon:"📖",label:"Wiki"},
-    {key:"docs",icon:"📁",label:"Dokumente"},
-    {key:"datacheck",icon:"🔍",label:"Datenprüfung"},
+    {key:"dashboard",          icon:"ti-layout-dashboard", label:"Home"},
+    {key:"members",            icon:"ti-users",            label:"Mitglieder"},
+    {key:"team",               icon:"ti-ball-football",    label:"Teams"},
+    {key:"training",           icon:"ti-calendar",         label:"Trainingsplan"},
+    {key:"schedule",           icon:"ti-flag",             label:"Spielplan"},
+    {key:"attendance_central", icon:"ti-chart-bar",        label:"Anwesenheitsstatistik"},
+    {key:"news",               icon:"ti-news",             label:"News"},
+    {key:"events",             icon:"ti-calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"ti-heart-handshake",  label:"Helfereinsätze"},
+    {key:"buses",              icon:"ti-bus",              label:"Vereinsbusse"},
+    {key:"material",           icon:"ti-package",          label:"Material"},
+    {key:"lockers",            icon:"ti-door-exit",        label:"Garderoben"},
+    {key:"media",              icon:"ti-speakerphone",     label:"Medien & Berichte"},
+    {key:"wiki",               icon:"ti-book",             label:"Wiki"},
+    {key:"docs",               icon:"ti-file-text",        label:"Dokumente"},
+    {key:"portal",             icon:"ti-settings",         label:"Portalverwaltung"},
   ],
   funktionaer: [
-    {key:"dashboard",icon:"🏠",label:"Home"},
-    {key:"members",icon:"👥",label:"Mitglieder"},
-    {key:"team",icon:"⚽",label:"Teams"},
-    {key:"training",icon:"📅",label:"Trainingsplan"},
-    {key:"attendance_central",icon:"✅",label:"Anwesenheitsstatistik"},
-    {key:"news",icon:"📰",label:"News"},
-    {key:"events",icon:"📅",label:"Termine"},
-    {key:"helpers",icon:"🤝",label:"Helfereinsätze"},
-    {key:"buses",icon:"🚌",label:"Vereinsbusse"},
-    {key:"material",icon:"⚙️",label:"Material"},
-    {key:"lockers",icon:"🚪",label:"Garderoben"},
-    {key:"media",icon:"📸",label:"Medien & Berichte"},
-    {key:"wiki",icon:"📖",label:"Wiki"},
-    {key:"docs",icon:"📁",label:"Dokumente"},
+    {key:"dashboard",          icon:"ti-layout-dashboard", label:"Home"},
+    {key:"members",            icon:"ti-users",            label:"Mitglieder"},
+    {key:"team",               icon:"ti-ball-football",    label:"Teams"},
+    {key:"training",           icon:"ti-calendar",         label:"Trainingsplan"},
+    {key:"attendance_central", icon:"ti-chart-bar",        label:"Anwesenheitsstatistik"},
+    {key:"news",               icon:"ti-news",             label:"News"},
+    {key:"events",             icon:"ti-calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"ti-heart-handshake",  label:"Helfereinsätze"},
+    {key:"buses",              icon:"ti-bus",              label:"Vereinsbusse"},
+    {key:"material",           icon:"ti-package",          label:"Material"},
+    {key:"lockers",            icon:"ti-door-exit",        label:"Garderoben"},
+    {key:"media",              icon:"ti-speakerphone",     label:"Medien & Berichte"},
+    {key:"wiki",               icon:"ti-book",             label:"Wiki"},
+    {key:"docs",               icon:"ti-file-text",        label:"Dokumente"},
   ],
   trainer: [
-    {key:"dashboard",icon:"🏠",label:"Home"},
-    {key:"team",icon:"⚽",label:"Mein Team"},
-    {key:"training",icon:"📅",label:"Trainingsplan"},
-    {key:"events",icon:"📅",label:"Termine"},
-    {key:"helpers",icon:"🤝",label:"Helfereinsätze"},
-    {key:"buses",icon:"🚌",label:"Vereinsbusse"},
-    {key:"material",icon:"⚙️",label:"Material"},
-    {key:"lockers",icon:"🚪",label:"Garderoben"},
-    {key:"media",icon:"📸",label:"Medien & Berichte"},
-    {key:"news",icon:"📰",label:"News"},
-    {key:"wiki",icon:"📖",label:"Wiki"},
-    {key:"docs",icon:"📁",label:"Dokumente"},
+    {key:"dashboard",          icon:"ti-layout-dashboard", label:"Home"},
+    {key:"team",               icon:"ti-ball-football",    label:"Mein Team"},
+    {key:"training",           icon:"ti-calendar",         label:"Trainingsplan"},
+    {key:"events",             icon:"ti-calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"ti-heart-handshake",  label:"Helfereinsätze"},
+    {key:"buses",              icon:"ti-bus",              label:"Vereinsbusse"},
+    {key:"material",           icon:"ti-package",          label:"Material"},
+    {key:"lockers",            icon:"ti-door-exit",        label:"Garderoben"},
+    {key:"media",              icon:"ti-speakerphone",     label:"Medien & Berichte"},
+    {key:"news",               icon:"ti-news",             label:"News"},
+    {key:"wiki",               icon:"ti-book",             label:"Wiki"},
+    {key:"docs",               icon:"ti-file-text",        label:"Dokumente"},
   ],
   spieler: [
-    {key:"dashboard",icon:"🏠",label:"Home"},
-    {key:"news",icon:"📰",label:"News"},
-    {key:"team",icon:"⚽",label:"Mein Team"},
-    {key:"events",icon:"📅",label:"Termine"},
-    {key:"helpers",icon:"🤝",label:"Helfereinsätze"},
-    {key:"docs",icon:"📁",label:"Dokumente"},
-    {key:"profile",icon:"👤",label:"Mein Profil"},
+    {key:"dashboard",          icon:"ti-layout-dashboard", label:"Home"},
+    {key:"news",               icon:"ti-news",             label:"News"},
+    {key:"team",               icon:"ti-ball-football",    label:"Mein Team"},
+    {key:"events",             icon:"ti-calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"ti-heart-handshake",  label:"Helfereinsätze"},
+    {key:"docs",               icon:"ti-file-text",        label:"Dokumente"},
+    {key:"profile",            icon:"ti-user",             label:"Mein Profil"},
   ],
   eltern: [
-    {key:"dashboard",icon:"🏠",label:"Home"},
-    {key:"news",icon:"📰",label:"News"},
-    {key:"team",icon:"⚽",label:"Mein Kind"},
-    {key:"events",icon:"📅",label:"Termine"},
-    {key:"helpers",icon:"🤝",label:"Helfereinsätze"},
-    {key:"docs",icon:"📁",label:"Dokumente"},
-    {key:"profile",icon:"👤",label:"Profil / Daten prüfen"},
+    {key:"dashboard",          icon:"ti-layout-dashboard", label:"Home"},
+    {key:"news",               icon:"ti-news",             label:"News"},
+    {key:"team",               icon:"ti-ball-football",    label:"Mein Kind"},
+    {key:"events",             icon:"ti-calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"ti-heart-handshake",  label:"Helfereinsätze"},
+    {key:"docs",               icon:"ti-file-text",        label:"Dokumente"},
+    {key:"profile",            icon:"ti-user",             label:"Profil / Daten prüfen"},
   ],
 };
 
@@ -1410,10 +1404,10 @@ const USER_ACCOUNTS={
 };
 
 const SCHEDULE=[
-  {team:"Cc-Junioren",id:1,date:"Sa 24.05.",time:"10:00",opponent:"FC Küsnacht",  home:true, venue:"Sportanlage Aabach, Herrliberg",   venueAddr:"Aabachstrasse 10, 8704 Herrliberg", comp:"U12 Ostschweizer Cup", liga:"U12 Cup",    spielNr:"2026-CUP-0814", status:"Angesetzt",  result:null, htResult:null, att:null,  schiedsrichter:"Beat Zimmermann",  delegierter:"-", bemerkung:"",                   treffpunkt:"09:15 Sportanlage Aabach", stats:null},
-  {team:"Cc-Junioren",id:2,date:"Mi 28.05.",time:"17:30",opponent:"SC Männedorf", home:false,venue:"Sportplatz Männedorf",              venueAddr:"Seefeldstrasse 4, 8708 Männedorf",  comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-1023",  status:"Angesetzt",  result:null, htResult:null, att:null,  schiedsrichter:"Thomas Huber",     delegierter:"-", bemerkung:"Auswärtsspiel - Parkplatz beim Sportplatz nutzen", treffpunkt:"16:45 Bahnhof Meilen", stats:null},
-  {team:"Cc-Junioren",id:3,date:"Sa 07.06.",time:"09:30",opponent:"FC Rapperswil",home:true, venue:"Sportanlage Aabach, Herrliberg",   venueAddr:"Aabachstrasse 10, 8704 Herrliberg", comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-1089",  status:"Angesetzt",  result:null, htResult:null, att:null,  schiedsrichter:"Sandra Meier",     delegierter:"-", bemerkung:"",                   treffpunkt:"09:00 Sportanlage Aabach", stats:null},
-  {team:"Cc-Junioren",id:4,date:"Sa 17.05.",time:"10:00",opponent:"FC Thalwil",   home:false,venue:"Sportplatz Thalwil",                venueAddr:"Dorfstrasse 22, 8800 Thalwil",      comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-0987",  status:"Gespielt",   result:"2:1",htResult:"1:0",att:16, schiedsrichter:"Marco Frei",       delegierter:"-", bemerkung:"",                   treffpunkt:"09:15 Sportanlage Aabach",
+  {team:"Cc-Junioren",id:1,date:"Sa 24.05.",time:"10:00",opponent:"FC Küsnacht",  home:true, venue:"Sportanlage Aabach, Herrliberg",   venueAddr:"Aabachstrasse 10, 8704 Herrliberg", comp:"U12 Ostschweizer Cup", liga:"U12 Cup",    spielNr:"2026-CUP-0814", status:"Angesetzt",  result:null, htResult:null, att:null,  schiedsrichter:"Beat Zimmermann",  delegierter:"-", notes:"",                   treffpunkt:"09:15 Sportanlage Aabach", stats:null},
+  {team:"Cc-Junioren",id:2,date:"Mi 28.05.",time:"17:30",opponent:"SC Männedorf", home:false,venue:"Sportplatz Männedorf",              venueAddr:"Seefeldstrasse 4, 8708 Männedorf",  comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-1023",  status:"Angesetzt",  result:null, htResult:null, att:null,  schiedsrichter:"Thomas Huber",     delegierter:"-", notes:"Auswärtsspiel - Parkplatz beim Sportplatz nutzen", treffpunkt:"16:45 Bahnhof Meilen", stats:null},
+  {team:"Cc-Junioren",id:3,date:"Sa 07.06.",time:"09:30",opponent:"FC Rapperswil",home:true, venue:"Sportanlage Aabach, Herrliberg",   venueAddr:"Aabachstrasse 10, 8704 Herrliberg", comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-1089",  status:"Angesetzt",  result:null, htResult:null, att:null,  schiedsrichter:"Sandra Meier",     delegierter:"-", notes:"",                   treffpunkt:"09:00 Sportanlage Aabach", stats:null},
+  {team:"Cc-Junioren",id:4,date:"Sa 17.05.",time:"10:00",opponent:"FC Thalwil",   home:false,venue:"Sportplatz Thalwil",                venueAddr:"Dorfstrasse 22, 8800 Thalwil",      comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-0987",  status:"Gespielt",   result:"2:1",htResult:"1:0",att:16, schiedsrichter:"Marco Frei",       delegierter:"-", notes:"",                   treffpunkt:"09:15 Sportanlage Aabach",
     stats:{
       kader:[1,2,3,4,5,6],
       tore:[{spieler:"Luca Meier",min:23,eigentor:false},{spieler:"Finn Bauer",min:61,eigentor:false}],
@@ -1421,7 +1415,7 @@ const SCHEDULE=[
       karten:[{spieler:"Leon Fischer",min:44,type:"gelb"}],
       wechsel:[{raus:"Jan Schmid",rein:"Elias Wolf",min:50}],
     }},
-  {team:"Cc-Junioren",id:5,date:"Mi 14.05.",time:"17:30",opponent:"SC Wädenswil", home:true, venue:"Sportanlage Aabach, Herrliberg",   venueAddr:"Aabachstrasse 10, 8704 Herrliberg", comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-0944",  status:"Gespielt",   result:"1:1",htResult:"0:1",att:15, schiedsrichter:"Lukas Benz",       delegierter:"-", bemerkung:"",                   treffpunkt:"17:00 Sportanlage Aabach",
+  {team:"Cc-Junioren",id:5,date:"Mi 14.05.",time:"17:30",opponent:"SC Wädenswil", home:true, venue:"Sportanlage Aabach, Herrliberg",   venueAddr:"Aabachstrasse 10, 8704 Herrliberg", comp:"U12 Liga A",          liga:"U12 Liga A", spielNr:"2026-LA-0944",  status:"Gespielt",   result:"1:1",htResult:"0:1",att:15, schiedsrichter:"Lukas Benz",       delegierter:"-", notes:"",                   treffpunkt:"17:00 Sportanlage Aabach",
     stats:{
       kader:[1,2,4,5,6],
       tore:[{spieler:"Luca Meier",min:78,eigentor:false}],
@@ -1430,66 +1424,66 @@ const SCHEDULE=[
       wechsel:[{raus:"Leon Fischer",rein:"Jan Schmid",min:55}],
     }},
 ,
-  {id:7,team:"1. Mannschaft Herren",date:"Sa 03.05.",time:"15:00",opponent:"FC Horgen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1007",status:"Gespielt",result:"1:0",htResult:"1:2",att:11,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"14:30 Sportanlage Aabach",stats:null},
-  {id:8,team:"1. Mannschaft Herren",date:"Mi 07.05.",time:"17:00",opponent:"FC Rüti",home:false,venue:"Sportplatz Rüti",venueAddr:"Rütistrasse 6, 8630 Rüti",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1008",status:"Gespielt",result:"3:2",htResult:"1:1",att:18,schiedsrichter:"Nadine Schmid",delegierter:"-",bemerkung:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
-  {id:9,team:"1. Mannschaft Herren",date:"Sa 10.05.",time:"15:00",opponent:"SC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1009",status:"Gespielt",result:"2:1",htResult:"2:1",att:17,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"14:30 Sportanlage Aabach",stats:null},
-  {id:10,team:"1. Mannschaft Herren",date:"Sa 24.05.",time:"15:00",opponent:"FC Rapperswil",home:false,venue:"Sportanlage Grünfeld, Rapperswil",venueAddr:"Grünfeldweg 3, 8640 Rapperswil",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1010",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"14:15 Bahnhof Herrliberg",stats:null},
-  {id:11,team:"1. Mannschaft Herren",date:"Mi 28.05.",time:"17:00",opponent:"SC Männedorf",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1011",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Oliver Frei",delegierter:"-",bemerkung:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
-  {id:12,team:"1. Mannschaft Herren",date:"Sa 31.05.",time:"15:00",opponent:"FC Uster",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1012",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Oliver Frei",delegierter:"-",bemerkung:"",treffpunkt:"14:15 Bahnhof Herrliberg",stats:null},
-  {id:13,team:"1. Mannschaft Herren",date:"Sa 07.06.",time:"15:00",opponent:"FC Adliswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1013",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"14:30 Sportanlage Aabach",stats:null},
-  {id:14,team:"2. Mannschaft Herren",date:"Sa 03.05.",time:"14:00",opponent:"FC Uster",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1014",status:"Gespielt",result:"2:1",htResult:"0:1",att:18,schiedsrichter:"Thomas Huber",delegierter:"-",bemerkung:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
-  {id:15,team:"2. Mannschaft Herren",date:"Mi 07.05.",time:"17:00",opponent:"FC Horgen",home:false,venue:"Sportanlage Langacker, Horgen",venueAddr:"Langackerstrasse 8, 8810 Horgen",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1015",status:"Gespielt",result:"1:2",htResult:"0:0",att:16,schiedsrichter:"Beat Zimmermann",delegierter:"-",bemerkung:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
-  {id:16,team:"2. Mannschaft Herren",date:"Sa 10.05.",time:"14:00",opponent:"SC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1016",status:"Gespielt",result:"2:0",htResult:"2:1",att:10,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
-  {id:17,team:"2. Mannschaft Herren",date:"Sa 24.05.",time:"14:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1017",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
-  {id:18,team:"2. Mannschaft Herren",date:"Mi 28.05.",time:"17:00",opponent:"SC Embrach",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1018",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Stefan Vogel",delegierter:"-",bemerkung:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
-  {id:19,team:"2. Mannschaft Herren",date:"Sa 31.05.",time:"14:00",opponent:"FC Adliswil",home:false,venue:"Sportanlage Adliswil",venueAddr:"Sportstrasse 2, 8134 Adliswil",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1019",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Nadine Schmid",delegierter:"-",bemerkung:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
-  {id:20,team:"2. Mannschaft Herren",date:"Sa 07.06.",time:"14:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1020",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Thomas Huber",delegierter:"-",bemerkung:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
-  {id:21,team:"1. Mannschaft Frauen",date:"Sa 03.05.",time:"14:00",opponent:"SC Wädenswil Frauen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1021",status:"Gespielt",result:"1:1",htResult:"2:0",att:13,schiedsrichter:"Sandra Meier",delegierter:"-",bemerkung:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
-  {id:22,team:"1. Mannschaft Frauen",date:"Mi 07.05.",time:"19:00",opponent:"FC Uster Frauen",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1022",status:"Gespielt",result:"3:2",htResult:"1:2",att:17,schiedsrichter:"Oliver Frei",delegierter:"-",bemerkung:"",treffpunkt:"18:15 Bahnhof Herrliberg",stats:null},
-  {id:23,team:"1. Mannschaft Frauen",date:"Sa 10.05.",time:"14:00",opponent:"SC Männedorf Frauen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1023",status:"Gespielt",result:"1:0",htResult:"2:1",att:12,schiedsrichter:"Beat Zimmermann",delegierter:"-",bemerkung:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
-  {id:24,team:"1. Mannschaft Frauen",date:"Sa 24.05.",time:"14:00",opponent:"FC Thalwil Frauen",home:false,venue:"Sportplatz Thalwil",venueAddr:"Dorfstrasse 22, 8800 Thalwil",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1024",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Thomas Huber",delegierter:"-",bemerkung:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
-  {id:25,team:"1. Mannschaft Frauen",date:"Mi 28.05.",time:"19:00",opponent:"FC Horgen Frauen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1025",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Beat Zimmermann",delegierter:"-",bemerkung:"",treffpunkt:"18:30 Sportanlage Aabach",stats:null},
-  {id:26,team:"1. Mannschaft Frauen",date:"Sa 31.05.",time:"14:00",opponent:"FC Küsnacht Frauen",home:false,venue:"Sportplatz Goldbach, Küsnacht",venueAddr:"Goldbachstrasse 12, 8700 Küsnacht",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1026",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Sandra Meier",delegierter:"-",bemerkung:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
-  {id:27,team:"Ba-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Uster",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1027",status:"Gespielt",result:"2:0",htResult:"2:1",att:10,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:28,team:"Ba-Junioren",date:"Mi 07.05.",time:"17:30",opponent:"FC Stäfa",home:false,venue:"Sportanlage Stäfa",venueAddr:"Seestrasse 40, 8712 Stäfa",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1028",status:"Gespielt",result:"1:1",htResult:"2:0",att:18,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"16:45 Bahnhof Herrliberg",stats:null},
-  {id:29,team:"Ba-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Küsnacht",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1029",status:"Gespielt",result:"4:1",htResult:"1:2",att:10,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:30,team:"Ba-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1030",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Patrick Gross",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:31,team:"Ba-Junioren",date:"Mi 28.05.",time:"17:30",opponent:"FC Hombrechtikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1031",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"17:00 Sportanlage Aabach",stats:null},
-  {id:32,team:"Ba-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Thalwil",home:false,venue:"Sportplatz Thalwil",venueAddr:"Dorfstrasse 22, 8800 Thalwil",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1032",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Nadine Schmid",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:33,team:"Bb-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1033",status:"Gespielt",result:"1:0",htResult:"0:1",att:12,schiedsrichter:"Oliver Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:34,team:"Bb-Junioren",date:"Mi 07.05.",time:"17:30",opponent:"FC Horgen",home:false,venue:"Sportanlage Langacker, Horgen",venueAddr:"Langackerstrasse 8, 8810 Horgen",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1034",status:"Gespielt",result:"0:0",htResult:"1:0",att:11,schiedsrichter:"Thomas Huber",delegierter:"-",bemerkung:"",treffpunkt:"16:45 Bahnhof Herrliberg",stats:null},
-  {id:35,team:"Bb-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1035",status:"Gespielt",result:"1:0",htResult:"0:0",att:12,schiedsrichter:"Sandra Meier",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:36,team:"Bb-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"FC Adliswil",home:false,venue:"Sportanlage Adliswil",venueAddr:"Sportstrasse 2, 8134 Adliswil",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1036",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:37,team:"Bb-Junioren",date:"Mi 28.05.",time:"17:30",opponent:"SC Embrach",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1037",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Sandra Meier",delegierter:"-",bemerkung:"",treffpunkt:"17:00 Sportanlage Aabach",stats:null},
-  {id:38,team:"Bb-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1038",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:39,team:"Ca-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"SC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1039",status:"Gespielt",result:"1:3",htResult:"1:2",att:15,schiedsrichter:"Sandra Meier",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:40,team:"Ca-Junioren",date:"Mi 07.05.",time:"17:00",opponent:"FC Rapperswil",home:false,venue:"Sportanlage Grünfeld, Rapperswil",venueAddr:"Grünfeldweg 3, 8640 Rapperswil",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1040",status:"Gespielt",result:"2:3",htResult:"1:0",att:18,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
-  {id:41,team:"Ca-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1041",status:"Gespielt",result:"3:0",htResult:"2:1",att:10,schiedsrichter:"Stefan Vogel",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:42,team:"Ca-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"FC Küsnacht",home:false,venue:"Sportplatz Goldbach, Küsnacht",venueAddr:"Goldbachstrasse 12, 8700 Küsnacht",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1042",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:43,team:"Ca-Junioren",date:"Mi 28.05.",time:"17:00",opponent:"SC Männedorf",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1043",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
-  {id:44,team:"Ca-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Uster",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1044",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:45,team:"Da-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1045",status:"Gespielt",result:"1:0",htResult:"1:0",att:15,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:46,team:"Da-Junioren",date:"Mi 07.05.",time:"17:00",opponent:"FC Uster",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1046",status:"Gespielt",result:"4:2",htResult:"1:1",att:13,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
-  {id:47,team:"Da-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Stäfa",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1047",status:"Gespielt",result:"1:3",htResult:"0:1",att:13,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:48,team:"Da-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1048",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Thomas Huber",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:49,team:"Da-Junioren",date:"Mi 28.05.",time:"17:00",opponent:"FC Hombrechtikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1049",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Stefan Vogel",delegierter:"-",bemerkung:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
-  {id:50,team:"Da-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Küsnacht",home:false,venue:"Sportplatz Goldbach, Küsnacht",venueAddr:"Goldbachstrasse 12, 8700 Küsnacht",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1050",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:51,team:"Db-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Uster",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1051",status:"Gespielt",result:"1:2",htResult:"1:1",att:14,schiedsrichter:"Thomas Huber",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:52,team:"Db-Junioren",date:"Mi 07.05.",time:"17:00",opponent:"FC Wädenswil",home:false,venue:"Sportanlage Eidmatt, Wädenswil",venueAddr:"Eidmattstrasse 5, 8820 Wädenswil",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1052",status:"Gespielt",result:"0:1",htResult:"0:0",att:15,schiedsrichter:"Patrick Gross",delegierter:"-",bemerkung:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
-  {id:53,team:"Db-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Adliswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1053",status:"Gespielt",result:"0:1",htResult:"2:0",att:14,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:54,team:"Db-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"FC Rüti",home:false,venue:"Sportplatz Rüti",venueAddr:"Rütistrasse 6, 8630 Rüti",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1054",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:55,team:"Db-Junioren",date:"Mi 28.05.",time:"17:00",opponent:"SC Embrach",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1055",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
-  {id:56,team:"Db-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Horgen",home:false,venue:"Sportanlage Langacker, Horgen",venueAddr:"Langackerstrasse 8, 8810 Horgen",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1056",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Oliver Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:57,team:"C-Juniorinnen",date:"Sa 03.05.",time:"10:00",opponent:"SC Männedorf Mädchen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1057",status:"Gespielt",result:"0:0",htResult:"0:0",att:13,schiedsrichter:"Stefan Vogel",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:58,team:"C-Juniorinnen",date:"Mi 07.05.",time:"16:00",opponent:"FC Thalwil Mädchen",home:false,venue:"Sportplatz Thalwil",venueAddr:"Dorfstrasse 22, 8800 Thalwil",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1058",status:"Gespielt",result:"3:0",htResult:"0:1",att:15,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"15:15 Bahnhof Herrliberg",stats:null},
-  {id:59,team:"C-Juniorinnen",date:"Sa 10.05.",time:"10:00",opponent:"FC Stäfa Mädchen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1059",status:"Gespielt",result:"1:3",htResult:"2:0",att:12,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:60,team:"C-Juniorinnen",date:"Sa 24.05.",time:"10:00",opponent:"FC Uster Mädchen",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1060",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:61,team:"C-Juniorinnen",date:"Mi 28.05.",time:"16:00",opponent:"FC Küsnacht Mädchen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1061",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"15:30 Sportanlage Aabach",stats:null},
-  {id:62,team:"F-Juniorinnen",date:"Sa 03.05.",time:"10:00",opponent:"FC Hombrechtikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1062",status:"Gespielt",result:"2:1",htResult:"2:1",att:18,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:63,team:"F-Juniorinnen",date:"Mi 07.05.",time:"16:00",opponent:"FC Stäfa",home:false,venue:"Sportanlage Stäfa",venueAddr:"Seestrasse 40, 8712 Stäfa",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1063",status:"Gespielt",result:"3:0",htResult:"2:1",att:14,schiedsrichter:"Sandra Meier",delegierter:"-",bemerkung:"",treffpunkt:"15:15 Bahnhof Herrliberg",stats:null},
-  {id:64,team:"F-Juniorinnen",date:"Sa 10.05.",time:"10:00",opponent:"FC Uetikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1064",status:"Gespielt",result:"0:1",htResult:"1:2",att:17,schiedsrichter:"Marco Frei",delegierter:"-",bemerkung:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
-  {id:65,team:"F-Juniorinnen",date:"Sa 24.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1065",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Lukas Benz",delegierter:"-",bemerkung:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
-  {id:66,team:"F-Juniorinnen",date:"Mi 28.05.",time:"16:00",opponent:"FC Küsnacht",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1066",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",bemerkung:"",treffpunkt:"15:30 Sportanlage Aabach",stats:null},
+  {id:7,team:"1. Mannschaft Herren",date:"Sa 03.05.",time:"15:00",opponent:"FC Horgen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1007",status:"Gespielt",result:"1:0",htResult:"1:2",att:11,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"14:30 Sportanlage Aabach",stats:null},
+  {id:8,team:"1. Mannschaft Herren",date:"Mi 07.05.",time:"17:00",opponent:"FC Rüti",home:false,venue:"Sportplatz Rüti",venueAddr:"Rütistrasse 6, 8630 Rüti",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1008",status:"Gespielt",result:"3:2",htResult:"1:1",att:18,schiedsrichter:"Nadine Schmid",delegierter:"-",notes:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
+  {id:9,team:"1. Mannschaft Herren",date:"Sa 10.05.",time:"15:00",opponent:"SC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1009",status:"Gespielt",result:"2:1",htResult:"2:1",att:17,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"14:30 Sportanlage Aabach",stats:null},
+  {id:10,team:"1. Mannschaft Herren",date:"Sa 24.05.",time:"15:00",opponent:"FC Rapperswil",home:false,venue:"Sportanlage Grünfeld, Rapperswil",venueAddr:"Grünfeldweg 3, 8640 Rapperswil",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1010",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"14:15 Bahnhof Herrliberg",stats:null},
+  {id:11,team:"1. Mannschaft Herren",date:"Mi 28.05.",time:"17:00",opponent:"SC Männedorf",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1011",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Oliver Frei",delegierter:"-",notes:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
+  {id:12,team:"1. Mannschaft Herren",date:"Sa 31.05.",time:"15:00",opponent:"FC Uster",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1012",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Oliver Frei",delegierter:"-",notes:"",treffpunkt:"14:15 Bahnhof Herrliberg",stats:null},
+  {id:13,team:"1. Mannschaft Herren",date:"Sa 07.06.",time:"15:00",opponent:"FC Adliswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga",liga:"1. Liga",spielNr:"2026-1MH-1013",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"14:30 Sportanlage Aabach",stats:null},
+  {id:14,team:"2. Mannschaft Herren",date:"Sa 03.05.",time:"14:00",opponent:"FC Uster",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1014",status:"Gespielt",result:"2:1",htResult:"0:1",att:18,schiedsrichter:"Thomas Huber",delegierter:"-",notes:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
+  {id:15,team:"2. Mannschaft Herren",date:"Mi 07.05.",time:"17:00",opponent:"FC Horgen",home:false,venue:"Sportanlage Langacker, Horgen",venueAddr:"Langackerstrasse 8, 8810 Horgen",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1015",status:"Gespielt",result:"1:2",htResult:"0:0",att:16,schiedsrichter:"Beat Zimmermann",delegierter:"-",notes:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
+  {id:16,team:"2. Mannschaft Herren",date:"Sa 10.05.",time:"14:00",opponent:"SC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1016",status:"Gespielt",result:"2:0",htResult:"2:1",att:10,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
+  {id:17,team:"2. Mannschaft Herren",date:"Sa 24.05.",time:"14:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1017",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
+  {id:18,team:"2. Mannschaft Herren",date:"Mi 28.05.",time:"17:00",opponent:"SC Embrach",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1018",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Stefan Vogel",delegierter:"-",notes:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
+  {id:19,team:"2. Mannschaft Herren",date:"Sa 31.05.",time:"14:00",opponent:"FC Adliswil",home:false,venue:"Sportanlage Adliswil",venueAddr:"Sportstrasse 2, 8134 Adliswil",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1019",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Nadine Schmid",delegierter:"-",notes:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
+  {id:20,team:"2. Mannschaft Herren",date:"Sa 07.06.",time:"14:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"3. Liga",liga:"3. Liga",spielNr:"2026-2MH-1020",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Thomas Huber",delegierter:"-",notes:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
+  {id:21,team:"1. Mannschaft Frauen",date:"Sa 03.05.",time:"14:00",opponent:"SC Wädenswil Frauen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1021",status:"Gespielt",result:"1:1",htResult:"2:0",att:13,schiedsrichter:"Sandra Meier",delegierter:"-",notes:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
+  {id:22,team:"1. Mannschaft Frauen",date:"Mi 07.05.",time:"19:00",opponent:"FC Uster Frauen",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1022",status:"Gespielt",result:"3:2",htResult:"1:2",att:17,schiedsrichter:"Oliver Frei",delegierter:"-",notes:"",treffpunkt:"18:15 Bahnhof Herrliberg",stats:null},
+  {id:23,team:"1. Mannschaft Frauen",date:"Sa 10.05.",time:"14:00",opponent:"SC Männedorf Frauen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1023",status:"Gespielt",result:"1:0",htResult:"2:1",att:12,schiedsrichter:"Beat Zimmermann",delegierter:"-",notes:"",treffpunkt:"13:30 Sportanlage Aabach",stats:null},
+  {id:24,team:"1. Mannschaft Frauen",date:"Sa 24.05.",time:"14:00",opponent:"FC Thalwil Frauen",home:false,venue:"Sportplatz Thalwil",venueAddr:"Dorfstrasse 22, 8800 Thalwil",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1024",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Thomas Huber",delegierter:"-",notes:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
+  {id:25,team:"1. Mannschaft Frauen",date:"Mi 28.05.",time:"19:00",opponent:"FC Horgen Frauen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1025",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Beat Zimmermann",delegierter:"-",notes:"",treffpunkt:"18:30 Sportanlage Aabach",stats:null},
+  {id:26,team:"1. Mannschaft Frauen",date:"Sa 31.05.",time:"14:00",opponent:"FC Küsnacht Frauen",home:false,venue:"Sportplatz Goldbach, Küsnacht",venueAddr:"Goldbachstrasse 12, 8700 Küsnacht",comp:"1. Liga Frauen",liga:"1. Liga Frauen",spielNr:"2026-1MF-1026",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Sandra Meier",delegierter:"-",notes:"",treffpunkt:"13:15 Bahnhof Herrliberg",stats:null},
+  {id:27,team:"Ba-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Uster",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1027",status:"Gespielt",result:"2:0",htResult:"2:1",att:10,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:28,team:"Ba-Junioren",date:"Mi 07.05.",time:"17:30",opponent:"FC Stäfa",home:false,venue:"Sportanlage Stäfa",venueAddr:"Seestrasse 40, 8712 Stäfa",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1028",status:"Gespielt",result:"1:1",htResult:"2:0",att:18,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"16:45 Bahnhof Herrliberg",stats:null},
+  {id:29,team:"Ba-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Küsnacht",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1029",status:"Gespielt",result:"4:1",htResult:"1:2",att:10,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:30,team:"Ba-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1030",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Patrick Gross",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:31,team:"Ba-Junioren",date:"Mi 28.05.",time:"17:30",opponent:"FC Hombrechtikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1031",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"17:00 Sportanlage Aabach",stats:null},
+  {id:32,team:"Ba-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Thalwil",home:false,venue:"Sportplatz Thalwil",venueAddr:"Dorfstrasse 22, 8800 Thalwil",comp:"U16 Liga A",liga:"U16 Liga A",spielNr:"2026-BAJ-1032",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Nadine Schmid",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:33,team:"Bb-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1033",status:"Gespielt",result:"1:0",htResult:"0:1",att:12,schiedsrichter:"Oliver Frei",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:34,team:"Bb-Junioren",date:"Mi 07.05.",time:"17:30",opponent:"FC Horgen",home:false,venue:"Sportanlage Langacker, Horgen",venueAddr:"Langackerstrasse 8, 8810 Horgen",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1034",status:"Gespielt",result:"0:0",htResult:"1:0",att:11,schiedsrichter:"Thomas Huber",delegierter:"-",notes:"",treffpunkt:"16:45 Bahnhof Herrliberg",stats:null},
+  {id:35,team:"Bb-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1035",status:"Gespielt",result:"1:0",htResult:"0:0",att:12,schiedsrichter:"Sandra Meier",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:36,team:"Bb-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"FC Adliswil",home:false,venue:"Sportanlage Adliswil",venueAddr:"Sportstrasse 2, 8134 Adliswil",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1036",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:37,team:"Bb-Junioren",date:"Mi 28.05.",time:"17:30",opponent:"SC Embrach",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1037",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Sandra Meier",delegierter:"-",notes:"",treffpunkt:"17:00 Sportanlage Aabach",stats:null},
+  {id:38,team:"Bb-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U16 Liga B",liga:"U16 Liga B",spielNr:"2026-BBJ-1038",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:39,team:"Ca-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"SC Wädenswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1039",status:"Gespielt",result:"1:3",htResult:"1:2",att:15,schiedsrichter:"Sandra Meier",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:40,team:"Ca-Junioren",date:"Mi 07.05.",time:"17:00",opponent:"FC Rapperswil",home:false,venue:"Sportanlage Grünfeld, Rapperswil",venueAddr:"Grünfeldweg 3, 8640 Rapperswil",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1040",status:"Gespielt",result:"2:3",htResult:"1:0",att:18,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
+  {id:41,team:"Ca-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1041",status:"Gespielt",result:"3:0",htResult:"2:1",att:10,schiedsrichter:"Stefan Vogel",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:42,team:"Ca-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"FC Küsnacht",home:false,venue:"Sportplatz Goldbach, Küsnacht",venueAddr:"Goldbachstrasse 12, 8700 Küsnacht",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1042",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:43,team:"Ca-Junioren",date:"Mi 28.05.",time:"17:00",opponent:"SC Männedorf",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1043",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
+  {id:44,team:"Ca-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Uster",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"U15 Liga A",liga:"U15 Liga A",spielNr:"2026-CAJ-1044",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:45,team:"Da-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Thalwil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1045",status:"Gespielt",result:"1:0",htResult:"1:0",att:15,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:46,team:"Da-Junioren",date:"Mi 07.05.",time:"17:00",opponent:"FC Uster",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1046",status:"Gespielt",result:"4:2",htResult:"1:1",att:13,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
+  {id:47,team:"Da-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Stäfa",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1047",status:"Gespielt",result:"1:3",htResult:"0:1",att:13,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:48,team:"Da-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1048",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Thomas Huber",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:49,team:"Da-Junioren",date:"Mi 28.05.",time:"17:00",opponent:"FC Hombrechtikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1049",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Stefan Vogel",delegierter:"-",notes:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
+  {id:50,team:"Da-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Küsnacht",home:false,venue:"Sportplatz Goldbach, Küsnacht",venueAddr:"Goldbachstrasse 12, 8700 Küsnacht",comp:"U13 Liga A",liga:"U13 Liga A",spielNr:"2026-DAJ-1050",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:51,team:"Db-Junioren",date:"Sa 03.05.",time:"10:00",opponent:"FC Uster",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1051",status:"Gespielt",result:"1:2",htResult:"1:1",att:14,schiedsrichter:"Thomas Huber",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:52,team:"Db-Junioren",date:"Mi 07.05.",time:"17:00",opponent:"FC Wädenswil",home:false,venue:"Sportanlage Eidmatt, Wädenswil",venueAddr:"Eidmattstrasse 5, 8820 Wädenswil",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1052",status:"Gespielt",result:"0:1",htResult:"0:0",att:15,schiedsrichter:"Patrick Gross",delegierter:"-",notes:"",treffpunkt:"16:15 Bahnhof Herrliberg",stats:null},
+  {id:53,team:"Db-Junioren",date:"Sa 10.05.",time:"10:00",opponent:"FC Adliswil",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1053",status:"Gespielt",result:"0:1",htResult:"2:0",att:14,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:54,team:"Db-Junioren",date:"Sa 24.05.",time:"10:00",opponent:"FC Rüti",home:false,venue:"Sportplatz Rüti",venueAddr:"Rütistrasse 6, 8630 Rüti",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1054",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:55,team:"Db-Junioren",date:"Mi 28.05.",time:"17:00",opponent:"SC Embrach",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1055",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"16:30 Sportanlage Aabach",stats:null},
+  {id:56,team:"Db-Junioren",date:"Sa 31.05.",time:"10:00",opponent:"FC Horgen",home:false,venue:"Sportanlage Langacker, Horgen",venueAddr:"Langackerstrasse 8, 8810 Horgen",comp:"U13 Liga B",liga:"U13 Liga B",spielNr:"2026-DBJ-1056",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Oliver Frei",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:57,team:"C-Juniorinnen",date:"Sa 03.05.",time:"10:00",opponent:"SC Männedorf Mädchen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1057",status:"Gespielt",result:"0:0",htResult:"0:0",att:13,schiedsrichter:"Stefan Vogel",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:58,team:"C-Juniorinnen",date:"Mi 07.05.",time:"16:00",opponent:"FC Thalwil Mädchen",home:false,venue:"Sportplatz Thalwil",venueAddr:"Dorfstrasse 22, 8800 Thalwil",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1058",status:"Gespielt",result:"3:0",htResult:"0:1",att:15,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"15:15 Bahnhof Herrliberg",stats:null},
+  {id:59,team:"C-Juniorinnen",date:"Sa 10.05.",time:"10:00",opponent:"FC Stäfa Mädchen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1059",status:"Gespielt",result:"1:3",htResult:"2:0",att:12,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:60,team:"C-Juniorinnen",date:"Sa 24.05.",time:"10:00",opponent:"FC Uster Mädchen",home:false,venue:"Sportplatz Buchholz, Uster",venueAddr:"Buchholzstrasse 10, 8610 Uster",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1060",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:61,team:"C-Juniorinnen",date:"Mi 28.05.",time:"16:00",opponent:"FC Küsnacht Mädchen",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U15 Mädchen A",liga:"U15 Mädchen A",spielNr:"2026-CJI-1061",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"15:30 Sportanlage Aabach",stats:null},
+  {id:62,team:"F-Juniorinnen",date:"Sa 03.05.",time:"10:00",opponent:"FC Hombrechtikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1062",status:"Gespielt",result:"2:1",htResult:"2:1",att:18,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:63,team:"F-Juniorinnen",date:"Mi 07.05.",time:"16:00",opponent:"FC Stäfa",home:false,venue:"Sportanlage Stäfa",venueAddr:"Seestrasse 40, 8712 Stäfa",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1063",status:"Gespielt",result:"3:0",htResult:"2:1",att:14,schiedsrichter:"Sandra Meier",delegierter:"-",notes:"",treffpunkt:"15:15 Bahnhof Herrliberg",stats:null},
+  {id:64,team:"F-Juniorinnen",date:"Sa 10.05.",time:"10:00",opponent:"FC Uetikon",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1064",status:"Gespielt",result:"0:1",htResult:"1:2",att:17,schiedsrichter:"Marco Frei",delegierter:"-",notes:"",treffpunkt:"09:30 Sportanlage Aabach",stats:null},
+  {id:65,team:"F-Juniorinnen",date:"Sa 24.05.",time:"10:00",opponent:"SC Männedorf",home:false,venue:"Sportplatz Männedorf",venueAddr:"Seefeldstrasse 4, 8708 Männedorf",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1065",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Lukas Benz",delegierter:"-",notes:"",treffpunkt:"09:15 Bahnhof Herrliberg",stats:null},
+  {id:66,team:"F-Juniorinnen",date:"Mi 28.05.",time:"16:00",opponent:"FC Küsnacht",home:true,venue:"Sportanlage Aabach, Herrliberg",venueAddr:"Aabachstrasse 10, 8704 Herrliberg",comp:"U9 Mädchen",liga:"U9 Mädchen",spielNr:"2026-FJI-1066",status:"Angesetzt",result:null,htResult:null,att:null,schiedsrichter:"Andrea Keller",delegierter:"-",notes:"",treffpunkt:"15:30 Sportanlage Aabach",stats:null},
 ];
 
 /* -- GLOBAL Rückennummern-Cache (wird aus Storage geladen) -- */
@@ -1627,11 +1621,11 @@ const GANTT=[];
 
 /* -- TRAININGSPLÄTZE -- */
 const TRAININGSPLAETZE_DEFAULT = [
-  {id:"hauptplatz_a", name:"Hauptplatz A",       aktiv:true,  haelften:["Hüttliseite","Rappiseite"]},
-  {id:"nebenplatz_b", name:"Nebenplatz B",        aktiv:true,  haelften:["Bergseite","Seeseite"]},
-  {id:"platz_c",      name:"Platz C",             aktiv:true,  haelften:[]},
-  {id:"halle",        name:"Turnhalle (Winter)",  aktiv:false, haelften:[]},
-  {id:"erlenbach",    name:"Platz Erlenbach",     aktiv:false, haelften:[]},
+  {id:"hauptplatz_a", name:"Hauptplatz A",       active:true,  halfn:["Hüttliseite","Rappiseite"]},
+  {id:"nebenplatz_b", name:"Nebenplatz B",        active:true,  halfn:["Bergseite","Seeseite"]},
+  {id:"platz_c",      name:"Platz C",             active:true,  halfn:[]},
+  {id:"halle",        name:"Turnhalle (Winter)",  active:false, halfn:[]},
+  {id:"erlenbach",    name:"Platz Erlenbach",     active:false, halfn:[]},
 ];
 // Runtime array — loaded from localStorage or default
 const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.slice();
@@ -1871,13 +1865,13 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
   const [open,setOpen]=useState(false);
   const currentRole=activeSubRole||account.primaryRole;
   const cur=ROLES[currentRole];
-  const hasMultiRoles=account.rollen.length>1;
+  const hasMultiRoles=account.rolen.length>1;
   return(
     <>
       <button onClick={()=>setOpen(true)} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 14px",borderRadius:10,border:`1.5px solid ${cur.color}`,background:cur.color+"12",cursor:"pointer"}}>
         <span style={{fontSize:15}}>{cur.icon}</span>
         <span style={{fontSize:13,fontWeight:700,color:cur.color}}>{cur.label}</span>
-        {hasMultiRoles&&<span style={{fontSize:10,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rollen.length}</span>}
+        {hasMultiRoles&&<span style={{fontSize:10,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rolen.length}</span>}
         <span style={{fontSize:11,color:cur.color,opacity:0.7}}>▾</span>
       </button>
       {open&&(
@@ -1892,11 +1886,11 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             </div>
 
             {/* Konten mit Mehrfach-Rollen */}
-            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length>1).length>0&&(
+            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rolen.length>1).length>0&&(
               <div style={{marginBottom:16}}>
                 <div style={{fontSize:11,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Konten mit Mehrfach-Rollen</div>
                 <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length>1).map(([key,a])=>{
+                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rolen.length>1).map(([key,a])=>{
                     const isActive=account===a;
                     return(
                       <div key={key} style={{border:`1.5px solid ${isActive?R:GB}`,borderRadius:10,padding:"10px 14px",background:isActive?R+"08":"#fafaf8"}}>
@@ -1911,7 +1905,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
                           {isActive&&<span style={{marginLeft:"auto",fontSize:10,color:R,fontWeight:700}}>AKTIVES KONTO</span>}
                         </div>
                         <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-                          {a.rollen.map(r=>{
+                          {a.rolen.map(r=>{
                             const rd=ROLES[r];
                             const isActiveSub=(isActive&&(activeSubRole||a.primaryRole)===r);
                             return(
@@ -1931,11 +1925,11 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             )}
 
             {/* Eltern mit Kindern */}
-            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rollen.length===1).length>0&&(
+            {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rolen.length===1).length>0&&(
               <div style={{marginBottom:16}}>
                 <div style={{fontSize:11,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Eltern-Zugänge</div>
                 <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rollen.length===1).map(([key,a])=>{
+                  {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rolen.length===1).map(([key,a])=>{
                     const rd=ROLES[a.primaryRole];
                     const isActive=account===a;
                     return(
@@ -1962,7 +1956,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             <div>
               <div style={{fontSize:11,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Standard-Rollen (Demo)</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length===1&&a.kinder.length===0).map(([key,a])=>{
+                {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rolen.length===1&&a.kinder.length===0).map(([key,a])=>{
                   const rd=ROLES[a.primaryRole];
                   const isActive=account===a&&!activeSubRole;
                   const teamLabel=a.trainerTeams?a.trainerTeams[0]:a.team||null;
@@ -2010,7 +2004,7 @@ function SideNav({role,active,setActive,account}){
       <div style={{flex:1,padding:"4px 8px",overflowY:"auto"}}>
         {nav.map(n=>(
           <button key={n.key} onClick={()=>setActive(n.key)} style={{width:"100%",display:"flex",alignItems:"center",gap:9,padding:"9px 12px",borderRadius:8,border:"none",background:active===n.key?"#f8de09":"transparent",color:active===n.key?"#1A1A1A":"#888",cursor:"pointer",fontSize:12.5,fontWeight:active===n.key?700:400,textAlign:"left",marginBottom:1}}>
-            <span style={{fontSize:12}}>{n.icon}</span>{n.label}
+            <i className={n.icon||"ti-circle"} style={{fontSize:15,width:18,textAlign:"center"}}/>{n.label}
           </button>
         ))}
       </div>
@@ -2078,7 +2072,7 @@ function DashboardAdmin({setActive}){
             {label:"Fairgate-Sync",     status:"OK",     last:"vor 2h",       ok:true},
             {label:"FVRZ-Sync",         status:"Fehler", last:"vor 4h",       ok:false},
             {label:"E-Mail-Versand",    status:"OK",     last:"vor 30min",    ok:true},
-            {label:"Push-Benachricht.", status:"OK",     last:"aktiv",        ok:true},
+            {label:"Push-Benachricht.", status:"OK",     last:"active",        ok:true},
           ].map((s,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
               <span style={{fontSize:13,fontWeight:500}}>{s.label}</span>
@@ -2135,7 +2129,7 @@ function DashboardAdmin({setActive}){
 function DashboardAdministration({setActive}){
   return(
     <div>
-      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Guten Tag, Sandra 👋</h1>
+      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Guten Tag, Sandra</h1>
       <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Mitglieder total" value="187" color={BL}/>
@@ -2184,7 +2178,7 @@ function DashboardAdministration({setActive}){
               <div style={{fontWeight:600,fontSize:13}}>{e.title}</div>
               <div style={{display:"flex",gap:6,marginTop:4}}>
                 <Chip text={`✓ ${e.res?.y}`} color={GN} bg="#ECFDF5"/>
-                <Chip text={`✗ ${e.res?.n}`} color={R} bg={RL}/>
+                <Chip text={`✕ ${e.res?.n}`} color={R} bg={RL}/>
                 <Chip text={`? ${e.res?.o}`} color={AM} bg="#FFFBEB"/>
               </div>
             </div>
@@ -2198,7 +2192,7 @@ function DashboardAdministration({setActive}){
 function DashboardFunktionaer(){
   return(
     <div>
-      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Guten Tag, Bruno 👋</h1>
+      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Guten Tag, Bruno</h1>
       <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Offene Rückmeldungen" value="22" color={R}/>
@@ -2213,7 +2207,7 @@ function DashboardFunktionaer(){
             <div key={i} style={{padding:"8px 0",borderBottom:i<EVENTS.length-1?`0.5px solid ${GB}`:"none"}}>
               <div style={{display:"flex",justifyContent:"space-between"}}>
                 <span style={{fontWeight:600,fontSize:13}}>{e.title}</span>
-                <Chip text={e.type==="Vereinsanlass"?"Verein":"Team"} color={e.type==="Vereinsanlass"?R:BL}/>
+                <Chip text={e.typee==="Vereinsanlass"?"Verein":"Team"} color={e.typee==="Vereinsanlass"?R:BL}/>
               </div>
               <div style={{fontSize:11,color:"#888"}}>{e.date} · {e.time+" Uhr"}</div>
             </div>
@@ -2275,8 +2269,8 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
 
   /* Nächstes Training und Spiel */
   const upcoming=ATT_EVENTS.filter(e=>e.team===team&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)));
-  const nextTrain=upcoming.find(e=>e.type==="Training");
-  const nextSpiel=upcoming.find(e=>e.type==="Spiel");
+  const nextTrain=upcoming.find(e=>e.typee==="Training");
+  const nextSpiel=upcoming.find(e=>e.typee==="Spiel");
 
   /* Tabellenrang */
   const tableData=TABLES[team]||[];
@@ -2284,10 +2278,10 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
 
   return(
     <div>
-      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Guten Morgen, {firstName} 👋</h1>
+      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Guten Morgen, {firstName}</h1>
       <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Trainer · {trainerTeams.join(" & ")} · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
-        <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.ort}`:"Kein Training"} color={GN}/>
+        <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} color={GN}/>
         <Stat label="Nächstes Spiel"    value={nextSpiel?nextSpiel.date.replace(/^\w+\s/,""):"-"} sub={nextSpiel?`${nextSpiel.time} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel"} color={BL}/>
         <Stat label="Ø Anwesenheit"     value="77%"      sub="letzte 5 Trainings"   color={GN}/>
         <Stat label="Tabellenrang"      value={myRow?myRow.rank+".":"-"} sub={myRow?TABLES[team]?.length+" Teams · "+myRow.pts+" Punkte":"Keine Tabelle"} color={BL}/>
@@ -2296,11 +2290,11 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
         <Card>
           <STitle action={<Chip text={upcoming.filter(e=>e.rsvp!==false).length+" offen"} color={R}/>}>Fehlende Rückmeldungen</STitle>
           {upcoming.filter(e=>e.rsvp!==false).slice(0,3).map((x,i,arr)=>{
-            const teamPids=ROSTER.filter(p=>(p.teams||[]).includes(team)&&!p.rolle).map(p=>p.id);
+            const teamPids=ROSTER.filter(p=>(p.teams||[]).includes(team)&&!p.role).map(p=>p.id);
             const missing=teamPids.filter(pid=>!ATT_INITIAL[x.id]?.[pid]?.status).length;
             return(
               <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<arr.length-1?`0.5px solid ${GB}`:"none"}}>
-                <span style={{fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.type} · {x.date}</span>
+                <span style={{fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.typee} · {x.date}</span>
                 {missing>0&&<Chip text={`${missing} fehlen`} color={AM} bg="#FEF3C7"/>}
                 {missing===0&&<Chip text="✓ Vollständig" color={GN} bg="#ECFDF5"/>}
               </div>
@@ -2312,7 +2306,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
           {ATT_LOG.slice(0,3).map((a,i)=>(
             <div key={i} style={{padding:"7px 0",borderBottom:i<2?`0.5px solid ${GB}`:"none"}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:12,fontWeight:600}}>{a.date} <Chip text={a.type} color={a.type==="Spiel"?BL:GN}/></span>
+                <span style={{fontSize:12,fontWeight:600}}>{a.date} <Chip text={a.typee} color={a.typee==="Spiel"?BL:GN}/></span>
                 <span style={{fontSize:13,fontWeight:800,color:R}}>{Math.round(a.present.length/(a.present.length+a.absent.length)*100)}%</span>
               </div>
               <div style={{height:4,background:GB,borderRadius:2}}>
@@ -2376,7 +2370,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
 
   /* Anwesenheitsquote */
   const myId=myRosterId||1;
-  const rsvpEvs=ATT_EVENTS.filter(e=>(e.team===team||e.team==="Alle")&&e.rsvp!==false&&e.type==="Training");
+  const rsvpEvs=ATT_EVENTS.filter(e=>(e.team===team||e.team==="Alle")&&e.rsvp!==false&&e.typee==="Training");
   const pastEvs=rsvpEvs.filter(e=>parseD(e.date)<today);
   const zuCount=pastEvs.filter(e=>ATT_INITIAL[e.id]?.[myId]?.status==="zu").length;
   const attPct=pastEvs.length?Math.round(zuCount/pastEvs.length*100):null;
@@ -2385,7 +2379,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
   /* Nächster Termin */
   const nextEv=ATT_EVENTS.filter(e=>(e.team===team||e.subtype==="Vereinsanlass")&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
   const nextVal=nextEv?nextEv.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim()+" "+nextEv.time.split(":")[0]+":"+nextEv.time.split(":")[1]:"-";
-  const nextSub=nextEv?(nextEv.opponent?"vs. "+nextEv.opponent:nextEv.title||nextEv.type):"Keine Termine";
+  const nextSub=nextEv?(nextEv.opponent?"vs. "+nextEv.opponent:nextEv.title||nextEv.typee):"Keine Termine";
 
   /* Helfereinsätze - kombiniert statische + dynamische Daten */
   const meinName=player?`${player.firstName} ${player.lastName}`:(account?.name||"");
@@ -2395,7 +2389,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
       (e.schichten||[]).filter(s=>{
         const helfer=schichtenState[s.id]??s.helfer;
         return helfer.includes(meinName);
-      }).map(s=>({...s,einsatzDate:e.date||"",einsatzName:ev.name||"",ort:e.ort||""}))
+      }).map(s=>({...s,einsatzDate:e.date||"",einsatzName:ev.name||"",ort:e.location||""}))
     )
   );
   const helferSoll=helperRecord?.soll??meineSchichtenMitDatum.length;
@@ -2404,30 +2398,30 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
 
   /* Nächstes Aufgebot */
   const nextAufgebot=ATT_EVENTS
-    .filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today&&(aufgebotState[e.id]||[]).includes(myId))
+    .filter(e=>e.team===team&&e.typee==="Spiel"&&parseD(e.date)>=today&&(aufgebotState[e.id]||[]).includes(myId))
     .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
 
   /* Nächstes Spiel */
   const nextSpiel=ATT_EVENTS
-    .filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today)
+    .filter(e=>e.team===team&&e.typee==="Spiel"&&parseD(e.date)>=today)
     .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
   const nextSpielImAufgebot=nextSpiel&&(aufgebotState[nextSpiel?.id]||[]).includes(myId);
   const nextSpielAufgebotStatus=nextSpiel
-    ?(nextSpielImAufgebot?"⚽ Im Aufgebot":"Noch kein Aufgebot")
+    ?(nextSpielImAufgebot?"Im Aufgebot":"Noch kein Aufgebot")
     :"Kein Spiel geplant";
 
   /* Nächstes Training */
   const nextTraining=ATT_EVENTS
-    .filter(e=>e.team===team&&e.type==="Training"&&parseD(e.date)>=today)
+    .filter(e=>e.team===team&&e.typee==="Training"&&parseD(e.date)>=today)
     .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
 
   return(
     <div>
-      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Hallo, {firstName} 👋</h1>
+      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Hallo, {firstName}</h1>
       <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Spieler · {team} · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={pastEvs.length?zuCount+"/"+pastEvs.length+" Trainings":"Noch keine vergangenen"} color={attColor}/>
-        <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.ort}`:"Kein Training geplant"} color={GN}/>
+        <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} color={GN}/>
         <Stat label="Nächstes Spiel" value={nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextSpiel?`${(nextSpiel.time||"").slice(0,5)} Uhr · ${nextSpielAufgebotStatus}`:nextSpielAufgebotStatus} color={nextSpielImAufgebot?"#4F46E5":nextSpiel?BL:"#aaa"}/>
         <Stat label="Helfereinsätze" value={helferSoll>0?helferGeleistet+"/"+helferSoll:"-"} sub={helferSoll>0?"Geleistet / Soll":"Keine Einsätze"} color={helferSoll>0?(helferOffen===0?GN:AM):"#aaa"}/>
       </div>
@@ -2435,13 +2429,13 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
       {nextAufgebot&&(
         <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.openEvId=nextAufgebot.id;setActive("team");}:undefined}
           style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:18,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
-          <span style={{fontSize:24}}>⚽</span>
+          <span style={{fontSize:24}}><i className="ti-ball-football"/></span>
           <div style={{flex:1}}>
             <div style={{fontWeight:800,fontSize:14,color:"#4F46E5"}}>Du bist im Aufgebot!</div>
             <div style={{fontSize:13,color:"#6366F1",marginTop:2}}>
               {`vs. ${nextAufgebot.opponent} · ${nextAufgebot.date} · ${nextAufgebot.time} Uhr`}
             </div>
-            {nextAufgebot.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}>🎯 Treffpunkt: {nextAufgebot.treffpunkt}</div>}
+            {nextAufgebot.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebot.treffpunkt}</div>}
           </div>
           <Chip text="Aufgebot" color="#4F46E5" bg="#EEF2FF"/>
         </div>
@@ -2455,10 +2449,10 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
             return upcoming.map((t,i)=>(
               <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:i<upcoming.length-1?`0.5px solid ${GB}`:"none"}}>
                 <div>
-                  <div style={{fontWeight:600,fontSize:13}}>{t.opponent?"vs. "+t.opponent:t.type==="Training"?"Training · "+t.team:t.title||t.type}</div>
+                  <div style={{fontWeight:600,fontSize:13}}>{t.opponent?"vs. "+t.opponent:t.typee==="Training"?"Training · "+t.team:t.title||t.typee}</div>
                   <div style={{fontSize:11,color:"#888"}}>{t.date} · {t.time+" Uhr"}</div>
                 </div>
-                <Chip text={t.subtype||t.type} color={t.type==="Spiel"?BL:t.subtype==="Team-Event"?AM:GN}/>
+                <Chip text={t.subtype||t.typee} color={t.typee==="Spiel"?BL:t.subtype==="Team-Event"?AM:GN}/>
               </div>
             ));
           })()}
@@ -2470,7 +2464,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
             if(open.length===0) return <div style={{fontSize:12,color:GN,fontWeight:600}}>✓ Alle Termine beantwortet</div>;
             return open.map((x,i)=>(
               <div key={i} style={{padding:"8px 0",borderBottom:i<open.length-1?`0.5px solid ${GB}`:"none"}}>
-                <div style={{fontWeight:600,fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.type} · {x.date}</div>
+                <div style={{fontWeight:600,fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.typee} · {x.date}</div>
                 <div style={{fontSize:11,color:"#888",marginBottom:4}}>Rückmeldung ausstehend</div>
               </div>
             ));
@@ -2512,7 +2506,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
                 <div>
                   <div style={{fontWeight:600,fontSize:12,color:BK,marginBottom:2}}>{s.label}</div>
                   <div style={{fontSize:11,color:"#888"}}>{s.einsatzName||""}</div>
-                  <div style={{fontSize:11,color:"#aaa",marginTop:2}}>{"📅 "+s.einsatzDate+" · 📍 "+(s.ort||"")}</div>
+                  <div style={{fontSize:11,color:"#aaa",marginTop:2}}>{""+s.einsatzDate+" · "+(s.location||"")}</div>
                 </div>
                 <span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20,background:"#FFF7ED",color:AM,border:`0.5px solid ${AM}`,flexShrink:0}}>Ausstehend</span>
               </div>
@@ -2537,7 +2531,7 @@ function DashboardEltern({account,meineTeams,setActive}){
 
   return(
     <div>
-      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Hallo, {parentName} 👋</h1>
+      <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Hallo, {parentName}</h1>
       <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Elternteil · {kinder.map(k=>k.name.split(" ")[0]).join(" & ")} · Freitag, 23. Mai 2026</p>
 
       {kinder.map((kind,ki)=>{
@@ -2546,7 +2540,7 @@ function DashboardEltern({account,meineTeams,setActive}){
         const vorname=kind.name.split(" ")[0];
 
         /* Anwesenheit - nur Trainings */
-        const pastEvs=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Training"&&parseD(e.date)<today);
+        const pastEvs=ATT_EVENTS.filter(e=>e.team===team&&e.typee==="Training"&&parseD(e.date)<today);
         const zuCount=pastEvs.filter(e=>ATT_INITIAL[e.id]?.[rosterId]?.status==="zu").length;
         const abCount=pastEvs.filter(e=>ATT_INITIAL[e.id]?.[rosterId]?.status==="ab").length;
         const attTotal=zuCount+abCount;
@@ -2555,21 +2549,21 @@ function DashboardEltern({account,meineTeams,setActive}){
 
         /* Nächste 4 Trainings & Spiele */
         const upcoming=ATT_EVENTS
-          .filter(e=>e.team===team&&(e.type==="Training"||e.type==="Spiel")&&parseD(e.date)>=today)
+          .filter(e=>e.team===team&&(e.typee==="Training"||e.typee==="Spiel")&&parseD(e.date)>=today)
           .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))
           .slice(0,4);
 
         /* Team-Events & Vereinsanlässe */
         const anlaesse=ATT_EVENTS
-          .filter(e=>(e.team===team||e.team==="Alle")&&e.type==="Veranstaltung"&&parseD(e.date)>=today)
+          .filter(e=>(e.team===team||e.team==="Alle")&&e.typee==="Veranstaltung"&&parseD(e.date)>=today)
           .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))
           .slice(0,4);
 
         const nextAufgebotSpiel=ATT_EVENTS
-          .filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today&&(aufgebotState[e.id]||[]).includes(rosterId))
+          .filter(e=>e.team===team&&e.typee==="Spiel"&&parseD(e.date)>=today&&(aufgebotState[e.id]||[]).includes(rosterId))
           .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
 
-        const accentFor=(e)=>e.type==="Spiel"?BL:e.subtype==="Vereinsanlass"?"#7C3AED":e.type==="Veranstaltung"?AM:GN;
+        const accentFor=(e)=>e.typee==="Spiel"?BL:e.subtype==="Vereinsanlass"?"#7C3AED":e.typee==="Veranstaltung"?AM:GN;
 
         return(
           <div key={ki} style={{marginBottom:24}}>
@@ -2581,12 +2575,12 @@ function DashboardEltern({account,meineTeams,setActive}){
 
             {/* Stat-Kacheln */}
             {(()=>{
-              const nextSpiel=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
-              const nextTraining=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Training"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
+              const nextSpiel=ATT_EVENTS.filter(e=>e.team===team&&e.typee==="Spiel"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
+              const nextTraining=ATT_EVENTS.filter(e=>e.team===team&&e.typee==="Training"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
               return(
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:10,marginBottom:14}}>
                   <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={attTotal?zuCount+"/"+attTotal+" Trainings":"Noch keine"} color={attColor}/>
-                  <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.ort}`:"Kein Training geplant"} color={GN}/>
+                  <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} color={GN}/>
                   {(()=>{
                     const imAufgebot=nextSpiel&&(aufgebotState[nextSpiel.id]||[]).includes(rosterId);
                     return(
@@ -2594,7 +2588,7 @@ function DashboardEltern({account,meineTeams,setActive}){
                         <div style={{fontSize:10,color:"#999",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>Nächstes Spiel</div>
                         <div style={{fontSize:26,fontWeight:800,color:BL,lineHeight:1}}>{nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"}</div>
                         <div style={{fontSize:11,color:"#aaa",fontWeight:500}}>{nextSpiel?`${nextSpiel.time.slice(0,5)} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel geplant"}</div>
-                        {imAufgebot&&<span style={{position:"absolute",bottom:10,right:12,fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",border:"0.5px solid #818CF840"}}>⚽ Im Aufgebot</span>}
+                        {imAufgebot&&<span style={{position:"absolute",bottom:10,right:12,fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",border:"0.5px solid #818CF840"}}><i className="ti-ball-football" style={{marginRight:4}}/> Im Aufgebot</span>}
                       </div>
                     );
                   })()}
@@ -2606,13 +2600,13 @@ function DashboardEltern({account,meineTeams,setActive}){
             {nextAufgebotSpiel&&(
               <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;NAV_TARGET.openEvId=nextAufgebotSpiel.id;setActive("team");}:undefined}
                 style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:14,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
-                <span style={{fontSize:24}}>⚽</span>
+                <span style={{fontSize:24}}><i className="ti-ball-football"/></span>
                 <div style={{flex:1}}>
                   <div style={{fontWeight:800,fontSize:13,color:"#4F46E5"}}>{vorname} ist im Aufgebot!</div>
                   <div style={{fontSize:12,color:"#6366F1",marginTop:2}}>
                     {`vs. ${nextAufgebotSpiel.opponent} · ${nextAufgebotSpiel.date} · ${nextAufgebotSpiel.time} Uhr`}
                   </div>
-                  {nextAufgebotSpiel.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}>🎯 Treffpunkt: {nextAufgebotSpiel.treffpunkt}</div>}
+                  {nextAufgebotSpiel.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebotSpiel.treffpunkt}</div>}
                 </div>
                 <div style={{background:"#4F46E5",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20}}>Aufgebot</div>
               </div>
@@ -2628,11 +2622,11 @@ function DashboardEltern({account,meineTeams,setActive}){
                     <div style={{width:3,height:30,borderRadius:2,background:accentFor(e),flexShrink:0}}/>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis"}}>
-                        {e.type==="Training"?`Training · ${team}`:e.opponent?"vs. "+e.opponent:e.title||e.type}
+                        {e.typee==="Training"?`Training · ${team}`:e.opponent?"vs. "+e.opponent:e.title||e.typee}
                       </div>
-                      <div style={{fontSize:11,color:"#888"}}>{e.date} · {e.time} Uhr · {e.ort}</div>
+                      <div style={{fontSize:11,color:"#888"}}>{e.date} · {e.time} Uhr · {e.location}</div>
                     </div>
-                    <Chip text={e.type} color={accentFor(e)}/>
+                    <Chip text={e.typee} color={accentFor(e)}/>
                   </div>
                 ))}
               </Card>
@@ -2645,10 +2639,10 @@ function DashboardEltern({account,meineTeams,setActive}){
                   <div key={e.id} style={{display:"flex",gap:8,padding:"8px 0",borderBottom:i<anlaesse.length-1?`0.5px solid ${GB}`:"none",alignItems:"center"}}>
                     <div style={{width:3,height:30,borderRadius:2,background:accentFor(e),flexShrink:0}}/>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis"}}>{e.title||e.type}</div>
-                      <div style={{fontSize:11,color:"#888"}}>{e.date} · {e.time} Uhr · {e.ort}</div>
+                      <div style={{fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis"}}>{e.title||e.typee}</div>
+                      <div style={{fontSize:11,color:"#888"}}>{e.date} · {e.time} Uhr · {e.location}</div>
                     </div>
-                    <Chip text={e.subtype||e.type} color={accentFor(e)}/>
+                    <Chip text={e.subtype||e.typee} color={accentFor(e)}/>
                   </div>
                 ))}
               </Card>
@@ -2779,7 +2773,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
           <span style={{fontSize:11,color:"#aaa",fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,marginRight:4}}>Kind:</span>
           {kinder.map((k,i)=>{
             const active=activeKind?.name===k.name;
-            const cnt=ROSTER.filter(p=>(p.teams||[]).includes(k.team)&&!p.rolle).length;
+            const cnt=ROSTER.filter(p=>(p.teams||[]).includes(k.team)&&!p.role).length;
             const info=TEAMS_DATA[k.team]||{liga:"",season:""};
             return(
               <button key={i} onClick={()=>handleKindSwitch(k)}
@@ -2883,14 +2877,14 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
     .slice(0,8);
 
   const spielplan=ATT_EVENTS
-    .filter(e=>e.team===myTeam&&(e.type==="Training"||e.type==="Spiel")&&parseEvDate(e.date)>=today)
+    .filter(e=>e.team===myTeam&&(e.typee==="Training"||e.typee==="Spiel")&&parseEvDate(e.date)>=today)
     .sort((a,b)=>parseEvDate(a.date).localeCompare(parseEvDate(b.date)));
   const allTermine=ATT_EVENTS
-    .filter(e=>e.type==="Veranstaltung"&&(e.team===myTeam||e.team==="Alle"))
+    .filter(e=>e.typee==="Veranstaltung"&&(e.team===myTeam||e.team==="Alle"))
     .filter(e=>parseEvDate(e.date)>=today)
     .sort((a,b)=>parseEvDate(a.date).localeCompare(parseEvDate(b.date)))
     .slice(0,4);
-  const accentFor=(e)=>e.type==="Spiel"?BL:e.subtype==="Vereinsanlass"?"#7C3AED":e.type==="Veranstaltung"?AM:GN;
+  const accentFor=(e)=>e.typee==="Spiel"?BL:e.subtype==="Vereinsanlass"?"#7C3AED":e.typee==="Veranstaltung"?AM:GN;
 
   const termine=allTermine;
 
@@ -2900,8 +2894,8 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
       <Card>
         <STitle>Info</STitle>
         {(()=>{
-          const spieler=ROSTER.filter(p=>(p.teams||[]).includes(myTeam)&&!p.rolle);
-          const trainer=ROSTER.filter(p=>(p.teams||[]).includes(myTeam)&&p.rolle);
+          const spieler=ROSTER.filter(p=>(p.teams||[]).includes(myTeam)&&!p.role);
+          const trainer=ROSTER.filter(p=>(p.teams||[]).includes(myTeam)&&p.role);
           const pos=[...new Set(spieler.map(p=>p.pos).filter(Boolean))];
           const tableData=TABLES[myTeam]||[];
           const myRow=tableData.find(r=>r.me);
@@ -2940,7 +2934,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                       <Av name={`${t.firstName} ${t.lastName}`} size={26} bg={R}/>
                       <div>
                         <div style={{fontWeight:600,fontSize:12}}>{t.firstName} {t.lastName}</div>
-                        <div style={{fontSize:10,color:"#888"}}>{t.rolle}</div>
+                        <div style={{fontSize:10,color:"#888"}}>{t.role}</div>
                       </div>
                     </div>
                     ))}
@@ -2956,12 +2950,12 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
         {(()=>{
           /* Only team-specific past Training + Spiel events */
           const pastEvs=ATT_EVENTS
-            .filter(e=>e.team===myTeam&&(e.type==="Training"||e.type==="Spiel"))
+            .filter(e=>e.team===myTeam&&(e.typee==="Training"||e.typee==="Spiel"))
             .filter(e=>parseEvDate(e.date)<today);
-          const trainEvs=pastEvs.filter(e=>e.type==="Training");
-          const spielEvs=pastEvs.filter(e=>e.type==="Spiel");
+          const trainEvs=pastEvs.filter(e=>e.typee==="Training");
+          const spielEvs=pastEvs.filter(e=>e.typee==="Spiel");
           /* Use same player slice as ATT_INITIAL */
-          const pids=ROSTER.filter(p=>(p.teams||[]).includes(myTeam)&&!p.rolle).map(p=>p.id).slice(0,12);
+          const pids=ROSTER.filter(p=>(p.teams||[]).includes(myTeam)&&!p.role).map(p=>p.id).slice(0,12);
           /* Only count "zu", "ab", "unentschuldigt" - null/fraglich excluded */
           const calcPct=(evs)=>{
             if(!evs.length) return null;
@@ -3013,17 +3007,17 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                 <div style={{width:3,height:32,borderRadius:2,background:accentFor(e),flexShrink:0}}/>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontWeight:600,fontSize:13,color:BK,overflow:"hidden",textOverflow:"ellipsis"}}>
-                    {e.opponent?"vs. "+e.opponent:e.type==="Training"?"Training · "+e.team:e.title||e.type}
+                    {e.opponent?"vs. "+e.opponent:e.typee==="Training"?"Training · "+e.team:e.title||e.typee}
                   </div>
                   <div style={{fontSize:11,color:"#888",display:"flex",alignItems:"center",gap:6}}>
                     <span>{e.date}{e.endDate?" - "+e.endDate:""}</span>
                     <span style={{color:"#ddd"}}>·</span>
                     <span>{e.time+" Uhr"}</span>
                     <span style={{color:"#ddd"}}>·</span>
-                    <span>{e.ort}</span>
+                    <span>{e.location}</span>
                   </div>
                 </div>
-                <span style={{fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0}}>{e.type}</span>
+                <span style={{fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0}}>{e.typee}</span>
               </div>
             ))}
           </>);
@@ -3036,16 +3030,16 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
           <div key={e.id} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 0",borderBottom:i<termine.length-1?`0.5px solid ${GB}`:"none"}}>
             <div style={{width:3,height:32,borderRadius:2,background:accentFor(e),flexShrink:0}}/>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontWeight:600,fontSize:13,color:BK,overflow:"hidden",textOverflow:"ellipsis"}}>{e.title||e.type}</div>
+              <div style={{fontWeight:600,fontSize:13,color:BK,overflow:"hidden",textOverflow:"ellipsis"}}>{e.title||e.typee}</div>
               <div style={{fontSize:11,color:"#888",display:"flex",alignItems:"center",gap:6}}>
                 <span>{e.date}{e.endDate?" - "+e.endDate:""}</span>
                 <span style={{color:"#ddd"}}>·</span>
                 <span>{e.time+" Uhr"}</span>
                 <span style={{color:"#ddd"}}>·</span>
-                <span>{e.ort}</span>
+                <span>{e.location}</span>
               </div>
             </div>
-            <span style={{fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0,whiteSpace:"nowrap"}}>{e.subtype||e.type}</span>
+            <span style={{fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0,whiteSpace:"nowrap"}}>{e.subtype||e.typee}</span>
           </div>
         ))}
       </Card>
@@ -3108,7 +3102,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
         <div onClick={canEdit?()=>setEditingNr(true):undefined}
           style={{display:"flex",alignItems:"center",gap:5,cursor:canEdit?"pointer":"default"}}>
           <span style={{fontSize:13,fontWeight:500,color:BK}}>{nrVal||"-"}</span>
-          {canEdit&&<span style={{fontSize:10,color:"#ccc"}}>{"✎"}</span>}
+          {canEdit&&<span style={{fontSize:10,color:"#ccc"}}>{"<i className=\"ti-edit\"/>"}</span>}
         </div>
       )}
     </div>
@@ -3208,7 +3202,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
 
           {/* Rollenhinweis */}
           <div style={{padding:"8px 12px",background:"#EFF6FF",borderRadius:8,fontSize:11,color:"#666",display:"flex",alignItems:"center",gap:6}}>
-            <span>👁️</span>
+            <span><i className="ti-eye"/></span>
             <span>Feldsichtbarkeit gemäss Rolle: <strong>{getRole(role).label}</strong></span>
           </div>
         </div>
@@ -3290,7 +3284,7 @@ function RosterTab({role,team,initialSelected=null}){
 
   const SortIcon=({col})=>{
     if(sortKey!==col) return <span style={{color:"#ccc",fontSize:9,marginLeft:3}}>{"↕"}</span>;
-    return <span style={{color:R,fontSize:9,marginLeft:3}}>{sortDir===1?"↑":"↓"}</span>;
+    return <span style={{color:R,fontSize:9,marginLeft:3}}>{sortDir===1?"<i className=\"ti-upload\"/>":"↓"}</span>;
   };
 
   const COL_DEF=[
@@ -3323,13 +3317,13 @@ function RosterTab({role,team,initialSelected=null}){
               style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderTop:i>0?`0.5px solid ${GB}`:"none",cursor:"pointer",background:"#fff"}}
               onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
               onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
-              <Av name={p.name} size={44} bg={p.rolle?"#7C3AED":"#9CA3AF"}/>
+              <Av name={p.name} size={44} bg={p.role?"#7C3AED":"#9CA3AF"}/>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontWeight:700,fontSize:16,color:"#374151"}}>{p.lastName} {p.firstName}</div>
                 <div style={{fontSize:13,color:"#888",marginTop:3,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
                   {positions[p.id]&&<span style={{background:"#F3F4F6",color:"#555",padding:"2px 9px",borderRadius:20}}>{positions[p.id]}</span>}
                   {rueckennrn[p.id]&&<span style={{color:"#aaa"}}>Nr. {rueckennrn[p.id]}</span>}
-                  {p.rolle&&<span style={{background:"#7C3AED18",color:"#7C3AED",padding:"2px 9px",borderRadius:20}}>{p.rolle}</span>}
+                  {p.role&&<span style={{background:"#7C3AED18",color:"#7C3AED",padding:"2px 9px",borderRadius:20}}>{p.role}</span>}
                 </div>
               </div>
               <span style={{color:"#ccc",fontSize:18}}>›</span>
@@ -3356,8 +3350,8 @@ function RosterTab({role,team,initialSelected=null}){
           </thead>
           <tbody>
             {(()=>{
-              const spieler=f.filter(p=>!p.rolle);
-              const trainer=f.filter(p=>p.rolle);
+              const spieler=f.filter(p=>!p.role);
+              const trainer=f.filter(p=>p.role);
               const renderRow=(p,i,bg)=>(
               <tr
                 key={p.id}
@@ -3387,7 +3381,7 @@ function RosterTab({role,team,initialSelected=null}){
                             ?<span style={{fontSize:12,fontWeight:600,color:"#555"}}>{rueckennrn[p.id]}</span>
                             :<span style={{fontSize:11,color:"#ccc"}}>-</span>
                           }
-                          {canEditPos&&<span style={{fontSize:9,color:"#ccc"}}>✎</span>}
+                          {canEditPos&&<span style={{fontSize:9,color:"#ccc"}}><i className="ti-edit"/></span>}
                         </div>
                       )}
                     </td>
@@ -3395,11 +3389,11 @@ function RosterTab({role,team,initialSelected=null}){
                   if(c.key==="name") return(
                     <td key={j} style={{padding:"9px 13px"}}>
                       <div style={{display:"flex",alignItems:"center",gap:7}}>
-                        <Av name={p.name} size={26} bg={p.rolle?"#7C3AED":R}/>
+                        <Av name={p.name} size={26} bg={p.role?"#7C3AED":R}/>
                         <div>
                           <div style={{fontWeight:600,whiteSpace:"nowrap",color:"#555"}}>{p.lastName} {p.firstName}</div>
-                          {p.rolle&&<span style={{fontSize:9,background:"#7C3AED18",color:"#7C3AED",fontWeight:700,padding:"1px 5px",borderRadius:8}}>{p.rolle}</span>}
-                          {!p.rolle&&p.teams&&p.teams.length>1&&(
+                          {p.role&&<span style={{fontSize:9,background:"#7C3AED18",color:"#7C3AED",fontWeight:700,padding:"1px 5px",borderRadius:8}}>{p.role}</span>}
+                          {!p.role&&p.teams&&p.teams.length>1&&(
                             <div style={{display:"flex",gap:3,marginTop:2,flexWrap:"wrap"}}>
                               {p.teams.map((t,i)=><span key={i} style={{fontSize:9,background:i===0?R+"15":"#EFF6FF",color:i===0?R:BL,fontWeight:600,padding:"1px 5px",borderRadius:8}}>{t}</span>)}
                             </div>
@@ -3433,7 +3427,7 @@ function RosterTab({role,team,initialSelected=null}){
                             ?<Chip text={positions[p.id]} color="#555" bg="#F3F4F6"/>
                             :<span style={{fontSize:11,color:"#ccc",fontStyle:"italic"}}>-</span>
                           }
-                          {canEditPos&&<span style={{fontSize:10,color:"#ccc"}}>✎</span>}
+                          {canEditPos&&<span style={{fontSize:10,color:"#ccc"}}><i className="ti-edit"/></span>}
                         </div>
                       )}
                     </td>
@@ -3448,8 +3442,8 @@ function RosterTab({role,team,initialSelected=null}){
               );
               const ROLLE_ORDER=["Trainer","Co-Trainer","Coach","Admin"];
               const trainerSorted=[...trainer].sort((a,b)=>{
-                const ia=ROLLE_ORDER.indexOf(a.rolle||"");
-                const ib=ROLLE_ORDER.indexOf(b.rolle||"");
+                const ia=ROLLE_ORDER.indexOf(a.role||"");
+                const ib=ROLLE_ORDER.indexOf(b.role||"");
                 const ra=ia===-1?99:ia;
                 const rb=ib===-1?99:ib;
                 return ra!==rb?ra-rb:a.lastName.localeCompare(b.lastName);
@@ -3487,19 +3481,19 @@ const INITIAL_PLAENE = [
   {
     id: "plan_1",
     name: "Trainingsplan Saison 2025/26",
-    gueltig_ab: "2025-08-01",
-    gueltig_bis: "2026-06-30",
-    aktiv: true,
+    valid_from: "2025-08-01",
+    valid_until: "2026-06-30",
+    active: true,
     slots: GANTT.flatMap((d,di) => d.slots.map((s,si) => ({
       id: "slot_"+di+"_"+si,
-      wochentag: d.day,
+      weekday: d.day,
       team: s.team,
       start: s.start,
       end: s.end,
       ort: s.field,
       end_ort: "",
-      haelfte: "",
-      end_haelfte: "",
+      half: "",
+      end_half: "",
       wechsel_zeit: "",
       color: s.color,
     })))
@@ -3508,14 +3502,14 @@ const INITIAL_PLAENE = [
 
 /* == PLATZ-GANTT == */
 function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStart,displayEnd,teamFilter,TEAM_COLORS,canEdit,onClickSlot,onNewSlot,GB,GR,BK,BL}){
-  const aktivePlaetze = TRAININGSPLAETZE.filter(function(p){return p.aktiv;});
+  const aktivePlaetze = TRAININGSPLAETZE.filter(function(p){return p.active;});
   const idxMap = dagIndexes || DAYS.map(function(_,i){return i;});
   const alleCols = aktivePlaetze.reduce(function(acc,p){
-    const haelften = p.haelften||[];
-    if(haelften.length > 0){
-      haelften.forEach(function(h){ acc.push({platz:p, haelfte:h, key:p.id+"_"+h}); });
+    const halfn = p.halfn||[];
+    if(halfn.length > 0){
+      halfn.forEach(function(h){ acc.push({platz:p, half:h, key:p.id+"_"+h}); });
     } else {
-      acc.push({platz:p, haelfte:null, key:p.id});
+      acc.push({platz:p, half:null, key:p.id});
     }
     return acc;
   },[]);
@@ -3585,7 +3579,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
           {DAYS.map(function(_,di){
             const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
             return aktivePlaetze.map(function(p,pi){
-              const spanCols = (p.haelften||[]).length||1;
+              const spanCols = (p.halfn||[]).length||1;
               const isLast = pi===aktivePlaetze.length-1;
               return (
                 <div key={di+"_"+p.id} style={{width:spanCols*colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"1px solid #DDD9CF", background:isToday?"#E8ECFF":"transparent", textAlign:"center", padding:"2px 3px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
@@ -3605,7 +3599,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
               const isLast = ci===alleCols.length-1;
               return (
                 <div key={di+"_"+col.key} style={{width:colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"0.5px solid #DDD9CF", background:isToday?"#DDE1F8":"transparent", textAlign:"center", padding:"1px 2px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
-                  <div style={{fontSize:10, fontWeight:500, color:"#6B7280", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.haelfte||""}</div>
+                  <div style={{fontSize:10, fontWeight:500, color:"#6B7280", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.half||""}</div>
                 </div>
               );
             });
@@ -3645,26 +3639,26 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
             return (
               <div key={di} style={{display:"flex", borderRight:"1.5px solid #C8C5BC", background:isToday?"#F8F9FF":"transparent"}}>
                 {alleCols.map(function(col,ci){
-                  const platzHaelften = col.platz.haelften||[];
+                  const platzHaelften = col.platz.halfn||[];
                   const hasHaelften = platzHaelften.length > 0;
-                  const isFirstHaelfte = hasHaelften && col.haelfte===platzHaelften[0];
+                  const isFirstHaelfte = hasHaelften && col.half===platzHaelften[0];
                   const numHaelften = platzHaelften.length||1;
 
                   const colSlots = daySlots.filter(function(s){
                     if(!hasHaelften){
-                      return s.ort===col.platz.name || (s.end_ort&&s.end_ort===col.platz.name);
+                      return s.location===col.platz.name || (s.end_ort&&s.end_ort===col.platz.name);
                     }
-                    var p1platz = s.ort;
-                    var p2platz = s.end_ort||s.ort;
-                    var p1h = s.haelfte;
-                    var p2h = s.end_haelfte;
+                    var p1platz = s.location;
+                    var p2platz = s.end_ort||s.location;
+                    var p1h = s.half;
+                    var p2h = s.end_half;
                     if(!s.wechsel_zeit){
                       if(col.platz.name!==p1platz) return false;
                       if(!p1h) return true;
-                      return p1h===col.haelfte;
+                      return p1h===col.half;
                     }
-                    var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.haelfte);
-                    var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.haelfte);
+                    var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.half);
+                    var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.half);
                     return p1here || p2here;
                   });
 
@@ -3679,11 +3673,11 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
                         var snapped = Math.round(rawTime*4)/4;
                         snapped = Math.max(displayStart, Math.min(displayEnd-1, snapped));
                         onNewSlot({
-                          wochentag: DAYS[di],
+                          weekday: DAYS[di],
                           start: snapped,
                           end: Math.min(snapped+1.5, displayEnd),
                           ort: col.platz.name,
-                          haelfte: col.haelfte||"",
+                          half: col.half||"",
                         });
                       } : undefined}>
                       {slots15.map(function(t,i){
@@ -3697,19 +3691,19 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
                         const col2 = s.color||TEAM_COLORS[s.team]||BL;
                         var blocks = [];
                         if(!s.wechsel_zeit){
-                          var isFullP = hasHaelften&&!s.haelfte;
+                          var isFullP = hasHaelften&&!s.half;
                           if(isFullP && !isFirstHaelfte){ /* skip */ }
                           else {
                             var sr = (isFullP && isFirstHaelfte) ? -(numHaelften-1)*colW-1 : 1;
                             blocks.push({start:s.start, end:s.end, right:sr});
                           }
                         } else {
-                          var p1platz = s.ort;
-                          var p2platz = s.end_ort||s.ort;
-                          var p1h = s.haelfte;
-                          var p2h = s.end_haelfte;
-                          var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.haelfte);
-                          var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.haelfte);
+                          var p1platz = s.location;
+                          var p2platz = s.end_ort||s.location;
+                          var p1h = s.half;
+                          var p2h = s.end_half;
+                          var p1here = col.platz.name===p1platz && (!p1h ? true : p1h===col.half);
+                          var p2here = col.platz.name===p2platz && (!p2h ? true : p2h===col.half);
                           if(p1here){
                             var isFullP1 = hasHaelften&&!p1h&&col.platz.name===p1platz;
                             var sr1 = (isFullP1 && isFirstHaelfte) ? -(numHaelften-1)*colW-1 : 1;
@@ -3720,7 +3714,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
                           if(p2here){
                             var isFullP2 = hasHaelften&&!p2h&&col.platz.name===p2platz;
                             var otherPlatz = col.platz.name===p2platz;
-                            var p2Cols = otherPlatz ? (p2platz===p1platz ? numHaelften : (TRAININGSPLAETZE.find(function(pp){return pp.name===p2platz;})||{}).haelften?.length||1) : 1;
+                            var p2Cols = otherPlatz ? (p2platz===p1platz ? numHaelften : (TRAININGSPLAETZE.find(function(pp){return pp.name===p2platz;})||{}).halfn?.length||1) : 1;
                             var sr2 = (isFullP2 && (isFirstHaelfte||!hasHaelften)) ? -(p2Cols-1)*colW-1 : 1;
                             if(!isFullP2 || isFirstHaelfte || !hasHaelften){
                               blocks.push({start:s.wechsel_zeit, end:s.end, right:sr2});
@@ -3796,7 +3790,7 @@ function TrainingGantt({team: teamProp, role}){
         // Supabase laden
         if(supabase){
           // Pläne laden
-          const {data: plaeneData} = await supabase.from("trainingsplan_vorlagen").select("*").order("gueltig_ab");
+          const {data: plaeneData} = await supabase.from("trainingsplan_vorlagen").select("*").order("valid_from");
           if(plaeneData && plaeneData.length > 0){
             // Slots pro Plan laden
             const {data: slotsData} = await supabase.from("trainingsplan_slots").select("*");
@@ -3804,26 +3798,26 @@ function TrainingGantt({team: teamProp, role}){
             const plaeneMitSlots = plaeneData.map(function(p){
               return {
                 ...p,
-                slots: slots.filter(function(s){ return s.vorlage_id === p.id; }).map(function(s){
+                slots: slots.filter(function(s){ return s.template_id === p.id; }).map(function(s){
                   return {
                     id: s.id,
-                    wochentag: s.wochentag,
+                    weekday: s.weekday,
                     team: s.team,
                     start: s.start_zeit,
                     end: s.end_zeit,
-                    ort: s.ort,
+                    ort: s.location,
                     end_ort: s.end_ort||"",
-                    haelfte: s.haelfte||"",
-                    end_haelfte: s.end_haelfte||"",
+                    half: s.half||"",
+                    end_half: s.end_half||"",
                     wechsel_zeit: s.wechsel_zeit||"",
-                    color: s.farbe||"",
+                    color: s.color||"",
                   };
                 }),
               };
             });
             setPlaene(plaeneMitSlots);
             // Aktiven Plan setzen
-            const aktiver = plaeneMitSlots.find(function(p){ return p.aktiv; });
+            const aktiver = plaeneMitSlots.find(function(p){ return p.active; });
             if(aktiver) setAktiverPlan(aktiver.id);
           } else {
             // Fallback: localStorage
@@ -3835,18 +3829,18 @@ function TrainingGantt({team: teamProp, role}){
           if(ausnahmenData){
             const ausnahmenMap = {};
             ausnahmenData.forEach(function(a){
-              const key = a.kw_key;
+              const key = a.week_nr_key;
               if(!ausnahmenMap[key]) ausnahmenMap[key] = [];
               ausnahmenMap[key].push({
                 id: a.id,
                 slot_id: a.slot_id,
-                typ: a.typ,
-                datum: a.datum,
-                kw_key: a.kw_key,
+                typ: a.type,
+                datum: a.date,
+                kw_key: a.week_nr_key,
                 neue_start_zeit: a.neue_start_zeit,
                 neue_end_zeit: a.neue_end_zeit,
                 neues_ort: a.neues_ort,
-                neue_haelfte: a.neue_haelfte,
+                neue_half: a.neue_half,
                 grund: a.grund||"",
               });
             });
@@ -3873,23 +3867,23 @@ function TrainingGantt({team: teamProp, role}){
           await supabase.from("trainingsplan_vorlagen").upsert({
             id: plan.id,
             name: plan.name,
-            gueltig_ab: plan.gueltig_ab,
-            gueltig_bis: plan.gueltig_bis,
-            aktiv: plan.aktiv,
+            valid_from: plan.valid_from,
+            valid_until: plan.valid_until,
+            active: plan.active,
           });
           if(plan.slots){
             for(const s of plan.slots){
               await supabase.from("trainingsplan_slots").upsert({
                 id: s.id,
-                vorlage_id: plan.id,
-                wochentag: s.wochentag,
+                template_id: plan.id,
+                weekday: s.weekday,
                 team: s.team,
                 start_zeit: s.start,
                 end_zeit: s.end,
-                ort: s.ort,
+                ort: s.location,
                 end_ort: s.end_ort||null,
-                haelfte: s.haelfte||null,
-                end_haelfte: s.end_haelfte||null,
+                half: s.half||null,
+                end_half: s.end_half||null,
                 wechsel_zeit: s.wechsel_zeit||null,
                 farbe: s.color||null,
               });
@@ -3912,13 +3906,13 @@ function TrainingGantt({team: teamProp, role}){
           await supabase.from("trainingsplan_ausnahmen").upsert({
             id: ausnahme.id,
             slot_id: ausnahme.slot_id||null,
-            typ: ausnahme.typ,
-            datum: ausnahme.datum||null,
-            kw_key: ausnahme.kw_key,
+            typ: ausnahme.type,
+            datum: ausnahme.date||null,
+            kw_key: ausnahme.week_nr_key,
             neue_start_zeit: ausnahme.neue_start_zeit||null,
             neue_end_zeit: ausnahme.neue_end_zeit||null,
             neues_ort: ausnahme.neues_ort||null,
-            neue_haelfte: ausnahme.neue_haelfte||null,
+            neue_half: ausnahme.neue_half||null,
             grund: ausnahme.grund||null,
           });
         }
@@ -3945,16 +3939,26 @@ function TrainingGantt({team: teamProp, role}){
   const kwKey = monday.getFullYear()+"_"+kw;
   const kwAusnahmen = ausnahmen[kwKey]||[];
 
-  const alleTeams = Array.from(new Set((plan?.slots||[]).map(function(s){return s.team;}))).sort();
+  const FCH_TEAMS = [
+    "1. Mannschaft","2. Mannschaft","3. Mannschaft","4. Mannschaft",
+    "Ältere Junioren A","Ältere Junioren B",
+    "Cc-Junioren","Dc-Junioren","Ec-Junioren","Fc-Junioren",
+    "Gc-Junioren","Hc-Junioren","Ic-Junioren",
+    "Frauen","Mädchen",
+  ];
+  const alleTeams = Array.from(new Set([
+    ...FCH_TEAMS,
+    ...(plan?.slots||[]).map(function(s){return s.team;})
+  ])).sort();
   const TEAM_COLORS = {};
   (plan?.slots||[]).forEach(function(s){ TEAM_COLORS[s.team]=s.color; });
 
   // Prüfe ob die aktuelle Woche innerhalb der Plan-Gültigkeit liegt
   const wocheStart = monday;
   const wocheEnd = new Date(monday); wocheEnd.setDate(wocheEnd.getDate()+6);
-  const planGueltigAb  = plan?.gueltig_ab  ? new Date(plan.gueltig_ab)  : null;
-  const planGueltigBis = plan?.gueltig_bis ? new Date(plan.gueltig_bis) : null;
-  // Plan gilt diese Woche wenn: wocheEnd >= gueltig_ab UND (kein gueltig_bis ODER wocheStart <= gueltig_bis)
+  const planGueltigAb  = plan?.valid_from  ? new Date(plan.valid_from)  : null;
+  const planGueltigBis = plan?.valid_until ? new Date(plan.valid_until) : null;
+  // Plan gilt diese Woche wenn: wocheEnd >= valid_from UND (kein valid_until ODER wocheStart <= valid_until)
   const planGueltigDieseWoche =
     (!planGueltigAb  || wocheEnd   >= planGueltigAb) &&
     (!planGueltigBis || wocheStart <= planGueltigBis);
@@ -3962,24 +3966,24 @@ function TrainingGantt({team: teamProp, role}){
   const wochenSlots = DAYS.map(function(day){
     if(!planGueltigDieseWoche) return [];
     const basis = (plan?.slots||[])
-      .filter(function(s){ return s.wochentag===day; })
+      .filter(function(s){ return s.weekday===day; })
       .filter(function(s){
         // Gilt dieser Slot ab dieser KW?
-        if(!s.gueltig_ab_kw) return true;
+        if(!s.valid_from_week) return true;
         const [cy,ck] = kwKey.split("_").map(Number);
-        const [gy,gk] = s.gueltig_ab_kw.split("_").map(Number);
+        const [gy,gk] = s.valid_from_week.split("_").map(Number);
         return cy>gy || (cy===gy && ck>=gk);
       })
-      .filter(function(s){ return !kwAusnahmen.some(function(a){ return a.type==="absage"&&a.slot_id===s.id; }); })
+      .filter(function(s){ return !kwAusnahmen.some(function(a){ return a.typee==="absage"&&a.slot_id===s.id; }); })
       .map(function(s){
-        const va = kwAusnahmen.find(function(a){ return a.type==="verschiebung"&&a.slot_id===s.id; });
-        const oa = kwAusnahmen.find(function(a){ return a.type==="ort"&&a.slot_id===s.id; });
+        const va = kwAusnahmen.find(function(a){ return a.typee==="verschiebung"&&a.slot_id===s.id; });
+        const oa = kwAusnahmen.find(function(a){ return a.typee==="location"&&a.slot_id===s.id; });
         if(va) return Object.assign({},s,{start:va.neue_start,end:va.neue_end,isVerschoben:true});
         if(oa) return Object.assign({},s,{ort:oa.neuer_ort,isOrtGeaendert:true});
         return s;
       });
     const zusatz = kwAusnahmen
-      .filter(function(a){ return a.type==="zusatz"&&a.wochentag===day; })
+      .filter(function(a){ return a.typee==="zusatz"&&a.weekday===day; })
       .map(function(a){ return Object.assign({},a,{isZusatz:true}); });
     return basis.concat(zusatz);
   });
@@ -3994,7 +3998,7 @@ function TrainingGantt({team: teamProp, role}){
   const displayStart = minStart < DEFAULT_START ? Math.max(7, Math.floor(minStart)) : DEFAULT_START;
   // Mindestens bis DEFAULT_END, sonst bis zum Ende des letzten Slots (aufgerundet)
   const displayEnd = Math.max(DEFAULT_END, Math.ceil(maxEnd));
-  const trainerAbsagen = kwAusnahmen.filter(function(a){ return a.type==="absage"&&a.von_termin; });
+  const trainerAbsagen = kwAusnahmen.filter(function(a){ return a.typee==="absage"&&a.von_termin; });
 
   function handleSlotSave(slot){
     const cleanSlot = Object.assign({},slot);
@@ -4006,16 +4010,16 @@ function TrainingGantt({team: teamProp, role}){
         const ausnahme = {
           type: "verschiebung",
           slot_id: editSlot.id,
-          wochentag: slot.wochentag||editSlot.wochentag,
+          weekday: slot.weekday||editSlot.weekday,
           team: slot.team||editSlot.team,
           neue_start: slot.start,
           neue_end: slot.end,
-          neuer_ort: slot.ort,
+          neuer_ort: slot.location,
           von_termin: false,
         };
         const next = Object.assign({},ausnahmen);
         next[kwKey] = (ausnahmen[kwKey]||[])
-          .filter(function(a){ return !(a.slot_id===editSlot.id&&a.type==="verschiebung"); })
+          .filter(function(a){ return !(a.slot_id===editSlot.id&&a.typee==="verschiebung"); })
           .concat([ausnahme]);
         saveAusnahmen(next);
       } else {
@@ -4023,7 +4027,7 @@ function TrainingGantt({team: teamProp, role}){
         const targetKwKey = slot.selectedKwKey||kwKey;
         const zusatz = Object.assign({},cleanSlot,{
           type: "zusatz",
-          wochentag: cleanSlot.wochentag,
+          weekday: cleanSlot.weekday,
           isZusatz: true,
           id: "zusatz_"+Date.now(),
         });
@@ -4032,14 +4036,14 @@ function TrainingGantt({team: teamProp, role}){
         saveAusnahmen(next);
       }
     } else {
-      // Save permanently — ab der gewählten KW (gueltig_ab)
+      // Save permanently — ab der gewählten KW (valid_from)
       delete cleanSlot.selectedKwKey;
       const gueltigAb = slot.selectedKwKey || null; // kwKey format: "2026_21"
       const updated = plaene.map(function(p){
         if(p.id!==angezeigterPlanId) return p;
         return Object.assign({},p,{slots: editSlot&&editSlot.id
           ? p.slots.map(function(s){ return s.id===editSlot.id?Object.assign({},s,cleanSlot):s; })
-          : p.slots.concat([Object.assign({},cleanSlot,{id:"slot_"+Date.now(), gueltig_ab_kw:gueltigAb})])
+          : p.slots.concat([Object.assign({},cleanSlot,{id:"slot_"+Date.now(), valid_from_week:gueltigAb})])
         });
       });
       savePlaene(updated);
@@ -4053,7 +4057,7 @@ function TrainingGantt({team: teamProp, role}){
     if(!slot) return;
     const td = new Date(2026,4,24);
     const zukunftigeEvents = ATT_EVENTS.filter(function(e){
-      if(e.type!=="Training"||e.team!==slot.team) return false;
+      if(e.typee!=="Training"||e.team!==slot.team) return false;
       const parts = e.date.split(" ");
       const dm = parts.length>1?parts[1]:parts[0];
       const dparts = dm.split(".");
@@ -4092,14 +4096,14 @@ function TrainingGantt({team: teamProp, role}){
 
   function handleAusnahmeSave(ausnahme, fuerAlleWochen){
     if(fuerAlleWochen){
-      if(ausnahme.type==="absage"){ handleSlotDeleteInit(ausnahme.slot_id); }
-      else if(ausnahme.type==="verschiebung"){
+      if(ausnahme.typee==="absage"){ handleSlotDeleteInit(ausnahme.slot_id); }
+      else if(ausnahme.typee==="verschiebung"){
         const updated = plaene.map(function(p){
           if(p.id!==angezeigterPlanId) return p;
           return Object.assign({},p,{slots:p.slots.map(function(s){ return s.id===ausnahme.slot_id?Object.assign({},s,{start:ausnahme.neue_start,end:ausnahme.neue_end}):s; })});
         });
         savePlaene(updated);
-      } else if(ausnahme.type==="ort"){
+      } else if(ausnahme.typee==="location"){
         const updated = plaene.map(function(p){
           if(p.id!==angezeigterPlanId) return p;
           return Object.assign({},p,{slots:p.slots.map(function(s){ return s.id===ausnahme.slot_id?Object.assign({},s,{ort:ausnahme.neuer_ort}):s; })});
@@ -4108,7 +4112,7 @@ function TrainingGantt({team: teamProp, role}){
       }
     } else {
       const next = Object.assign({},ausnahmen);
-      next[kwKey] = (ausnahmen[kwKey]||[]).filter(function(a){ return !(a.slot_id===ausnahme.slot_id&&a.type===ausnahme.type); }).concat([ausnahme]);
+      next[kwKey] = (ausnahmen[kwKey]||[]).filter(function(a){ return !(a.slot_id===ausnahme.slot_id&&a.typee===ausnahme.typee); }).concat([ausnahme]);
       saveAusnahmen(next);
     }
     setShowAusnahmeModal(false);
@@ -4136,14 +4140,14 @@ function TrainingGantt({team: teamProp, role}){
     const copy = Object.assign({},plan,{
       id:"plan_"+Date.now(),
       name:plan.name+" (Kopie)",
-      aktiv:false,
+      active:false,
       slots:(plan.slots||[]).map(function(s){ return Object.assign({},s,{id:"slot_"+Date.now()+Math.random()}); }),
     });
     savePlaene(plaene.concat([copy]));
   }
 
   function handlePlanAktivieren(id){
-    savePlaene(plaene.map(function(p){ return Object.assign({},p,{aktiv:p.id===id}); }));
+    savePlaene(plaene.map(function(p){ return Object.assign({},p,{active:p.id===id}); }));
     setAktiverPlan(id);
   }
 
@@ -4175,7 +4179,7 @@ function TrainingGantt({team: teamProp, role}){
     const newEnd = newStart + dragState.duration;
     const updated = plaene.map(function(p){
       if(p.id!==angezeigterPlanId) return p;
-      return Object.assign({},p,{slots:p.slots.map(function(x){ return x.id===slotId?Object.assign({},x,{wochentag:day,start:newStart,end:newEnd}):x; })});
+      return Object.assign({},p,{slots:p.slots.map(function(x){ return x.id===slotId?Object.assign({},x,{weekday:day,start:newStart,end:newEnd}):x; })});
     });
     savePlaene(updated);
     setDragState(null);
@@ -4209,12 +4213,12 @@ function TrainingGantt({team: teamProp, role}){
                         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
                           <div style={{fontWeight:700,fontSize:14,color:isAktiv?BL:BK}}>{p.name}</div>
                           {isAktiv&&<span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:BL,color:"#fff",fontWeight:600}}>Aktiv</span>}
-                          {p.aktiv&&!isAktiv&&<span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:"#ECFDF5",color:GN,fontWeight:600}}>Aktiviert</span>}
+                          {p.active&&!isAktiv&&<span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:"#ECFDF5",color:GN,fontWeight:600}}>Aktiviert</span>}
                         </div>
                         <div style={{fontSize:11,color:"#888"}}>
-                          {p.gueltig_ab?p.gueltig_ab.split("-").reverse().join("."):"–"}
+                          {p.valid_from?p.valid_from.split("-").reverse().join("."):"–"}
                           {" bis "}
-                          {p.gueltig_bis?p.gueltig_bis.split("-").reverse().join("."):"unbegrenzt"}
+                          {p.valid_until?p.valid_until.split("-").reverse().join("."):"unbegrenzt"}
                           {" · "+slotCount+" Training"+(slotCount===1?"":"s")}
                         </div>
                       </div>
@@ -4226,12 +4230,12 @@ function TrainingGantt({team: teamProp, role}){
                           </button>
                         )}
                         <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);setShowPlanVerwaltung(false);}} title="Bearbeiten"
-                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>✏️</button>
+                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-edit"/></button>
                         <button onClick={function(){handlePlanDuplizieren(p);}} title="Duplizieren"
-                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>📋</button>
+                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
                         {plaene.length>1&&!isAktiv&&(
                           <button onClick={function(){if(window.confirm("Plan \""+p.name+"\" loeschen?")){handlePlanLoeschen(p.id);}}} title="Loeschen"
-                            style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>🗑️</button>
+                            style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>
                         )}
                       </div>
                     </div>
@@ -4285,18 +4289,18 @@ function TrainingGantt({team: teamProp, role}){
                       {isAktiv&&<span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:BL,color:"#fff",fontWeight:600}}>Aktiv</span>}
                     </div>
                     <div style={{fontSize:12,color:"#888"}}>
-                      {p.gueltig_ab?p.gueltig_ab.split("-").reverse().join("."):"–"}
+                      {p.valid_from?p.valid_from.split("-").reverse().join("."):"–"}
                       {" bis "}
-                      {p.gueltig_bis?p.gueltig_bis.split("-").reverse().join("."):"unbegrenzt"}
+                      {p.valid_until?p.valid_until.split("-").reverse().join("."):"unbegrenzt"}
                       {" · "+slotCount+" Training"+(slotCount===1?"":"s")}
                     </div>
                   </div>
                   {canEdit&&(
                     <div style={{display:"flex",gap:6,flexShrink:0}}>
                       {!isAktiv&&<button onClick={function(){handlePlanAktivieren(p.id);}} style={{padding:"6px 12px",borderRadius:8,border:"1.5px solid "+BL,background:"#EFF6FF",color:BL,fontSize:12,fontWeight:600,cursor:"pointer"}}>Aktivieren</button>}
-                      <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✏️</button>
-                      <button onClick={function(){handlePlanDuplizieren(p);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>📋</button>
-                      {plaene.length>1&&!isAktiv&&<button onClick={function(){if(window.confirm("Plan loeschen?")){handlePlanLoeschen(p.id);}}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>🗑️</button>}
+                      <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-edit"/></button>
+                      <button onClick={function(){handlePlanDuplizieren(p);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
+                      {plaene.length>1&&!isAktiv&&<button onClick={function(){if(window.confirm("Plan loeschen?")){handlePlanLoeschen(p.id);}}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>}
                     </div>
                   )}
                 </div>
@@ -4326,7 +4330,7 @@ function TrainingGantt({team: teamProp, role}){
           <span style={{fontSize:14}}>&#128197;</span>
           <span>
             Diese Woche liegt ausserhalb der Gültigkeitsspanne des Plans
-            {planGueltigAb&&<strong style={{color:"#374151"}}> ({plan.gueltig_ab&&plan.gueltig_ab.split("-").reverse().join(".")} – {plan.gueltig_bis?plan.gueltig_bis.split("-").reverse().join("."):"unbegrenzt"})</strong>}.
+            {planGueltigAb&&<strong style={{color:"#374151"}}> ({plan.valid_from&&plan.valid_from.split("-").reverse().join(".")} – {plan.valid_until?plan.valid_until.split("-").reverse().join("."):"unbegrenzt"})</strong>}.
             Keine Trainings angezeigt.
           </span>
         </div>
@@ -4360,7 +4364,7 @@ function TrainingGantt({team: teamProp, role}){
               {plan?plan.name:"Trainingsplan"}
             </div>
             <div style={{fontSize:11,color:"#888",marginTop:2}}>
-              {plan&&plan.gueltig_ab?"Gueltig: "+fmtDate(new Date(plan.gueltig_ab))+" - "+(plan.gueltig_bis?fmtDate(new Date(plan.gueltig_bis)):"unbegrenzt"):""}
+              {plan&&plan.valid_from?"Gueltig: "+fmtDate(new Date(plan.valid_from))+" - "+(plan.valid_until?fmtDate(new Date(plan.valid_until)):"unbegrenzt"):""}
             </div>
           </div>
           {canEdit && (
@@ -4471,7 +4475,7 @@ function TrainingGantt({team: teamProp, role}){
       </div>
 
       {/* Trainer-Benachrichtigungen */}
-      {trainerNachrichten.filter(function(n){return n.typ==="training_geloescht";}).length>0 && (
+      {trainerNachrichten.filter(function(n){return n.type==="training_geloescht";}).length>0 && (
         <div style={{marginTop:12,border:"1px solid #2563EB40",borderRadius:12,overflow:"hidden"}}>
           <div style={{background:"#EFF6FF",padding:"10px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
             <span style={{fontSize:12,fontWeight:700,color:BL}}>Training dauerhaft aus dem Plan entfernt</span>
@@ -4497,7 +4501,7 @@ function TrainingGantt({team: teamProp, role}){
               <div key={i} style={{padding:"9px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:i<trainerAbsagen.length-1?"0.5px solid "+GB:"none",background:"#fff"}}>
                 <div>
                   <span style={{fontSize:12,fontWeight:600,color:BK}}>{a.team}</span>
-                  <span style={{fontSize:11,color:"#888",marginLeft:8}}>{a.wochentag}{slot?" "+fmtTime(slot.start)+"-"+fmtTime(slot.end)+" Uhr":""}</span>
+                  <span style={{fontSize:11,color:"#888",marginLeft:8}}>{a.weekday}{slot?" "+fmtTime(slot.start)+"-"+fmtTime(slot.end)+" Uhr":""}</span>
                 </div>
                 <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:RL,color:R,fontWeight:600}}>Abgesagt</span>
               </div>
@@ -4520,7 +4524,7 @@ function TrainingGantt({team: teamProp, role}){
             <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:14}}>
               <div style={{padding:"12px",background:RL,borderRadius:8,border:"1px solid "+R+"30"}}>
                 <div style={{fontSize:13,fontWeight:700,color:R,marginBottom:2}}>Training wird dauerhaft aus dem Plan entfernt</div>
-                <div style={{fontSize:11,color:"#666"}}>{deleteSlot.team} - {deleteSlot.wochentag} {fmtTime(deleteSlot.start)}-{fmtTime(deleteSlot.end)} Uhr</div>
+                <div style={{fontSize:11,color:"#666"}}>{deleteSlot.team} - {deleteSlot.weekday} {fmtTime(deleteSlot.start)}-{fmtTime(deleteSlot.end)} Uhr</div>
               </div>
               {deleteSlot.zukunftigeEvents.length>0 ? (
                 <div>
@@ -4620,15 +4624,15 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
   const selectedKw = kwOptions[selectedKwOffset];
 
   const [form, setForm] = useState({
-    wochentag: slot?.wochentag||(prefill?.wochentag)||"Mo",
+    weekday: slot?.weekday||(prefill?.weekday)||"Mo",
     team: slot?.team||teams[0]||"",
     start: slot?.start||(prefill?.start)||17,
     end: slot?.end||(prefill?.end)||18.5,
-    ort: slot?.ort||(prefill?.ort)||"",
-    haelfte: slot?.haelfte||(prefill?.haelfte)||"",
+    ort: slot?.location||(prefill?.location)||"",
+    half: slot?.half||(prefill?.half)||"",
     wechsel_zeit: slot?.wechsel_zeit||"",
     end_ort: slot?.end_ort||"",
-    end_haelfte: slot?.end_haelfte||"",
+    end_half: slot?.end_half||"",
     color: slot?.color||TEAM_COLORS_MAP[slot?.team||""]||BL,
   });
   const [ausnahmeMode, setAusnahmeMode] = useState(false);
@@ -4637,7 +4641,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
   const [fuerAlleWochen, setFuerAlleWochen] = useState(false);
   const [verschiebungStart, setVerschiebungStart] = useState(slot?.start||17);
   const [verschiebungEnd, setVerschiebungEnd] = useState(slot?.end||18.5);
-  const [verschiebungOrt, setVerschiebungOrt] = useState(slot?.ort||"");
+  const [verschiebungOrt, setVerschiebungOrt] = useState(slot?.location||"");
   const [verschiebungGrund, setVerschiebungGrund] = useState("");
 
   const TIMES = Array.from({length:(22-7)*2+1},(_,i)=>7+i*0.5);
@@ -4675,8 +4679,8 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 <div style={{fontSize:11,fontWeight:600,color:"#888",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Wochentag</div>
                 <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
                   {DAYS.map(d=>(
-                    <button key={d} onClick={()=>setForm(f=>({...f,wochentag:d}))}
-                      style={{padding:"5px 11px",borderRadius:20,border:`1.5px solid ${form.wochentag===d?BK:GB}`,background:form.wochentag===d?BK:"#fff",color:form.wochentag===d?"#fff":"#555",fontSize:12,cursor:"pointer"}}>
+                    <button key={d} onClick={()=>setForm(f=>({...f,weekday:d}))}
+                      style={{padding:"5px 11px",borderRadius:20,border:`1.5px solid ${form.weekday===d?BK:GB}`,background:form.weekday===d?BK:"#fff",color:form.weekday===d?"#fff":"#555",fontSize:12,cursor:"pointer"}}>
                       {d}
                     </button>
                   ))}
@@ -4727,27 +4731,27 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                       {/* Platz Phase 1 */}
                       <div style={{marginBottom:8}}>
                         <div style={{fontSize:10,color:"#999",marginBottom:4}}>Platz</div>
-                        <select value={form.ort} onChange={e=>setForm(f=>({...f,ort:e.target.value,haelfte:""}))}
-                          style={{width:"100%",padding:"7px 10px",border:`1.5px solid ${form.ort?GB:R+"80"}`,borderRadius:8,fontSize:12,outline:"none"}}>
+                        <select value={form.location} onChange={e=>setForm(f=>({...f,ort:e.target.value,half:""}))}
+                          style={{width:"100%",padding:"7px 10px",border:`1.5px solid ${form.location?GB:R+"80"}`,borderRadius:8,fontSize:12,outline:"none"}}>
                           <option value="" disabled>– Platz wählen –</option>
-                          {TRAININGSPLAETZE.filter(p=>p.aktiv).map(p=>(
+                          {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
                             <option key={p.id} value={p.name}>{p.name}</option>
                           ))}
                         </select>
                       </div>
 
                       {/* Seite Phase 1 */}
-                      {form.ort&&(TRAININGSPLAETZE.find(p=>p.name===form.ort)?.haelften||[]).length>0&&(
+                      {form.location&&(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).length>0&&(
                         <div>
                           <div style={{fontSize:10,color:"#999",marginBottom:4}}>Seite</div>
                           <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                            <button onClick={()=>setForm(f=>({...f,haelfte:""}))}
-                              style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${!form.haelfte?BK:GB}`,background:!form.haelfte?BK:"#fff",color:!form.haelfte?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
+                            <button onClick={()=>setForm(f=>({...f,half:""}))}
+                              style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${!form.half?BK:GB}`,background:!form.half?BK:"#fff",color:!form.half?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
                               Ganzer Platz
                             </button>
-                            {(TRAININGSPLAETZE.find(p=>p.name===form.ort)?.haelften||[]).map(h=>(
-                              <button key={h} onClick={()=>setForm(f=>({...f,haelfte:h}))}
-                                style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${form.haelfte===h?BL:GB}`,background:form.haelfte===h?BL:"#fff",color:form.haelfte===h?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
+                            {(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).map(h=>(
+                              <button key={h} onClick={()=>setForm(f=>({...f,half:h}))}
+                                style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${form.half===h?BL:GB}`,background:form.half===h?BL:"#fff",color:form.half===h?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
                                 {h}
                               </button>
                             ))}
@@ -4757,10 +4761,10 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     </div>
 
                     {/* Wechsel-Zeitpunkt */}
-                    {form.ort&&(
+                    {form.location&&(
                       <div style={{display:"flex",alignItems:"center",gap:10}}>
                         <div style={{fontSize:11,color:"#888",flexShrink:0}}>Wechsel um:</div>
-                        <select value={form.wechsel_zeit} onChange={e=>setForm(f=>({...f,wechsel_zeit:e.target.value?parseFloat(e.target.value):"",end_ort:"",end_haelfte:""}))}
+                        <select value={form.wechsel_zeit} onChange={e=>setForm(f=>({...f,wechsel_zeit:e.target.value?parseFloat(e.target.value):"",end_ort:"",end_half:""}))}
                           style={{flex:1,padding:"7px 10px",border:`1px solid ${GB}`,borderRadius:8,fontSize:12,outline:"none"}}>
                           <option value="">– kein Wechsel –</option>
                           {Array.from({length:(form.end-form.start)*4},(_,i)=>form.start+i*0.25+0.25).filter(t=>t<form.end).map(t=>(
@@ -4771,7 +4775,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     )}
 
                     {/* Phase 2 */}
-                    {form.ort&&form.wechsel_zeit&&(
+                    {form.location&&form.wechsel_zeit&&(
                       <div style={{background:"#fff",borderRadius:8,padding:"10px 12px",border:`0.5px solid ${GB}`}}>
                         <div style={{fontSize:10,fontWeight:700,color:"#555",marginBottom:10}}>
                           Phase 2
@@ -4783,27 +4787,27 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                         {/* Platz Phase 2 */}
                         <div style={{marginBottom:8}}>
                           <div style={{fontSize:10,color:"#999",marginBottom:4}}>Platz</div>
-                          <select value={form.end_ort} onChange={e=>setForm(f=>({...f,end_ort:e.target.value,end_haelfte:""}))}
+                          <select value={form.end_ort} onChange={e=>setForm(f=>({...f,end_ort:e.target.value,end_half:""}))}
                             style={{width:"100%",padding:"7px 10px",border:`1px solid ${GB}`,borderRadius:8,fontSize:12,outline:"none"}}>
-                            <option value="">– gleich wie Phase 1 ({form.ort}) –</option>
-                            {TRAININGSPLAETZE.filter(p=>p.aktiv).map(p=>(
+                            <option value="">– gleich wie Phase 1 ({form.location}) –</option>
+                            {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
                               <option key={p.id} value={p.name}>{p.name}</option>
                             ))}
                           </select>
                         </div>
 
                         {/* Seite Phase 2 */}
-                        {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.ort))?.haelften||[]).length>0&&(
+                        {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).length>0&&(
                           <div>
                             <div style={{fontSize:10,color:"#999",marginBottom:4}}>Seite</div>
                             <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                              <button onClick={()=>setForm(f=>({...f,end_haelfte:""}))}
-                                style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${!form.end_haelfte?BK:GB}`,background:!form.end_haelfte?BK:"#fff",color:!form.end_haelfte?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
+                              <button onClick={()=>setForm(f=>({...f,end_half:""}))}
+                                style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${!form.end_half?BK:GB}`,background:!form.end_half?BK:"#fff",color:!form.end_half?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
                                 Ganzer Platz
                               </button>
-                              {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.ort))?.haelften||[]).map(h=>(
-                                <button key={h} onClick={()=>setForm(f=>({...f,end_haelfte:h}))}
-                                  style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${form.end_haelfte===h?BL:GB}`,background:form.end_haelfte===h?BL:"#fff",color:form.end_haelfte===h?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
+                              {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).map(h=>(
+                                <button key={h} onClick={()=>setForm(f=>({...f,end_half:h}))}
+                                  style={{padding:"4px 12px",borderRadius:20,border:`1.5px solid ${form.end_half===h?BL:GB}`,background:form.end_half===h?BL:"#fff",color:form.end_half===h?"#fff":"#555",fontSize:11,cursor:"pointer"}}>
                                   {h}
                                 </button>
                               ))}
@@ -4814,16 +4818,16 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     )}
 
                     {/* Zusammenfassung */}
-                    {form.ort&&(
+                    {form.location&&(
                       <div style={{fontSize:11,color:"#555",padding:"8px 10px",background:"#EEF2FF",borderRadius:6,lineHeight:1.7}}>
                         <div>
                           <strong>{fmtT(form.start)}–{form.wechsel_zeit?fmtT(form.wechsel_zeit):fmtT(form.end)}</strong>
-                          {" "}{form.ort}{form.haelfte?" / "+form.haelfte:" / Ganzer Platz"}
+                          {" "}{form.location}{form.half?" / "+form.half:" / Ganzer Platz"}
                         </div>
                         {form.wechsel_zeit&&(
                           <div>
                             <strong>{fmtT(form.wechsel_zeit)}–{fmtT(form.end)}</strong>
-                            {" "}{form.end_ort||form.ort}{form.end_haelfte?" / "+form.end_haelfte:" / Ganzer Platz"}
+                            {" "}{form.end_ort||form.location}{form.end_half?" / "+form.end_half:" / Ganzer Platz"}
                           </div>
                         )}
                       </div>
@@ -4864,8 +4868,8 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 </div>
               ) : (
                 <div style={{display:"flex",gap:8,marginTop:4}}>
-                  <button onClick={()=>{ if(!form.ort){alert("Bitte einen Platz auswählen.");return;} setShowSaveDialog(true); }}
-                    style={{flex:1,padding:"11px",borderRadius:10,border:"none",background:form.ort?BK:"#ccc",color:"#fff",fontSize:13,fontWeight:600,cursor:form.ort?"pointer":"not-allowed"}}>
+                  <button onClick={()=>{ if(!form.location){alert("Bitte einen Platz auswählen.");return;} setShowSaveDialog(true); }}
+                    style={{flex:1,padding:"11px",borderRadius:10,border:"none",background:form.location?BK:"#ccc",color:"#fff",fontSize:13,fontWeight:600,cursor:form.location?"pointer":"not-allowed"}}>
                     {isEdit?"Speichern":"Hinzufügen"}
                   </button>
                 </div>
@@ -4875,7 +4879,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={()=>setAusnahmeMode(true)}
                     style={{flex:1,padding:"9px",borderRadius:10,border:`1px solid ${GB}`,background:"#fff",color:"#555",fontSize:12,cursor:"pointer"}}>
-                    ⚡ Ausnahme diese Woche
+                    <i className="ti-bolt"/> Ausnahme diese Woche
                   </button>
                   <button onClick={onDelete}
                     style={{padding:"9px 14px",borderRadius:10,border:`1px solid ${R}`,background:RL,color:R,fontSize:12,cursor:"pointer"}}>
@@ -4888,14 +4892,14 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
             /* Ausnahme-Modus */
             <>
               <div style={{padding:"10px 12px",background:"#FFF7ED",borderRadius:8,border:"1px solid #FED7AA",fontSize:12,color:"#92400E"}}>
-                <strong>{slot?.team} · {slot?.wochentag}</strong> - Ausnahme für diese Woche (oder als neuer Standard).
+                <strong>{slot?.team} · {slot?.weekday}</strong> - Ausnahme für diese Woche (oder als neuer Standard).
               </div>
 
               {/* Typ-Auswahl */}
               <div>
                 <div style={{fontSize:11,fontWeight:600,color:"#888",marginBottom:8,textTransform:"uppercase",letterSpacing:0.5}}>Typ</div>
                 <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                  {[{v:"absage",l:"Absagen",icon:"✕"},{v:"verschiebung",l:"Verschieben",icon:"⏰"},{v:"ort",l:"Ort ändern",icon:"📍"}].map(t=>(
+                  {[{v:"absage",l:"Absagen",icon:"✕"},{v:"verschiebung",l:"Verschieben",icon:"⏰"},{v:"location",l:"Ort ändern",icon:"ti-map-pin"}].map(t=>(
                     <button key={t.v} onClick={()=>setAusnahmeTyp(t.v)}
                       style={{flex:1,padding:"8px",borderRadius:8,border:`1.5px solid ${ausnahmeTyp===t.v?(t.v==="absage"?R:BL):GB}`,background:ausnahmeTyp===t.v?(t.v==="absage"?RL:"#EFF6FF"):"#fff",color:ausnahmeTyp===t.v?(t.v==="absage"?R:BL):"#555",fontSize:12,cursor:"pointer",minWidth:80}}>
                       {t.icon} {t.l}
@@ -4929,13 +4933,13 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               )}
 
               {/* Ort ändern */}
-              {ausnahmeTyp==="ort"&&(
+              {ausnahmeTyp==="location"&&(
                 <div>
                   <div style={{fontSize:11,fontWeight:600,color:"#888",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Neuer Platz</div>
                   <select value={verschiebungOrt} onChange={e=>setVerschiebungOrt(e.target.value)}
                     style={{width:"100%",padding:"8px 10px",border:`1px solid ${GB}`,borderRadius:8,fontSize:13,outline:"none"}}>
                     <option value="" disabled>- Platz wählen (Pflichtfeld) -</option>
-                    {TRAININGSPLAETZE.filter(p=>p.aktiv).map(p=>(
+                    {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
                       <option key={p.id} value={p.name}>{p.name}</option>
                     ))}
                   </select>
@@ -4963,10 +4967,10 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 <button onClick={()=>onAusnahme({
                   type:ausnahmeTyp,
                   slot_id:slot.id,
-                  wochentag:slot.wochentag,
+                  weekday:slot.weekday,
                   team:slot.team,
                   ...(ausnahmeTyp==="verschiebung"?{neue_start:verschiebungStart,neue_end:verschiebungEnd}:{}),
-                  ...(ausnahmeTyp==="ort"?{neuer_ort:verschiebungOrt}:{}),
+                  ...(ausnahmeTyp==="location"?{neuer_ort:verschiebungOrt}:{}),
                   begruendung:verschiebungGrund,
                 },fuerAlleWochen)}
                   style={{flex:1,padding:"11px",borderRadius:10,border:"none",background:ausnahmeTyp==="absage"?R:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>
@@ -4989,9 +4993,9 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 function PlanEditorModal({plan, plaene, onSave, onClose}){
   const [form, setForm] = useState({
     name: plan?.name||"Neuer Trainingsplan",
-    gueltig_ab: plan?.gueltig_ab||new Date().toISOString().split("T")[0],
-    gueltig_bis: plan?.gueltig_bis||"",
-    aktiv: plan?.aktiv??true,
+    valid_from: plan?.valid_from||new Date().toISOString().split("T")[0],
+    valid_until: plan?.valid_until||"",
+    active: plan?.active??true,
   });
 
   return(
@@ -5010,17 +5014,17 @@ function PlanEditorModal({plan, plaene, onSave, onClose}){
           <div style={{display:"flex",gap:12}}>
             <div style={{flex:1}}>
               <div style={{fontSize:11,fontWeight:600,color:"#888",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Gültig ab</div>
-              <input type="date" value={form.gueltig_ab} onChange={e=>setForm(f=>({...f,gueltig_ab:e.target.value}))}
+              <input type="date" value={form.valid_from} onChange={e=>setForm(f=>({...f,valid_from:e.target.value}))}
                 style={{width:"100%",padding:"8px 10px",border:`1px solid ${GB}`,borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
             </div>
             <div style={{flex:1}}>
               <div style={{fontSize:11,fontWeight:600,color:"#888",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Gültig bis</div>
-              <input type="date" value={form.gueltig_bis} onChange={e=>setForm(f=>({...f,gueltig_bis:e.target.value}))}
+              <input type="date" value={form.valid_until} onChange={e=>setForm(f=>({...f,valid_until:e.target.value}))}
                 style={{width:"100%",padding:"8px 10px",border:`1px solid ${GB}`,borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:GR,borderRadius:8}}>
-            <input type="checkbox" id="planAktiv" checked={form.aktiv} onChange={e=>setForm(f=>({...f,aktiv:e.target.checked}))}
+            <input type="checkbox" id="planAktiv" checked={form.active} onChange={e=>setForm(f=>({...f,active:e.target.checked}))}
               style={{width:16,height:16,cursor:"pointer"}}/>
             <label htmlFor="planAktiv" style={{fontSize:12,cursor:"pointer"}}>Plan aktiv (erscheint bei Teams als Termine)</label>
           </div>
@@ -5081,11 +5085,11 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
         const r=await window.storage.get("aufgebot_state");
         if(r){
           const aufgebotState=JSON.parse(r.value);
-          const attEv=ATT_EVENTS.find(e=>e.date===spiel.date&&e.type==="Spiel"&&
+          const attEv=ATT_EVENTS.find(e=>e.date===spiel.date&&e.typee==="Spiel"&&
             (e.opponent===spiel.opponent||e.team===spiel.team));
           if(attEv){
             const aufgebotIds=(aufgebotState[attEv.id]||[]).filter(id=>
-              ROSTER.find(p=>p.id===id&&(p.teams||[]).includes(spiel.team||"")&&!p.rolle)
+              ROSTER.find(p=>p.id===id&&(p.teams||[]).includes(spiel.team||"")&&!p.role)
             );
             if(aufgebotIds.length>0) setStats(s=>({...s,kader:aufgebotIds}));
           }
@@ -5145,10 +5149,10 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
           </div>
           {/* Meta strip */}
           <div style={{display:"flex",gap:14,paddingBottom:14,fontSize:11,color:"rgba(0,0,0,0.55)"}}>
-            <span>📅 {spiel.date}</span>
-            <span>🕐 {spiel.time} Uhr</span>
-            <span>{spiel.home?"🏠 Heim":"✈️ Auswärts"}</span>
-            {spiel.att&&<span>👥 {spiel.att} Spieler</span>}
+            <span><i className="ti-calendar" style={{marginRight:3}}/> {spiel.date}</span>
+            <span><i className="ti-clock" style={{marginRight:3}}/> {spiel.time} Uhr</span>
+            <span>{spiel.home?"Heim":"Auswärts"}</span>
+            {spiel.att&&<span><i className="ti-users" style={{marginRight:3}}/> {spiel.att} Spieler</span>}
           </div>
           {/* Tabs */}
           <div style={{display:"flex",gap:4,marginTop:-1}}>
@@ -5176,7 +5180,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                   </div>
                   <div style={{textAlign:"right"}}>
                     <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginBottom:4}}>{spiel.home?"Heimspiel":"Auswärtsspiel"}</div>
-                    {spiel.att&&<div style={{fontSize:11,color:"rgba(255,255,255,0.6)"}}>👥 {spiel.att} Spieler</div>}
+                    {spiel.att&&<div style={{fontSize:11,color:"rgba(255,255,255,0.6)"}}><i className="ti-users" style={{marginRight:3}}/> {spiel.att} Spieler</div>}
                     <div style={{marginTop:8}}><span style={{background:spiel.result?.split(":")[0]>spiel.result?.split(":")[1]?"#16A34A":spiel.result?.split(":")[0]===spiel.result?.split(":")[1]?"#F3F4F6":"#DC2626",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20}}>{spiel.result?.split(":")[0]>spiel.result?.split(":")[1]?"Sieg":spiel.result?.split(":")[0]===spiel.result?.split(":")[1]?"Unentschieden":"Niederlage"}</span></div>
                   </div>
                 </div>
@@ -5185,7 +5189,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {/* Ort & Treffpunkt */}
               <div style={{display:"grid",gridTemplateColumns:spiel.treffpunkt?"1fr 1fr":"1fr",gap:10}}>
                 <div style={{background:GR,borderRadius:12,padding:"12px 14px",display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                  <span style={{fontSize:20}}>📍</span>
+                  <span style={{fontSize:20}}><i className="ti-map-pin"/></span>
                   <div>
                     <div style={{fontSize:10,color:"#888",fontWeight:600,textTransform:"uppercase",letterSpacing:0.4,marginBottom:2}}>Spielort</div>
                     <div style={{fontWeight:700,fontSize:13,color:BK}}>{spiel.venue}</div>
@@ -5194,7 +5198,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                 </div>
                 {spiel.treffpunkt&&(
                   <div style={{background:"#EFF6FF",borderRadius:12,padding:"12px 14px",display:"flex",alignItems:"center",gap:10,border:"0.5px solid #DBEAFE"}}>
-                    <span style={{fontSize:20}}>🎯</span>
+                    <span style={{fontSize:20}}><i className="ti-target"/></span>
                     <div>
                       <div style={{fontSize:10,color:BL,fontWeight:600,textTransform:"uppercase",letterSpacing:0.4,marginBottom:2}}>Treffpunkt</div>
                       <div style={{fontWeight:700,fontSize:13,color:BK}}>{spiel.treffpunkt}</div>
@@ -5230,17 +5234,17 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {/* Offizielle */}
               <div style={{background:GR,borderRadius:12,overflow:"hidden"}}>
                 <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${GB}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:11,color:"#888"}}>⚖️ Schiedsrichter</span>
+                  <span style={{fontSize:11,color:"#888"}}><i className="ti-scale"/> Schiedsrichter</span>
                   <span style={{fontSize:12,fontWeight:600,color:BK}}>{spiel.schiedsrichter||"-"}</span>
                 </div>
                 <div style={{padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:11,color:"#888"}}>📋 Delegierter</span>
+                  <span style={{fontSize:11,color:"#888"}}>≡ Delegierter</span>
                   <span style={{fontSize:12,fontWeight:600,color:BK}}>{spiel.delegierter||"-"}</span>
                 </div>
               </div>
 
-              {spiel.bemerkung&&<div style={{background:"#FFFBEB",borderRadius:10,padding:"10px 14px",fontSize:12,color:"#92400E",border:"0.5px solid #FDE68A",display:"flex",gap:8,alignItems:"flex-start"}}><span>⚠️</span><span>{spiel.bemerkung}</span></div>}
-              <div style={{padding:"8px 12px",background:"#F0F9FF",borderRadius:8,fontSize:11,color:BL,display:"flex",gap:6,alignItems:"center"}}><span>🔄</span><span>Synchronisiert mit <strong>fvrz.ch</strong> · {spiel.spielNr}</span></div>
+              {spiel.notes&&<div style={{background:"#FFFBEB",borderRadius:10,padding:"10px 14px",fontSize:12,color:"#92400E",border:"0.5px solid #FDE68A",display:"flex",gap:8,alignItems:"flex-start"}}><span>⚠</span><span>{spiel.notes}</span></div>}
+              <div style={{padding:"8px 12px",background:"#F0F9FF",borderRadius:8,fontSize:11,color:BL,display:"flex",gap:6,alignItems:"center"}}><span><i className="ti-refresh"/></span><span>Synchronisiert mit <strong>fvrz.ch</strong> · {spiel.spielNr}</span></div>
             </div>
           )}
 
@@ -5249,7 +5253,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
             <div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                 <div style={{fontSize:11,color:"#aaa"}}>Manuell erfasst · nicht von FVRZ</div>
-                {canEdit&&<button onClick={()=>setEditMode(v=>!v)} style={{padding:"4px 11px",borderRadius:7,fontSize:12,fontWeight:600,cursor:"pointer",border:`0.5px solid ${editMode?GN:GB}`,background:editMode?"#F0FDF4":"#fff",color:editMode?GN:BL}}>{editMode?"✓ Fertig":"✎ Bearbeiten"}</button>}
+                {canEdit&&<button onClick={()=>setEditMode(v=>!v)} style={{padding:"4px 11px",borderRadius:7,fontSize:12,fontWeight:600,cursor:"pointer",border:`0.5px solid ${editMode?GN:GB}`,background:editMode?"#F0FDF4":"#fff",color:editMode?GN:BL}}>{editMode?"Fertig ✓":"Bearbeiten"}</button>}
               </div>
 
               <ST>Kader ({stats.kader.length} Spieler · {stats.kader.length-(stats.ersatz||[]).length} Start · {(stats.ersatz||[]).filter(id=>stats.kader.includes(id)).length} Ersatz)</ST>
@@ -5294,7 +5298,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               </div>
               {editMode&&<AR onAdd={()=>{const p=ROSTER.find(r=>r.name===newTor.kaderName);if(p&&!stats.kader.includes(p.id))setStats(s=>({...s,kader:[...s.kader,p.id]}));setNewTor(t=>({...t,kaderName:""}));}}><SS value={newTor.kaderName||""} onChange={v=>setNewTor(t=>({...t,kaderName:v}))} options={spielerNamen.filter(n=>!kaderNamen.includes(n))} placeholder="Spieler auswählen"/></AR>}
 
-              {!played&&<div style={{padding:"10px 12px",background:"#EFF6FF",borderRadius:8,fontSize:12,color:BL,marginTop:8}}>📋 Startaufstellung - Tore, Assists und Karten können nach dem Spiel erfasst werden.</div>}
+              {!played&&<div style={{padding:"10px 12px",background:"#EFF6FF",borderRadius:8,fontSize:12,color:BL,marginTop:8}}>≡ Startaufstellung - Tore, Assists und Karten können nach dem Spiel erfasst werden.</div>}
 
               {played&&<><ST>Tore ({stats.tore.length})</ST>
               {stats.tore.length===0&&!editMode&&<div style={{fontSize:12,color:"#aaa",marginBottom:4}}>Keine Tore erfasst.</div>}
@@ -5313,11 +5317,11 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               <ST>Karten ({stats.karten.length})</ST>
               {stats.karten.length===0&&!editMode&&<div style={{fontSize:12,color:"#aaa",marginBottom:4}}>Keine Karten erfasst.</div>}
               {stats.karten.map((k,i)=>{
-                const ks=KARTEN_STYLE[k.type]||KARTEN_STYLE["gelb"];
+                const ks=KARTEN_STYLE[k.typee]||KARTEN_STYLE["gelb"];
                 const karteBadge=<span style={{background:ks.bg,color:ks.color,fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:3}}>{ks.label}</span>;
                 return <EZ key={i} icon={karteBadge} text={k.spieler} min={k.min} onDelete={()=>setStats(s=>({...s,karten:s.karten.filter((_,j)=>j!==i)}))}/>;
               })}
-              {editMode&&<AR onAdd={()=>{if(!newKarte.spieler)return;setStats(s=>({...s,karten:[...s.karten,{spieler:newKarte.spieler,min:newKarte.min||"",type:newKarte.type}]}));setNewKarte({spieler:"",min:"",type:"gelb"});}}><SS value={newKarte.spieler} onChange={v=>setNewKarte(k=>({...k,spieler:v}))} options={spielerNamen} placeholder="Spieler"/><SS value={newKarte.type} onChange={v=>setNewKarte(k=>({...k,type:v}))} options={[{value:"gelb",label:"Gelb"},{value:"gelb-rot",label:"Gelb-Rot"},{value:"rot",label:"Rot"}]}/><MI value={newKarte.min} onChange={v=>setNewKarte(k=>({...k,min:v}))}/></AR>}
+              {editMode&&<AR onAdd={()=>{if(!newKarte.spieler)return;setStats(s=>({...s,karten:[...s.karten,{spieler:newKarte.spieler,min:newKarte.min||"",type:newKarte.typee}]}));setNewKarte({spieler:"",min:"",type:"gelb"});}}><SS value={newKarte.spieler} onChange={v=>setNewKarte(k=>({...k,spieler:v}))} options={spielerNamen} placeholder="Spieler"/><SS value={newKarte.typee} onChange={v=>setNewKarte(k=>({...k,type:v}))} options={[{value:"gelb",label:"Gelb"},{value:"gelb-rot",label:"Gelb-Rot"},{value:"rot",label:"Rot"}]}/><MI value={newKarte.min} onChange={v=>setNewKarte(k=>({...k,min:v}))}/></AR>}
 
               <ST>Ein-/Auswechslungen ({stats.wechsel.length})</ST>
               {stats.wechsel.length===0&&!editMode&&<div style={{fontSize:12,color:"#aaa",marginBottom:4}}>Keine Wechsel erfasst.</div>}
@@ -5340,7 +5344,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
 
           {/* -- Player of the Match -- */}
           {activeTab==="motm"&&played&&(()=>{
-            const roster=ROSTER.filter(p=>(p.teams||[]).includes(spiel.team)&&!p.rolle);
+            const roster=ROSTER.filter(p=>(p.teams||[]).includes(spiel.team)&&!p.role);
             const counts=voteCounts(roster);
             const maxV=Math.max(0,...roster.map(p=>counts[p.id]||0));
             const sorted=[...roster].sort((x,y)=>(counts[y.id]||0)-(counts[x.id]||0));
@@ -5356,7 +5360,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               idx+=grp.length;
               rank+=grp.length;
             }
-            const medals=["🥇","🥈","🥉"];
+            const medals=["①","②","③"];
             const gradients=["linear-gradient(135deg,#FEF3C7,#FDE68A)","linear-gradient(135deg,#F3F4F6,#E5E7EB)","linear-gradient(135deg,#FEF9EE,#FDE68A80)"];
             const borders=[AM,"#9CA3AF","#D97706"];
 
@@ -5607,7 +5611,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
       window.storage.set("cancelled_events",JSON.stringify(next)).catch(()=>{});
 
       // Sync mit GANTT: Training-Event → Ausnahme in trainingsAusnahmen schreiben
-      const ev=ATT_EVENTS.find(e=>e.id===evId&&e.type==="Training");
+      const ev=ATT_EVENTS.find(e=>e.id===evId&&e.typee==="Training");
       if(ev){
         (async()=>{
           try{
@@ -5621,13 +5625,13 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
 
             // Passenden GANTT-Slot finden
             const WOCHENTAGE=["So","Mo","Di","Mi","Do","Fr","Sa"];
-            const wochentag=WOCHENTAGE[evDate.getDay()];
+            const weekday=WOCHENTAGE[evDate.getDay()];
             const r=await window.storage.get("trainingsPlaene");
             if(r){
               const plaene=JSON.parse(r.value);
-              const aktiverPlan=plaene.find(p=>p.aktiv)||plaene[0];
+              const aktiverPlan=plaene.find(p=>p.active)||plaene[0];
               const matchSlot=aktiverPlan?.slots?.find(s=>
-                s.wochentag===wochentag&&s.team===ev.team
+                s.weekday===weekday&&s.team===ev.team
               );
               if(matchSlot){
                 const ar=await window.storage.get("trainingsAusnahmen");
@@ -5638,12 +5642,12 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                 if(isCancelling){
                   // Absage hinzufügen
                   newKwAusnahmen=[
-                    ...kwAusnahmen.filter(a=>!(a.slot_id===matchSlot.id&&a.type==="absage")),
-                    {type:"absage",slot_id:matchSlot.id,wochentag,team:ev.team,evId,von_termin:true}
+                    ...week_nrAusnahmen.filter(a=>!(a.slot_id===matchSlot.id&&a.typee==="absage")),
+                    {type:"absage",slot_id:matchSlot.id,weekday,team:ev.team,evId,von_termin:true}
                   ];
                 } else {
                   // Absage rückgängig
-                  newKwAusnahmen=kwAusnahmen.filter(a=>!(a.slot_id===matchSlot.id&&a.type==="absage"&&a.von_termin));
+                  newKwAusnahmen=kwAusnahmen.filter(a=>!(a.slot_id===matchSlot.id&&a.typee==="absage"&&a.von_termin));
                 }
                 await window.storage.set("trainingsAusnahmen",JSON.stringify({...ausnahmen,[kwKey]:newKwAusnahmen}));
 
@@ -5655,7 +5659,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     id:Date.now(),
                     typ:"training_absage",
                     titel:`Training abgesagt: ${ev.team}`,
-                    inhalt:`${wochentag} ${ev.date} · ${ev.time} Uhr · abgesagt vom Trainer`,
+                    inhalt:`${weekday} ${ev.date} · ${ev.time} Uhr · abgesagt vom Trainer`,
                     team:ev.team,
                     datum:ev.date,
                     gelesen:false,
@@ -5720,7 +5724,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
     const stored=responses[evId]?.[pid];
     if(stored?.status) return stored;
     const ev=ATT_EVENTS.find(e=>e.id===evId);
-    if(ev?.type==="Training") return {status:"zu",note:""};
+    if(ev?.typee==="Training") return {status:"zu",note:""};
     return {status:null,note:""};
   };
 
@@ -5747,10 +5751,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
 
   const STATUS_CFG={
     "zu":             {label:"Zusage",        color:GN,    bg:"#ECFDF5", icon:"✓"},
-    "ab":             {label:"Absage",         color:R,     bg:RL,        icon:"✗"},
+    "ab":             {label:"Absage",         color:R,     bg:RL,        icon:"✕"},
     "unentschuldigt": {label:"Unentschuldigt", color:AM, bg:"#FFF7ED", icon:"!"},
     "fraglich":       {label:"Fraglich",       color:AM,    bg:"#FFFBEB", icon:"?"},
-    "aufgebot":       {label:"Aufgebot",     color:"#4F46E5",bg:"#EEF2FF",icon:"⚽"},
+    "aufgebot":       {label:"Aufgebot",     color:"#4F46E5",bg:"#EEF2FF",icon:"ti-ball-football"},
     null:             {label:"Ausstehend",     color:"#888",bg:"#f5f5f5", icon:"-"},
   };
 
@@ -5765,10 +5769,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
     .filter(e=>timeFilter==="alle"||(timeFilter==="kommend"&&!isPast(e))||(timeFilter==="vergangen"&&isPast(e)))
     .filter(e=>{
       if(activeFilters.size===0) return true;
-      if(activeFilters.has("training")&&e.type==="Training") return true;
-      if(activeFilters.has("spiele")&&e.type==="Spiel") return true;
-      if(activeFilters.has("team-event")&&e.type==="Veranstaltung"&&e.subtype==="Team-Event") return true;
-      if(activeFilters.has("vereinsanlass")&&e.type==="Veranstaltung"&&e.subtype==="Vereinsanlass") return true;
+      if(activeFilters.has("training")&&e.typee==="Training") return true;
+      if(activeFilters.has("spiele")&&e.typee==="Spiel") return true;
+      if(activeFilters.has("team-event")&&e.typee==="Veranstaltung"&&e.subtype==="Team-Event") return true;
+      if(activeFilters.has("vereinsanlass")&&e.typee==="Veranstaltung"&&e.subtype==="Vereinsanlass") return true;
       return false;
     })
     .sort((a,b)=>{
@@ -5852,63 +5856,63 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             <div onClick={e=>e.stopPropagation()} style={isMobile?{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",overflowY:"auto",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)"}:{background:"#fff",borderRadius:20,width:"100%",maxWidth:660,maxHeight:"90vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 8px 40px rgba(0,0,0,0.18)"}}>
               {/* Header */}
               {(()=>{
-                const hBg=selEv.type==="Spiel"?"#EFF6FF":selEv.subtype==="Vereinsanlass"?"linear-gradient(135deg,#7C3AED 0%,#6D28D9 100%)":selEv.type==="Veranstaltung"?`linear-gradient(135deg,${AM} 0%,#b45309 100%)`:"#F0FDF4";
-                const hLight=selEv.type==="Spiel"||selEv.type==="Training";
+                const hBg=selEv.typee==="Spiel"?"#EFF6FF":selEv.subtype==="Vereinsanlass"?"linear-gradient(135deg,#7C3AED 0%,#6D28D9 100%)":selEv.typee==="Veranstaltung"?`linear-gradient(135deg,${AM} 0%,#b45309 100%)`:"#F0FDF4";
+                const hLight=selEv.typee==="Spiel"||selEv.typee==="Training";
                 const hTxt=hLight?"#1a1a1a":"#fff";
                 const hTxtSub=hLight?"rgba(0,0,0,0.5)":"rgba(255,255,255,0.75)";
                 const hBtn=hLight?"rgba(0,0,0,0.08)":"rgba(255,255,255,0.18)";
                 return(
                   <div style={{background:hBg,borderRadius:"20px 20px 0 0",padding:"20px 22px",color:"#fff"}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-                      <span style={{background:hBtn,color:hTxt,fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20,textTransform:"uppercase",letterSpacing:0.6}}>{selEv.subtype||selEv.type}</span>
+                      <span style={{background:hBtn,color:hTxt,fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20,textTransform:"uppercase",letterSpacing:0.6}}>{selEv.subtype||selEv.typee}</span>
                       <button onClick={()=>setModalOpen(false)} style={{background:hBtn,border:"none",borderRadius:"50%",width:30,height:30,color:hTxt,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
                     </div>
                     <div style={{fontWeight:900,fontSize:22,lineHeight:1.2,marginBottom:12,color:hTxt}}>
-                      {selEv.opponent?"vs. "+selEv.opponent:selEv.type==="Training"?"Training":selEv.title||selEv.type}
+                      {selEv.opponent?"vs. "+selEv.opponent:selEv.typee==="Training"?"Training":selEv.title||selEv.typee}
                     </div>
                     {/* Info Pills */}
                     <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}>📅 {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
-                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}>🕐 {selEv.time} Uhr</span>
-                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}>📍 {selEv.ort}</span>
-                      {selEv.treffpunkt&&<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}>🎯 {selEv.treffpunkt}</span>}
+                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-calendar" style={{marginRight:3}}/> {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
+                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-clock" style={{marginRight:3}}/> {selEv.time} Uhr</span>
+                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-map-pin" style={{marginRight:3}}/> {selEv.location}</span>
+                      {selEv.treffpunkt&&<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-target" style={{marginRight:3}}/> {selEv.treffpunkt}</span>}
                     </div>
                   </div>
                 );
               })()}
               {/* Beschreibung */}
-              {selEv.beschreibung&&(
+              {selEv.description&&(
                 <div style={{padding:"14px 20px",borderBottom:`0.5px solid ${GB}`,display:"flex",gap:10,background:"#F9FAFB"}}>
                   <span style={{fontSize:16,flexShrink:0}}>ℹ️</span>
-                  <p style={{margin:0,fontSize:13,color:"#444",lineHeight:1.65}}>{selEv.beschreibung}</p>
+                  <p style={{margin:0,fontSize:13,color:"#444",lineHeight:1.65}}>{selEv.description}</p>
                 </div>
               )}
               {/* Weitere Informationen */}
               {(trainerNotes[selEv.id]||besammlungen[selEv.id])&&(
                 <div style={{padding:"14px 20px",borderBottom:`0.5px solid ${GB}`,background:"#fff"}}>
-                  <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>📋 Weitere Informationen</div>
-                  {besammlungen[selEv.id]&&(besammlungen[selEv.id].time||besammlungen[selEv.id].ort)&&(
+                  <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>≡ Weitere Informationen</div>
+                  {besammlungen[selEv.id]&&(besammlungen[selEv.id].time||besammlungen[selEv.id].location)&&(
                     <div style={{marginBottom:trainerNotes[selEv.id]?8:0}}>
-                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}>🎯 Treffpunkt</div>
+                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt</div>
                       <div style={{fontSize:13,color:BK,fontWeight:500}}>
-                        {besammlungen[selEv.id].date&&<span style={{marginRight:8}}>📅 {besammlungen[selEv.id].date}</span>}
-                        {besammlungen[selEv.id].time&&<span style={{marginRight:8}}>🕐 {besammlungen[selEv.id].time} Uhr</span>}
-                        {besammlungen[selEv.id].ort&&<span>🎯 {besammlungen[selEv.id].ort}</span>}
+                        {besammlungen[selEv.id].date&&<span style={{marginRight:8}}><i className="ti-calendar" style={{marginRight:3}}/> {besammlungen[selEv.id].date}</span>}
+                        {besammlungen[selEv.id].time&&<span style={{marginRight:8}}><i className="ti-clock" style={{marginRight:3}}/> {besammlungen[selEv.id].time} Uhr</span>}
+                        {besammlungen[selEv.id].location&&<span><i className="ti-target" style={{marginRight:3}}/> {besammlungen[selEv.id].location}</span>}
                       </div>
                     </div>
                   )}
                   {trainerNotes[selEv.id]&&(
                     <div>
-                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}>📝 Bemerkungen</div>
+                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}><i className="ti-edit" style={{marginRight:3}}/> Bemerkungen</div>
                       <p style={{margin:0,fontSize:13,color:"#1a3a2a",lineHeight:1.7,whiteSpace:"pre-wrap"}}>{trainerNotes[selEv.id]}</p>
                     </div>
                   )}
                 </div>
               )}
               {/* Zum Spielplan Link bei Spielen */}
-              {selEv.type==="Spiel"&&onNavigateToSpiel&&(
+              {selEv.typee==="Spiel"&&onNavigateToSpiel&&(
                 <div style={{padding:"10px 20px",background:"#EFF6FF",borderBottom:`0.5px solid #DBEAFE`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:12,color:BL,fontWeight:500}}>⚽ Dieses Spiel im Spielplan ansehen</span>
+                  <span style={{fontSize:12,color:BL,fontWeight:500}}><i className="ti-ball-football" style={{marginRight:4}}/> Dieses Spiel im Spielplan ansehen</span>
                   <button onClick={()=>{const match=SCHEDULE.find(g=>g.date===selEv.date&&g.opponent===selEv.opponent);setModalOpen(false);if(match)onNavigateToSpiel(match);}}
                     style={{fontSize:11,fontWeight:700,color:BL,background:"#fff",border:`1px solid ${BL}`,borderRadius:20,padding:"3px 12px",cursor:"pointer"}}>
                     Zum Spielplan →
@@ -5921,7 +5925,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   {/* Aufgebot-Banner für Spieler/Eltern */}
                   {!isTrainer&&!isAdmin&&isInAufgebot(selEv.id,myId)&&(
                     <div style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:10,padding:"10px 14px",marginBottom:12,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                      <span style={{fontSize:18}}>⚽</span>
+                      <span style={{fontSize:18}}><i className="ti-ball-football"/></span>
                       <div>
                         <div style={{fontWeight:700,fontSize:13,color:"#4F46E5"}}>Du bist im Aufgebot!</div>
                         <div style={{fontSize:11,color:"#6366F1",marginTop:2}}>
@@ -5931,7 +5935,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     </div>
                   )}
                   {/* Aufgebotene Mitspieler */}
-                  {!isTrainer&&!isAdmin&&selEv.type==="Spiel"&&(()=>{
+                  {!isTrainer&&!isAdmin&&selEv.typee==="Spiel"&&(()=>{
                     const ichSelbst=teamRoster.find(p=>p.id===myId);
                     const mitspieler=teamRoster.filter(p=>p.id!==myId&&isInAufgebot(selEv.id,p.id));
                     const alleAufgebotene=[...(isInAufgebot(selEv.id,myId)&&ichSelbst?[{...ichSelbst,ich:true}]:[]),...mitspieler];
@@ -5980,7 +5984,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:10,marginBottom:14}}>
           {(()=>{
             const rsvpEvs=teamEvents.filter(e=>!(e.subtype==="Vereinsanlass"&&e.rsvp===false));
-            const spielTrainEvs=rsvpEvs.filter(e=>e.type==="Training"||e.type==="Spiel");
+            const spielTrainEvs=rsvpEvs.filter(e=>e.typee==="Training"||e.typee==="Spiel");
 
             /* Vergangene Events → Anwesenheitsquote */
             const pastST=spielTrainEvs.filter(e=>isPast(e));
@@ -5988,12 +5992,12 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             const pastPct=pastST.length?Math.round(pastZu/pastST.length*100):null;
 
             /* Trainings */
-            const pastTrain=spielTrainEvs.filter(e=>e.type==="Training"&&isPast(e));
+            const pastTrain=spielTrainEvs.filter(e=>e.typee==="Training"&&isPast(e));
             const pastTrainZu=pastTrain.filter(e=>getResp(e.id,myId).status==="zu").length;
             const trainPct=pastTrain.length?Math.round(pastTrainZu/pastTrain.length*100):null;
 
             /* Spiele */
-            const pastSpiele=spielTrainEvs.filter(e=>e.type==="Spiel"&&isPast(e));
+            const pastSpiele=spielTrainEvs.filter(e=>e.typee==="Spiel"&&isPast(e));
             const pastSpieleZu=pastSpiele.filter(e=>getResp(e.id,myId).status==="zu").length;
             const spielPct=pastSpiele.length?Math.round(pastSpieleZu/pastSpiele.length*100):null;
 
@@ -6060,7 +6064,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           {(showMoreEvents?filteredEvents:filteredEvents.slice(0,5)).map(ev=>{
             const resp=getResp(ev.id,myId);
             const past=isPast(ev);
-            const accentColor=ev.type==="Spiel"?BL:ev.subtype==="Vereinsanlass"?"#7C3AED":ev.type==="Veranstaltung"?AM:GN;
+            const accentColor=ev.typee==="Spiel"?BL:ev.subtype==="Vereinsanlass"?"#7C3AED":ev.typee==="Veranstaltung"?AM:GN;
             const dateParts=ev.date.split(" ");
             const weekday=dateParts[0]||"";
             const dayMonth=dateParts[1]||ev.date;
@@ -6071,7 +6075,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             const isZu=resp.status==="zu";
             const isAb=resp.status==="ab";
             const isCancelled=!!cancelledEvents[ev.id];
-            const canCancel=isTrainer&&!past&&(ev.type==="Training"||ev.subtype==="Team-Event");
+            const canCancel=isTrainer&&!past&&(ev.typee==="Training"||ev.subtype==="Team-Event");
             const showRsvp=!past&&!canCancel&&!(ev.subtype==="Vereinsanlass"&&ev.rsvp===false);
             const inAufgebot=!past&&isInAufgebot(ev.id,myId);
 
@@ -6100,20 +6104,20 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:3}}>
                     <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                       <div style={{fontWeight:600,fontSize:14,color:isCancelled?"#aaa":"#1A1A1A",textDecoration:isCancelled?"line-through":"none"}}>
-                        {ev.opponent?"vs. "+ev.opponent:ev.type==="Training"?"Training · "+ev.team:ev.title||ev.type}
+                        {ev.opponent?"vs. "+ev.opponent:ev.typee==="Training"?"Training · "+ev.team:ev.title||ev.typee}
                       </div>
                       <span style={{background:accentColor+"18",color:accentColor,fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20,flexShrink:0}}>
-                        {ev.subtype||ev.type}
+                        {ev.subtype||ev.typee}
                       </span>
                       {isCancelled&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R,flexShrink:0}}>⚠ Abgesagt</span>}
-                      {inAufgebot&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",flexShrink:0}}>⚽ Aufgebot</span>}
+                      {inAufgebot&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",flexShrink:0}}><i className="ti-ball-football" style={{marginRight:3}}/> Aufgebot</span>}
                       {past&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:isZu?"#ECFDF5":isAb?RL:"#F3F4F6",color:isZu?GN:isAb?R:"#aaa",flexShrink:0}}>{isZu?"✓ Anwesend":isAb?"✕ Abwesend":"-"}</span>}
                     </div>
                     <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:"2px 6px",fontSize:11,color:"#888"}}>
-                      <span>🕐 {ev.time} Uhr</span>
-                      {ev.type==="Spiel"&&ev.treffpunkt&&(<>
+                      <span><i className="ti-clock" style={{marginRight:3}}/> {ev.time} Uhr</span>
+                      {ev.typee==="Spiel"&&ev.treffpunkt&&(<>
                         <span style={{color:"#ddd"}}>·</span>
-                        <span>🎯 <span style={{fontWeight:600,color:"#666"}}>Treffpunkt: </span>{ev.treffpunkt}</span>
+                        <span><i className="ti-target" style={{marginRight:3}}/> <span style={{fontWeight:600,color:"#666"}}>Treffpunkt: </span>{ev.treffpunkt}</span>
                       </>)}
                     </div>
                   </div>
@@ -6125,13 +6129,13 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     <div style={{display:"flex",background:"#F3F3F1",borderRadius:10,padding:3,gap:2}}>
                       <button onClick={()=>setResp(ev.id,myId,isZu?null:"zu")}
                         style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isZu?"#16A34A":"transparent",color:isZu?"#fff":(!isZu&&!isAb)?"#888":"#bbb",fontSize:12,fontWeight:isZu?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
-                        <span style={{fontSize:14}}>👍</span>
+                        <span style={{fontSize:14}}>▲</span>
                         <span>{isZu?"Zugesagt":"Zusagen"}</span>
                       </button>
                       <div style={{width:1,background:GB,flexShrink:0,margin:"4px 0"}}/>
                       <button onClick={()=>setResp(ev.id,myId,isAb?null:"ab")}
                         style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isAb?"#DC2626":"transparent",color:isAb?"#fff":(!isZu&&!isAb)?"#888":"#bbb",fontSize:12,fontWeight:isAb?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
-                        <span style={{fontSize:14}}>👎</span>
+                        <span style={{fontSize:14}}>▽</span>
                         <span>{isAb?"Abgesagt":"Absagen"}</span>
                       </button>
                     </div>
@@ -6174,8 +6178,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           <div onClick={e=>e.stopPropagation()} style={isMobile?{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",overflowY:"auto",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)"}:{background:"#fff",borderRadius:20,width:"100%",maxWidth:660,maxHeight:"90vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 8px 40px rgba(0,0,0,0.18)"}}>
             {/* Modal Header */}
             {(()=>{
-              const hBg=selEv.type==="Spiel"?"#EFF6FF":selEv.subtype==="Vereinsanlass"?"linear-gradient(135deg,#7C3AED 0%,#6D28D9 100%)":selEv.type==="Veranstaltung"?`linear-gradient(135deg,${AM} 0%,#b45309 100%)`:"#F0FDF4";
-                const hLight=selEv.type==="Spiel"||selEv.type==="Training";
+              const hBg=selEv.typee==="Spiel"?"#EFF6FF":selEv.subtype==="Vereinsanlass"?"linear-gradient(135deg,#7C3AED 0%,#6D28D9 100%)":selEv.typee==="Veranstaltung"?`linear-gradient(135deg,${AM} 0%,#b45309 100%)`:"#F0FDF4";
+                const hLight=selEv.typee==="Spiel"||selEv.typee==="Training";
                 const hTxt=hLight?"#1a1a1a":"#fff";
                 const hTxtSub=hLight?"rgba(0,0,0,0.5)":"rgba(255,255,255,0.75)";
                 const hBtn=hLight?"rgba(0,0,0,0.08)":"rgba(255,255,255,0.18)";
@@ -6183,17 +6187,17 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                 <div style={{background:hBg,borderRadius:"20px 20px 0 0",padding:"20px 22px",overflow:"hidden"}}>
                   {cancelledEvents[selEv.id]&&(
                     <div style={{background:hBtn,borderRadius:10,padding:"8px 14px",marginBottom:12,display:"flex",alignItems:"center",gap:8,border:"0.5px solid rgba(0,0,0,0.1)"}}>
-                      <span style={{fontSize:16}}>⚠️</span>
+                      <span style={{fontSize:16}}>⚠</span>
                       <span style={{color:hTxt,fontWeight:700,fontSize:13}}>Dieser Termin wurde abgesagt</span>
                       {isTrainer&&<button onClick={()=>toggleCancel(selEv.id)} style={{marginLeft:"auto",fontSize:11,padding:"3px 10px",borderRadius:20,border:"0.5px solid rgba(255,255,255,0.4)",background:"transparent",color:"#fff",cursor:"pointer",fontWeight:600}}>↩ Rückgängig</button>}
                     </div>
                   )}
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
                     <span style={{background:hBtn,color:hTxt,fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20,letterSpacing:0.8,textTransform:"uppercase"}}>
-                      {selEv.subtype||selEv.type}
+                      {selEv.subtype||selEv.typee}
                     </span>
                     <div style={{display:"flex",alignItems:"center",gap:7,flexShrink:0}}>
-                      {isTrainer&&!isPast(selEv)&&(selEv.type==="Training"||selEv.subtype==="Team-Event")&&(
+                      {isTrainer&&!isPast(selEv)&&(selEv.typee==="Training"||selEv.subtype==="Team-Event")&&(
                         <button onClick={()=>toggleCancel(selEv.id)}
                           style={{display:"flex",alignItems:"center",gap:5,background:cancelledEvents[selEv.id]?hBtn:hBtn,border:"0.5px solid rgba(0,0,0,0.15)",borderRadius:20,padding:"4px 12px",cursor:"pointer",color:hTxt,fontSize:11,fontWeight:700}}>
                           {cancelledEvents[selEv.id]?"↩ Reaktivieren":"✕ Training absagen"}
@@ -6204,14 +6208,14 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     </div>
                   </div>
                   <div style={{color:hTxt,fontWeight:900,fontSize:22,lineHeight:1.15,marginBottom:12,letterSpacing:-0.3}}>
-                    {selEv.opponent?"vs. "+selEv.opponent:selEv.type==="Training"?"Training":selEv.title||selEv.type}
+                    {selEv.opponent?"vs. "+selEv.opponent:selEv.typee==="Training"?"Training":selEv.title||selEv.typee}
                   </div>
                   {/* Info Pills */}
                   <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
-                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}>📅 {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
-                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}>🕐 {selEv.time} Uhr</span>
-                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}>📍 {selEv.ort}</span>
-                    {(()=>{const b=besammlungen[selEv.id]||{};const t=b.time||"";const o=b.ort||selEv.treffpunkt||"";return (t||o)?<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}>🎯 {t?t+" Uhr":""}{t&&o?" · ":""}{o}</span>:null;})()}
+                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-calendar" style={{marginRight:3}}/> {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
+                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-clock" style={{marginRight:3}}/> {selEv.time} Uhr</span>
+                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-map-pin" style={{marginRight:3}}/> {selEv.location}</span>
+                    {(()=>{const b=besammlungen[selEv.id]||{};const t=b.time||"";const o=b.location||selEv.treffpunkt||"";return (t||o)?<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-target" style={{marginRight:3}}/> {t?t+" Uhr":""}{t&&o?" · ":""}{o}</span>:null;})()}
                   </div>
                   {/* Deadline & Erinnerung - für alle editierbaren Events */}
                   {canEditEvent(selEv)&&(
@@ -6233,7 +6237,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                       ):(
                         <span onClick={()=>setEditingDeadline(true)}
                           style={{color:hTxt,fontWeight:600,fontSize:11,cursor:"pointer",background:hBtn,padding:"3px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}>
-                          {deadlines[selEv.id]||"Setzen ✎"}{deadlines[selEv.id]?" Uhr":""}
+                          {deadlines[selEv.id]||"Setzen"}{deadlines[selEv.id]?" Uhr":""}
                         </span>
                       )}
                       <button onClick={()=>setAutoReminder(prev=>({...prev,[selEv.id]:!prev[selEv.id]}))}
@@ -6242,7 +6246,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                           <span style={{position:"absolute",top:2,left:autoReminder[selEv.id]?11:2,width:8,height:8,borderRadius:"50%",background:autoReminder[selEv.id]?GN:(hLight?"rgba(0,0,0,0.2)":"rgba(255,255,255,0.4)")}}/>
                         </span>
                         <span style={{opacity:autoReminder[selEv.id]?1:0.5,color:hTxt}}>
-                          {autoReminder[selEv.id]?"🔔 Erinnerung":"Keine Erinnerung"}
+                          {autoReminder[selEv.id]?"◬ Erinnerung":"Keine Erinnerung"}
                         </span>
                       </button>
                       {autoReminder[selEv.id]&&(
@@ -6258,26 +6262,26 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
               );
             })()}
             {/* Beschreibung für Vereinsanlass/Team-Event */}
-            {selEv.beschreibung&&(
+            {selEv.description&&(
               <div style={{padding:"14px 20px",background:"#F9FAFB",borderBottom:`0.5px solid ${GB}`,display:"flex",gap:12,alignItems:"flex-start"}}>
                 <span style={{fontSize:18,flexShrink:0,marginTop:1}}>ℹ️</span>
-                <p style={{margin:0,fontSize:13,color:"#444",lineHeight:1.7}}>{selEv.beschreibung}</p>
+                <p style={{margin:0,fontSize:13,color:"#444",lineHeight:1.7}}>{selEv.description}</p>
               </div>
             )}
             {/* Weitere Informationen */}
             <div style={{padding:"14px 20px",borderBottom:`0.5px solid ${GB}`,background:"#fff"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-                <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.5}}>📋 Weitere Informationen</div>
+                <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.5}}>≡ Weitere Informationen</div>
                 {canEditEvent(selEv)&&(
                   <button onClick={()=>setEditingNote(v=>!v)}
                     style={{fontSize:11,fontWeight:600,color:editingNote?R:BL,background:"transparent",border:"none",cursor:"pointer",padding:"2px 6px"}}>
-                    {editingNote?"✓ Fertig":"✎ Bearbeiten"}
+                    {editingNote?"Fertig ✓":"Bearbeiten"}
                   </button>
                 )}
               </div>
               {/* Besammlung */}
               <div style={{marginBottom:10}}>
-                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:6}}>🎯 Treffpunkt</div>
+                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:6}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt</div>
                 {editingNote&&canEditEvent(selEv)?(
                   <div style={{display:"flex",flexDirection:"column",gap:6}}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
@@ -6296,26 +6300,26 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     </div>
                     <div>
                       <div style={{fontSize:10,color:"#aaa",marginBottom:2}}>Ort</div>
-                      <input value={besammlungen[selEv.id]?.ort||""} onChange={e=>saveBesammlung(selEv.id,"ort",e.target.value)}
+                      <input value={besammlungen[selEv.id]?.location||""} onChange={e=>saveBesammlung(selEv.id,"location",e.target.value)}
                         placeholder="z.B. Sportanlage Aabach, Parkplatz Bahnhof…"
                         style={{width:"100%",padding:"7px 8px",border:`1px solid ${GB}`,borderRadius:7,fontSize:12,boxSizing:"border-box",outline:"none"}}/>
                     </div>
                   </div>
                 ):(()=>{
                   const b=besammlungen[selEv.id]||{};
-                  const hasData=b.time||b.ort||b.date;
+                  const hasData=b.time||b.location||b.date;
                   return hasData?(
                     <div style={{fontSize:13,color:BK}}>
-                      {b.date&&<span style={{marginRight:8}}>📅 {b.date}</span>}
-                      {b.time&&<span style={{marginRight:8}}>🕐 {b.time} Uhr</span>}
-                      {b.ort&&<span>📍 {b.ort}</span>}
+                      {b.date&&<span style={{marginRight:8}}><i className="ti-calendar" style={{marginRight:3}}/> {b.date}</span>}
+                      {b.time&&<span style={{marginRight:8}}><i className="ti-clock" style={{marginRight:3}}/> {b.time} Uhr</span>}
+                      {b.location&&<span><i className="ti-map-pin" style={{marginRight:3}}/> {b.location}</span>}
                     </div>
                   ):<div style={{fontSize:12,color:"#ccc",fontStyle:"italic"}}>Noch nicht gesetzt</div>;
                 })()}
               </div>
               {/* Notizen */}
               <div>
-                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:4}}>📝 Bemerkungen</div>
+                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:4}}><i className="ti-edit" style={{marginRight:3}}/> Bemerkungen</div>
                 {editingNote&&canEditEvent(selEv)?(
                   <textarea value={trainerNotes[selEv.id]||""} onChange={e=>saveTrainerNote(selEv.id,e.target.value)}
                     placeholder="Bemerkungen, Taktik-Hinweise, Infos für Spieler und Eltern…" rows={3}
@@ -6328,9 +6332,9 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
               </div>
             </div>
             {/* Zum Spielplan Link bei Spielen */}
-            {selEv.type==="Spiel"&&onNavigateToSpiel&&(
+            {selEv.typee==="Spiel"&&onNavigateToSpiel&&(
               <div style={{padding:"10px 20px",background:"#EFF6FF",borderBottom:`0.5px solid #DBEAFE`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,color:BL,fontWeight:500}}>⚽ Dieses Spiel im Spielplan ansehen</span>
+                <span style={{fontSize:12,color:BL,fontWeight:500}}><i className="ti-ball-football" style={{marginRight:4}}/> Dieses Spiel im Spielplan ansehen</span>
                 <button onClick={()=>{const match=SCHEDULE.find(g=>g.date===selEv.date&&g.opponent===selEv.opponent);setModalOpen(false);if(match)onNavigateToSpiel(match);}}
                   style={{fontSize:11,fontWeight:700,color:BL,background:"#fff",border:`1px solid ${BL}`,borderRadius:20,padding:"3px 12px",cursor:"pointer"}}>
                   Zum Spielplan →
@@ -6371,8 +6375,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             {/* Spieler-Liste */}
             <div style={{padding:"0 0 4px"}}>
               <div style={{padding:"8px 20px 4px",background:GR,borderBottom:`0.5px solid ${GB}`}}>
-                <div style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.type==="Spiel"?" auto":""}`,fontSize:10,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,gap:"0 16px"}}>
-                  <span>Spieler</span><span style={{textAlign:"center"}}>Status</span><span style={{minWidth:80,textAlign:"left"}}>Begründung</span>{selEv.type==="Spiel"&&<span style={{textAlign:"center",color:"#4F46E5"}}>⚽</span>}
+                <div style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.typee==="Spiel"?" auto":""}`,fontSize:10,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,gap:"0 16px"}}>
+                  <span>Spieler</span><span style={{textAlign:"center"}}>Status</span><span style={{minWidth:80,textAlign:"left"}}>Begründung</span>{selEv.typee==="Spiel"&&<span style={{textAlign:"center",color:"#4F46E5"}}><i className="ti-ball-football"/></span>}
                 </div>
               </div>
               {teamRoster.map((p,i)=>{
@@ -6380,7 +6384,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                 const editingNote=showNoteFor===p.id;
                 const statusColor=resp.status==="zu"?GN:resp.status==="ab"?R:resp.status==="unentschuldigt"?AM:resp.status==="fraglich"?AM:"#F3F4F6";
                 return(
-                  <div key={p.id} style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.type==="Spiel"?" auto":""}`,alignItems:"center",gap:"0 16px",padding:"8px 20px",borderBottom:`0.5px solid ${GB}`,background:resp.status==="zu"?"#F9FFFB":resp.status==="ab"?"#FFF9F9":resp.status==="unentschuldigt"?"#FFF7ED":"#fff"}}>
+                  <div key={p.id} style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.typee==="Spiel"?" auto":""}`,alignItems:"center",gap:"0 16px",padding:"8px 20px",borderBottom:`0.5px solid ${GB}`,background:resp.status==="zu"?"#F9FFFB":resp.status==="ab"?"#FFF9F9":resp.status==="unentschuldigt"?"#FFF7ED":"#fff"}}>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
                       <div style={{width:4,height:28,borderRadius:2,background:statusColor,flexShrink:0}}/>
                       <Av name={p.name} size={28} bg={resp.status==="zu"?GN:resp.status==="ab"?R:resp.status==="unentschuldigt"?AM:resp.status==="fraglich"?AM:"#D1D5DB"}/>
@@ -6390,7 +6394,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                       </div>
                     </div>
                     <div style={{display:"flex",gap:3,justifyContent:"center"}}>
-                      {(canEditEvent(selEv)?(selEv.type==="Spiel"?["zu","ab","unentschuldigt"]:selEv.type==="Veranstaltung"?["zu","ab"]:["zu","ab","unentschuldigt"]):[]).map(s=>{
+                      {(canEditEvent(selEv)?(selEv.typee==="Spiel"?["zu","ab","unentschuldigt"]:selEv.typee==="Veranstaltung"?["zu","ab"]:["zu","ab","unentschuldigt"]):[]).map(s=>{
                         const cfg=STATUS_CFG[s];
                         const active=resp.status===s;
                         return(
@@ -6413,10 +6417,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                         <span style={{fontSize:11,color:resp.note?"#555":"#ccc",fontStyle:resp.note?"normal":"italic"}}>{resp.note||"-"}</span>
                       )}
                     </div>
-                    {selEv.type==="Spiel"&&(
+                    {selEv.typee==="Spiel"&&(
                       <button onClick={()=>toggleAufgebot(selEv.id,p.id)} title="Im Aufgebot"
                         style={{width:30,height:30,borderRadius:"50%",border:`1.5px solid ${isInAufgebot(selEv.id,p.id)?"#4F46E5":"#F3F4F6"}`,background:isInAufgebot(selEv.id,p.id)?"#4F46E5":"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                        ⚽
+                        <i className="ti-ball-football"/>
                       </button>
                     )}
                   </div>
@@ -6454,8 +6458,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           const c=evCounts(ev);
           const noRsvp=ev.subtype==="Vereinsanlass"&&ev.rsvp===false;
           const isCancelled=!!cancelledEvents[ev.id];
-          const canCancel=isTrainer&&!isPast(ev)&&(ev.type==="Training"||ev.subtype==="Team-Event");
-          const accentColor=ev.type==="Spiel"?BL:ev.subtype==="Vereinsanlass"?"#7C3AED":ev.type==="Veranstaltung"?AM:GN;
+          const canCancel=isTrainer&&!isPast(ev)&&(ev.typee==="Training"||ev.subtype==="Team-Event");
+          const accentColor=ev.typee==="Spiel"?BL:ev.subtype==="Vereinsanlass"?"#7C3AED":ev.typee==="Veranstaltung"?AM:GN;
           const dateParts=ev.date.split(" ");
           const weekday=dateParts[0]||"";
           const dayMonth=dateParts[1]||ev.date;
@@ -6463,9 +6467,9 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           const dayNum=dayMonth.split(".")[0];
           const monNum=parseInt(dayMonth.split(".")[1])||0;
           const monName=MONTHS[monNum]||dayMonth.split(".")[1];
-          const isSpiel=ev.type==="Spiel";
+          const isSpiel=ev.typee==="Spiel";
           const isVerein=ev.subtype==="Vereinsanlass";
-          const isVeranst=ev.type==="Veranstaltung"&&!isVerein;
+          const isVeranst=ev.typee==="Veranstaltung"&&!isVerein;
           const needsRichCard=isSpiel||isVerein||isVeranst;
           const headerBg=isSpiel?"#1a3a2a":isVerein?"#4C1D95":"#78350F";
           return(
@@ -6486,10 +6490,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     <div style={{width:1,alignSelf:"stretch",background:"rgba(255,255,255,0.15)",marginRight:14,flexShrink:0}}/>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontWeight:700,fontSize:15,color:"#fff",lineHeight:1.25,textDecoration:isCancelled?"line-through":"none"}}>
-                        {ev.opponent?"vs. "+ev.opponent:ev.title||ev.type}
+                        {ev.opponent?"vs. "+ev.opponent:ev.title||ev.typee}
                       </div>
                       <div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginTop:2}}>
-                        {isSpiel?(ev.home?"Heimspiel":"Auswärtsspiel"):ev.subtype||ev.type}
+                        {isSpiel?(ev.home?"Heimspiel":"Auswärtsspiel"):ev.subtype||ev.typee}
                         {isCancelled&&" · ⚠ Abgesagt"}
                       </div>
                     </div>
@@ -6518,14 +6522,14 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:3}}>
                     <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                       <div style={{fontWeight:600,fontSize:14,color:isCancelled?"#aaa":"#1A1A1A",textDecoration:isCancelled?"line-through":"none"}}>
-                        {ev.type==="Training"?"Training · "+ev.team:ev.title||ev.type}
+                        {ev.typee==="Training"?"Training · "+ev.team:ev.title||ev.typee}
                       </div>
                       <span style={{background:accentColor+"18",color:accentColor,fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,flexShrink:0}}>
-                        {ev.subtype||ev.type}
+                        {ev.subtype||ev.typee}
                       </span>
                       {isCancelled&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R}}>⚠ Abgesagt</span>}
                     </div>
-                    <div style={{fontSize:11,color:"#888"}}>🕐 {ev.time} Uhr</div>
+                    <div style={{fontSize:11,color:"#888"}}><i className="ti-clock" style={{marginRight:3}}/> {ev.time} Uhr</div>
                   </div>
                 </div>
               )}
@@ -6559,13 +6563,13 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     <div style={{display:"flex",background:"#F3F3F1",borderRadius:10,padding:3,gap:2}}>
                       <button onClick={()=>setResp(ev.id,myId,isZu?null:"zu")}
                         style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isZu?"#16A34A":"transparent",color:isZu?"#fff":none?"#888":"#bbb",fontSize:12,fontWeight:isZu?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
-                        <span style={{fontSize:14}}>👍</span>
+                        <span style={{fontSize:14}}>▲</span>
                         <span>{isZu?"Zugesagt":"Zusagen"}</span>
                       </button>
                       <div style={{width:1,background:GB,flexShrink:0,margin:"4px 0"}}/>
                       <button onClick={()=>setResp(ev.id,myId,isAb?null:"ab")}
                         style={{flex:1,padding:"9px 8px",border:"none",borderRadius:8,background:isAb?"#DC2626":"transparent",color:isAb?"#fff":none?"#888":"#bbb",fontSize:12,fontWeight:isAb?700:400,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
-                        <span style={{fontSize:14}}>👎</span>
+                        <span style={{fontSize:14}}>▽</span>
                         <span>{isAb?"Abgesagt":"Absagen"}</span>
                       </button>
                     </div>
@@ -6635,7 +6639,7 @@ function StatsTab({team="Cc-Junioren"}){
   /* Generate per-team stats from ROSTER + seeded random */
   const seed=(str)=>str.split("").reduce((a,c)=>a+c.charCodeAt(0),0);
   const rnd=(n,min,max)=>{let s=seed(n+team);s=((s*1664525+1013904223)&0xFFFFFFFF)>>>0;return min+Math.floor((s/0xFFFFFFFF)*(max-min+1));};
-  const players=ROSTER.filter(p=>(p.teams||[]).includes(team)&&!p.rolle);
+  const players=ROSTER.filter(p=>(p.teams||[]).includes(team)&&!p.role);
   const stats=players.map(p=>{
     const nm=`${p.firstName} ${p.lastName}`;
     return{name:nm,sp:rnd(nm+"sp",6,14),tore:rnd(nm+"t",0,9),assists:rnd(nm+"a",0,7),gelb:rnd(nm+"g",0,3),rot:rnd(nm+"r",0,1)};
@@ -6711,8 +6715,8 @@ function MembersView({role}){
                 </td>
                 <td style={{padding:"9px 13px"}}><Chip text={m.role} color={R}/></td>
                 <td style={{padding:"9px 13px",color:"#555"}}>{m.team}</td>
-                <td style={{padding:"9px 13px"}}><Chip text={m.type} color={BL} bg="#EFF6FF"/></td>
-                <td style={{padding:"9px 13px",color:"#555"}}>{m.ort}</td>
+                <td style={{padding:"9px 13px"}}><Chip text={m.typee} color={BL} bg="#EFF6FF"/></td>
+                <td style={{padding:"9px 13px",color:"#555"}}>{m.location}</td>
                 <td style={{padding:"9px 13px"}}>
                   <Chip text={m.status} color={m.status==="Vollständig"?GN:m.status==="Prüfung fällig"?AM:R} bg={m.status==="Vollständig"?"#ECFDF5":m.status==="Prüfung fällig"?"#FFFBEB":RL}/>
                 </td>
@@ -6775,93 +6779,405 @@ function FieldVisView(){
   );
 }
 
-function SyncView(){
-  return(
-    <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>Fairgate-Synchronisation</h1>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:14}}>
-        <Card>
-          <STitle>Import aus Fairgate</STitle>
-          {["Personen & Adressen","Kontaktdaten","Elternkontakte","Teams & Gruppen","Rollen & Mitgliedstatus","Spielerpassdaten","J+S Nummern"].map((x,i)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<6?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13}}>{x}</span>
-              <Chip text="Sync OK" color={GN} bg="#ECFDF5"/>
-            </div>
-          ))}
-        </Card>
-        <Card>
-          <STitle>Rückschreiben nach Fairgate</STitle>
-          {["Adresse","Telefon / E-Mail","Rechnungs-E-Mail","Elternkontakte","Korrigierte Stammdaten"].map((x,i,a)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<a.length-1?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13}}>{x}</span>
-              <Chip text={i===2?"Ausstehend":"Sync OK"} color={i===2?AM:GN} bg={i===2?"#FFFBEB":"#ECFDF5"}/>
-            </div>
-          ))}
-          <InfoBox text="Rechnungs-E-Mail: 3 Datensätze warten auf Synchronisation." color={AM}/>
-        </Card>
-        <Card>
-          <STitle>FVRZ-Synchronisation</STitle>
-          {["Spielplan (aktuell)","Tabelle (aktuell)","Resultate","Spielernummern"].map((x,i)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13}}>{x}</span>
-              <Chip text={i===0?"Fehler":"Sync OK"} color={i===0?R:GN} bg={i===0?RL:"#ECFDF5"}/>
-            </div>
-          ))}
-          <InfoBox text="FVRZ API: Verbindungsfehler. Letzter erfolgreicher Sync: vor 4h." color={R}/>
-          <div style={{marginTop:12}}><Btn variant="primary" color="#F3F4F6">Sync erneut versuchen</Btn></div>
-        </Card>
-        <Card>
-          <STitle>SportDB BABS Export</STitle>
-          <p style={{margin:"0 0 12px",fontSize:13,color:"#555"}}>Export der An-/Abwesenheiten für den Import in die SportDB des BABS.</p>
-          {["Team","Zeitraum"].map((x,i)=>(
-            <div key={i} style={{marginBottom:10}}>
-              <label style={{fontSize:11,color:"#888"}}>{x}</label><br/>
-              <select style={{width:"100%",padding:"6px 8px",border:`0.5px solid ${GB}`,borderRadius:7,fontSize:13}}>
-                {i===0?<><option>Cc-Junioren</option><option>D-Junioren</option><option>Alle</option></>:<><option>2024/25</option><option>2023/24</option></>}
-              </select>
-            </div>
-          ))}
-          <Btn variant="primary" color={BL}>Export herunterladen</Btn>
-        </Card>
-      </div>
-    </div>
-  );
-}
+function SyncView(){ return <PortalverwaltungView initialTab="api"/>; }
+function AuditView(){ return <PortalverwaltungView initialTab="audit"/>; }
 
-function AuditView(){
-  const entries=[
-    {time:"14:22",user:"Sandra Berger",action:"Export Mitgliederliste (CSV, 187 Einträge)",cat:"Export"},
-    {time:"12:00",user:"Admin User",   action:"Fairgate-Sync manuell ausgelöst",           cat:"Sync"},
-    {time:"10:45",user:"Admin User",   action:"Rolle geändert: Marco Senn → Materialwart", cat:"Rollen"},
-    {time:"10:12",user:"Thomas Müller",action:"Spieler-Export Cc-Junioren (Kaderliste)",    cat:"Export"},
-    {time:"09:30",user:"Sandra Berger",action:"Stammdaten geändert: Adresse Noah Beispiel",cat:"Stammdaten"},
-    {time:"09:00",user:"System",       action:"Automatischer Fairgate-Import",             cat:"Sync"},
+/* ══════════════════════════════════════════════════════════════════
+   PORTALVERWALTUNG — Zentrales Admin-Cockpit
+   Tabs: Module & Rechte | Benutzer & Rollen | Feldsichtbarkeit |
+         API-Verbindungen | Audit-Logs
+   ══════════════════════════════════════════════════════════════════ */
+function PortalverwaltungView({initialTab="module"}){
+  const [tab,setTab]=useState(initialTab);
+  const [module,setModule]=useState([]);
+  const [moduleConfig,setModuleConfig]=useState({});
+  const [moduleBerechtigungen,setModuleBerechtigungen]=useState({});
+  const [felder,setFelder]=useState([]);
+  const [apiVerbindungen,setApiVerbindungen]=useState([]);
+  const [auditLogs,setAuditLogs]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [saveMsg,setSaveMsg]=useState("");
+  const [expandedModul,setExpandedModul]=useState(null);
+  const [benutzerListe,setBenutzerListe]=useState([]);
+
+  const TABS=[
+    {key:"module",    label:"Module & Rechte",   icon:"ti-layout-grid"},
+    {key:"users",     label:"Benutzer & Rollen", icon:"ti-users"},
+    {key:"feldvis",   label:"Feldsichtbarkeit",  icon:"ti-eye"},
+    {key:"api",       label:"API-Verbindungen",  icon:"ti-plug"},
+    {key:"audit",     label:"Audit-Logs",        icon:"ti-clipboard-list"},
   ];
-  const CC={Export:BL,Sync:GN,Rollen:"#7C3AED",Stammdaten:AM};
+
+  const ROLLEN=["administrator","administration","funktionaer","trainer","spieler","eltern"];
+  const ROLLEN_LABELS={administrator:"Admin",administration:"Verwaltung",funktionaer:"Funktionär",trainer:"Trainer",spieler:"Spieler",eltern:"Eltern"};
+  const KATEGORIEN=["kern","sport","kommunikation","betrieb","verwaltung","admin"];
+  const KAT_LABELS={kern:"Kern",sport:"Sport",kommunikation:"Kommunikation",betrieb:"Betrieb",verwaltung:"Verwaltung",admin:"Systemverwaltung"};
+
+  const API_INFOS={
+    fairgate:   {description:"Mitglieder, Gruppen, Stammdaten automatisch synchronisieren",felder:["Personen & Adressen","Kontaktdaten","Elternkontakte","Teams & Gruppen","Spielerpassdaten","J+S Nummern"]},
+    football_ch:{description:"Spielpläne, Resultate und Ranglisten von Football.ch importieren",felder:["Spielplan","Resultate","Ranglisten","Teaminfos"]},
+    fvrz:       {description:"Spielplan und Tabelle vom FVRZ (Fussballverband Region Zürich)",felder:["Spielplan","Tabelle","Resultate","Spielernummern"]},
+    clubdesk:   {description:"Mitgliederdaten und Vereinsverwaltung aus ClubDesk synchronisieren",felder:["Mitglieder","Adressen","Mitgliedschaften","Beiträge"]},
+    sfa:        {description:"Spielerdaten und Lizenzen von Swiss Football Association",felder:["Spielerlizenzen","Transferdaten","Sperren"]},
+  };
+
+  useEffect(function(){
+    (async function(){
+      setLoading(true);
+      try{
+        if(supabase){
+          const [modR,cfgR,bercR,feldR,apiR,audR,benuR]=await Promise.all([
+            supabase.from("module").select("*").order("sort_order"),
+            supabase.from("module_config").select("*"),
+            supabase.from("module_berechtigungen").select("*"),
+            supabase.from("feldsichtbarkeit").select("*"),
+            supabase.from("api_verbindungen").select("*").order("sort_order"),
+            supabase.from("api_sync_log").select("*,api_verbindungen(label)").order("gestartet_am",{ascending:false}).limit(50),
+            supabase.from("benutzer").select("id,name,email,role,aktiv").order("name"),
+          ]);
+          if(modR.data) setModule(modR.data);
+          if(cfgR.data){const c={};cfgR.data.forEach(r=>{c[r.modul_id]=r;});setModuleConfig(c);}
+          if(bercR.data){
+            const b={};
+            bercR.data.forEach(r=>{
+              if(!b[r.modul_id]) b[r.modul_id]={};
+              b[r.modul_id][r.role]=r;
+            });
+            setModuleBerechtigungen(b);
+          }
+          if(feldR.data) setFelder(feldR.data);
+          if(apiR.data) setApiVerbindungen(apiR.data);
+          if(audR.data) setAuditLogs(audR.data);
+          if(benuR.data) setBenutzerListe(benuR.data);
+        }
+      }catch(e){console.warn("[FCH] Portalverwaltung laden:",e.message);}
+      setLoading(false);
+    })();
+  },[]);
+
+  async function toggleModulAktiv(modulId,aktiv){
+    if(!supabase) return;
+    await supabase.from("module_config").upsert({modul_id:modulId,aktiv,updated_by:supabase.auth.getUser?.()?.id});
+    setModuleConfig(prev=>({...prev,[modulId]:{...prev[modulId],aktiv}}));
+    setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
+  }
+
+  async function toggleBerechtigung(modulId,rolle,feld,wert){
+    if(!supabase) return;
+    const curr=moduleBerechtigungen[modulId]?.[rolle]||{};
+    const update={modul_id:modulId,rolle,...curr,[feld]:wert};
+    await supabase.from("module_berechtigungen").upsert(update);
+    setModuleBerechtigungen(prev=>({
+      ...prev,
+      [modulId]:{...prev[modulId],[rolle]:{...curr,[feld]:wert}}
+    }));
+    setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
+  }
+
+  async function toggleFeld(feldKey,rolle,sichtbar){
+    if(!supabase) return;
+    await supabase.from("feldsichtbarkeit").upsert({feld_key:feldKey,rolle,sichtbar},{onConflict:"feld_key,rolle"});
+    setFelder(prev=>prev.map(f=>f.feld_key===feldKey&&f.role===rolle?{...f,sichtbar}:f));
+    setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
+  }
+
+  async function updateBenutzerRolle(id,role){
+    if(!supabase) return;
+    await supabase.from("benutzer").update({role}).eq("id",id);
+    setBenutzerListe(prev=>prev.map(b=>b.id===id?{...b,role}:b));
+    setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
+  }
+
+  const moduleNachKat=KATEGORIEN.reduce(function(acc,k){
+    acc[k]=module.filter(m=>m.category===k);
+    return acc;
+  },{});
+
+  const felderNachKey={};
+  felder.forEach(f=>{
+    if(!felderNachKey[f.feld_key]) felderNachKey[f.feld_key]={label:f.feld_label||f.feld_key,rollen:{}};
+    felderNachKey[f.feld_key].rolen[f.role]=f.sichtbar;
+  });
+
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>Audit-Logs</h1>
-      <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-          <thead>
-            <tr style={{background:GR}}>
-              {["Zeit","Benutzer","Aktion","Kategorie"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"#777",fontSize:10,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((e,i)=>(
-              <tr key={i} style={{borderTop:`0.5px solid ${GB}`,background:i%2===0?"#fff":"#fafaf8"}}>
-                <td style={{padding:"9px 13px",color:"#888",fontWeight:600,whiteSpace:"nowrap"}}>Heute {e.time+" Uhr"}</td>
-                <td style={{padding:"9px 13px",fontWeight:600}}>{e.user}</td>
-                <td style={{padding:"9px 13px",color:"#555"}}>{e.action}</td>
-                <td style={{padding:"9px 13px"}}><Chip text={e.cat} color={CC[e.cat]||"#888"} bg={(CC[e.cat]||"#888")+"18"}/></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
+        <div>
+          <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Portalverwaltung</h1>
+          <div style={{fontSize:12,color:"#888",marginTop:3}}>Module, Benutzer, API-Verbindungen und Einstellungen</div>
+        </div>
+        {saveMsg&&<Chip text={saveMsg} color={GN} bg="#ECFDF5"/>}
+      </div>
+
+      {/* Tabs */}
+      <div style={{display:"flex",gap:4,marginBottom:20,borderBottom:`1px solid ${GB}`,paddingBottom:0}}>
+        {TABS.map(t=>(
+          <button key={t.key} onClick={()=>setTab(t.key)} style={{
+            display:"flex",alignItems:"center",gap:6,padding:"8px 14px",
+            background:"none",border:"none",borderBottom:tab===t.key?`2px solid #1A1A1A`:"2px solid transparent",
+            cursor:"pointer",fontSize:13,fontWeight:tab===t.key?700:400,
+            color:tab===t.key?BK:"#888",borderRadius:0,marginBottom:-1,
+          }}>
+            <i className={t.icon} style={{fontSize:14}}/>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {loading&&<div style={{padding:40,textAlign:"center",color:"#888",fontSize:13}}>Wird geladen…</div>}
+
+      {/* ── TAB: MODULE & RECHTE ── */}
+      {!loading&&tab==="module"&&(
+        <div>
+          <InfoBox text="Module ein/aus schaltet das Modul für den ganzen Verein. Berechtigungen steuern wer lesen, schreiben oder verwalten darf." color={BL}/>
+          <div style={{height:16}}/>
+          {KATEGORIEN.filter(k=>moduleNachKat[k]?.length>0).map(kat=>(
+            <div key={kat} style={{marginBottom:24}}>
+              <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.8,marginBottom:8}}>{KAT_LABELS[kat]}</div>
+              <Card style={{padding:0}}>
+                {moduleNachKat[kat].map((m,i)=>{
+                  const cfg=moduleConfig[m.id];
+                  const aktiv=cfg?.active!==false;
+                  const berc=moduleBerechtigungen[m.id]||{};
+                  const expanded=expandedModul===m.id;
+                  return(
+                    <div key={m.id} style={{borderTop:i>0?`0.5px solid ${GB}`:"none"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",cursor:"pointer"}}
+                        onClick={()=>setExpandedModul(expanded?null:m.id)}>
+                        <i className={m.icon||"ti-circle"} style={{fontSize:16,color:aktiv?BK:"#ccc",width:20,textAlign:"center"}}/>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:13,fontWeight:600,color:aktiv?BK:"#aaa"}}>{m.label}</div>
+                          <div style={{fontSize:11,color:"#999"}}>{m.description}</div>
+                        </div>
+                        {/* Toggle aktiv */}
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          <span style={{fontSize:11,color:"#888"}}>{aktiv?"Aktiv":"Inaktiv"}</span>
+                          <div onClick={function(e){e.stopPropagation();toggleModulAktiv(m.id,!aktiv);}}
+                            style={{width:36,height:20,borderRadius:10,background:aktiv?"#22c55e":"#d1d5db",cursor:"pointer",position:"relative",transition:"background 0.2s"}}>
+                            <div style={{position:"absolute",top:2,left:aktiv?18:2,width:16,height:16,borderRadius:"50%",background:"#fff",transition:"left 0.2s"}}/>
+                          </div>
+                          <i className={expanded?"ti-chevron-up":"ti-chevron-down"} style={{fontSize:13,color:"#888"}}/>
+                        </div>
+                      </div>
+                      {/* Expandierte Berechtigungen */}
+                      {expanded&&(
+                        <div style={{background:"#fafaf8",borderTop:`0.5px solid ${GB}`,padding:"12px 16px"}}>
+                          <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.5,marginBottom:10}}>Berechtigungen pro Rolle</div>
+                          <div style={{overflowX:"auto"}}>
+                            <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                              <thead>
+                                <tr>
+                                  <th style={{textAlign:"left",padding:"4px 8px",color:"#888",fontWeight:600,fontSize:11}}>Rolle</th>
+                                  <th style={{textAlign:"center",padding:"4px 8px",color:"#888",fontWeight:600,fontSize:11}}>Lesen</th>
+                                  <th style={{textAlign:"center",padding:"4px 8px",color:"#888",fontWeight:600,fontSize:11}}>Schreiben</th>
+                                  <th style={{textAlign:"center",padding:"4px 8px",color:"#888",fontWeight:600,fontSize:11}}>Verwalten</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {ROLLEN.map(rolle=>{
+                                  const b=berc[rolle]||{};
+                                  const isAdmin=rolle==="administrator";
+                                  return(
+                                    <tr key={rolle} style={{borderTop:`0.5px solid ${GB}`}}>
+                                      <td style={{padding:"6px 8px",fontWeight:600,fontSize:12}}>{ROLLEN_LABELS[rolle]}</td>
+                                      {["kann_lesen","kann_schreiben","kann_verwalten"].map(feld=>{
+                                        const val=isAdmin?true:(b[feld]||false);
+                                        return(
+                                          <td key={feld} style={{textAlign:"center",padding:"6px 8px"}}>
+                                            <div onClick={isAdmin?undefined:()=>toggleBerechtigung(m.id,rolle,feld,!val)}
+                                              style={{width:20,height:20,borderRadius:4,background:val?GN:"#e5e7eb",cursor:isAdmin?"not-allowed":"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",border:`1px solid ${val?"#16a34a":"#d1d5db"}`}}>
+                                              {val&&<i className="ti-check" style={{fontSize:11,color:"#fff"}}/>}
+                                            </div>
+                                          </td>
+                                        );
+                                      })}
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </Card>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── TAB: BENUTZER & ROLLEN ── */}
+      {!loading&&tab==="users"&&(
+        <div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+            <div style={{fontSize:13,color:"#888"}}>{benutzerListe.length} Benutzer</div>
+            <Btn variant="primary" color={BK} onClick={()=>{}}>+ Benutzer einladen</Btn>
+          </div>
+          <Card style={{padding:0,overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+              <thead>
+                <tr style={{background:GR}}>
+                  {["Name","E-Mail","Rolle","Status","Aktion"].map((h,i)=>(
+                    <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"#777",fontSize:10,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {benutzerListe.length===0&&(
+                  <tr><td colSpan={5} style={{padding:"20px",textAlign:"center",color:"#aaa",fontSize:13}}>Keine Benutzer gefunden</td></tr>
+                )}
+                {benutzerListe.map((b,i)=>(
+                  <tr key={b.id} style={{borderTop:`0.5px solid ${GB}`,background:i%2===0?"#fff":"#fafaf8"}}>
+                    <td style={{padding:"9px 13px",fontWeight:600}}>{b.name||"—"}</td>
+                    <td style={{padding:"9px 13px",color:"#555",fontSize:12}}>{b.email}</td>
+                    <td style={{padding:"9px 13px"}}>
+                      <select value={b.role||"spieler"} onChange={e=>updateBenutzerRolle(b.id,e.target.value)}
+                        style={{padding:"4px 8px",border:`0.5px solid ${GB}`,borderRadius:6,fontSize:12,background:"#fff"}}>
+                        {ROLLEN.map(r=><option key={r} value={r}>{ROLLEN_LABELS[r]}</option>)}
+                      </select>
+                    </td>
+                    <td style={{padding:"9px 13px"}}>
+                      <Chip text={b.active?"Aktiv":"Inaktiv"} color={b.active?GN:R} bg={b.active?"#ECFDF5":RL}/>
+                    </td>
+                    <td style={{padding:"9px 13px"}}>
+                      <button style={{background:"none",border:"none",cursor:"pointer",color:"#888",fontSize:13,padding:"2px 6px"}}>
+                        <i className="ti-edit" style={{fontSize:14}}/>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </div>
+      )}
+
+      {/* ── TAB: FELDSICHTBARKEIT ── */}
+      {!loading&&tab==="feldvis"&&(
+        <div>
+          <InfoBox text="Steuert welche Mitglieder-Felder pro Rolle sichtbar sind. Änderungen wirken sofort." color={BL}/>
+          <div style={{height:12}}/>
+          <Card style={{padding:0,overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+              <thead>
+                <tr style={{background:GR}}>
+                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"#777",fontSize:10,textTransform:"uppercase",letterSpacing:0.4}}>Feld</th>
+                  {ROLLEN.map((r,i)=>(
+                    <th key={i} style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:"#777",fontSize:10,textTransform:"uppercase",letterSpacing:0.4}}>{ROLLEN_LABELS[r]}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(felderNachKey).map(([key,data],i)=>(
+                  <tr key={key} style={{borderTop:`0.5px solid ${GB}`,background:i%2===0?"#fff":"#fafaf8"}}>
+                    <td style={{padding:"9px 13px",fontWeight:600}}>{data.label}</td>
+                    {ROLLEN.map(rolle=>{
+                      const sichtbar=data.rolen[rolle]||false;
+                      const isAdmin=rolle==="administrator";
+                      return(
+                        <td key={rolle} style={{padding:"9px 13px",textAlign:"center"}}>
+                          <div onClick={isAdmin?undefined:()=>toggleFeld(key,rolle,!sichtbar)}
+                            style={{width:20,height:20,borderRadius:4,background:sichtbar?GN:"#e5e7eb",cursor:isAdmin?"not-allowed":"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",border:`1px solid ${sichtbar?"#16a34a":"#d1d5db"}`}}>
+                            {sichtbar&&<i className="ti-check" style={{fontSize:11,color:"#fff"}}/>}
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+                {Object.keys(felderNachKey).length===0&&(
+                  <tr><td colSpan={7} style={{padding:20,textAlign:"center",color:"#aaa",fontSize:13}}>
+                    Noch keine Felder konfiguriert — SQL-Schema importieren
+                  </td></tr>
+                )}
+              </tbody>
+            </table>
+          </Card>
+        </div>
+      )}
+
+      {/* ── TAB: API-VERBINDUNGEN ── */}
+      {!loading&&tab==="api"&&(
+        <div>
+          <InfoBox text="API-Keys werden aus Sicherheitsgründen nicht in der Datenbank gespeichert. Sie werden als Vercel Environment Variables konfiguriert." color={AM}/>
+          <div style={{height:16}}/>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:14}}>
+            {(apiVerbindungen.length>0?apiVerbindungen:Object.entries(API_INFOS).map(([key,info])=>({key,label:key,active:false,konfiguriert:false,sync_status:"deaktiviert",...info}))).map(api=>{
+              const info=API_INFOS[api.key]||{};
+              const statusColor=api.sync_status==="ok"?GN:api.sync_status==="fehler"?R:api.sync_status==="ausstehend"?AM:"#aaa";
+              const statusBg=api.sync_status==="ok"?"#ECFDF5":api.sync_status==="fehler"?RL:api.sync_status==="ausstehend"?"#FFFBEB":"#f5f5f3";
+              return(
+                <Card key={api.key}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <i className="ti-plug" style={{fontSize:18,color:api.active?BK:"#ccc"}}/>
+                      <span style={{fontWeight:700,fontSize:14}}>{api.label||api.key}</span>
+                    </div>
+                    <Chip text={api.sync_status||"deaktiviert"} color={statusColor} bg={statusBg}/>
+                  </div>
+                  <p style={{fontSize:12,color:"#666",margin:"0 0 10px",lineHeight:1.5}}>{info.description||"Externe API-Verbindung"}</p>
+                  {info.felder&&(
+                    <div style={{marginBottom:12}}>
+                      <div style={{fontSize:11,color:"#888",fontWeight:600,marginBottom:4}}>Synchronisierte Daten:</div>
+                      {info.felder.map((f,i)=>(
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:6,fontSize:12,color:"#555",padding:"2px 0"}}>
+                          <i className="ti-check" style={{fontSize:11,color:api.active?GN:"#ccc"}}/>{f}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {api.letzter_sync&&(
+                    <div style={{fontSize:11,color:"#888",marginBottom:10}}>
+                      Letzter Sync: {new Date(api.letzter_sync).toLocaleString("de-CH")}
+                    </div>
+                  )}
+                  <div style={{display:"flex",gap:8}}>
+                    {api.active&&<Btn sm variant="primary" color={BL} onClick={()=>{}}>Sync starten</Btn>}
+                    <Btn sm variant="outline" color="#888" onClick={()=>{}}>Konfigurieren</Btn>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── TAB: AUDIT-LOGS ── */}
+      {!loading&&tab==="audit"&&(
+        <div>
+          <Card style={{padding:0,overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+              <thead>
+                <tr style={{background:GR}}>
+                  {["Zeit","API / System","Status","Neu","Aktualisiert","Fehler","Details"].map((h,i)=>(
+                    <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"#777",fontSize:10,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {auditLogs.length===0&&(
+                  <tr><td colSpan={7} style={{padding:"20px",textAlign:"center",color:"#aaa",fontSize:13}}>Noch keine Sync-Logs vorhanden</td></tr>
+                )}
+                {auditLogs.map((log,i)=>(
+                  <tr key={log.id} style={{borderTop:`0.5px solid ${GB}`,background:i%2===0?"#fff":"#fafaf8"}}>
+                    <td style={{padding:"9px 13px",color:"#888",whiteSpace:"nowrap",fontSize:12}}>
+                      {log.gestartet_am?new Date(log.gestartet_am).toLocaleString("de-CH",{dateStyle:"short",timeStyle:"short"}):"—"}
+                    </td>
+                    <td style={{padding:"9px 13px",fontWeight:600}}>{log.api_verbindungen?.label||"System"}</td>
+                    <td style={{padding:"9px 13px"}}><Chip text={log.status||"—"} color={log.status==="ok"?GN:log.status==="fehler"?R:AM} bg={log.status==="ok"?"#ECFDF5":log.status==="fehler"?RL:"#FFFBEB"}/></td>
+                    <td style={{padding:"9px 13px",color:GN,fontWeight:600}}>{log.datensaetze_neu||0}</td>
+                    <td style={{padding:"9px 13px",color:BL,fontWeight:600}}>{log.datensaetze_aktualisiert||0}</td>
+                    <td style={{padding:"9px 13px",color:log.datensaetze_fehler>0?R:"#aaa",fontWeight:600}}>{log.datensaetze_fehler||0}</td>
+                    <td style={{padding:"9px 13px",color:"#555",fontSize:12,maxWidth:200,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{log.meldung||"—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
@@ -6948,7 +7264,7 @@ function EventsList({teamOnly,role}){
   const [newEvent,setNewEvent]=useState({title:"",type:isTrainer?"Team-Event":"Team-Event",date:"",time:"",loc:"",rsvp:true});
 
   /* Trainer sieht nur Team-Events bei teamOnly */
-  const list=teamOnly?EVENTS.filter(e=>e.type==="Team-Event"):isTrainer?EVENTS:EVENTS;
+  const list=teamOnly?EVENTS.filter(e=>e.typee==="Team-Event"):isTrainer?EVENTS:EVENTS;
 
   const typeOptions=isTrainer?["Team-Event"]:["Team-Event","Vereinsanlass"];
 
@@ -6976,7 +7292,7 @@ function EventsList({teamOnly,role}){
             </div>
             <div>
               <div style={{fontSize:11,color:"#888",marginBottom:4}}>Typ</div>
-              <select value={newEvent.type} onChange={e=>setNewEvent(p=>({...p,type:e.target.value}))}
+              <select value={newEvent.typee} onChange={e=>setNewEvent(p=>({...p,type:e.target.value}))}
                 style={{width:"100%",padding:"6px 10px",border:`0.5px solid ${GB}`,borderRadius:7,fontSize:13}}>
                 {typeOptions.map(t=><option key={t} value={t}>{t}</option>)}
               </select>
@@ -7009,7 +7325,7 @@ function EventsList({teamOnly,role}){
       )}
       <div style={{display:"flex",flexDirection:"column",gap:12,marginTop:teamOnly?0:14}}>
         {list.map((e,i)=>{
-          const accentColor=e.type==="Team-Event"?BL:e.type==="Vereinsanlass"?"#7C3AED":R;
+          const accentColor=e.typee==="Team-Event"?BL:e.typee==="Vereinsanlass"?"#7C3AED":R;
           return(
             <div key={i} style={{background:"#fff",border:`0.5px solid ${GB}`,borderRadius:12,overflow:"hidden",display:"flex",marginBottom:10}}>
               {/* Left accent bar */}
@@ -7019,7 +7335,7 @@ function EventsList({teamOnly,role}){
                 {/* Type + RSVP badge row */}
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:7}}>
                   <span style={{background:accentColor+"18",color:accentColor,fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20,border:`0.5px solid ${accentColor}30`}}>
-                    {e.type}
+                    {e.typee}
                   </span>
                   {e.rsvp&&(
                     <span style={{fontSize:10,fontWeight:600,color:AM,background:"#F9FAFB",border:"0.5px solid #FDE68A",padding:"2px 8px",borderRadius:20}}>
@@ -7048,15 +7364,15 @@ function EventsList({teamOnly,role}){
                 {/* Meta */}
                 <div style={{display:"flex",alignItems:"center",gap:0,flexWrap:"wrap",fontSize:12,color:"#666"}}>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span>{"📅"}</span>{e.date}{e.endDate?" - "+e.endDate:""}
+                    <span>{"<i className=\"ti-calendar\"/>"}</span>{e.date}{e.endDate?" - "+e.endDate:""}
                   </span>
                   <span style={{color:"#ddd",margin:"0 8px"}}>{"|"}</span>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span>{"🕐"}</span>{e.time+" Uhr"}
+                    <span>{"<i className=\"ti-clock\"/>"}</span>{e.time+" Uhr"}
                   </span>
                   <span style={{color:"#ddd",margin:"0 8px"}}>{"|"}</span>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span>{"📍"}</span>{e.loc}
+                    <span>{"<i className=\"ti-map-pin\"/>"}</span>{e.loc}
                   </span>
                 </div>
               </div>
@@ -7081,9 +7397,9 @@ function getHelperName(role,account){
 /* Alle möglichen Übergabe-Empfänger (alle Helfer ausser dem aktuellen) */
 const ALLE_HELFER_NAMEN = HELPERS.map(h=>h.name);
 
-function BemerkungEdit({bemerkung,onSave}){
+function BemerkungEdit({notes,onSave}){
   const [editing,setEditing]=useState(false);
-  const [draft,setDraft]=useState(bemerkung||"");
+  const [draft,setDraft]=useState(notes||"");
   if(editing) return(
     <div style={{display:"flex",gap:4,marginTop:4,alignItems:"center"}} onClick={e=>e.stopPropagation()}>
       <input autoFocus value={draft} onChange={e=>setDraft(e.target.value)} placeholder="Bemerkung…"
@@ -7093,10 +7409,10 @@ function BemerkungEdit({bemerkung,onSave}){
       <button onClick={()=>setEditing(false)} style={{padding:"1px 6px",borderRadius:6,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}>✕</button>
     </div>
   );
-  return <button onClick={e=>{e.stopPropagation();setEditing(true);setDraft(bemerkung||"");}} style={{marginTop:3,fontSize:9,color:"#aaa",background:"none",border:"none",cursor:"pointer",padding:0}}>📝 Bemerkung</button>;
+  return <button onClick={e=>{e.stopPropagation();setEditing(true);setDraft(notes||"");}} style={{marginTop:3,fontSize:9,color:"#aaa",background:"none",border:"none",cursor:"pointer",padding:0}}><i className="ti-edit" style={{marginRight:3}}/> Bemerkung</button>;
 }
 
-function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen,teamMitglieder,schichtenState,onEintragen,onFreigeben,onÜbertragen,freigabeAnfragen,bemerkung,onSaveBemerkung}){
+function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen,teamMitglieder,schichtenState,onEintragen,onFreigeben,onÜbertragen,freigabeAnfragen,notes,onSaveBemerkung}){
   const helfer=schichtenState[schicht.id]??schicht.helfer;
   const filled=helfer.length, max=schicht.max;
   const pct=Math.round(filled/max*100);
@@ -7160,10 +7476,10 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
           <div style={{minWidth:0}}>
             <div style={{fontWeight:700,fontSize:13,color:BK,lineHeight:1.2}}>{schicht.label}</div>
             <div style={{fontSize:10,color:"#888",marginTop:3,display:"flex",alignItems:"center",gap:3}}>
-              <span>{"📍"}</span><span>{einsatz.ort}</span>
+              <span>{"<i className=\"ti-map-pin\"/>"}</span><span>{einsatz.location}</span>
             </div>
-            {bemerkung&&<div style={{fontSize:10,color:AM,marginTop:3,fontStyle:"italic"}}>📝 {bemerkung}</div>}
-            {canEdit&&onSaveBemerkung&&<BemerkungEdit bemerkung={bemerkung} onSave={onSaveBemerkung}/>}
+            {notes&&<div style={{fontSize:10,color:AM,marginTop:3,fontStyle:"italic"}}><i className="ti-edit" style={{marginRight:3}}/> {notes}</div>}
+            {canEdit&&onSaveBemerkung&&<BemerkungEdit notes={notes} onSave={onSaveBemerkung}/>}
           </div>
           <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:statusBg,color:statusColor,flexShrink:0,whiteSpace:"nowrap"}}>
             {statusText}
@@ -7260,7 +7576,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
               <div style={{fontSize:11,fontWeight:600,color:"#0891B2",marginBottom:6}}>Schicht an wen übertragen?</div>
               {/* Suchfeld */}
               <div style={{position:"relative",marginBottom:6}}>
-                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}>🔍</span>
+                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
                 <input
                   value={zuteilSearch}
                   onChange={e=>{setZuteilSearch(e.target.value);setTransferTarget("");}}
@@ -7322,7 +7638,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
               <div style={{fontSize:11,fontWeight:600,color:GN,marginBottom:6}}>Wen zuteilen?</div>
               {/* Suchfeld */}
               <div style={{position:"relative",marginBottom:6}}>
-                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}>🔍</span>
+                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
                 <input
                   value={zuteilSearch}
                   onChange={e=>{setZuteilSearch(e.target.value);setZuteilTarget("");}}
@@ -7386,7 +7702,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         <div style={{marginTop:6,display:"flex",gap:4,flexWrap:"wrap"}}>
           {helfer.map((h,i)=>(
             <button key={i} onClick={()=>onFreigeben(schicht.id,h)} style={{padding:"2px 8px",borderRadius:6,fontSize:10,cursor:"pointer",border:`0.5px solid ${R}`,background:"#fff",color:R}}>
-              {h} ✗
+              {h} ✕
             </button>
           ))}
         </div>
@@ -7428,8 +7744,8 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
           <div style={{fontSize:16,fontWeight:700,color:BK,letterSpacing:-0.2}}>{schicht.eventName}</div>
           <div style={{fontSize:12,color:"#888",marginTop:3,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
             <span>{schicht.einsatzName}</span>
-            {schicht.einsatzDate&&<><span style={{opacity:0.4}}>{"|"}</span><span>{"📅 "+schicht.einsatzDate}</span></>}
-            {schicht.einsatzOrt&&<><span style={{opacity:0.4}}>{"|"}</span><span>{"📍 "+schicht.einsatzOrt}</span></>}
+            {schicht.einsatzDate&&<><span style={{opacity:0.4}}>{"|"}</span><span>{""+schicht.einsatzDate}</span></>}
+            {schicht.einsatzOrt&&<><span style={{opacity:0.4}}>{"|"}</span><span>{""+schicht.einsatzOrt}</span></>}
           </div>
         </div>
         <div style={{flexShrink:0}}>
@@ -7531,16 +7847,16 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
   });
   const [collapsedEinsaetze,setCollapsedEinsaetze]=useState({});
   const toggleEinsatz=(id)=>setCollapsedEinsaetze(prev=>({...prev,[id]:!prev[id]}));
-  const [bemerkungState,setBemerkungState]=useState({}); /* einsatzId/schichtId → text */
+  const [notesState,setBemerkungState]=useState({}); /* einsatzId/schichtId → text */
   const [editingBemerkung,setEditingBemerkung]=useState(null);
-  const [bemerkungDraft,setBemerkungDraft]=useState("");
+  const [notesDraft,setBemerkungDraft]=useState("");
   useEffect(()=>{
-    (async()=>{try{const r=await window.storage.get("helfer_bemerkungen");if(r)setBemerkungState(JSON.parse(r.value));}catch(e){}})();
+    (async()=>{try{const r=await window.storage.get("helfer_notesen");if(r)setBemerkungState(JSON.parse(r.value));}catch(e){}})();
   },[]);
   const saveBemerkung=(id,text)=>{
-    const next={...bemerkungState,[id]:text};
+    const next={...notesState,[id]:text};
     setBemerkungState(next);
-    window.storage.set("helfer_bemerkungen",JSON.stringify(next));
+    window.storage.set("helfer_notesen",JSON.stringify(next));
     setEditingBemerkung(null);
   };
   const schichtenRef=useRef({});
@@ -7679,21 +7995,21 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
   const meinGruppe=meineGruppen[0]||null;
 
   const TABS= teamOnly ? [
-    ...(meinGruppe?[{key:"team",label:"👥 Meinem Team zugewiesen"}]:[]),
-    ...(canEdit?[{key:"controlling",label:"📊 Controlling"}]:[]),
+    ...(meinGruppe?[{key:"team",label:"Meinem Team zugewiesen"}]:[]),
+    ...(canEdit?[{key:"controlling",label:"Controlling"}]:[]),
   ] : [
-    {key:"browse",  label:"📋 Offene Einsätze"},
-    {key:"mein",    label:"👤 Meine Einsätze"},
-    ...(meinGruppe?[{key:"team",label:"👥 Meinem Team zugewiesen"}]:[]),
-    ...(canEdit?[{key:"controlling",label:"📊 Controlling"}]:[]),
-    ...(canErstellen?[{key:"erstellen",label:"➕ Einsatz erfassen"}]:[]),
+    {key:"browse",  label:"≡ Offene Einsätze"},
+    {key:"mein",    label:"Meine Einsätze"},
+    ...(meinGruppe?[{key:"team",label:"Meinem Team zugewiesen"}]:[]),
+    ...(canEdit?[{key:"controlling",label:"Controlling"}]:[]),
+    ...(canErstellen?[{key:"erstellen",label:"+ Einsatz erfassen"}]:[]),
   ];
 
   /* Meine Schichten */
   const meineSchichten=[];
   for(const ev of HELPER_EVENTS) for(const e of ev.einsaetze) for(const s of e.schichten){
     const h=schichtenState[s.id]??s.helfer;
-    if(h.includes(aktiverName)) meineSchichten.push({...s,helfer:h,einsatzName:e.name,einsatzDate:e.date,einsatzOrt:e.ort,eventName:ev.name,eventColor:ev.color});
+    if(h.includes(aktiverName)) meineSchichten.push({...s,helfer:h,einsatzName:e.name,einsatzDate:e.date,einsatzOrt:e.location,eventName:ev.name,eventColor:ev.color});
   }
   const mich=mitgliederCalc.find(m=>m.name===aktiverName)||{soll:2,geleistet:1,geplant:meineSchichten.length,offen:0,status:"Geplant erfüllt"};
 
@@ -7754,7 +8070,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
           <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap",alignItems:"center"}}>
             {/* Suchfeld */}
             <div style={{position:"relative",flexShrink:0}}>
-              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}>🔍</span>
+              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
               <input
                 value={browseSearch}
                 onChange={e=>setBrowseSearch(e.target.value)}
@@ -7792,7 +8108,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                   const matchSearch=!q
                     ||ev.name.toLowerCase().includes(q)
                     ||e.name.toLowerCase().includes(q)
-                    ||e.ort.toLowerCase().includes(q)
+                    ||e.location.toLowerCase().includes(q)
                     ||s.label.toLowerCase().includes(q)
                     ||s.helfer.some(h=>h.toLowerCase().includes(q));
                   const matchOffen=!filterOffen||(schichtenState[s.id]??s.helfer).length<s.max;
@@ -7820,9 +8136,9 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                         <span style={{fontSize:14,opacity:0.4,transition:"transform 0.2s",display:"inline-block",transform:isCollapsed?"rotate(-90deg)":"rotate(0deg)"}}>{"▾"}</span>
                       </div>
                       <div style={{fontSize:12,color:"#888",marginTop:3,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                        <span>{"📅 "+ev.date}</span>
+                        <span>{""+ev.date}</span>
                         <span style={{opacity:0.4}}>{"|"}</span>
-                        <span>{"📍 "+ev.loc}</span>
+                        <span>{""+ev.loc}</span>
                       </div>
                     </div>
                     <div style={{display:"flex",gap:8}}>
@@ -7864,13 +8180,13 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                   {einsatz.name}
                                 </div>
                                 <div style={{fontSize:11,color:"#888",marginTop:1,display:"flex",alignItems:"center",gap:6}}>
-                                  <span>{"🕐 "+einsatz.time+" Uhr"}</span>
+                                  <span>{""+einsatz.time+" Uhr"}</span>
                                   <span style={{color:"#ddd"}}>{"|"}</span>
-                                  <span>{"📍 "+einsatz.ort}</span>
+                                  <span>{""+einsatz.location}</span>
                                 </div>
-                                {bemerkungState[`e${einsatz.id}`]&&(
+                                {notesState[`e${einsatz.id}`]&&(
                                   <div style={{fontSize:10,color:AM,marginTop:3,display:"flex",alignItems:"center",gap:4}}>
-                                    <span>📝</span><span style={{fontStyle:"italic"}}>{bemerkungState[`e${einsatz.id}`]}</span>
+                                    <span><i className="ti-edit"/></span><span style={{fontStyle:"italic"}}>{notesState[`e${einsatz.id}`]}</span>
                                   </div>
                                 )}
                               </div>
@@ -7894,21 +8210,21 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                               ):(
                                 <>
                                   {(gruppenState[einsatz.id]||einsatz.gruppen).map((g,gi)=><Chip key={gi} text={g} color="#6B7280" bg="#F3F4F6"/>)}
-                                  {canEdit&&<button onClick={e=>{e.stopPropagation();setEditingGruppen(einsatz.id);}} style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}>✎</button>}
+                                  {canEdit&&<button onClick={e=>{e.stopPropagation();setEditingGruppen(einsatz.id);}} style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}><i className="ti-edit"/></button>}
                                 </>
                               )}
                               {/* Bemerkung Edit */}
                               {canEdit&&(editingBemerkung===`e${einsatz.id}`?(
                                 <div onClick={e=>e.stopPropagation()} style={{display:"flex",gap:5,alignItems:"center"}}>
-                                  <input autoFocus value={bemerkungDraft} onChange={e=>setBemerkungDraft(e.target.value)}
+                                  <input autoFocus value={notesDraft} onChange={e=>setBemerkungDraft(e.target.value)}
                                     placeholder="Bemerkung…"
                                     style={{padding:"3px 8px",border:`0.5px solid ${GB}`,borderRadius:6,fontSize:11,outline:"none",width:160}}/>
-                                  <button onClick={()=>saveBemerkung(`e${einsatz.id}`,bemerkungDraft)} style={{padding:"2px 8px",borderRadius:6,fontSize:11,fontWeight:600,border:`0.5px solid ${GN}`,background:"#F0FDF4",color:GN,cursor:"pointer"}}>✓</button>
+                                  <button onClick={()=>saveBemerkung(`e${einsatz.id}`,notesDraft)} style={{padding:"2px 8px",borderRadius:6,fontSize:11,fontWeight:600,border:`0.5px solid ${GN}`,background:"#F0FDF4",color:GN,cursor:"pointer"}}>✓</button>
                                   <button onClick={()=>setEditingBemerkung(null)} style={{padding:"2px 8px",borderRadius:6,fontSize:11,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}>✕</button>
                                 </div>
                               ):(
-                                <button onClick={e=>{e.stopPropagation();setEditingBemerkung(`e${einsatz.id}`);setBemerkungDraft(bemerkungState[`e${einsatz.id}`]||"");}}
-                                  style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}>📝</button>
+                                <button onClick={e=>{e.stopPropagation();setEditingBemerkung(`e${einsatz.id}`);setBemerkungDraft(notesState[`e${einsatz.id}`]||"");}}
+                                  style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}><i className="ti-edit"/></button>
                               ))}
                               {(()=>{
                                 const totalPlätze=einsatz.schichten.reduce((s,sc)=>s+sc.max,0);
@@ -7925,7 +8241,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                           {/* Schichten-Grid */}
                           {!collapsedEinsaetze[einsatz.id]&&<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,280px),1fr))",gap:14,padding:"16px",background:"#fff"}}>
                             {einsatz.schichtenVisible.map(s=>(
-                              <SchichtKarte key={s.id} schicht={s} einsatz={einsatz} meinName={aktiverName} canEdit={canEdit} canFreigeben={canFreigeben} canZuteilen={canZuteilen} teamMitglieder={teamMitglieder} schichtenState={schichtenState} onEintragen={onEintragen} onFreigeben={onFreigeben} onÜbertragen={onÜbertragen} freigabeAnfragen={freigabeAnfragen} bemerkung={bemerkungState[`s${s.id}`]} onSaveBemerkung={(txt)=>saveBemerkung(`s${s.id}`,txt)}/>
+                              <SchichtKarte key={s.id} schicht={s} einsatz={einsatz} meinName={aktiverName} canEdit={canEdit} canFreigeben={canFreigeben} canZuteilen={canZuteilen} teamMitglieder={teamMitglieder} schichtenState={schichtenState} onEintragen={onEintragen} onFreigeben={onFreigeben} onÜbertragen={onÜbertragen} freigabeAnfragen={freigabeAnfragen} notes={notesState[`s${s.id}`]} onSaveBemerkung={(txt)=>saveBemerkung(`s${s.id}`,txt)}/>
                             ))}
                           </div>}
                         </div>
@@ -7941,7 +8257,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
               if(ev.name.toLowerCase().includes(q)) return false;
               return ev.einsaetze.every(e=>
                 !e.name.toLowerCase().includes(q)&&
-                !e.ort.toLowerCase().includes(q)&&
+                !e.location.toLowerCase().includes(q)&&
                 e.schichten.every(s=>!s.label.toLowerCase().includes(q)&&!s.helfer.some(h=>h.toLowerCase().includes(q)))
               );
             })&&(
@@ -8017,15 +8333,15 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                               <div style={{fontSize:16,fontWeight:700,color:BK,letterSpacing:-0.2}}>{s.eventName}</div>
                               <div style={{fontSize:12,color:"#888",marginTop:3,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                                 <span>{s.einsatzName}</span>
-                                {s.einsatzDate&&<><span style={{opacity:0.4}}>{"|"}</span><span>{"📅 "+s.einsatzDate}</span></>}
-                                {s.einsatzOrt&&<><span style={{opacity:0.4}}>{"|"}</span><span>{"📍 "+s.einsatzOrt}</span></>}
+                                {s.einsatzDate&&<><span style={{opacity:0.4}}>{"|"}</span><span>{""+s.einsatzDate}</span></>}
+                                {s.einsatzOrt&&<><span style={{opacity:0.4}}>{"|"}</span><span>{""+s.einsatzOrt}</span></>}
                               </div>
                             </div>
                             <span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20,background:"#ECFDF5",color:GN,flexShrink:0}}>✓ Geleistet</span>
                           </div>
                           <div style={{padding:"8px 14px"}}>
                             <div style={{fontWeight:600,fontSize:13}}>{s.label}</div>
-                            <div style={{fontSize:11,color:"#888",marginTop:2}}>{"📅 "+s.einsatzDate+(s.einsatzOrt?" · 📍 "+s.einsatzOrt:"")}</div>
+                            <div style={{fontSize:11,color:"#888",marginTop:2}}>{""+s.einsatzDate+(s.einsatzOrt?" · "+s.einsatzOrt:"")}</div>
                           </div>
                         </div>
                       ))}
@@ -8044,7 +8360,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
       {helperTab==="team"&&meinGruppe&&(
         <div>
           <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"#F3F4F6",border:`0.5px solid ${GB}`,borderRadius:9,marginBottom:16,fontSize:13}}>
-            <span style={{fontSize:15}}>👥</span>
+            <span style={{fontSize:15}}><i className="ti-users"/></span>
             <span>Einsätze für deine Teams: {meineGruppen.map((g,i)=><strong key={i}>{i>0?" · ":""}{g}</strong>)}</span>
           </div>
 
@@ -8081,9 +8397,9 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                           <span style={{fontSize:14,opacity:0.4,transition:"transform 0.2s",display:"inline-block",transform:isTeamCollapsed?"rotate(-90deg)":"rotate(0deg)"}}>{"▾"}</span>
                         </div>
                         <div style={{fontSize:12,color:"#888",marginTop:3,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                          <span>{"📅 "+ev.date}</span>
+                          <span>{""+ev.date}</span>
                           <span style={{opacity:0.4}}>{"|"}</span>
-                          <span>{"📍 "+ev.loc}</span>
+                          <span>{""+ev.loc}</span>
                         </div>
                       </div>
                       <div style={{display:"flex",gap:8}}>
@@ -8122,9 +8438,9 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                     {einsatz.name}
                                   </div>
                                   <div style={{fontSize:11,color:"#888",marginTop:1,display:"flex",alignItems:"center",gap:6}}>
-                                    <span>{"🕐 "+einsatz.time+" Uhr"}</span>
+                                    <span>{""+einsatz.time+" Uhr"}</span>
                                     <span style={{color:"#ddd"}}>{"|"}</span>
-                                    <span>{"📍 "+einsatz.ort}</span>
+                                    <span>{""+einsatz.location}</span>
                                   </div>
                                 </div>
                               </div>
@@ -8146,7 +8462,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                             </div>
                             {!collapsedEinsaetze[einsatz.id]&&<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,280px),1fr))",gap:14,padding:"16px",background:"#fff"}}>
                               {einsatz.schichten.map(s=>(
-                                <SchichtKarte key={s.id} schicht={s} einsatz={einsatz} meinName={aktiverName} canEdit={canEdit} canFreigeben={canFreigeben} canZuteilen={canZuteilen} teamMitglieder={teamMitglieder} schichtenState={schichtenState} onEintragen={onEintragen} onFreigeben={onFreigeben} onÜbertragen={onÜbertragen} freigabeAnfragen={freigabeAnfragen} bemerkung={bemerkungState[`s${s.id}`]} onSaveBemerkung={(txt)=>saveBemerkung(`s${s.id}`,txt)}/>
+                                <SchichtKarte key={s.id} schicht={s} einsatz={einsatz} meinName={aktiverName} canEdit={canEdit} canFreigeben={canFreigeben} canZuteilen={canZuteilen} teamMitglieder={teamMitglieder} schichtenState={schichtenState} onEintragen={onEintragen} onFreigeben={onFreigeben} onÜbertragen={onÜbertragen} freigabeAnfragen={freigabeAnfragen} notes={notesState[`s${s.id}`]} onSaveBemerkung={(txt)=>saveBemerkung(`s${s.id}`,txt)}/>
                               ))}
                             </div>}
                           </div>
@@ -8167,7 +8483,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
           {/* Team-Filter Hinweis für Trainer */}
           {isTrainer&&(
             <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"#F3F4F6",border:`0.5px solid ${GB}`,borderRadius:9,marginBottom:14,fontSize:13}}>
-              <span style={{fontSize:15}}>👁️</span>
+              <span style={{fontSize:15}}><i className="ti-eye"/></span>
               <span>Du siehst nur Mitglieder deines Teams: <strong>Cc-Junioren</strong></span>
             </div>
           )}
@@ -8193,7 +8509,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
           {/* Suche + Filter */}
           <div style={{display:"flex",gap:8,marginBottom:14,flexWrap:"wrap",alignItems:"center",width:"100%",rowGap:6}}>
             <div style={{position:"relative",flexShrink:0}}>
-              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}>🔍</span>
+              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Mitglied suchen…"
                 style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${search?"#f8de09":GB}`,borderRadius:20,fontSize:12,outline:"none",width:"100%",maxWidth:190,background:"#fff"}}/>
               {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#aaa",lineHeight:1}}>×</button>}
@@ -8282,8 +8598,8 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                         <div style={{padding:"7px 12px"}}>
                                           <div style={{fontWeight:600,fontSize:12,color:BK}}>{s.label}</div>
                                           <div style={{fontSize:11,color:"#888",marginTop:2,display:"flex",gap:8}}>
-                                            <span>{"📅 "+e.date}</span>
-                                            {e.ort&&<><span style={{opacity:0.3}}>|</span><span>{"📍 "+e.ort}</span></>}
+                                            <span>{""+e.date}</span>
+                                            {e.location&&<><span style={{opacity:0.3}}>|</span><span>{""+e.location}</span></>}
                                           </div>
                                         </div>
                                       </div>
@@ -8328,7 +8644,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             ].map((f,i)=>(
               <div key={i}>
                 <label style={{fontSize:11,color:"#888",display:"block",marginBottom:4}}>{f.l}</label>
-                {f.type==="gruppen"?(
+                {f.typee==="gruppen"?(
                   <div style={{display:"flex",flexWrap:"wrap",gap:6,padding:"8px 10px",border:`0.5px solid ${GB}`,borderRadius:8,background:"#fff"}}>
                     {HELPER_GRUPPEN.map(g=>{
                       const checked=newEinsatzGruppen.includes(g);
@@ -8340,12 +8656,12 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                       );
                     })}
                   </div>
-                ):f.type==="select"?(
+                ):f.typee==="select"?(
                   <select style={{width:"100%",padding:"7px 9px",border:`0.5px solid ${GB}`,borderRadius:8,fontSize:13}}>
                     {f.opts?.map(o=><option key={o}>{o}</option>)}
                   </select>
                 ):(
-                  <input type={f.type||"text"} placeholder={f.ph} style={{width:"100%",padding:"7px 9px",border:`0.5px solid ${GB}`,borderRadius:8,fontSize:13,boxSizing:"border-box"}}/>
+                  <input type={f.typee||"text"} placeholder={f.ph} style={{width:"100%",padding:"7px 9px",border:`0.5px solid ${GB}`,borderRadius:8,fontSize:13,boxSizing:"border-box"}}/>
                 )}
               </div>
             ))}
@@ -8446,7 +8762,7 @@ function MaterialView(){
             {MATERIAL.map((m,i)=>(
               <tr key={m.id} style={{borderTop:`0.5px solid ${GB}`}}>
                 <td style={{padding:"9px 13px"}}><Chip text={m.team} color={R}/></td>
-                <td style={{padding:"9px 13px"}}><Chip text={m.type} color={TC[m.type]||"#888"} bg={(TC[m.type]||"#888")+"18"}/></td>
+                <td style={{padding:"9px 13px"}}><Chip text={m.typee} color={TC[m.typee]||"#888"} bg={(TC[m.typee]||"#888")+"18"}/></td>
                 <td style={{padding:"9px 13px",fontWeight:600}}>{m.item}</td>
                 <td style={{padding:"9px 13px",color:"#555"}}>{m.by}</td>
                 <td style={{padding:"9px 13px",color:"#888"}}>{m.date}</td>
@@ -8485,7 +8801,7 @@ function LockersView(){
                   const left=(a.start-START)/(END-START)*100, width=(a.end-a.start)/(END-START)*100;
                   return(
                     <div key={j} title={`${a.team} · ${fmt(a.start)}-${fmt(a.end)}`} style={{position:"absolute",left:`${left}%`,width:`${width}%`,top:j*(H+4)+4,height:H,background:a.color,borderRadius:5,padding:"3px 7px",overflow:"hidden",cursor:"help"}}>
-                      <div style={{color:"#fff",fontSize:10,fontWeight:700,whiteSpace:"nowrap"}}>{a.team} ({a.type})</div>
+                      <div style={{color:"#fff",fontSize:10,fontWeight:700,whiteSpace:"nowrap"}}>{a.team} ({a.typee})</div>
                       <div style={{color:"rgba(255,255,255,0.8)",fontSize:9}}>{fmt(a.start)}-{fmt(a.end)}</div>
                     </div>
                   );
@@ -8601,8 +8917,8 @@ function DocsView(){
       <Card style={{padding:0}}>
         {docs.map((d,i)=>(
           <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",borderBottom:i<docs.length-1?`0.5px solid ${GB}`:"none"}}>
-            <div style={{width:34,height:34,borderRadius:8,background:(TC[d.type]||"#888")+"20",display:"flex",alignItems:"center",justifyContent:"center"}}>
-              <span style={{fontSize:9,fontWeight:800,color:TC[d.type]||"#888"}}>{d.type}</span>
+            <div style={{width:34,height:34,borderRadius:8,background:(TC[d.typee]||"#888")+"20",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <span style={{fontSize:9,fontWeight:800,color:TC[d.typee]||"#888"}}>{d.typee}</span>
             </div>
             <div style={{flex:1}}>
               <div style={{fontWeight:600,fontSize:13}}>{d.name}</div>
@@ -8692,19 +9008,19 @@ function PlaetzeView(){
   function handleAdd(){
     if(!newName.trim()) return;
     const h = parseHaelften(newHaelften);
-    save(plaetze.concat([{id:"platz_"+Date.now(), name:newName.trim(), aktiv:true, haelften:h}]));
+    save(plaetze.concat([{id:"platz_"+Date.now(), name:newName.trim(), active:true, halfn:h}]));
     setNewName(""); setNewHaelften(""); setShowAdd(false);
   }
 
   function handleRename(id){
     if(!editName.trim()) return;
     const h = parseHaelften(editHaelften);
-    save(plaetze.map(function(p){ return p.id===id?Object.assign({},p,{name:editName.trim(),haelften:h}):p; }));
+    save(plaetze.map(function(p){ return p.id===id?Object.assign({},p,{name:editName.trim(),halfn:h}):p; }));
     setEditId(null); setEditName(""); setEditHaelften("");
   }
 
   function handleToggle(id){
-    save(plaetze.map(function(p){ return p.id===id?Object.assign({},p,{aktiv:!p.aktiv}):p; }));
+    save(plaetze.map(function(p){ return p.id===id?Object.assign({},p,{active:!p.active}):p; }));
   }
 
   function handleDelete(id){
@@ -8742,11 +9058,11 @@ function PlaetzeView(){
       {/* Aktiv */}
       <div style={{fontSize:10,fontWeight:600,color:"#888",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Aktive Plätze</div>
       <div style={{background:"#fff",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden",marginBottom:16}}>
-        {plaetze.filter(function(p){return p.aktiv;}).length===0&&(
+        {plaetze.filter(function(p){return p.active;}).length===0&&(
           <div style={{padding:"16px",textAlign:"center",color:"#aaa",fontSize:13}}>Keine aktiven Plätze</div>
         )}
         {plaetze.map(function(p,i){
-          if(!p.aktiv) return null;
+          if(!p.active) return null;
           return(
             <div key={p.id} style={{borderBottom:i<plaetze.length-1?"0.5px solid "+GB:"none"}}>
               {editId===p.id ? (
@@ -8770,21 +9086,21 @@ function PlaetzeView(){
               ) : (
                 <div style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px"}}>
                   <div style={{display:"flex",flexDirection:"column",gap:2,flexShrink:0}}>
-                    <button onClick={function(){moveUp(i);}} disabled={plaetze.filter(function(x){return x.aktiv;}).indexOf(p)===0}
+                    <button onClick={function(){moveUp(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===0}
                       style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:3,background:"#fff",cursor:"pointer",fontSize:9,color:"#666",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
-                    <button onClick={function(){moveDown(i);}} disabled={plaetze.filter(function(x){return x.aktiv;}).indexOf(p)===plaetze.filter(function(x){return x.aktiv;}).length-1}
+                    <button onClick={function(){moveDown(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===plaetze.filter(function(x){return x.active;}).length-1}
                       style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:3,background:"#fff",cursor:"pointer",fontSize:9,color:"#666",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
                   </div>
                   <div style={{width:10,height:10,borderRadius:"50%",background:GN,flexShrink:0}}/>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontSize:13,fontWeight:500,color:BK}}>{p.name}</div>
-                    {p.haelften&&p.haelften.length>0&&(
-                      <div style={{fontSize:10,color:"#aaa",marginTop:1}}>{p.haelften.join("  ·  ")}</div>
+                    {p.halfn&&p.halfn.length>0&&(
+                      <div style={{fontSize:10,color:"#aaa",marginTop:1}}>{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
                   <div style={{display:"flex",gap:5,flexShrink:0}}>
-                    <button onClick={function(){setEditId(p.id);setEditName(p.name);setEditHaelften((p.haelften||[]).join(", "));}} title="Bearbeiten"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>✏️</button>
+                    <button onClick={function(){setEditId(p.id);setEditName(p.name);setEditHaelften((p.halfn||[]).join(", "));}} title="Bearbeiten"
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-edit"/></button>
                     <button onClick={function(){handleToggle(p.id);}} title="Deaktivieren"
                       style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -8792,7 +9108,7 @@ function PlaetzeView(){
                       </svg>
                     </button>
                     <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>🗑️</button>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>
                   </div>
                 </div>
               )}
@@ -8802,19 +9118,19 @@ function PlaetzeView(){
       </div>
 
       {/* Inaktiv */}
-      {plaetze.some(function(p){return !p.aktiv;})&&(
+      {plaetze.some(function(p){return !p.active;})&&(
         <>
           <div style={{fontSize:10,fontWeight:600,color:"#888",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Inaktive Plätze</div>
           <div style={{background:"#fff",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden",marginBottom:16,opacity:0.7}}>
             {plaetze.map(function(p,i){
-              if(p.aktiv) return null;
+              if(p.active) return null;
               return(
                 <div key={p.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderBottom:i<plaetze.length-1?"0.5px solid "+GB:"none"}}>
                   <div style={{width:10,height:10,borderRadius:"50%",background:"#ccc",flexShrink:0}}/>
                   <div style={{flex:1}}>
                     <div style={{fontSize:13,color:"#888"}}>{p.name}</div>
-                    {p.haelften&&p.haelften.length>0&&(
-                      <div style={{fontSize:10,color:"#bbb"}}>{p.haelften.join("  ·  ")}</div>
+                    {p.halfn&&p.halfn.length>0&&(
+                      <div style={{fontSize:10,color:"#bbb"}}>{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
                   <button onClick={function(){handleToggle(p.id);}} title="Aktivieren"
@@ -8822,7 +9138,7 @@ function PlaetzeView(){
                     Aktivieren
                   </button>
                   <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>🗑️</button>
+                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>
                 </div>
               );
             })}
@@ -8914,7 +9230,7 @@ function MobileNav({role,active,setActive}){
         {nav.map(n=>(
           <button key={n.key} onClick={()=>setActive(n.key)}
             style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",gap:3,minWidth:72}}>
-            <span style={{fontSize:24}}>{n.icon}</span>
+            <i className={n.icon||"ti-circle"} style={{fontSize:22}}/>
             <span style={{fontSize:10,color:active===n.key?"#f8de09":"#666",fontWeight:active===n.key?700:400,whiteSpace:"nowrap"}}>{n.label}</span>
             {active===n.key&&<span style={{width:4,height:4,borderRadius:"50%",background:"#f8de09",marginTop:1}}/>}
           </button>
@@ -8968,7 +9284,7 @@ function LoginScreen({onLogin, sb}){
       <div style={{width:"100%",maxWidth:400,padding:"0 20px"}}>
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
-          <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}>⚽</div>
+          <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><i className="ti-ball-football"/></div>
           <div style={{fontWeight:800,fontSize:22,color:BK}}>FC Herrliberg</div>
           <div style={{fontSize:13,color:"#888",marginTop:2}}>Vereinsportal</div>
         </div>
@@ -9086,7 +9402,7 @@ export default function App({supabaseClient}){
     return(
       <div style={{minHeight:"100vh",background:GR,display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{textAlign:"center"}}>
-          <div style={{width:48,height:48,background:"#f8de09",borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}>⚽</div>
+          <div style={{width:48,height:48,background:"#f8de09",borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}><i className="ti-ball-football"/></div>
           <div style={{fontSize:13,color:"#888"}}>Wird geladen…</div>
         </div>
       </div>
@@ -9136,8 +9452,9 @@ export default function App({supabaseClient}){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
       case "team":              return <TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account}/>;
       case "members":           return <MembersView role={role}/>;
-      case "users":             return <FieldVisView/>;
-      case "fieldvis":          return <FieldVisView/>;
+      case "users":             return <PortalverwaltungView initialTab="users"/>;
+      case "fieldvis":          return <PortalverwaltungView initialTab="feldvis"/>;
+      case "portal":            return <PortalverwaltungView initialTab="module"/>;
       case "training":          return <TrainingGantt role={role} team={role==="trainer"?meineTeams?.[0]:undefined}/>;
       case "schedule":          return <ScheduleTab role={role}/>;
       case "attendance_central":return <AttendanceCentral/>;
@@ -9150,10 +9467,10 @@ export default function App({supabaseClient}){
       case "news":              return <NewsView role={role} meineTeams={meineTeams}/>;
       case "wiki":              return <WikiView/>;
       case "docs":              return <DocsView/>;
-      case "exports":           return <SyncView/>;
-      case "sync":              return <SyncView/>;
-      case "audit":             return <AuditView/>;
-      case "datacheck":         return <DataCheckView/>;
+      case "exports":           return <PortalverwaltungView initialTab="api"/>;
+      case "sync":              return <PortalverwaltungView initialTab="api"/>;
+      case "audit":             return <PortalverwaltungView initialTab="audit"/>;
+      case "datacheck":         return <PortalverwaltungView initialTab="module"/>;
       case "profile":           return <ProfileView role={role} myRosterId={myRosterId} account={account}/>;
       default:                  return <Dashboard role={role} setActive={setActive}/>;
     }
