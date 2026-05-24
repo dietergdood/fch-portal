@@ -3834,7 +3834,7 @@ function TrainingGantt({team: teamProp, role}){
               ausnahmenMap[key].push({
                 id: a.id,
                 slot_id: a.slot_id,
-                typ: a.type,
+                type: a.type,
                 datum: a.date,
                 kw_key: a.week_nr_key,
                 neue_start_zeit: a.neue_start_zeit,
@@ -3906,7 +3906,7 @@ function TrainingGantt({team: teamProp, role}){
           await supabase.from("trainingsplan_ausnahmen").upsert({
             id: ausnahme.id,
             slot_id: ausnahme.slot_id||null,
-            typ: ausnahme.type,
+            type: ausnahme.type,
             datum: ausnahme.date||null,
             kw_key: ausnahme.week_nr_key,
             neue_start_zeit: ausnahme.neue_start_zeit||null,
@@ -5657,7 +5657,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   const bestehende=nr?JSON.parse(nr.value):[];
                   const neue=[...bestehende,{
                     id:Date.now(),
-                    typ:"training_absage",
+                    type:"training_absage",
                     titel:`Training abgesagt: ${ev.team}`,
                     inhalt:`${weekday} ${ev.date} · ${ev.time} Uhr · abgesagt vom Trainer`,
                     team:ev.team,
@@ -6833,7 +6833,7 @@ function PortalverwaltungView({initialTab="module"}){
             supabase.from("feldsichtbarkeit").select("*"),
             supabase.from("api_verbindungen").select("*").order("sort_order"),
             supabase.from("api_sync_log").select("*,api_verbindungen(label)").order("gestartet_am",{ascending:false}).limit(50),
-            supabase.from("benutzer").select("id,name,email,role,aktiv").order("name"),
+            supabase.from("benutzer").select("id,name,email,role,active").order("name"),
           ]);
           if(modR.data) setModule(modR.data);
           if(cfgR.data){const c={};cfgR.data.forEach(r=>{c[r.modul_id]=r;});setModuleConfig(c);}
@@ -6857,7 +6857,7 @@ function PortalverwaltungView({initialTab="module"}){
 
   async function toggleModulAktiv(modulId,aktiv){
     if(!supabase) return;
-    await supabase.from("module_config").upsert({modul_id:modulId,aktiv,updated_by:supabase.auth.getUser?.()?.id});
+    await supabase.from("module_config").upsert({modul_id:modulId,active,updated_by:supabase.auth.getUser?.()?.id});
     setModuleConfig(prev=>({...prev,[modulId]:{...prev[modulId],aktiv}}));
     setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
   }
@@ -6876,7 +6876,7 @@ function PortalverwaltungView({initialTab="module"}){
 
   async function toggleFeld(feldKey,rolle,sichtbar){
     if(!supabase) return;
-    await supabase.from("feldsichtbarkeit").upsert({feld_key:feldKey,rolle,sichtbar},{onConflict:"feld_key,rolle"});
+    await supabase.from("feldsichtbarkeit").upsert({feld_key:feldKey,role,sichtbar},{onConflict:"feld_key,role"});
     setFelder(prev=>prev.map(f=>f.feld_key===feldKey&&f.role===rolle?{...f,sichtbar}:f));
     setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
   }
