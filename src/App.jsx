@@ -5248,8 +5248,7 @@ function StatsTab({team="Cc-Junioren"}){
   }).sort((a,b)=>b.tore-a.tore);
   if(stats.length===0) return <Card><div style={{textAlign:"center",color:"#aaa",padding:20}}>Keine Spielerstatistiken verfügbar.</div></Card>;
   return(
-    <Card style={{padding:0,overflowX:"auto"}>
-      <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+    <Card style={{padding:0,overflowX:"auto"}}>      <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
         <thead>
           <tr style={{background:GR}}>
             {["Spieler","Spiele","Tore","Assists","Gelb","Rot"].map((h,i)=>(
