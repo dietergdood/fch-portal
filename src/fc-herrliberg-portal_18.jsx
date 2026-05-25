@@ -911,19 +911,47 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
 function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout,isMobile,onOpenProfile}){
   const acc=account||USER_ACCOUNTS[role]||{name:getRole(role).label,rollen:[role],primaryRole:role,kinder:[]};
   const {dark,toggle}=useTheme();
-  const rc=getRole(role).color;
   const initials=(acc.name||"U").split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
+  const nav=NAV_BY_ROLE[role]||[];
+  const pageLabel=nav.find(n=>n.key===active)?.label||active;
+  const isHome=active==="dashboard";
   return(
-    <div className="fch-topbar" style={{height:52,borderBottom:"1px solid",display:"flex",alignItems:"center",padding:"0 14px 0 16px",justifyContent:"space-between",flexShrink:0,gap:10,fontFamily:FONT}}>
-      {/* Links: Logo */}
-      <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
-        <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
+    <div className="fch-topbar" style={{height:52,borderBottom:"1px solid",display:"flex",alignItems:"center",padding:"0 14px 0 12px",justifyContent:"space-between",flexShrink:0,gap:8,fontFamily:FONT,position:isMobile?"sticky":"relative",top:isMobile?0:"auto",zIndex:isMobile?50:"auto"}}>
+      {/* Links */}
+      {isMobile?(
+        isHome?(
+          /* Dashboard: Logo + Vereinsname */
+          <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
+            <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
+            </div>
+            <span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>
+          </div>
+        ):(
+          /* Andere Seiten: Zurück-Button + Seitentitel */
+          <div style={{display:"flex",alignItems:"center",gap:4,flexShrink:0,minWidth:0}}>
+            <button onClick={()=>setActive("dashboard")} style={{
+              width:36,height:36,borderRadius:9,background:"none",border:"none",
+              display:"flex",alignItems:"center",justifyContent:"center",
+              cursor:"pointer",color:"var(--text)",flexShrink:0,
+              WebkitTapHighlightColor:"transparent"
+            }}>
+              <TI n="chevron-left" size={22}/>
+            </button>
+            <span style={{fontWeight:700,fontSize:16,color:"var(--text)",letterSpacing:-0.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{pageLabel}</span>
+          </div>
+        )
+      ):(
+        /* Desktop: Logo + Name */
+        <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
+          <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
+          </div>
+          <span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>
         </div>
-        {!isMobile&&<span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>}
-      </div>
+      )}
       {/* Rechts */}
-      <div style={{display:"flex",alignItems:"center",gap:8}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
         {/* Dark Toggle – nur Desktop */}
         {!isMobile&&(
           <button onClick={toggle} title={dark?"Hell-Modus":"Dunkel-Modus"} style={{
@@ -942,14 +970,14 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
         {!isMobile&&!onLogout&&<RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
         {!isMobile&&!onLogout&&<Chip text="DEMO" color="#999" bg="var(--surface2)"/>}
         {!isMobile&&onLogout&&<button onClick={onLogout} style={{padding:"6px 14px",borderRadius:7,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer",fontWeight:500,minHeight:36}}>Abmelden</button>}
-        {/* Profil-Avatar – nur Mobile, oben rechts */}
+        {/* Profil-Avatar – nur Mobile */}
         {isMobile&&(
           <button onClick={onOpenProfile} style={{
-            width:34,height:34,borderRadius:"50%",background:"#f8de09",border:"none",
+            width:34,height:34,borderRadius:"50%",background:"#f5f5f3",border:"none",
             display:"flex",alignItems:"center",justifyContent:"center",
-            color:"#111",fontWeight:700,fontSize:13,
+            color:"#9a9a9a",fontWeight:700,fontSize:13,
             cursor:"pointer",flexShrink:0,WebkitTapHighlightColor:"transparent",
-            fontFamily:FONT,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"
+            fontFamily:FONT,boxShadow:"0 1px 4px rgba(0,0,0,0.08)"
           }}>
             {initials}
           </button>
