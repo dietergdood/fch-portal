@@ -546,9 +546,13 @@ const PSTATS=[
    KLEINE HILFKOMPONENTEN
 ========================================== */
 function Av({name="",init,size=34,bg="#f8de09"}){
-  const l=init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
-  const textColor=bg==="#f8de09"||bg==="rgba(255,255,255,0.3)"?"#F3F4F6":"#fff";
-  return <div style={{width:size,height:size,borderRadius:"50%",background:bg,display:"flex",alignItems:"center",justifyContent:"center",color:textColor,fontWeight:700,fontSize:size*0.35,flexShrink:0}}>{l}</div>;
+  const textColor=bg==="#f8de09"||bg==="rgba(255,255,255,0.3)"?"#1A1A1A":"#fff";
+  // init kann ein Icon-Name sein (z.B. "settings") oder Initialen
+  const isIcon = init && TI_PATHS[init];
+  const l = isIcon ? null : (init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase());
+  return <div style={{width:size,height:size,borderRadius:"50%",background:bg,display:"flex",alignItems:"center",justifyContent:"center",color:textColor,fontWeight:700,fontSize:size*0.35,flexShrink:0}}>
+    {isIcon ? <TI n={init} size={size*0.55} style={{color:textColor}}/> : l}
+  </div>;
 }
 function Chip({text,color=R,bg}){
   return <span style={{background:bg||color+"15",color,fontSize:10,fontWeight:700,padding:"2px 9px",borderRadius:20,whiteSpace:"nowrap",letterSpacing:0.2,border:`0.5px solid ${color}25`}}>{text}</span>;
@@ -728,7 +732,7 @@ function SideNav({role,active,setActive,account}){
     <nav style={{width:200,background:BK,minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0}}>
       <div style={{padding:"20px 14px 16px",borderBottom:"1px solid #252525",marginBottom:8}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
-          <div style={{width:36,height:36,borderRadius:"50%",background:"#1a6b3a",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"#fff",fontWeight:700,fontSize:11}}>FCH</div>
+          <img src="/logo_fch_mit_rand.svg" style={{width:40,height:40,objectFit:"contain",flexShrink:0}} alt="FC Herrliberg"/>
           <div>
             <div style={{color:"#fff",fontWeight:700,fontSize:13}}>FC Herrliberg</div>
             <div style={{color:"#666",fontSize:10}}>Vereinsportal</div>
