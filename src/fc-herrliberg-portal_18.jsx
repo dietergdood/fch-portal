@@ -1780,8 +1780,8 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
  ))}
  </div>
  </div>
- )}
  </div>
+ )}
  );
  })()}
  </Card>
@@ -1907,8 +1907,8 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
  return <p style={{margin:0,fontSize:13,color:"#4B5563",lineHeight:1.65}}>{text}</p>;
  })()}
  </Card>
- )}
  </div>
+ )}
  );
 }
 
@@ -1944,8 +1944,8 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
  <span style={{fontSize:13,fontWeight:500,color:BK}}>{nrVal||"-"}</span>
  {canEdit&&<span style={{fontSize:12,color:"#ccc"}}><TI n="edit"/></span>}
  </div>
- )}
  </div>
+ )}
  );
 
  return(
@@ -2306,8 +2306,8 @@ function RosterTab({role,team,initialSelected=null}){
  </tbody>
  </table>
  </Card>
- )}
  </div>
+ )}
  );
 }
 
@@ -3146,8 +3146,8 @@ function TrainingGantt({team: teamProp, role}){
  style={{marginTop:10,width:"100%",padding:"7px",borderRadius:8,border:"1px solid #FDE68A",background:"#FFFBEB",color:"#92400E",fontSize:12,fontWeight:600,cursor:"pointer"}}>
  Vorschau im GANTT →
  </button>
- )}
  </div>
+ )}
  );
  })}
  </div>
@@ -4986,8 +4986,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
  {isCancelled?"↩ Rückgängig":"✕ Absagen"}
  </button>
  </div>
- )}
  </div>
+ )}
  );
  })}
  {filteredEvents.length>5&&(
@@ -5088,8 +5088,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
  </select>
  )}
  </div>
- )}
  </div>
+ )}
  );
  })()}
  {/* Beschreibung für Vereinsanlass/Team-Event */}
@@ -5199,8 +5199,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
  <div style={{fontSize:26,fontWeight:800,color:"#6366F1",lineHeight:1}}>{c.aufgebot}</div>
  <div style={{fontSize:12,color:"#6366F1",fontWeight:600,marginTop:3,opacity:0.8}}>Aufgebot</div>
  </div>
- )}
  </div>
+ )}
  );
  })()}
  {/* Spieler-Liste */}
@@ -5253,8 +5253,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
  style={{width:30,height:30,borderRadius:"50%",border:`1.5px solid ${isInAufgebot(selEv.id,p.id)?"#4F46E5":"#F5F5F3"}`,background:isInAufgebot(selEv.id,p.id)?"#4F46E5":"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
  <TI n="ball-football"/>
  </button>
- )}
  </div>
+ )}
  );
  })}
  </div>
@@ -5825,8 +5825,8 @@ function PortalverwaltungView({initialTab="module"}){
  </tbody>
  </table>
  </div>
- )}
   </div>
+ )}
  );
  })}
  </Card>
@@ -6001,8 +6001,8 @@ function PortalverwaltungView({initialTab="module"}){
  </tbody>
  </table>
  </Card>
- )}
  </div>
+ )}
  );
 }
 
@@ -7503,8 +7503,8 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
  <Btn onClick={()=>setHelperTab("browse")}>Abbrechen</Btn>
  </div>
  </Card>
- )}
  </div>
+ )}
  );
 }
 
@@ -7932,8 +7932,8 @@ function PlaetzeView(){
  style={{width:28,height:28,borderRadius:8,border:"1px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
  </div>
  </div>
- )}
  </div>
+ )}
  );
  })}
  </div>
