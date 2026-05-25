@@ -866,20 +866,20 @@ function SideNav({role,active,setActive,account}){
   );
 }
 
-function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout}){
-  const nav=NAV_BY_ROLE[role]||[];
-  const label=nav.find(n=>n.key===active)?.label||active;
+function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout,isMobile}){
   const acc=account||USER_ACCOUNTS[role]||{name:getRole(role).label,rollen:[role],primaryRole:role,kinder:[]};
   const {dark,toggle}=useTheme();
   return(
-    <div className="fch-topbar" style={{height:52,borderBottom:"1px solid",display:"flex",alignItems:"center",padding:"0 20px",justifyContent:"space-between",flexShrink:0,gap:10,fontFamily:FONT}}>
-      <span style={{fontSize:13,fontWeight:400}}>
-        <span style={{color:"#f8de09",fontWeight:800}}>FCH</span>
-        <span style={{margin:"0 6px",color:"var(--border)"}}>/</span>
-        <span style={{color:"var(--text)"}}>{label}</span>
-      </span>
+    <div className="fch-topbar" style={{height:52,borderBottom:"1px solid",display:"flex",alignItems:"center",padding:"0 14px 0 16px",justifyContent:"space-between",flexShrink:0,gap:10,fontFamily:FONT}}>
+      {isMobile?(
+        <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
+          <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
+          </div>
+          <span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>
+        </div>
+      ):<div/>}
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        {/* Dark Mode Toggle – Pill Switch */}
         <button onClick={toggle} title={dark?"Hell-Modus":"Dunkel-Modus"} style={{
           display:"flex",alignItems:"center",gap:6,
           padding:"5px 10px 5px 7px",borderRadius:20,
@@ -8251,6 +8251,17 @@ export default function Portal({supabaseClient}){
     let m=document.querySelector("meta[name=viewport]");
     if(!m){m=document.createElement("meta");m.name="viewport";document.head.appendChild(m);}
     m.content="width=device-width,initial-scale=1,viewport-fit=cover";
+    /* PWA Standalone – Adressleiste ausblenden */
+    const setMeta=(n,v)=>{let t=document.querySelector(`meta[name="${n}"]`);if(!t){t=document.createElement("meta");t.name=n;document.head.appendChild(t);}t.content=v;};
+    setMeta("apple-mobile-web-app-capable","yes");
+    setMeta("apple-mobile-web-app-status-bar-style","black-translucent");
+    setMeta("mobile-web-app-capable","yes");
+    setMeta("apple-mobile-web-app-title","FC Herrliberg");
+    /* manifest.json link – falls noch nicht vorhanden */
+    if(!document.querySelector("link[rel=manifest]")){
+      const lm=document.createElement("link");lm.rel="manifest";lm.href="/manifest.json";
+      document.head.appendChild(lm);
+    }
     let th=document.querySelector("meta[name=theme-color]");
     if(!th){th=document.createElement("meta");th.name="theme-color";document.head.appendChild(th);}
     th.content=dark?"#0a0a0c":"#141414";
