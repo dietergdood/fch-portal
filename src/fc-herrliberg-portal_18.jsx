@@ -5826,6 +5826,7 @@ function PortalverwaltungView({initialTab="module"}){
  </table>
  </div>
  )}
+  </div>
  );
  })}
  </Card>
