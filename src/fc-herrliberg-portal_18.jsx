@@ -16,45 +16,46 @@ if(typeof window!=="undefined"&&!window.storage){
 }
 
 /* ── Tabler Icons als SVG-Komponente ── */
+const TI_PATHS={
+    "ball-football":"<circle cx="12" cy="12" r="9"/><path d="M12 3c0 0 2 4 2 9s-2 9-2 9"/><path d="M3 12c0 0 4-2 9-2s9 2 9 2"/><path d="M5.6 5.6c0 0 3.4 1.4 6.4 6.4s1.4 6.4 1.4 6.4"/>",
+    "bolt":"<path d="M13 3l-6 9h5l-1 9l6-9h-5l1-9z"/>",
+    "book":"<path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><line x1="3" y1="6" x2="3" y2="19"/><line x1="12" y1="6" x2="12" y2="19"/><line x1="21" y1="6" x2="21" y2="19"/>",
+    "briefcase":"<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7v-2a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/>",
+    "bus":"<path d="M6 17l0 .01"/><path d="M18 17l0 .01"/><path d="M4 11V7a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4"/><rect x="2" y="11" width="20" height="8" rx="1"/><path d="M12 3v8"/>",
+    "calendar":"<rect x="4" y="5" width="16" height="16" rx="2"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="4" y1="11" x2="20" y2="11"/>",
+    "calendar-event":"<rect x="4" y="5" width="16" height="16" rx="2"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="4" y1="11" x2="20" y2="11"/><rect x="8" y="15" width="2" height="2"/>",
+    "chart-bar":"<rect x="3" y="12" width="4" height="8" rx="1"/><rect x="9" y="8" width="4" height="12" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/>",
+    "check":"<path d="M5 12l5 5l10-10"/>",
+    "clipboard-list":"<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/>",
+    "clock":"<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/>",
+    "door-exit":"<path d="M13 12v.01"/><path d="M3 21h18"/><path d="M5 21v-16a2 2 0 0 1 2-2h7.5"/><path d="M14 7l3 3l-3 3"/><path d="M14 10h-7"/>",
+    "edit":"<path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3l8.385-8.415z"/>",
+    "eye":"<circle cx="12" cy="12" r="2"/><path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/>",
+    "file-text":"<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><line x1="9" y1="9" x2="10" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>",
+    "flag":"<path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1-7 0a5 5 0 0 0-7 0v-9z"/><line x1="5" y1="19" x2="5" y2="14"/>",
+    "heart-handshake":"<path d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566a5 5 0 1 1 7.5 6.572"/><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1-1a3.182 3.182 0 0 1 4.5 0l2.25 2.25"/><path d="M12.5 15.5l2 2"/><path d="M15 13l2 2"/>",
+    "layout-dashboard":"<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="3" rx="1"/><rect x="4" y="13" width="7" height="3" rx="1"/><rect x="13" y="9" width="7" height="11" rx="1"/>",
+    "layout-grid":"<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>",
+    "map-pin":"<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/>",
+    "news":"<path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1-4 0V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a3 3 0 0 0 3 3h11"/><line x1="8" y1="8" x2="12" y2="8"/><line x1="8" y1="12" x2="12" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>",
+    "package":"<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3"/><line x1="12" y1="12" x2="20" y2="7.5"/><line x1="12" y1="12" x2="12" y2="21"/><line x1="12" y1="12" x2="4" y2="7.5"/><line x1="8" y1="5.25" x2="16" y2="9.75"/>",
+    "plug":"<path d="M9.785 6L18 14.215l-2.828 2.828L7.957 8.828L9.785 6z"/><path d="M8 6l-2-2"/><path d="M16 14l2 2"/><path d="M5.828 8.172L3 11a3 3 0 1 0 4.243 4.243l2.828-2.829M13 16l-1 3l-3-1"/>",
+    "refresh":"<path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/>",
+    "scale":"<path d="M7 20l4-16m2 16l4-16"/><path d="M3 8h18"/><path d="M3 16h18"/>",
+    "search":"<circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/>",
+    "settings":"<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37c1 .608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/>",
+    "speakerphone":"<path d="M18 8a3 3 0 0 1 0 6"/><path d="M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5"/><path d="M12 8h0l4.524-3.77A.9.9 0 0 1 18 5v14a.9.9 0 0 1-1.476.692L12 16H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8"/>",
+    "target":"<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>",
+    "trash":"<line x1="4" y1="7" x2="20" y2="7"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>",
+    "upload":"<path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/>",
+    "user":"<circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>",
+    "users":"<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/>",
+    "circle":"<circle cx="12" cy="12" r="9"/>",
+};
 function TI({n,size=16,style}){
-  const icons={
-    "ball-football":<><circle cx="12" cy="12" r="9"/><path d="M12 3c0 0 2 4 2 9s-2 9-2 9"/><path d="M3 12c0 0 4-2 9-2s9 2 9 2"/><path d="M5.6 5.6c0 0 3.4 1.4 6.4 6.4s1.4 6.4 1.4 6.4"/></>,
-    "bolt":<><path d="M13 3l-6 9h5l-1 9l6-9h-5l1-9z"/></>,
-    "book":<><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><line x1="3" y1="6" x2="3" y2="19"/><line x1="12" y1="6" x2="12" y2="19"/><line x1="21" y1="6" x2="21" y2="19"/></>,
-    "briefcase":<><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7v-2a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/></>,
-    "bus":<><path d="M6 17l0 .01"/><path d="M18 17l0 .01"/><path d="M4 11V7a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4"/><rect x="2" y="11" width="20" height="8" rx="1"/><path d="M12 3v8"/></>,
-    "calendar":<><rect x="4" y="5" width="16" height="16" rx="2"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="4" y1="11" x2="20" y2="11"/></>,
-    "calendar-event":<><rect x="4" y="5" width="16" height="16" rx="2"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="4" y1="11" x2="20" y2="11"/><rect x="8" y="15" width="2" height="2"/></>,
-    "chart-bar":<><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="9" y="8" width="4" height="12" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></>,
-    "check":<><path d="M5 12l5 5l10-10"/></>,
-    "clipboard-list":<><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></>,
-    "clock":<><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></>,
-    "door-exit":<><path d="M13 12v.01"/><path d="M3 21h18"/><path d="M5 21v-16a2 2 0 0 1 2-2h7.5"/><path d="M14 7l3 3l-3 3"/><path d="M14 10h-7"/></>,
-    "edit":<><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3l8.385-8.415z"/></>,
-    "eye":<><circle cx="12" cy="12" r="2"/><path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/></>,
-    "file-text":<><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><line x1="9" y1="9" x2="10" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></>,
-    "flag":<><path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1-7 0a5 5 0 0 0-7 0v-9z"/><line x1="5" y1="19" x2="5" y2="14"/></>,
-    "heart-handshake":<><path d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566a5 5 0 1 1 7.5 6.572"/><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1-1a3.182 3.182 0 0 1 4.5 0l2.25 2.25"/><path d="M12.5 15.5l2 2"/><path d="M15 13l2 2"/></>,
-    "layout-dashboard":<><path d="M5 5m0 1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M13 5m0 1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M5 15m0 1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M13 11m0 1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/></>,
-    "layout-grid":<><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></>,
-    "map-pin":<><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></>,
-    "news":<><path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1-4 0V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a3 3 0 0 0 3 3h11"/><line x1="8" y1="8" x2="12" y2="8"/><line x1="8" y1="12" x2="12" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></>,
-    "package":<><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3"/><line x1="12" y1="12" x2="20" y2="7.5"/><line x1="12" y1="12" x2="12" y2="21"/><line x1="12" y1="12" x2="4" y2="7.5"/><line x1="8" y1="5.25" x2="16" y2="9.75"/></>,
-    "plug":<><path d="M9.785 6L18 14.215l-2.828 2.828L7.957 8.828L9.785 6z"/><path d="M8 6l-2-2"/><path d="M16 14l2 2"/><path d="M5.828 8.172L3 11a3 3 0 1 0 4.243 4.243l2.828-2.829M13 16l-1 3l-3-1"/></>,
-    "refresh":<><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></>,
-    "scale":<><path d="M7 20l4-16m2 16l4-16"/><path d="M3 8h18"/><path d="M3 16h18"/></>,
-    "search":<><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></>,
-    "settings":<><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37c1 .608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></>,
-    "speakerphone":<><path d="M18 8a3 3 0 0 1 0 6"/><path d="M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5"/><path d="M12 8h0l4.524-3.77A.9.9 0 0 1 18 5v14a.9.9 0 0 1-1.476.692L12 16H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8"/></>,
-    "target":<><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></>,
-    "trash":<><line x1="4" y1="7" x2="20" y2="7"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></>,
-    "upload":<><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></>,
-    "user":<><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></>,
-    "users":<><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></>,
-  };
-  const p=icons[n];
-  if(!p) return <span style={{fontSize:size,...style}}>□</span>;
-  return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>{p}</svg>;
+  const p=TI_PATHS[n];
+  if(!p) return <span style={{display:"inline-block",width:size,height:size,...style}}/>;
+  return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style} dangerouslySetInnerHTML={{__html:p}}/>;
 }
 
 function useIsMobile(){const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);return w<680;}
@@ -1265,7 +1266,7 @@ function DashboardEltern({account,meineTeams,setActive}){
   return(
     <div>
       <h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Hallo, {parentName}</h1>
-      <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Elternteil · {kinder.map(k=>k.name.split(" ")[0]).join(" &amp; ")} · Freitag, 23. Mai 2026</p>
+      <p style={{color:"#888",fontSize:13,margin:"0 0 18px"}}>Elternteil · {kinder.map(k=>k.name.split(" ")[0]).join(" & ")} · Freitag, 23. Mai 2026</p>
 
       {kinder.map((kind,ki)=>{
         const team=kind.team||"Cc-Junioren";
@@ -1280,20 +1281,20 @@ function DashboardEltern({account,meineTeams,setActive}){
         const attPct=attTotal?Math.round(zuCount/attTotal*100):null;
         const attColor=attPct===null?"#aaa":attPct>=80?GN:attPct>=60?AM:R;
 
-        /* Nächste 4 Trainings &amp; Spiele */
+        /* Nächste 4 Trainings & Spiele */
         const upcoming=ATT_EVENTS
-          .filter(e=>e.team===team&amp;&amp;(e.type==="Training"||e.type==="Spiel")&amp;&amp;parseD(e.date)>=today)
+          .filter(e=>e.team===team&&(e.type==="Training"||e.type==="Spiel")&&parseD(e.date)>=today)
           .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))
           .slice(0,4);
 
-        /* Team-Events &amp; Vereinsanlässe */
+        /* Team-Events & Vereinsanlässe */
         const anlaesse=ATT_EVENTS
-          .filter(e=>(e.team===team||e.team==="Alle")&amp;&amp;e.type==="Veranstaltung"&amp;&amp;parseD(e.date)>=today)
+          .filter(e=>(e.team===team||e.team==="Alle")&&e.type==="Veranstaltung"&&parseD(e.date)>=today)
           .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))
           .slice(0,4);
 
         const nextAufgebotSpiel=ATT_EVENTS
-          .filter(e=>e.team===team&amp;&amp;e.type==="Spiel"&amp;&amp;parseD(e.date)>=today&amp;&amp;(aufgebotState[e.id]||[]).includes(rosterId))
+          .filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today&&(aufgebotState[e.id]||[]).includes(rosterId))
           .sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
 
         const accentFor=(e)=>e.type==="Spiel"?BL:e.subtype==="Vereinsanlass"?"#7C3AED":e.type==="Veranstaltung"?AM:GN;
@@ -1348,7 +1349,7 @@ function DashboardEltern({account,meineTeams,setActive}){
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:14}}>
               {/* Nächste 4 Trainings & Spiele */}
               <Card style={{cursor:setActive?"pointer":"default"}} onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;setActive("team");}:undefined}>
-                <STitle action={setActive&&<span style={{fontSize:11,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Trainings &amp; Spiele</STitle>
+                <STitle action={setActive&&<span style={{fontSize:11,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Trainings & Spiele</STitle>
                 {upcoming.length===0&&<div style={{fontSize:12,color:"#aaa"}}>Keine anstehenden Trainings oder Spiele.</div>}
                 {upcoming.map((e,i)=>(
                   <div key={e.id} style={{display:"flex",gap:8,padding:"8px 0",borderBottom:i<upcoming.length-1?`0.5px solid ${GB}`:"none",alignItems:"center"}}>
@@ -1366,7 +1367,7 @@ function DashboardEltern({account,meineTeams,setActive}){
 
               {/* Team-Events & Vereinsanlässe */}
               <Card style={{cursor:setActive?"pointer":"default"}} onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["team-event","vereinsanlass"];NAV_TARGET.kindTeam=team;setActive("team");}:undefined}>
-                <STitle action={setActive&&<span style={{fontSize:11,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Team-Events &amp; Anlässe</STitle>
+                <STitle action={setActive&&<span style={{fontSize:11,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Team-Events & Anlässe</STitle>
                 {anlaesse.length===0&&<div style={{fontSize:12,color:"#aaa"}}>Keine anstehenden Anlässe.</div>}
                 {anlaesse.map((e,i)=>(
                   <div key={e.id} style={{display:"flex",gap:8,padding:"8px 0",borderBottom:i<anlaesse.length-1?`0.5px solid ${GB}`:"none",alignItems:"center"}}>
@@ -3060,7 +3061,7 @@ function TrainingGantt({team: teamProp, role}){
       {/* Ausserhalb Gültigkeitsspanne */}
       {!planGueltigDieseWoche&&(
         <div style={{padding:"10px 14px",background:"#F3F4F6",border:"1px solid #D1D5DB",borderRadius:10,marginBottom:12,fontSize:12,color:"#6B7280",display:"flex",alignItems:"center",gap:8}}>
-          <span style={{fontSize:14}}>&amp;#128197;</span>
+          <span style={{fontSize:14}}>&#128197;</span>
           <span>
             Diese Woche liegt ausserhalb der Gültigkeitsspanne des Plans
             {planGueltigAb&&<strong style={{color:"#374151"}}> ({plan.valid_from&&plan.valid_from.split("-").reverse().join(".")} – {plan.valid_until?plan.valid_until.split("-").reverse().join("."):"unbegrenzt"})</strong>}.
@@ -3110,7 +3111,7 @@ function TrainingGantt({team: teamProp, role}){
             <button onClick={function(){
               if(ansicht==="tag"){ setSelectedDay(function(d){return d===0?6:d-1;}); }
               else { setKwOffset(function(o){return o-1;}); }
-            }} style={{width:28,height:28,borderRadius:"50%",border:"1px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14}}>&amp;#8249;</button>
+            }} style={{width:28,height:28,borderRadius:"50%",border:"1px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14}}>&#8249;</button>
             <div style={{textAlign:"center",minWidth:130}}>
               {ansicht==="woche" ? (
                 <>
@@ -3127,7 +3128,7 @@ function TrainingGantt({team: teamProp, role}){
             <button onClick={function(){
               if(ansicht==="tag"){ setSelectedDay(function(d){return d===6?0:d+1;}); }
               else { setKwOffset(function(o){return o+1;}); }
-            }} style={{width:28,height:28,borderRadius:"50%",border:"1px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14}}>&amp;#8250;</button>
+            }} style={{width:28,height:28,borderRadius:"50%",border:"1px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14}}>&#8250;</button>
             {kwOffset!==0 && <button onClick={function(){setKwOffset(0);setSelectedDay(0);}} style={{padding:"4px 12px",borderRadius:20,border:"1px solid "+GB,background:"#fff",color:"#555",fontSize:11,cursor:"pointer"}}>Heute</button>}
           </div>
           {ansicht==="tag" && (
@@ -3288,7 +3289,7 @@ function TrainingGantt({team: teamProp, role}){
               )}
               <div style={{display:"flex",gap:8}}>
                 <button onClick={function(){handleSlotDeleteConfirm(deleteSlot,deleteSlot.selectedEvIds);}} style={{flex:1,padding:"11px",borderRadius:10,border:"none",background:R,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>
-                  Training loeschen{deleteSlot.selectedEvIds.size>0?" &amp; "+deleteSlot.selectedEvIds.size+" Termin"+(deleteSlot.selectedEvIds.size>1?"e":"")+" absagen":""}
+                  Training loeschen{deleteSlot.selectedEvIds.size>0?" & "+deleteSlot.selectedEvIds.size+" Termin"+(deleteSlot.selectedEvIds.size>1?"e":"")+" absagen":""}
                 </button>
                 <button onClick={function(){setShowDeleteDialog(false);setDeleteSlot(null);}} style={{padding:"11px 16px",borderRadius:10,border:"1px solid "+GB,background:"#fff",fontSize:13,cursor:"pointer"}}>Abbrechen</button>
               </div>
@@ -3919,7 +3920,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                 </div>
               )}
 
-              {/* Ort &amp; Treffpunkt */}
+              {/* Ort & Treffpunkt */}
               <div style={{display:"grid",gridTemplateColumns:spiel.treffpunkt?"1fr 1fr":"1fr",gap:10}}>
                 <div style={{background:GR,borderRadius:12,padding:"12px 14px",display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                   <span style={{fontSize:20}}><TI n="map-pin"/></span>
@@ -4716,7 +4717,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
         {/* Statistik-Header */}
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:10,marginBottom:14}}>
           {(()=>{
-            const rsvpEvs=teamEvents.filter(e=>!(e.subtype==="Vereinsanlass"&amp;&amp;e.rsvp===false));
+            const rsvpEvs=teamEvents.filter(e=>!(e.subtype==="Vereinsanlass"&&e.rsvp===false));
             const spielTrainEvs=rsvpEvs.filter(e=>e.type==="Training"||e.type==="Spiel");
 
             /* Vergangene Events → Anwesenheitsquote */
@@ -4725,19 +4726,19 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             const pastPct=pastST.length?Math.round(pastZu/pastST.length*100):null;
 
             /* Trainings */
-            const pastTrain=spielTrainEvs.filter(e=>e.type==="Training"&amp;&amp;isPast(e));
+            const pastTrain=spielTrainEvs.filter(e=>e.type==="Training"&&isPast(e));
             const pastTrainZu=pastTrain.filter(e=>getResp(e.id,myId).status==="zu").length;
             const trainPct=pastTrain.length?Math.round(pastTrainZu/pastTrain.length*100):null;
 
             /* Spiele */
-            const pastSpiele=spielTrainEvs.filter(e=>e.type==="Spiel"&amp;&amp;isPast(e));
+            const pastSpiele=spielTrainEvs.filter(e=>e.type==="Spiel"&&isPast(e));
             const pastSpieleZu=pastSpiele.filter(e=>getResp(e.id,myId).status==="zu").length;
             const spielPct=pastSpiele.length?Math.round(pastSpieleZu/pastSpiele.length*100):null;
 
             const fmt=(pct,zu,total,label)=>pct!==null?[pct+"%",zu+"/"+total+" "+label]:["-","Noch keine "+label];
             const col=(pct)=>pct===null?"#aaa":pct>=80?GN:pct>=60?AM:R;
 
-            const [tv,ts]=fmt(pastPct,pastZu,pastST.length,"Spiele &amp; Trainings");
+            const [tv,ts]=fmt(pastPct,pastZu,pastST.length,"Spiele & Trainings");
             const [trv,trs]=fmt(trainPct,pastTrainZu,pastTrain.length,"Trainings");
             const [spv,sps]=fmt(spielPct,pastSpieleZu,pastSpiele.length,"Spiele");
             return[
@@ -4950,7 +4951,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><TI n="map-pin" style={{marginRight:3}}/> {selEv.location}</span>
                     {(()=>{const b=besammlungen[selEv.id]||{};const t=b.time||"";const o=b.location||selEv.treffpunkt||"";return (t||o)?<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><TI n="target" style={{marginRight:3}}/> {t?t+" Uhr":""}{t&&o?" · ":""}{o}</span>:null;})()}
                   </div>
-                  {/* Deadline &amp; Erinnerung - für alle editierbaren Events */}
+                  {/* Deadline & Erinnerung - für alle editierbaren Events */}
                   {canEditEvent(selEv)&&(
                     <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",paddingTop:10,borderTop:"0.5px solid rgba(0,0,0,0.1)"}}>
                       <span style={{color:hTxtSub,fontSize:10,fontWeight:700,letterSpacing:0.5}}>⏰ DEADLINE</span>
