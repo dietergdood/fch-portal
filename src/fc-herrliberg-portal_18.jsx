@@ -4346,6 +4346,7 @@ function TableTab({team}){
  </tbody>
  </table>
  </Card>
+  </div>
  );
 }
 
@@ -5602,6 +5603,7 @@ function FieldVisView(){
  </tbody>
  </table>
  </Card>
+  </div>
  );
 }
 
@@ -7589,6 +7591,7 @@ function MaterialView(){
  </tbody>
  </table>
  </Card>
+  </div>
  );
 }
 
@@ -7787,6 +7790,7 @@ function AttendanceCentral(){
  </tbody>
  </table>
  </Card>
+  </div>
  );
 }
 
@@ -7991,6 +7995,8 @@ function PlaetzeView(){
  Inaktive Plätze erscheinen nicht in Dropdowns. Hälften mit Komma trennen.
  </div>
  </div>
+  </div>
+  </div>
  );
 }
 
@@ -8030,6 +8036,7 @@ function DataCheckView(){
  </tbody>
  </table>
  </Card>
+  </div>
  );
 }
 
