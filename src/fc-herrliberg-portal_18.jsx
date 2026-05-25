@@ -1,10 +1,52 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 
 /* -- SUPABASE wird als Prop von App.jsx übergeben (kein Import hier) -- */
 let supabase = null; // wird via setSupabaseClient() gesetzt
 
 /* -- FARBEN -- */
 const R="#C8102E",RL="#FEF2F2",BK="#1A1A1A",GR="#F5F5F3",GB="#E0DED8",BL="#2563EB",GN="#059669",AM="#D97706";
+
+/* ── PWA: Schriften & Breakpoints ── */
+const FONT="'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
+const BP_MOBILE=680, BP_TABLET=1024;
+
+/* ── PWA THEME SYSTEM ── */
+const ThemeCtx = createContext({dark:false, toggle:()=>{}});
+const useTheme = ()=>useContext(ThemeCtx);
+
+/* ── Globales CSS (wird per useEffect injiziert) ── */
+const PWA_CSS=`
+:root,[data-theme=light]{
+  --bg:#F5F5F3;--surface:#fff;--surface2:#f8f8f6;
+  --border:#E0DED8;--text:#1A1A1A;--sub:#666;
+  --nav:#141414;--nav-b:#222;--nav-t:#9a9a9a;--nav-a:#f0f0f0;
+  --card-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+[data-theme=dark]{
+  --bg:#0f0f11;--surface:#18181c;--surface2:#222228;
+  --border:#2c2c36;--text:#f0f0f0;--sub:#8a8a9a;
+  --nav:#0a0a0c;--nav-b:#1a1a22;--nav-t:#6a6a7a;--nav-a:#f0f0f0;
+  --card-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+@keyframes fch-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fch-pop{from{opacity:0;transform:scale(0.72)}to{opacity:1;transform:scale(1)}}
+@keyframes fch-splash-out{to{opacity:0;visibility:hidden}}
+@keyframes fch-shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes fch-dot{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+.fch-page{animation:fch-in 0.2s ease-out}
+.fch-card{background:var(--surface)!important;border-color:var(--border)!important;box-shadow:var(--card-shadow)!important}
+.fch-topbar{background:var(--surface)!important;border-color:var(--border)!important}
+.fch-main{background:var(--bg)!important}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+html{scroll-behavior:smooth}
+button:active:not([disabled]){transform:scale(0.96)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.14);border-radius:10px}
+[data-theme=dark] ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1)}
+:focus-visible{outline:2px solid #f8de09;outline-offset:2px;border-radius:4px}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+`;
 /* localStorage polyfill voor window.storage */
 if(typeof window!=="undefined"&&!window.storage){
   window.storage={
@@ -58,7 +100,49 @@ function TI({n,size=16,style}){
   return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style} dangerouslySetInnerHTML={{__html:p}}/>;
 }
 
-function useIsMobile(){const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);return w<680;}
+function useBreakpoint(){const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);return{isMobile:w<BP_MOBILE,isTablet:w>=BP_MOBILE&&w<BP_TABLET,isDesktop:w>=BP_TABLET,width:w};}
+function useIsMobile(){return useBreakpoint().isMobile;}
+
+/* ── SPLASH SCREEN ── */
+function SplashScreen({onDone}){
+  useEffect(()=>{const t=setTimeout(onDone,1600);return()=>clearTimeout(t);},[]);
+  return(
+    <div style={{position:"fixed",inset:0,background:"#0a0a0c",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:9999,animation:"fch-splash-out 0.35s 1.25s ease-out forwards"}}>
+      <img src="/logo_fch_mit_rand.svg" style={{width:76,height:76,objectFit:"contain",animation:"fch-pop 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) both"}} alt="FC Herrliberg"/>
+      <div style={{color:"#f0f0f0",fontWeight:800,fontSize:22,marginTop:18,letterSpacing:-0.3,fontFamily:FONT,animation:"fch-in 0.4s 0.4s ease-out both"}}>FC Herrliberg</div>
+      <div style={{color:"#444",fontSize:12,marginTop:4,letterSpacing:1.5,textTransform:"uppercase",fontFamily:FONT,animation:"fch-in 0.4s 0.55s ease-out both"}}>Vereinsportal</div>
+      <div style={{display:"flex",gap:6,marginTop:32,animation:"fch-in 0.4s 0.7s ease-out both"}}>
+        {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:"#f8de09",animation:`fch-dot 1.2s ${i*0.18}s ease-in-out infinite`}}/>)}
+      </div>
+    </div>
+  );
+}
+
+/* ── SKELETON LOADER ── */
+function Skel({h=14,w="100%",br=6,mb=0,style={}}){
+  return <div style={{height:h,width:w,borderRadius:br,marginBottom:mb,background:"linear-gradient(90deg,var(--border) 25%,var(--surface2) 50%,var(--border) 75%)",backgroundSize:"200% 100%",animation:"fch-shimmer 1.5s infinite",...style}}/>;
+}
+function SkelCard(){
+  return(
+    <div className="fch-card" style={{borderRadius:14,padding:"20px 22px",border:"0.5px solid"}}>
+      <Skel h={10} w="38%" br={4} mb={14}/>
+      <Skel h={30} w="55%" br={6} mb={8}/>
+      <Skel h={10} w="72%" br={4}/>
+    </div>
+  );
+}
+function SkelList({rows=4}){
+  return(
+    <div style={{display:"flex",flexDirection:"column",gap:10}}>
+      {Array.from({length:rows},(_,i)=>(
+        <div key={i} className="fch-card" style={{borderRadius:12,padding:"14px 18px",border:"0.5px solid",display:"flex",alignItems:"center",gap:14}}>
+          <div style={{width:38,height:38,borderRadius:"50%",background:"var(--border)",animation:"fch-shimmer 1.5s infinite",flexShrink:0}}/>
+          <div style={{flex:1}}><Skel h={11} w="60%" br={4} mb={7}/><Skel h={9} w="40%" br={4}/></div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /* Reusable Modal/BottomSheet - desktop: centered modal, mobile: slides up from bottom */
 function ModalOrSheet({open,onClose,children,maxWidth=660}){
@@ -559,18 +643,18 @@ function Chip({text,color=R,bg}){
 }
 function Stat({label,value,sub,color=BK,icon}){
   return(
-    <div style={{background:"#fff",border:`1px solid ${GB}`,borderRadius:12,padding:"18px 20px",flex:1,minWidth:0,boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}>
+    <div className="fch-card" style={{borderRadius:12,padding:"18px 20px",flex:1,minWidth:0,border:"0.5px solid"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-        <div style={{fontSize:10,color:"#999",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>{label}</div>
+        <div style={{fontSize:10,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>{label}</div>
         {icon&&<div style={{width:28,height:28,borderRadius:7,background:color+"15",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n={icon} size={14} style={{color}}/></div>}
       </div>
       <div style={{fontSize:28,fontWeight:800,color,lineHeight:1,marginBottom:5}}>{value}</div>
-      {sub&&<div style={{fontSize:11,color:"#aaa",fontWeight:400}}>{sub}</div>}
+      {sub&&<div style={{fontSize:11,color:"var(--sub)",fontWeight:400}}>{sub}</div>}
     </div>
   );
 }
 function Card({children,style={},onClick}){
-  return <div onClick={onClick} style={{background:"#fff",border:`0.5px solid ${GB}`,borderRadius:14,padding:"20px 22px",boxShadow:"0 1px 4px rgba(0,0,0,0.04)",...style}}>{children}</div>;
+  return <div onClick={onClick} className="fch-card" style={{borderRadius:14,padding:"20px 22px",border:"0.5px solid",...style}}>{children}</div>;
 }
 function STitle({children,action}){
   return(
@@ -582,14 +666,14 @@ function STitle({children,action}){
 }
 function Btn({children,onClick,variant="outline",color=BK,small,style={}}){
   const p=small?"4px 11px":"7px 15px";
-  if(variant==="primary"){const lightBg=color==="#F3F4F6"||color==="#F3F4F6"||color==="#f8de09";return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?11:13,fontWeight:600,cursor:"pointer",border:lightBg?`0.5px solid ${GB}`:"none",background:color,color:lightBg?"#374151":"#fff",transition:"opacity 0.1s",...style}} onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>;}
-  return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?11:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${GB}`,background:"#fff",color:BK,transition:"background 0.1s",...style}} onMouseEnter={e=>e.currentTarget.style.background=GR} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>{children}</button>;
+  if(variant==="primary"){const lightBg=color==="#F3F4F6"||color==="#f8de09";return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:lightBg?"1px solid var(--border)":"none",background:color,color:lightBg?"#374151":"#fff",transition:"opacity 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>;}
+  return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:"1px solid var(--border)",background:"var(--surface)",color:"var(--text)",transition:"background 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"} onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>{children}</button>;
 }
 function Tabs({tabs,active,setActive}){
   return(
-    <div style={{display:"flex",gap:1,background:GR,borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap"}}>
+    <div style={{display:"flex",gap:1,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap"}}>
       {tabs.map(t=>(
-        <button key={t.key} onClick={()=>setActive(t.key)} style={{padding:"6px 10px",border:"none",borderRadius:7,background:active===t.key?"#fff":"transparent",color:active===t.key?BK:"#999",fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:12,boxShadow:active===t.key?"0 1px 3px rgba(0,0,0,0.08)":"none",whiteSpace:"nowrap"}}>{t.label}</button>
+        <button key={t.key} onClick={()=>setActive(t.key)} style={{padding:"7px 12px",border:"none",borderRadius:7,background:active===t.key?"var(--surface)":"transparent",color:active===t.key?"var(--text)":"var(--sub)",fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:12,boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",whiteSpace:"nowrap",fontFamily:FONT,minHeight:34,transition:"all 0.15s"}}>{t.label}</button>
       ))}
     </div>
   );
@@ -733,14 +817,14 @@ function SideNav({role,active,setActive,account}){
   const rc=getRole(role).color;
   const userName=account?.name||USER_ACCOUNTS[role]?.name||getRole(role)?.label||"Benutzer";
   return(
-    <nav style={{width:216,background:"#141414",minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0}}>
+    <nav style={{width:216,background:"var(--nav)",minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0,borderRight:"1px solid var(--nav-b)"}}>
       {/* Logo */}
-      <div style={{padding:"20px 18px 16px",borderBottom:"1px solid #222"}}>
+      <div style={{padding:"20px 18px 16px",borderBottom:"1px solid var(--nav-b)"}}>
         <div style={{display:"flex",alignItems:"center",gap:11}}>
           <img src="/logo_fch_mit_rand.svg" style={{width:46,height:46,objectFit:"contain",flexShrink:0}} alt="FC Herrliberg"/>
           <div>
-            <div style={{color:"#f0f0f0",fontWeight:700,fontSize:14,lineHeight:1.25,letterSpacing:0.1}}>FC Herrliberg</div>
-            <div style={{color:"#555",fontSize:10.5,letterSpacing:0.4,marginTop:1}}>Vereinsportal</div>
+            <div style={{color:"var(--nav-a)",fontWeight:700,fontSize:14,lineHeight:1.25,letterSpacing:0.1}}>FC Herrliberg</div>
+            <div style={{color:"var(--nav-t)",fontSize:10.5,letterSpacing:0.4,marginTop:1}}>Vereinsportal</div>
           </div>
         </div>
       </div>
@@ -749,24 +833,25 @@ function SideNav({role,active,setActive,account}){
         {nav.map(n=>(
           <button key={n.key} onClick={()=>setActive(n.key)} style={{
             width:"100%",display:"flex",alignItems:"center",gap:11,
-            padding:"9px 12px",borderRadius:8,border:"none",
+            padding:"10px 12px",borderRadius:9,border:"none",
             background:active===n.key?"#f8de09":"transparent",
-            color:active===n.key?"#111":"#9a9a9a",
+            color:active===n.key?"#111":"var(--nav-t)",
             cursor:"pointer",fontSize:13.5,fontWeight:active===n.key?600:400,
-            textAlign:"left",marginBottom:1,letterSpacing:0.1,
-            transition:"background 0.12s,color 0.12s"
+            textAlign:"left",marginBottom:2,letterSpacing:0.1,
+            transition:"background 0.15s,color 0.15s",
+            fontFamily:FONT,WebkitTapHighlightColor:"transparent",minHeight:44
           }}>
-            <TI n={n.icon||"circle"} size={15} style={{flexShrink:0,opacity:active===n.key?1:0.7}}/>{n.label}
+            <TI n={n.icon||"circle"} size={15} style={{flexShrink:0,opacity:active===n.key?1:0.65}}/>{n.label}
           </button>
         ))}
       </div>
       {/* User footer */}
-      <div style={{padding:"14px 12px",borderTop:"1px solid #222"}}>
-        <div style={{fontSize:9.5,color:"#404040",fontWeight:600,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:2}}>Angemeldet als</div>
+      <div style={{padding:"14px 12px",borderTop:"1px solid var(--nav-b)"}}>
+        <div style={{fontSize:9.5,color:"var(--nav-t)",fontWeight:600,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:2,opacity:0.6}}>Angemeldet als</div>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <Av size={32} bg={rc} name={userName}/>
           <div style={{minWidth:0}}>
-            <div style={{color:"#e8e8e8",fontSize:12.5,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
+            <div style={{color:"var(--nav-a)",fontSize:12.5,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
             <span style={{display:"inline-block",marginTop:3,background:rc,color:rc==="#f8de09"?"#111":"#fff",fontSize:9.5,fontWeight:700,padding:"2px 8px",borderRadius:20,letterSpacing:0.2}}>{getRole(role).label}</span>
           </div>
         </div>
@@ -778,16 +863,23 @@ function SideNav({role,active,setActive,account}){
 function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout}){
   const nav=NAV_BY_ROLE[role]||[];
   const label=nav.find(n=>n.key===active)?.label||active;
-  const rc=getRole(role).color;
   const acc=account||USER_ACCOUNTS[role]||{name:getRole(role).label,rollen:[role],primaryRole:role,kinder:[]};
+  const {dark,toggle}=useTheme();
   return(
-    <div style={{height:52,background:"#fff",borderBottom:`1px solid ${GB}`,display:"flex",alignItems:"center",padding:"0 28px",justifyContent:"space-between",flexShrink:0,gap:12}}>
-      <span style={{fontSize:13,color:"#bbb",fontWeight:400}}><span style={{color:"#f8de09",fontWeight:800}}>FCH</span><span style={{margin:"0 7px",color:"#ddd"}}>/</span><span style={{color:"#555"}}>{label}</span></span>
-      <div style={{display:"flex",alignItems:"center",gap:10}}>
-        {!onLogout && <RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
-        {!onLogout && <Chip text="DEMO" color="#999" bg="#f5f5f3"/>}
-        {onLogout && <span style={{fontSize:12,color:"#888",fontWeight:500}}>{acc.name||acc.email}</span>}
-        {onLogout && <button onClick={onLogout} style={{padding:"5px 14px",borderRadius:6,border:"1px solid "+GB,background:"#fff",color:"#555",fontSize:12,cursor:"pointer",fontWeight:500}}>Abmelden</button>}
+    <div className="fch-topbar" style={{height:52,borderBottom:"1px solid",display:"flex",alignItems:"center",padding:"0 20px",justifyContent:"space-between",flexShrink:0,gap:10,fontFamily:FONT}}>
+      <span style={{fontSize:13,fontWeight:400}}>
+        <span style={{color:"#f8de09",fontWeight:800}}>FCH</span>
+        <span style={{margin:"0 6px",color:"var(--border)"}}>/</span>
+        <span style={{color:"var(--text)"}}>{label}</span>
+      </span>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>
+        <button onClick={toggle} title={dark?"Hell":"Dunkel"} style={{width:36,height:36,borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"background 0.2s"}}>
+          <TI n={dark?"sun":"moon"} size={15} style={{color:"var(--sub)"}}/>
+        </button>
+        {!onLogout&&<RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
+        {!onLogout&&<Chip text="DEMO" color="#999" bg="var(--surface2)"/>}
+        {onLogout&&<span style={{fontSize:12,color:"var(--sub)",fontWeight:500}}>{acc.name||acc.email}</span>}
+        {onLogout&&<button onClick={onLogout} style={{padding:"6px 14px",borderRadius:7,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:12,cursor:"pointer",fontWeight:500,minHeight:36}}>Abmelden</button>}
       </div>
     </div>
   );
@@ -7980,14 +8072,20 @@ function DataCheckView(){
 function MobileNav({role,active,setActive}){
   const nav=NAV_BY_ROLE[role]||[];
   return(
-    <nav style={{position:"fixed",bottom:0,left:0,right:0,background:BK,borderTop:"1px solid #252525",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)",boxShadow:"0 -4px 20px rgba(0,0,0,0.3)"}}>
+    <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"var(--nav)",borderTop:"1px solid var(--nav-b)",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)",boxShadow:"0 -2px 16px rgba(0,0,0,0.25)"}}>
       <div style={{display:"flex",overflowX:"auto",WebkitOverflowScrolling:"touch",scrollbarWidth:"none",msOverflowStyle:"none"}}>
         {nav.map(n=>(
-          <button key={n.key} onClick={()=>setActive(n.key)}
-            style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",gap:3,minWidth:72}}>
-            <TI n={n.icon||"circle"} size={16} />
-            <span style={{fontSize:10,color:active===n.key?"#f8de09":"#666",fontWeight:active===n.key?700:400,whiteSpace:"nowrap"}}>{n.label}</span>
-            {active===n.key&&<span style={{width:4,height:4,borderRadius:"50%",background:"#f8de09",marginTop:1}}/>}
+          <button key={n.key} onClick={()=>setActive(n.key)} style={{
+            flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",
+            justifyContent:"center",padding:"8px 10px",background:"none",border:"none",
+            cursor:"pointer",gap:4,minWidth:68,minHeight:58,
+            WebkitTapHighlightColor:"transparent",fontFamily:FONT,position:"relative"
+          }}>
+            {active===n.key&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:28,height:3,borderRadius:"0 0 4px 4px",background:"#f8de09"}}/>}
+            <div style={{width:36,height:36,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",background:active===n.key?"#f8de09":"transparent",transition:"background 0.15s"}}>
+              <TI n={n.icon||"circle"} size={17} style={{color:active===n.key?"#111":"var(--nav-t)"}}/>
+            </div>
+            <span style={{fontSize:10,color:active===n.key?"#f8de09":"var(--nav-t)",fontWeight:active===n.key?700:400,whiteSpace:"nowrap",lineHeight:1}}>{n.label}</span>
           </button>
         ))}
       </div>
@@ -8035,16 +8133,16 @@ function LoginScreen({onLogin, sb}){
   }
 
   return(
-    <div style={{minHeight:"100vh",background:GR,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"system-ui,-apple-system,sans-serif"}}>
+    <div style={{minHeight:"100vh",background:"var(--bg)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT,WebkitFontSmoothing:"antialiased",color:"var(--text)"}}>
       <div style={{width:"100%",maxWidth:400,padding:"0 20px"}}>
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
           <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><TI n="ball-football"/></div>
-          <div style={{fontWeight:800,fontSize:22,color:BK}}>FC Herrliberg</div>
-          <div style={{fontSize:13,color:"#888",marginTop:2}}>Vereinsportal</div>
+          <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>FC Herrliberg</div>
+          <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>Vereinsportal</div>
         </div>
 
-        <div style={{background:"#fff",borderRadius:16,padding:28,boxShadow:"0 2px 16px rgba(0,0,0,0.08)"}}>
+        <div style={{background:"var(--surface)",borderRadius:16,padding:28,boxShadow:"var(--card-shadow)",border:"1px solid var(--border)"}}>
           {!showReset ? (
             <>
               <div style={{fontWeight:700,fontSize:16,color:BK,marginBottom:20}}>Anmelden</div>
@@ -8115,7 +8213,33 @@ export default function Portal({supabaseClient}){
   const [accountKey,setAccountKey]=useState("trainer");
   const [activeSubRole,setActiveSubRole]=useState(null);
   const [active,setActive]=useState("dashboard");
-  const isMobile=useIsMobile(); // MUSS vor allen Early Returns stehen
+  const {isMobile,isTablet}=useBreakpoint();
+  /* ── Dark Mode ── */
+  const [dark,setDark]=useState(()=>{
+    try{const s=localStorage.getItem("fch-dark");return s?JSON.parse(s):window.matchMedia("(prefers-color-scheme: dark)").matches;}catch{return false;}
+  });
+  const toggleDark=()=>setDark(d=>{const n=!d;try{localStorage.setItem("fch-dark",n);}catch{}return n;});
+  /* ── Splash Screen ── */
+  const [splash,setSplash]=useState(()=>{try{return !sessionStorage.getItem("fch-splash");}catch{return true;}});
+  const doneSplash=()=>{try{sessionStorage.setItem("fch-splash","1");}catch{}setSplash(false);};
+  /* ── Inter Font + PWA Globals ── */
+  useEffect(()=>{
+    if(!document.getElementById("inter-font")){
+      const l=document.createElement("link");l.id="inter-font";l.rel="stylesheet";
+      l.href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap";
+      document.head.appendChild(l);
+    }
+    if(!document.getElementById("fch-pwa-css")){
+      const s=document.createElement("style");s.id="fch-pwa-css";s.textContent=PWA_CSS;
+      document.head.appendChild(s);
+    }
+    let m=document.querySelector("meta[name=viewport]");
+    if(!m){m=document.createElement("meta");m.name="viewport";document.head.appendChild(m);}
+    m.content="width=device-width,initial-scale=1,viewport-fit=cover";
+    let th=document.querySelector("meta[name=theme-color]");
+    if(!th){th=document.createElement("meta");th.name="theme-color";document.head.appendChild(th);}
+    th.content=dark?"#0a0a0c":"#141414";
+  },[dark]);
   // Auth-Session beim Start prüfen
   useEffect(()=>{
     if(!sb){ setSession(null); return; }
@@ -8232,16 +8356,19 @@ export default function Portal({supabaseClient}){
   };
 
   return(
-    <div style={{display:"flex",minHeight:"100vh",background:GR,fontFamily:"system-ui,-apple-system,sans-serif"}}>
-      {!isMobile&&<SideNav role={role} active={active} setActive={setActive} account={account}/>}
-      <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}}>
-        <TopBar role={role} active={active} setActive={setActive}
-          account={account} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole}
-          onRoleChange={(key)=>handleAccountChange(key)} isMobile={isMobile}
-          onLogout={sb&&session ? handleLogout : undefined}/>
-        <main style={{flex:1,padding:isMobile?"16px 14px 90px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
-        {isMobile&&<MobileNav role={role} active={active} setActive={setActive}/>}
+    <ThemeCtx.Provider value={{dark,toggle:toggleDark}}>
+      {splash&&<SplashScreen onDone={doneSplash}/>}
+      <div data-theme={dark?"dark":"light"} style={{display:"flex",minHeight:"100vh",background:"var(--bg)",fontFamily:FONT,WebkitFontSmoothing:"antialiased",MozOsxFontSmoothing:"grayscale",color:"var(--text)",transition:"background 0.25s,color 0.25s"}}>
+        {!isMobile&&<SideNav role={role} active={active} setActive={setActive} account={account}/>}
+        <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}}>
+          <TopBar role={role} active={active} setActive={setActive}
+            account={account} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole}
+            onRoleChange={(key)=>handleAccountChange(key)} isMobile={isMobile}
+            onLogout={sb&&session ? handleLogout : undefined}/>
+          <main key={active} className="fch-page" style={{flex:1,padding:isMobile?"16px 14px 90px":isTablet?"20px 24px 28px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
+          {isMobile&&<MobileNav role={role} active={active} setActive={setActive}/>}
+        </div>
       </div>
-    </div>
+    </ThemeCtx.Provider>
   );
 }
