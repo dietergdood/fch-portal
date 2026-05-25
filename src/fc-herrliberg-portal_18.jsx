@@ -97,6 +97,10 @@ const TI_PATHS={
     "user":"<circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2\"/>",
     "users":"<circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/><path d=\"M21 21v-2a4 4 0 0 0-3-3.85\"/>",
     "circle":"<circle cx=\"12\" cy=\"12\" r=\"9\"/>",
+    "chevron-left":"<polyline points=\"15 18 9 12 15 6\"/>",
+    "chevron-right":"<polyline points=\"9 18 15 12 9 6\"/>",
+    "chevrons-left":"<polyline points=\"11 17 6 12 11 7\"/><polyline points=\"18 17 13 12 18 7\"/>",
+    "chevrons-right":"<polyline points=\"13 17 18 12 13 7\"/><polyline points=\"6 17 11 12 6 7\"/>",
 };
 function TI({n,size=16,style}){
   const p=TI_PATHS[n];
@@ -823,89 +827,133 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
   const rc=getRole(role).color;
   const userName=account?.name||USER_ACCOUNTS[role]?.name||getRole(role)?.label||"Benutzer";
   const [showProfile,setShowProfile]=useState(false);
+  const [collapsed,setCollapsed]=useState(()=>{try{return localStorage.getItem("fch-nav-collapsed")==="1";}catch{return false;}});
+  const toggleCollapse=()=>setCollapsed(c=>{const n=!c;try{localStorage.setItem("fch-nav-collapsed",n?"1":"0");}catch{}return n;});
+  const W=collapsed?64:216;
   return(
-    <nav style={{width:216,background:"var(--nav)",minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0,borderRight:"1px solid var(--nav-b)"}}>
+    <nav style={{width:W,minWidth:W,background:"var(--nav)",minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0,borderRight:"1px solid var(--nav-b)",transition:"width 0.22s cubic-bezier(0.4,0,0.2,1),min-width 0.22s cubic-bezier(0.4,0,0.2,1)",overflow:"hidden"}}>
       {/* Logo Header */}
-      <div style={{padding:"18px 16px 15px",borderBottom:"1px solid var(--nav-b)",display:"flex",alignItems:"center",gap:11}}>
-        <div style={{width:44,height:44,borderRadius:12,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden",boxShadow:"0 2px 8px rgba(248,222,9,0.3)"}}>
+      <div style={{padding:"18px 10px 15px",borderBottom:"1px solid var(--nav-b)",display:"flex",alignItems:"center",gap:collapsed?0:11,justifyContent:collapsed?"center":"flex-start",overflow:"hidden"}}>
+        <div style={{width:44,height:44,minWidth:44,borderRadius:12,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden",boxShadow:"0 2px 8px rgba(248,222,9,0.3)"}}>
           <img src="/logo_fch_mit_rand.svg" style={{width:38,height:38,objectFit:"contain",display:"block"}} alt="FCH"/>
         </div>
-        <div style={{minWidth:0}}>
-          <div style={{color:"var(--nav-a)",fontWeight:800,fontSize:14,lineHeight:1.2,letterSpacing:-0.2,whiteSpace:"nowrap"}}>FC Herrliberg</div>
-          <div style={{color:"var(--nav-t)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>Vereinsportal</div>
-        </div>
+        {!collapsed&&(
+          <div style={{minWidth:0,overflow:"hidden"}}>
+            <div style={{color:"var(--nav-a)",fontWeight:800,fontSize:14,lineHeight:1.2,letterSpacing:-0.2,whiteSpace:"nowrap"}}>FC Herrliberg</div>
+            <div style={{color:"var(--nav-t)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>Vereinsportal</div>
+          </div>
+        )}
       </div>
       {/* Nav items */}
-      <div style={{flex:1,padding:"10px 10px",overflowY:"auto"}}>
+      <div style={{flex:1,padding:"10px 8px",overflowY:"auto",overflowX:"hidden"}}>
         {nav.map(n=>(
-          <button key={n.key} onClick={()=>setActive(n.key)} style={{
-            width:"100%",display:"flex",alignItems:"center",gap:11,
-            padding:"10px 12px",borderRadius:9,border:"none",
+          <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined} style={{
+            width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
+            padding:collapsed?"10px 0":"10px 12px",borderRadius:9,border:"none",
             background:active===n.key?"#f8de09":"transparent",
             color:active===n.key?"#111":"var(--nav-t)",
             cursor:"pointer",fontSize:13.5,fontWeight:active===n.key?600:400,
             textAlign:"left",marginBottom:2,letterSpacing:0.1,
             transition:"background 0.15s,color 0.15s",
-            fontFamily:FONT,WebkitTapHighlightColor:"transparent",minHeight:44
+            fontFamily:FONT,WebkitTapHighlightColor:"transparent",minHeight:44,
+            justifyContent:collapsed?"center":"flex-start"
           }}>
-            <TI n={n.icon||"circle"} size={15} style={{flexShrink:0,opacity:active===n.key?1:0.65}}/>{n.label}
+            <TI n={n.icon||"circle"} size={collapsed?18:15} style={{flexShrink:0,opacity:active===n.key?1:0.65}}/>
+            {!collapsed&&n.label}
           </button>
         ))}
       </div>
+
+      {/* Trennlinie */}
+      <div style={{height:1,background:"var(--nav-b)",margin:"0 12px"}}/>
+
       {/* User footer – klickbar → Profil */}
-      <button onClick={()=>setShowProfile(true)} style={{
-        padding:"14px 12px",borderTop:"1px solid var(--nav-b)",
+      <button onClick={()=>setShowProfile(true)} title={collapsed?userName:undefined} style={{
+        padding:collapsed?"12px 0":"14px 12px",
         background:"none",border:"none",cursor:"pointer",textAlign:"left",
-        width:"100%",transition:"background 0.15s",borderRadius:"0 0 0 0",
-        WebkitTapHighlightColor:"transparent"
+        width:"100%",transition:"background 0.15s",
+        WebkitTapHighlightColor:"transparent",
+        display:"flex",flexDirection:collapsed?"column":"column",alignItems:collapsed?"center":"stretch"
       }}
         onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.04)"}
         onMouseLeave={e=>e.currentTarget.style.background="none"}>
-        <div style={{fontSize:10,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>
-        <div style={{display:"flex",alignItems:"center",gap:9}}>
-          <Av size={32} bg={rc} name={userName}/>
-          <div style={{minWidth:0,flex:1}}>
-            <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
-            <div style={{marginTop:3,fontSize:10,color:rc,fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{getRole(role).label}</div>
-          </div>
-          <TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>
+        {!collapsed&&<div style={{fontSize:10,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>}
+        <div style={{display:"flex",alignItems:"center",gap:9,justifyContent:collapsed?"center":"flex-start"}}>
+          <Av size={32} bg="#f8de09" name={userName}/>
+          {!collapsed&&(
+            <div style={{minWidth:0,flex:1}}>
+              <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
+              <div style={{marginTop:3,fontSize:10,color:rc,fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{getRole(role).label}</div>
+            </div>
+          )}
+          {!collapsed&&<TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>}
         </div>
       </button>
+
+      {/* Einklappen-Button */}
+      <button onClick={toggleCollapse} title={collapsed?"Menü ausklappen":"Menü einklappen"} style={{
+        padding:"10px 0",background:"none",border:"none",cursor:"pointer",
+        borderTop:"1px solid var(--nav-b)",
+        display:"flex",alignItems:"center",justifyContent:"center",
+        color:"var(--nav-t)",transition:"background 0.15s, color 0.15s",
+        WebkitTapHighlightColor:"transparent",width:"100%"
+      }}
+        onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.color="var(--nav-a)";}}
+        onMouseLeave={e=>{e.currentTarget.style.background="none";e.currentTarget.style.color="var(--nav-t)";}}>
+        <TI n={collapsed?"chevrons-right":"chevrons-left"} size={16}/>
+      </button>
+
       <ProfileModal open={showProfile} onClose={()=>setShowProfile(false)} account={account} role={role} sb={sb} onNameUpdated={onNameUpdated} onLogout={onLogout}/>
     </nav>
   );
 }
 
-function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout,isMobile}){
+function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout,isMobile,onOpenProfile}){
   const acc=account||USER_ACCOUNTS[role]||{name:getRole(role).label,rollen:[role],primaryRole:role,kinder:[]};
   const {dark,toggle}=useTheme();
+  const rc=getRole(role).color;
+  const initials=(acc.name||"U").split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
   return(
     <div className="fch-topbar" style={{height:52,borderBottom:"1px solid",display:"flex",alignItems:"center",padding:"0 14px 0 16px",justifyContent:"space-between",flexShrink:0,gap:10,fontFamily:FONT}}>
-      {isMobile?(
-        <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
-          <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-            <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
-          </div>
-          <span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>
+      {/* Links: Logo */}
+      <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
+        <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
         </div>
-      ):<div/>}
+        {!isMobile&&<span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>}
+      </div>
+      {/* Rechts */}
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <button onClick={toggle} title={dark?"Hell-Modus":"Dunkel-Modus"} style={{
-          display:"flex",alignItems:"center",gap:6,
-          padding:"5px 10px 5px 7px",borderRadius:20,
-          border:"1px solid var(--border)",background:dark?"#f8de09":"var(--surface2)",
-          cursor:"pointer",transition:"background 0.25s,border-color 0.25s",
-          flexShrink:0,minHeight:34
-        }}>
-          <div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}>
-            <TI n={dark?"sun":"moon"} size={12} style={{color:dark?"#f8de09":"var(--sub)"}}/>
-          </div>
-          <span style={{fontSize:12,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span>
-        </button>
-        {!onLogout&&<RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
-        {!onLogout&&<Chip text="DEMO" color="#999" bg="var(--surface2)"/>}
-        {onLogout&&<span style={{fontSize:13,color:"var(--sub)",fontWeight:500}}>{acc.name||acc.email}</span>}
-        {onLogout&&<button onClick={onLogout} style={{padding:"6px 14px",borderRadius:7,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer",fontWeight:500,minHeight:36}}>Abmelden</button>}
+        {/* Dark Toggle – nur Desktop */}
+        {!isMobile&&(
+          <button onClick={toggle} title={dark?"Hell-Modus":"Dunkel-Modus"} style={{
+            display:"flex",alignItems:"center",gap:6,
+            padding:"5px 10px 5px 7px",borderRadius:20,
+            border:"1px solid var(--border)",background:dark?"#f8de09":"var(--surface2)",
+            cursor:"pointer",transition:"background 0.25s,border-color 0.25s",
+            flexShrink:0,minHeight:34
+          }}>
+            <div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}>
+              <TI n={dark?"sun":"moon"} size={12} style={{color:dark?"#f8de09":"var(--sub)"}}/>
+            </div>
+            <span style={{fontSize:12,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span>
+          </button>
+        )}
+        {!isMobile&&!onLogout&&<RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
+        {!isMobile&&!onLogout&&<Chip text="DEMO" color="#999" bg="var(--surface2)"/>}
+        {!isMobile&&onLogout&&<button onClick={onLogout} style={{padding:"6px 14px",borderRadius:7,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer",fontWeight:500,minHeight:36}}>Abmelden</button>}
+        {/* Profil-Avatar – nur Mobile, oben rechts */}
+        {isMobile&&(
+          <button onClick={onOpenProfile} style={{
+            width:34,height:34,borderRadius:"50%",background:"#f8de09",border:"none",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            color:"#111",fontWeight:700,fontSize:13,
+            cursor:"pointer",flexShrink:0,WebkitTapHighlightColor:"transparent",
+            fontFamily:FONT,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"
+          }}>
+            {initials}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -8096,6 +8144,32 @@ function DataCheckView(){
 /* ==========================================
    PROFIL MODAL
 ========================================== */
+/* ── DARK MODE ROW (für ProfileModal) ── */
+function DarkModeRow(){
+  const {dark,toggle}=useTheme();
+  return(
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div>
+        <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
+        <div style={{fontSize:12,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
+      </div>
+      <button onClick={toggle} style={{
+        position:"relative",width:48,height:26,borderRadius:13,border:"none",
+        background:dark?"#f8de09":"var(--border)",cursor:"pointer",
+        transition:"background 0.25s",flexShrink:0,padding:0,
+        WebkitTapHighlightColor:"transparent"
+      }}>
+        <div style={{
+          position:"absolute",top:3,left:dark?22:3,width:20,height:20,
+          borderRadius:"50%",background:dark?"#111":"#fff",
+          boxShadow:"0 1px 4px rgba(0,0,0,0.2)",
+          transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)"
+        }}/>
+      </button>
+    </div>
+  );
+}
+
 function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
   const rc=getRole(role).color;
   const userName=account?.name||USER_ACCOUNTS[role]?.name||getRole(role)?.label||"Benutzer";
@@ -8170,8 +8244,8 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
       {/* Header */}
       <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:13}}>
-          <div style={{width:46,height:46,borderRadius:"50%",background:rc,display:"flex",alignItems:"center",
-            justifyContent:"center",color:rc==="#f8de09"?"#111":"#fff",fontWeight:800,fontSize:17,flexShrink:0}}>
+          <div style={{width:46,height:46,borderRadius:"50%",background:"#f8de09",display:"flex",alignItems:"center",
+            justifyContent:"center",color:"#111",fontWeight:800,fontSize:17,flexShrink:0}}>
             {initials}
           </div>
           <div>
@@ -8255,6 +8329,12 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             </div>
 
             {nameStatus==="ok"&&!editName&&<StatusBox status="ok" msg={nameMsg}/>}
+
+            {/* Erscheinungsbild / Dark Mode */}
+            <div style={{marginTop:20,paddingTop:16,borderTop:"1px solid var(--border)"}}>
+              <div style={{fontSize:11,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8,marginBottom:10}}>Erscheinungsbild</div>
+              <DarkModeRow/>
+            </div>
 
             {/* Abmelden */}
             {onLogout&&(
@@ -8478,6 +8558,7 @@ export default function Portal({supabaseClient}){
   const [activeSubRole,setActiveSubRole]=useState(null);
   const [active,setActive]=useState("dashboard");
   const {isMobile,isTablet}=useBreakpoint();
+  const [mobileProfileOpen,setMobileProfileOpen]=useState(false);
   /* ── Dark Mode ── */
   const [dark,setDark]=useState(()=>{
     try{const s=localStorage.getItem("fch-dark");return s?JSON.parse(s):window.matchMedia("(prefers-color-scheme: dark)").matches;}catch{return false;}
@@ -8636,14 +8717,16 @@ export default function Portal({supabaseClient}){
       <div data-theme={dark?"dark":"light"} style={{display:"flex",minHeight:"100vh",background:"var(--bg)",fontFamily:FONT,WebkitFontSmoothing:"antialiased",MozOsxFontSmoothing:"grayscale",color:"var(--text)",transition:"background 0.25s,color 0.25s"}}>
         {!isMobile&&<SideNav role={role} active={active} setActive={setActive} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
         <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}}>
-          <TopBar role={role} active={active} setActive={setActive}
+          {isMobile&&<TopBar role={role} active={active} setActive={setActive}
             account={account} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole}
             onRoleChange={(key)=>handleAccountChange(key)} isMobile={isMobile}
-            onLogout={sb&&session ? handleLogout : undefined}/>
+            onLogout={sb&&session ? handleLogout : undefined}
+            onOpenProfile={()=>setMobileProfileOpen(true)}/>}
           <main key={active} className="fch-page" style={{flex:1,padding:isMobile?"16px 14px 90px":isTablet?"20px 24px 28px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
           {isMobile&&<MobileNav role={role} active={active} setActive={setActive} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
         </div>
       </div>
+      {isMobile&&<ProfileModal open={mobileProfileOpen} onClose={()=>setMobileProfileOpen(false)} account={account} role={role} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
     </ThemeCtx.Provider>
   );
 }
