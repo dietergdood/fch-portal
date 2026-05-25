@@ -35,7 +35,7 @@ const PWA_CSS=`
 @keyframes fch-dot{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
 .fch-page{animation:fch-in 0.2s ease-out}
 .fch-card{background:var(--surface)!important;border-color:var(--border)!important;box-shadow:var(--card-shadow)!important}
-.fch-topbar{background:var(--surface)!important;border-color:var(--border)!important}
+.fch-topbar{background:var(--bg)!important;border-color:var(--border)!important}
 .fch-main{background:var(--bg)!important}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 html{scroll-behavior:smooth}
