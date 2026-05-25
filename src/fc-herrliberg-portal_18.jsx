@@ -2429,13 +2429,13 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
       {nextAufgebot&&(
         <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.openEvId=nextAufgebot.id;setActive("team");}:undefined}
           style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:18,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
-          <span style={{fontSize:24}}><i className="ti-ball-football"/></span>
+          <span style={{fontSize:24}}><i className="ti ti-ball-football"/></span>
           <div style={{flex:1}}>
             <div style={{fontWeight:800,fontSize:14,color:"#4F46E5"}}>Du bist im Aufgebot!</div>
             <div style={{fontSize:13,color:"#6366F1",marginTop:2}}>
               {`vs. ${nextAufgebot.opponent} · ${nextAufgebot.date} · ${nextAufgebot.time} Uhr`}
             </div>
-            {nextAufgebot.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebot.treffpunkt}</div>}
+            {nextAufgebot.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}><i className="ti ti-target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebot.treffpunkt}</div>}
           </div>
           <Chip text="Aufgebot" color="#4F46E5" bg="#EEF2FF"/>
         </div>
@@ -2588,7 +2588,7 @@ function DashboardEltern({account,meineTeams,setActive}){
                         <div style={{fontSize:10,color:"#999",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>Nächstes Spiel</div>
                         <div style={{fontSize:26,fontWeight:800,color:BL,lineHeight:1}}>{nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"}</div>
                         <div style={{fontSize:11,color:"#aaa",fontWeight:500}}>{nextSpiel?`${nextSpiel.time.slice(0,5)} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel geplant"}</div>
-                        {imAufgebot&&<span style={{position:"absolute",bottom:10,right:12,fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",border:"0.5px solid #818CF840"}}><i className="ti-ball-football" style={{marginRight:4}}/> Im Aufgebot</span>}
+                        {imAufgebot&&<span style={{position:"absolute",bottom:10,right:12,fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",border:"0.5px solid #818CF840"}}><i className="ti ti-ball-football" style={{marginRight:4}}/> Im Aufgebot</span>}
                       </div>
                     );
                   })()}
@@ -2600,13 +2600,13 @@ function DashboardEltern({account,meineTeams,setActive}){
             {nextAufgebotSpiel&&(
               <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;NAV_TARGET.openEvId=nextAufgebotSpiel.id;setActive("team");}:undefined}
                 style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:14,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
-                <span style={{fontSize:24}}><i className="ti-ball-football"/></span>
+                <span style={{fontSize:24}}><i className="ti ti-ball-football"/></span>
                 <div style={{flex:1}}>
                   <div style={{fontWeight:800,fontSize:13,color:"#4F46E5"}}>{vorname} ist im Aufgebot!</div>
                   <div style={{fontSize:12,color:"#6366F1",marginTop:2}}>
                     {`vs. ${nextAufgebotSpiel.opponent} · ${nextAufgebotSpiel.date} · ${nextAufgebotSpiel.time} Uhr`}
                   </div>
-                  {nextAufgebotSpiel.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebotSpiel.treffpunkt}</div>}
+                  {nextAufgebotSpiel.treffpunkt&&<div style={{fontSize:11,color:"#818CF8",marginTop:3}}><i className="ti ti-target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebotSpiel.treffpunkt}</div>}
                 </div>
                 <div style={{background:"#4F46E5",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20}}>Aufgebot</div>
               </div>
@@ -3102,7 +3102,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
         <div onClick={canEdit?()=>setEditingNr(true):undefined}
           style={{display:"flex",alignItems:"center",gap:5,cursor:canEdit?"pointer":"default"}}>
           <span style={{fontSize:13,fontWeight:500,color:BK}}>{nrVal||"-"}</span>
-          {canEdit&&<span style={{fontSize:10,color:"#ccc"}}><i className="ti-edit"/></span>}
+          {canEdit&&<span style={{fontSize:10,color:"#ccc"}}><i className="ti ti-edit"/></span>}
         </div>
       )}
     </div>
@@ -3202,7 +3202,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
 
           {/* Rollenhinweis */}
           <div style={{padding:"8px 12px",background:"#EFF6FF",borderRadius:8,fontSize:11,color:"#666",display:"flex",alignItems:"center",gap:6}}>
-            <span><i className="ti-eye"/></span>
+            <span><i className="ti ti-eye"/></span>
             <span>Feldsichtbarkeit gemäss Rolle: <strong>{getRole(role).label}</strong></span>
           </div>
         </div>
@@ -3284,7 +3284,7 @@ function RosterTab({role,team,initialSelected=null}){
 
   const SortIcon=({col})=>{
     if(sortKey!==col) return <span style={{color:"#ccc",fontSize:9,marginLeft:3}}>{"↕"}</span>;
-    return <span style={{color:R,fontSize:9,marginLeft:3}}>{sortDir===1?<i className="ti-upload"/>:"↓"}</span>;
+    return <span style={{color:R,fontSize:9,marginLeft:3}}>{sortDir===1?<i className="ti ti-upload"/>:"↓"}</span>;
   };
 
   const COL_DEF=[
@@ -3381,7 +3381,7 @@ function RosterTab({role,team,initialSelected=null}){
                             ?<span style={{fontSize:12,fontWeight:600,color:"#555"}}>{rueckennrn[p.id]}</span>
                             :<span style={{fontSize:11,color:"#ccc"}}>-</span>
                           }
-                          {canEditPos&&<span style={{fontSize:9,color:"#ccc"}}><i className="ti-edit"/></span>}
+                          {canEditPos&&<span style={{fontSize:9,color:"#ccc"}}><i className="ti ti-edit"/></span>}
                         </div>
                       )}
                     </td>
@@ -3427,7 +3427,7 @@ function RosterTab({role,team,initialSelected=null}){
                             ?<Chip text={positions[p.id]} color="#555" bg="#F3F4F6"/>
                             :<span style={{fontSize:11,color:"#ccc",fontStyle:"italic"}}>-</span>
                           }
-                          {canEditPos&&<span style={{fontSize:10,color:"#ccc"}}><i className="ti-edit"/></span>}
+                          {canEditPos&&<span style={{fontSize:10,color:"#ccc"}}><i className="ti ti-edit"/></span>}
                         </div>
                       )}
                     </td>
@@ -4230,12 +4230,12 @@ function TrainingGantt({team: teamProp, role}){
                           </button>
                         )}
                         <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);setShowPlanVerwaltung(false);}} title="Bearbeiten"
-                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-edit"/></button>
+                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-edit"/></button>
                         <button onClick={function(){handlePlanDuplizieren(p);}} title="Duplizieren"
                           style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
                         {plaene.length>1&&!isAktiv&&(
                           <button onClick={function(){if(window.confirm("Plan \""+p.name+"\" loeschen?")){handlePlanLoeschen(p.id);}}} title="Loeschen"
-                            style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>
+                            style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-trash"/></button>
                         )}
                       </div>
                     </div>
@@ -4298,9 +4298,9 @@ function TrainingGantt({team: teamProp, role}){
                   {canEdit&&(
                     <div style={{display:"flex",gap:6,flexShrink:0}}>
                       {!isAktiv&&<button onClick={function(){handlePlanAktivieren(p.id);}} style={{padding:"6px 12px",borderRadius:8,border:"1.5px solid "+BL,background:"#EFF6FF",color:BL,fontSize:12,fontWeight:600,cursor:"pointer"}}>Aktivieren</button>}
-                      <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-edit"/></button>
+                      <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-edit"/></button>
                       <button onClick={function(){handlePlanDuplizieren(p);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
-                      {plaene.length>1&&!isAktiv&&<button onClick={function(){if(window.confirm("Plan loeschen?")){handlePlanLoeschen(p.id);}}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>}
+                      {plaene.length>1&&!isAktiv&&<button onClick={function(){if(window.confirm("Plan loeschen?")){handlePlanLoeschen(p.id);}}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-trash"/></button>}
                     </div>
                   )}
                 </div>
@@ -4879,7 +4879,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={()=>setAusnahmeMode(true)}
                     style={{flex:1,padding:"9px",borderRadius:10,border:`1px solid ${GB}`,background:"#fff",color:"#555",fontSize:12,cursor:"pointer"}}>
-                    <i className="ti-bolt"/> Ausnahme diese Woche
+                    <i className="ti ti-bolt"/> Ausnahme diese Woche
                   </button>
                   <button onClick={onDelete}
                     style={{padding:"9px 14px",borderRadius:10,border:`1px solid ${R}`,background:RL,color:R,fontSize:12,cursor:"pointer"}}>
@@ -5149,10 +5149,10 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
           </div>
           {/* Meta strip */}
           <div style={{display:"flex",gap:14,paddingBottom:14,fontSize:11,color:"rgba(0,0,0,0.55)"}}>
-            <span><i className="ti-calendar" style={{marginRight:3}}/> {spiel.date}</span>
-            <span><i className="ti-clock" style={{marginRight:3}}/> {spiel.time} Uhr</span>
+            <span><i className="ti ti-calendar" style={{marginRight:3}}/> {spiel.date}</span>
+            <span><i className="ti ti-clock" style={{marginRight:3}}/> {spiel.time} Uhr</span>
             <span>{spiel.home?"Heim":"Auswärts"}</span>
-            {spiel.att&&<span><i className="ti-users" style={{marginRight:3}}/> {spiel.att} Spieler</span>}
+            {spiel.att&&<span><i className="ti ti-users" style={{marginRight:3}}/> {spiel.att} Spieler</span>}
           </div>
           {/* Tabs */}
           <div style={{display:"flex",gap:4,marginTop:-1}}>
@@ -5180,7 +5180,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                   </div>
                   <div style={{textAlign:"right"}}>
                     <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginBottom:4}}>{spiel.home?"Heimspiel":"Auswärtsspiel"}</div>
-                    {spiel.att&&<div style={{fontSize:11,color:"rgba(255,255,255,0.6)"}}><i className="ti-users" style={{marginRight:3}}/> {spiel.att} Spieler</div>}
+                    {spiel.att&&<div style={{fontSize:11,color:"rgba(255,255,255,0.6)"}}><i className="ti ti-users" style={{marginRight:3}}/> {spiel.att} Spieler</div>}
                     <div style={{marginTop:8}}><span style={{background:spiel.result?.split(":")[0]>spiel.result?.split(":")[1]?"#16A34A":spiel.result?.split(":")[0]===spiel.result?.split(":")[1]?"#F3F4F6":"#DC2626",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20}}>{spiel.result?.split(":")[0]>spiel.result?.split(":")[1]?"Sieg":spiel.result?.split(":")[0]===spiel.result?.split(":")[1]?"Unentschieden":"Niederlage"}</span></div>
                   </div>
                 </div>
@@ -5189,7 +5189,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {/* Ort & Treffpunkt */}
               <div style={{display:"grid",gridTemplateColumns:spiel.treffpunkt?"1fr 1fr":"1fr",gap:10}}>
                 <div style={{background:GR,borderRadius:12,padding:"12px 14px",display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                  <span style={{fontSize:20}}><i className="ti-map-pin"/></span>
+                  <span style={{fontSize:20}}><i className="ti ti-map-pin"/></span>
                   <div>
                     <div style={{fontSize:10,color:"#888",fontWeight:600,textTransform:"uppercase",letterSpacing:0.4,marginBottom:2}}>Spielort</div>
                     <div style={{fontWeight:700,fontSize:13,color:BK}}>{spiel.venue}</div>
@@ -5198,7 +5198,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                 </div>
                 {spiel.treffpunkt&&(
                   <div style={{background:"#EFF6FF",borderRadius:12,padding:"12px 14px",display:"flex",alignItems:"center",gap:10,border:"0.5px solid #DBEAFE"}}>
-                    <span style={{fontSize:20}}><i className="ti-target"/></span>
+                    <span style={{fontSize:20}}><i className="ti ti-target"/></span>
                     <div>
                       <div style={{fontSize:10,color:BL,fontWeight:600,textTransform:"uppercase",letterSpacing:0.4,marginBottom:2}}>Treffpunkt</div>
                       <div style={{fontWeight:700,fontSize:13,color:BK}}>{spiel.treffpunkt}</div>
@@ -5234,7 +5234,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {/* Offizielle */}
               <div style={{background:GR,borderRadius:12,overflow:"hidden"}}>
                 <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${GB}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:11,color:"#888"}}><i className="ti-scale"/> Schiedsrichter</span>
+                  <span style={{fontSize:11,color:"#888"}}><i className="ti ti-scale"/> Schiedsrichter</span>
                   <span style={{fontSize:12,fontWeight:600,color:BK}}>{spiel.schiedsrichter||"-"}</span>
                 </div>
                 <div style={{padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -5244,7 +5244,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               </div>
 
               {spiel.notes&&<div style={{background:"#FFFBEB",borderRadius:10,padding:"10px 14px",fontSize:12,color:"#92400E",border:"0.5px solid #FDE68A",display:"flex",gap:8,alignItems:"flex-start"}}><span>⚠</span><span>{spiel.notes}</span></div>}
-              <div style={{padding:"8px 12px",background:"#F0F9FF",borderRadius:8,fontSize:11,color:BL,display:"flex",gap:6,alignItems:"center"}}><span><i className="ti-refresh"/></span><span>Synchronisiert mit <strong>fvrz.ch</strong> · {spiel.spielNr}</span></div>
+              <div style={{padding:"8px 12px",background:"#F0F9FF",borderRadius:8,fontSize:11,color:BL,display:"flex",gap:6,alignItems:"center"}}><span><i className="ti ti-refresh"/></span><span>Synchronisiert mit <strong>fvrz.ch</strong> · {spiel.spielNr}</span></div>
             </div>
           )}
 
@@ -5872,10 +5872,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     </div>
                     {/* Info Pills */}
                     <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-calendar" style={{marginRight:3}}/> {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
-                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-clock" style={{marginRight:3}}/> {selEv.time} Uhr</span>
-                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-map-pin" style={{marginRight:3}}/> {selEv.location}</span>
-                      {selEv.treffpunkt&&<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti-target" style={{marginRight:3}}/> {selEv.treffpunkt}</span>}
+                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-calendar" style={{marginRight:3}}/> {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
+                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-clock" style={{marginRight:3}}/> {selEv.time} Uhr</span>
+                      <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-map-pin" style={{marginRight:3}}/> {selEv.location}</span>
+                      {selEv.treffpunkt&&<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-target" style={{marginRight:3}}/> {selEv.treffpunkt}</span>}
                     </div>
                   </div>
                 );
@@ -5893,17 +5893,17 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   <div style={{fontSize:11,fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>≡ Weitere Informationen</div>
                   {besammlungen[selEv.id]&&(besammlungen[selEv.id].time||besammlungen[selEv.id].location)&&(
                     <div style={{marginBottom:trainerNotes[selEv.id]?8:0}}>
-                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt</div>
+                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}><i className="ti ti-target" style={{marginRight:3}}/> Treffpunkt</div>
                       <div style={{fontSize:13,color:BK,fontWeight:500}}>
-                        {besammlungen[selEv.id].date&&<span style={{marginRight:8}}><i className="ti-calendar" style={{marginRight:3}}/> {besammlungen[selEv.id].date}</span>}
-                        {besammlungen[selEv.id].time&&<span style={{marginRight:8}}><i className="ti-clock" style={{marginRight:3}}/> {besammlungen[selEv.id].time} Uhr</span>}
-                        {besammlungen[selEv.id].location&&<span><i className="ti-target" style={{marginRight:3}}/> {besammlungen[selEv.id].location}</span>}
+                        {besammlungen[selEv.id].date&&<span style={{marginRight:8}}><i className="ti ti-calendar" style={{marginRight:3}}/> {besammlungen[selEv.id].date}</span>}
+                        {besammlungen[selEv.id].time&&<span style={{marginRight:8}}><i className="ti ti-clock" style={{marginRight:3}}/> {besammlungen[selEv.id].time} Uhr</span>}
+                        {besammlungen[selEv.id].location&&<span><i className="ti ti-target" style={{marginRight:3}}/> {besammlungen[selEv.id].location}</span>}
                       </div>
                     </div>
                   )}
                   {trainerNotes[selEv.id]&&(
                     <div>
-                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}><i className="ti-edit" style={{marginRight:3}}/> Bemerkungen</div>
+                      <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:2}}><i className="ti ti-edit" style={{marginRight:3}}/> Bemerkungen</div>
                       <p style={{margin:0,fontSize:13,color:"#1a3a2a",lineHeight:1.7,whiteSpace:"pre-wrap"}}>{trainerNotes[selEv.id]}</p>
                     </div>
                   )}
@@ -5912,7 +5912,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
               {/* Zum Spielplan Link bei Spielen */}
               {selEv.type==="Spiel"&&onNavigateToSpiel&&(
                 <div style={{padding:"10px 20px",background:"#EFF6FF",borderBottom:`0.5px solid #DBEAFE`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:12,color:BL,fontWeight:500}}><i className="ti-ball-football" style={{marginRight:4}}/> Dieses Spiel im Spielplan ansehen</span>
+                  <span style={{fontSize:12,color:BL,fontWeight:500}}><i className="ti ti-ball-football" style={{marginRight:4}}/> Dieses Spiel im Spielplan ansehen</span>
                   <button onClick={()=>{const match=SCHEDULE.find(g=>g.date===selEv.date&&g.opponent===selEv.opponent);setModalOpen(false);if(match)onNavigateToSpiel(match);}}
                     style={{fontSize:11,fontWeight:700,color:BL,background:"#fff",border:`1px solid ${BL}`,borderRadius:20,padding:"3px 12px",cursor:"pointer"}}>
                     Zum Spielplan →
@@ -5925,7 +5925,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   {/* Aufgebot-Banner für Spieler/Eltern */}
                   {!isTrainer&&!isAdmin&&isInAufgebot(selEv.id,myId)&&(
                     <div style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:10,padding:"10px 14px",marginBottom:12,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                      <span style={{fontSize:18}}><i className="ti-ball-football"/></span>
+                      <span style={{fontSize:18}}><i className="ti ti-ball-football"/></span>
                       <div>
                         <div style={{fontWeight:700,fontSize:13,color:"#4F46E5"}}>Du bist im Aufgebot!</div>
                         <div style={{fontSize:11,color:"#6366F1",marginTop:2}}>
@@ -6110,14 +6110,14 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                         {ev.subtype||ev.type}
                       </span>
                       {isCancelled&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R,flexShrink:0}}>⚠ Abgesagt</span>}
-                      {inAufgebot&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",flexShrink:0}}><i className="ti-ball-football" style={{marginRight:3}}/> Aufgebot</span>}
+                      {inAufgebot&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",flexShrink:0}}><i className="ti ti-ball-football" style={{marginRight:3}}/> Aufgebot</span>}
                       {past&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:isZu?"#ECFDF5":isAb?RL:"#F3F4F6",color:isZu?GN:isAb?R:"#aaa",flexShrink:0}}>{isZu?"✓ Anwesend":isAb?"✕ Abwesend":"-"}</span>}
                     </div>
                     <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:"2px 6px",fontSize:11,color:"#888"}}>
-                      <span><i className="ti-clock" style={{marginRight:3}}/> {ev.time} Uhr</span>
+                      <span><i className="ti ti-clock" style={{marginRight:3}}/> {ev.time} Uhr</span>
                       {ev.type==="Spiel"&&ev.treffpunkt&&(<>
                         <span style={{color:"#ddd"}}>·</span>
-                        <span><i className="ti-target" style={{marginRight:3}}/> <span style={{fontWeight:600,color:"#666"}}>Treffpunkt: </span>{ev.treffpunkt}</span>
+                        <span><i className="ti ti-target" style={{marginRight:3}}/> <span style={{fontWeight:600,color:"#666"}}>Treffpunkt: </span>{ev.treffpunkt}</span>
                       </>)}
                     </div>
                   </div>
@@ -6212,10 +6212,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   </div>
                   {/* Info Pills */}
                   <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
-                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-calendar" style={{marginRight:3}}/> {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
-                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-clock" style={{marginRight:3}}/> {selEv.time} Uhr</span>
-                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-map-pin" style={{marginRight:3}}/> {selEv.location}</span>
-                    {(()=>{const b=besammlungen[selEv.id]||{};const t=b.time||"";const o=b.location||selEv.treffpunkt||"";return (t||o)?<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti-target" style={{marginRight:3}}/> {t?t+" Uhr":""}{t&&o?" · ":""}{o}</span>:null;})()}
+                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti ti-calendar" style={{marginRight:3}}/> {selEv.date}{selEv.endDate?" - "+selEv.endDate:""}</span>
+                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti ti-clock" style={{marginRight:3}}/> {selEv.time} Uhr</span>
+                    <span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti ti-map-pin" style={{marginRight:3}}/> {selEv.location}</span>
+                    {(()=>{const b=besammlungen[selEv.id]||{};const t=b.time||"";const o=b.location||selEv.treffpunkt||"";return (t||o)?<span style={{background:hBtn,color:hTxt,fontSize:11,padding:"4px 10px",borderRadius:20}}><i className="ti ti-target" style={{marginRight:3}}/> {t?t+" Uhr":""}{t&&o?" · ":""}{o}</span>:null;})()}
                   </div>
                   {/* Deadline & Erinnerung - für alle editierbaren Events */}
                   {canEditEvent(selEv)&&(
@@ -6281,7 +6281,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
               </div>
               {/* Besammlung */}
               <div style={{marginBottom:10}}>
-                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:6}}><i className="ti-target" style={{marginRight:3}}/> Treffpunkt</div>
+                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:6}}><i className="ti ti-target" style={{marginRight:3}}/> Treffpunkt</div>
                 {editingNote&&canEditEvent(selEv)?(
                   <div style={{display:"flex",flexDirection:"column",gap:6}}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
@@ -6310,16 +6310,16 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   const hasData=b.time||b.location||b.date;
                   return hasData?(
                     <div style={{fontSize:13,color:BK}}>
-                      {b.date&&<span style={{marginRight:8}}><i className="ti-calendar" style={{marginRight:3}}/> {b.date}</span>}
-                      {b.time&&<span style={{marginRight:8}}><i className="ti-clock" style={{marginRight:3}}/> {b.time} Uhr</span>}
-                      {b.location&&<span><i className="ti-map-pin" style={{marginRight:3}}/> {b.location}</span>}
+                      {b.date&&<span style={{marginRight:8}}><i className="ti ti-calendar" style={{marginRight:3}}/> {b.date}</span>}
+                      {b.time&&<span style={{marginRight:8}}><i className="ti ti-clock" style={{marginRight:3}}/> {b.time} Uhr</span>}
+                      {b.location&&<span><i className="ti ti-map-pin" style={{marginRight:3}}/> {b.location}</span>}
                     </div>
                   ):<div style={{fontSize:12,color:"#ccc",fontStyle:"italic"}}>Noch nicht gesetzt</div>;
                 })()}
               </div>
               {/* Notizen */}
               <div>
-                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:4}}><i className="ti-edit" style={{marginRight:3}}/> Bemerkungen</div>
+                <div style={{fontSize:10,color:"#888",fontWeight:600,marginBottom:4}}><i className="ti ti-edit" style={{marginRight:3}}/> Bemerkungen</div>
                 {editingNote&&canEditEvent(selEv)?(
                   <textarea value={trainerNotes[selEv.id]||""} onChange={e=>saveTrainerNote(selEv.id,e.target.value)}
                     placeholder="Bemerkungen, Taktik-Hinweise, Infos für Spieler und Eltern…" rows={3}
@@ -6334,7 +6334,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             {/* Zum Spielplan Link bei Spielen */}
             {selEv.type==="Spiel"&&onNavigateToSpiel&&(
               <div style={{padding:"10px 20px",background:"#EFF6FF",borderBottom:`0.5px solid #DBEAFE`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,color:BL,fontWeight:500}}><i className="ti-ball-football" style={{marginRight:4}}/> Dieses Spiel im Spielplan ansehen</span>
+                <span style={{fontSize:12,color:BL,fontWeight:500}}><i className="ti ti-ball-football" style={{marginRight:4}}/> Dieses Spiel im Spielplan ansehen</span>
                 <button onClick={()=>{const match=SCHEDULE.find(g=>g.date===selEv.date&&g.opponent===selEv.opponent);setModalOpen(false);if(match)onNavigateToSpiel(match);}}
                   style={{fontSize:11,fontWeight:700,color:BL,background:"#fff",border:`1px solid ${BL}`,borderRadius:20,padding:"3px 12px",cursor:"pointer"}}>
                   Zum Spielplan →
@@ -6376,7 +6376,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             <div style={{padding:"0 0 4px"}}>
               <div style={{padding:"8px 20px 4px",background:GR,borderBottom:`0.5px solid ${GB}`}}>
                 <div style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.type==="Spiel"?" auto":""}`,fontSize:10,fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:0.5,gap:"0 16px"}}>
-                  <span>Spieler</span><span style={{textAlign:"center"}}>Status</span><span style={{minWidth:80,textAlign:"left"}}>Begründung</span>{selEv.type==="Spiel"&&<span style={{textAlign:"center",color:"#4F46E5"}}><i className="ti-ball-football"/></span>}
+                  <span>Spieler</span><span style={{textAlign:"center"}}>Status</span><span style={{minWidth:80,textAlign:"left"}}>Begründung</span>{selEv.type==="Spiel"&&<span style={{textAlign:"center",color:"#4F46E5"}}><i className="ti ti-ball-football"/></span>}
                 </div>
               </div>
               {teamRoster.map((p,i)=>{
@@ -6420,7 +6420,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     {selEv.type==="Spiel"&&(
                       <button onClick={()=>toggleAufgebot(selEv.id,p.id)} title="Im Aufgebot"
                         style={{width:30,height:30,borderRadius:"50%",border:`1.5px solid ${isInAufgebot(selEv.id,p.id)?"#4F46E5":"#F3F4F6"}`,background:isInAufgebot(selEv.id,p.id)?"#4F46E5":"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                        <i className="ti-ball-football"/>
+                        <i className="ti ti-ball-football"/>
                       </button>
                     )}
                   </div>
@@ -6529,7 +6529,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                       </span>
                       {isCancelled&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R}}>⚠ Abgesagt</span>}
                     </div>
-                    <div style={{fontSize:11,color:"#888"}}><i className="ti-clock" style={{marginRight:3}}/> {ev.time} Uhr</div>
+                    <div style={{fontSize:11,color:"#888"}}><i className="ti ti-clock" style={{marginRight:3}}/> {ev.time} Uhr</div>
                   </div>
                 </div>
               )}
@@ -6986,7 +6986,7 @@ function PortalverwaltungView({initialTab="module"}){
                                           <td key={feld} style={{textAlign:"center",padding:"6px 8px"}}>
                                             <div onClick={isAdmin?undefined:()=>toggleBerechtigung(m.id,rolle,feld,!val)}
                                               style={{width:20,height:20,borderRadius:4,background:val?GN:"#e5e7eb",cursor:isAdmin?"not-allowed":"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",border:`1px solid ${val?"#16a34a":"#d1d5db"}`}}>
-                                              {val&&<i className="ti-check" style={{fontSize:11,color:"#fff"}}/>}
+                                              {val&&<i className="ti ti-check" style={{fontSize:11,color:"#fff"}}/>}
                                             </div>
                                           </td>
                                         );
@@ -7043,7 +7043,7 @@ function PortalverwaltungView({initialTab="module"}){
                     </td>
                     <td style={{padding:"9px 13px"}}>
                       <button style={{background:"none",border:"none",cursor:"pointer",color:"#888",fontSize:13,padding:"2px 6px"}}>
-                        <i className="ti-edit" style={{fontSize:14}}/>
+                        <i className="ti ti-edit" style={{fontSize:14}}/>
                       </button>
                     </td>
                   </tr>
@@ -7080,7 +7080,7 @@ function PortalverwaltungView({initialTab="module"}){
                         <td key={rolle} style={{padding:"9px 13px",textAlign:"center"}}>
                           <div onClick={isAdmin?undefined:()=>toggleFeld(key,rolle,!sichtbar)}
                             style={{width:20,height:20,borderRadius:4,background:sichtbar?GN:"#e5e7eb",cursor:isAdmin?"not-allowed":"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",border:`1px solid ${sichtbar?"#16a34a":"#d1d5db"}`}}>
-                            {sichtbar&&<i className="ti-check" style={{fontSize:11,color:"#fff"}}/>}
+                            {sichtbar&&<i className="ti ti-check" style={{fontSize:11,color:"#fff"}}/>}
                           </div>
                         </td>
                       );
@@ -7112,7 +7112,7 @@ function PortalverwaltungView({initialTab="module"}){
                 <Card key={api.key}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <i className="ti-plug" style={{fontSize:18,color:api.active?BK:"#ccc"}}/>
+                      <i className="ti ti-plug" style={{fontSize:18,color:api.active?BK:"#ccc"}}/>
                       <span style={{fontWeight:700,fontSize:14}}>{api.label||api.key}</span>
                     </div>
                     <Chip text={api.sync_status||"deaktiviert"} color={statusColor} bg={statusBg}/>
@@ -7123,7 +7123,7 @@ function PortalverwaltungView({initialTab="module"}){
                       <div style={{fontSize:11,color:"#888",fontWeight:600,marginBottom:4}}>Synchronisierte Daten:</div>
                       {info.felder.map((f,i)=>(
                         <div key={i} style={{display:"flex",alignItems:"center",gap:6,fontSize:12,color:"#555",padding:"2px 0"}}>
-                          <i className="ti-check" style={{fontSize:11,color:api.active?GN:"#ccc"}}/>{f}
+                          <i className="ti ti-check" style={{fontSize:11,color:api.active?GN:"#ccc"}}/>{f}
                         </div>
                       ))}
                     </div>
@@ -7364,15 +7364,15 @@ function EventsList({teamOnly,role}){
                 {/* Meta */}
                 <div style={{display:"flex",alignItems:"center",gap:0,flexWrap:"wrap",fontSize:12,color:"#666"}}>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span><i className="ti-calendar"/></span>{e.date}{e.endDate?" - "+e.endDate:""}
+                    <span><i className="ti ti-calendar"/></span>{e.date}{e.endDate?" - "+e.endDate:""}
                   </span>
                   <span style={{color:"#ddd",margin:"0 8px"}}>{"|"}</span>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span><i className="ti-clock"/></span>{e.time+" Uhr"}
+                    <span><i className="ti ti-clock"/></span>{e.time+" Uhr"}
                   </span>
                   <span style={{color:"#ddd",margin:"0 8px"}}>{"|"}</span>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span><i className="ti-map-pin"/></span>{e.loc}
+                    <span><i className="ti ti-map-pin"/></span>{e.loc}
                   </span>
                 </div>
               </div>
@@ -7409,7 +7409,7 @@ function BemerkungEdit({notes,onSave}){
       <button onClick={()=>setEditing(false)} style={{padding:"1px 6px",borderRadius:6,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}>✕</button>
     </div>
   );
-  return <button onClick={e=>{e.stopPropagation();setEditing(true);setDraft(notes||"");}} style={{marginTop:3,fontSize:9,color:"#aaa",background:"none",border:"none",cursor:"pointer",padding:0}}><i className="ti-edit" style={{marginRight:3}}/> Bemerkung</button>;
+  return <button onClick={e=>{e.stopPropagation();setEditing(true);setDraft(notes||"");}} style={{marginTop:3,fontSize:9,color:"#aaa",background:"none",border:"none",cursor:"pointer",padding:0}}><i className="ti ti-edit" style={{marginRight:3}}/> Bemerkung</button>;
 }
 
 function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen,teamMitglieder,schichtenState,onEintragen,onFreigeben,onÜbertragen,freigabeAnfragen,notes,onSaveBemerkung}){
@@ -7476,9 +7476,9 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
           <div style={{minWidth:0}}>
             <div style={{fontWeight:700,fontSize:13,color:BK,lineHeight:1.2}}>{schicht.label}</div>
             <div style={{fontSize:10,color:"#888",marginTop:3,display:"flex",alignItems:"center",gap:3}}>
-              <span><i className="ti-map-pin"/></span><span>{einsatz.location}</span>
+              <span><i className="ti ti-map-pin"/></span><span>{einsatz.location}</span>
             </div>
-            {notes&&<div style={{fontSize:10,color:AM,marginTop:3,fontStyle:"italic"}}><i className="ti-edit" style={{marginRight:3}}/> {notes}</div>}
+            {notes&&<div style={{fontSize:10,color:AM,marginTop:3,fontStyle:"italic"}}><i className="ti ti-edit" style={{marginRight:3}}/> {notes}</div>}
             {canEdit&&onSaveBemerkung&&<BemerkungEdit notes={notes} onSave={onSaveBemerkung}/>}
           </div>
           <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:statusBg,color:statusColor,flexShrink:0,whiteSpace:"nowrap"}}>
@@ -7576,7 +7576,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
               <div style={{fontSize:11,fontWeight:600,color:"#0891B2",marginBottom:6}}>Schicht an wen übertragen?</div>
               {/* Suchfeld */}
               <div style={{position:"relative",marginBottom:6}}>
-                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
+                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}><i className="ti ti-search"/></span>
                 <input
                   value={zuteilSearch}
                   onChange={e=>{setZuteilSearch(e.target.value);setTransferTarget("");}}
@@ -7638,7 +7638,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
               <div style={{fontSize:11,fontWeight:600,color:GN,marginBottom:6}}>Wen zuteilen?</div>
               {/* Suchfeld */}
               <div style={{position:"relative",marginBottom:6}}>
-                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
+                <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#aaa",pointerEvents:"none"}}><i className="ti ti-search"/></span>
                 <input
                   value={zuteilSearch}
                   onChange={e=>{setZuteilSearch(e.target.value);setZuteilTarget("");}}
@@ -8070,7 +8070,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
           <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap",alignItems:"center"}}>
             {/* Suchfeld */}
             <div style={{position:"relative",flexShrink:0}}>
-              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
+              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}><i className="ti ti-search"/></span>
               <input
                 value={browseSearch}
                 onChange={e=>setBrowseSearch(e.target.value)}
@@ -8186,7 +8186,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                 </div>
                                 {bemerkungState[`e${einsatz.id}`]&&(
                                   <div style={{fontSize:10,color:AM,marginTop:3,display:"flex",alignItems:"center",gap:4}}>
-                                    <span><i className="ti-edit"/></span><span style={{fontStyle:"italic"}}>{bemerkungState[`e${einsatz.id}`]}</span>
+                                    <span><i className="ti ti-edit"/></span><span style={{fontStyle:"italic"}}>{bemerkungState[`e${einsatz.id}`]}</span>
                                   </div>
                                 )}
                               </div>
@@ -8210,7 +8210,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                               ):(
                                 <>
                                   {(gruppenState[einsatz.id]||einsatz.gruppen).map((g,gi)=><Chip key={gi} text={g} color="#6B7280" bg="#F3F4F6"/>)}
-                                  {canEdit&&<button onClick={e=>{e.stopPropagation();setEditingGruppen(einsatz.id);}} style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}><i className="ti-edit"/></button>}
+                                  {canEdit&&<button onClick={e=>{e.stopPropagation();setEditingGruppen(einsatz.id);}} style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}><i className="ti ti-edit"/></button>}
                                 </>
                               )}
                               {/* Bemerkung Edit */}
@@ -8224,7 +8224,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                 </div>
                               ):(
                                 <button onClick={e=>{e.stopPropagation();setEditingBemerkung(`e${einsatz.id}`);setBemerkungDraft(bemerkungState[`e${einsatz.id}`]||"");}}
-                                  style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}><i className="ti-edit"/></button>
+                                  style={{padding:"2px 8px",borderRadius:20,fontSize:10,border:`0.5px solid ${GB}`,background:"#fff",color:"#888",cursor:"pointer"}}><i className="ti ti-edit"/></button>
                               ))}
                               {(()=>{
                                 const totalPlätze=einsatz.schichten.reduce((s,sc)=>s+sc.max,0);
@@ -8360,7 +8360,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
       {helperTab==="team"&&meinGruppe&&(
         <div>
           <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"#F3F4F6",border:`0.5px solid ${GB}`,borderRadius:9,marginBottom:16,fontSize:13}}>
-            <span style={{fontSize:15}}><i className="ti-users"/></span>
+            <span style={{fontSize:15}}><i className="ti ti-users"/></span>
             <span>Einsätze für deine Teams: {meineGruppen.map((g,i)=><strong key={i}>{i>0?" · ":""}{g}</strong>)}</span>
           </div>
 
@@ -8483,7 +8483,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
           {/* Team-Filter Hinweis für Trainer */}
           {isTrainer&&(
             <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"#F3F4F6",border:`0.5px solid ${GB}`,borderRadius:9,marginBottom:14,fontSize:13}}>
-              <span style={{fontSize:15}}><i className="ti-eye"/></span>
+              <span style={{fontSize:15}}><i className="ti ti-eye"/></span>
               <span>Du siehst nur Mitglieder deines Teams: <strong>Cc-Junioren</strong></span>
             </div>
           )}
@@ -8509,7 +8509,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
           {/* Suche + Filter */}
           <div style={{display:"flex",gap:8,marginBottom:14,flexWrap:"wrap",alignItems:"center",width:"100%",rowGap:6}}>
             <div style={{position:"relative",flexShrink:0}}>
-              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}><i className="ti-search"/></span>
+              <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"#aaa",pointerEvents:"none"}}><i className="ti ti-search"/></span>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Mitglied suchen…"
                 style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${search?"#f8de09":GB}`,borderRadius:20,fontSize:12,outline:"none",width:"100%",maxWidth:190,background:"#fff"}}/>
               {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#aaa",lineHeight:1}}>×</button>}
@@ -9100,7 +9100,7 @@ function PlaetzeView(){
                   </div>
                   <div style={{display:"flex",gap:5,flexShrink:0}}>
                     <button onClick={function(){setEditId(p.id);setEditName(p.name);setEditHaelften((p.halfn||[]).join(", "));}} title="Bearbeiten"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-edit"/></button>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-edit"/></button>
                     <button onClick={function(){handleToggle(p.id);}} title="Deaktivieren"
                       style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"#fff",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -9108,7 +9108,7 @@ function PlaetzeView(){
                       </svg>
                     </button>
                     <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-trash"/></button>
                   </div>
                 </div>
               )}
@@ -9138,7 +9138,7 @@ function PlaetzeView(){
                     Aktivieren
                   </button>
                   <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti-trash"/></button>
+                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-trash"/></button>
                 </div>
               );
             })}
@@ -9284,7 +9284,7 @@ function LoginScreen({onLogin, sb}){
       <div style={{width:"100%",maxWidth:400,padding:"0 20px"}}>
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
-          <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><i className="ti-ball-football"/></div>
+          <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><i className="ti ti-ball-football"/></div>
           <div style={{fontWeight:800,fontSize:22,color:BK}}>FC Herrliberg</div>
           <div style={{fontSize:13,color:"#888",marginTop:2}}>Vereinsportal</div>
         </div>
@@ -9402,7 +9402,7 @@ export default function Portal({supabaseClient}){
     return(
       <div style={{minHeight:"100vh",background:GR,display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{textAlign:"center"}}>
-          <div style={{width:48,height:48,background:"#f8de09",borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}><i className="ti-ball-football"/></div>
+          <div style={{width:48,height:48,background:"#f8de09",borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}><i className="ti ti-ball-football"/></div>
           <div style={{fontSize:13,color:"#888"}}>Wird geladen…</div>
         </div>
       </div>
