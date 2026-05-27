@@ -6259,18 +6259,37 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       setLoading(true);
       try{
         if(supabase){
-          const [apiR,audR,benuR,gruppenR,funktionenR]=await Promise.all([
+          const [apiR,audR,benuR,gruppenR,funktionenR,mcR,mrR]=await Promise.all([
             supabase.from("api_verbindungen").select("*").order("sort_order"),
             supabase.from("api_sync_log").select("*,api_verbindungen(label)").order("gestartet_am",{ascending:false}).limit(50),
             supabase.from("benutzer").select("id,name,email,role,aktiv").order("name"),
             supabase.from("portal_gruppen").select("*").order("name"),
             supabase.from("portal_funktionen").select("*, portal_gruppen(name,farbe)").order("name"),
+            supabase.from("module_config").select("*"),
+            supabase.from("modul_rechte").select("*"),
           ]);
           if(apiR.data) setApiVerbindungen(apiR.data);
           if(audR.data) setAuditLogs(audR.data);
           if(benuR.data) setBenutzerListe(benuR.data);
           if(gruppenR.data) setGruppen(gruppenR.data);
           if(funktionenR.data) setFunktionen(funktionenR.data);
+          /* module_config → moduleAktiv State */
+          if(mcR.data&&mcR.data.length>0&&setModuleAktiv){
+            const ma={};
+            mcR.data.forEach(r=>{ma[r.modul]=r.aktiv!==false;});
+            setModuleAktiv(ma);
+            try{localStorage.setItem("fch-module-aktiv",JSON.stringify(ma));}catch{}
+          }
+          /* modul_rechte → moduleRechte State */
+          if(mrR.data&&mrR.data.length>0&&setModuleRechte){
+            const mr={};
+            mrR.data.forEach(r=>{
+              if(!mr[r.rolle]) mr[r.rolle]=[];
+              if(r.hat_zugriff) mr[r.rolle].push(r.modul);
+            });
+            setModuleRechte(mr);
+            try{localStorage.setItem("fch-module-rechte",JSON.stringify(mr));}catch{}
+          }
         }
       }catch(e){console.warn("[FCH] Portalverwaltung laden:",e.message);}
       setLoading(false);
@@ -6315,6 +6334,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     setModuleAktiv(prev=>{
       const neu={...prev,[key]:prev[key]===false?true:false};
       try{localStorage.setItem("fch-module-aktiv",JSON.stringify(neu));}catch{}
+      /* In Supabase speichern */
+      if(supabase) supabase.from("module_config")
+        .upsert({modul:key,aktiv:neu[key]!==false},{onConflict:"modul"})
+        .then(({error})=>{ if(error) console.warn("[FCH] module_config:", error.message); });
       return neu;
     });
     setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
@@ -6330,7 +6353,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       try{localStorage.setItem("fch-module-rechte",JSON.stringify(neu));}catch{}
       return neu;
     });
-    setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
+    setSaveMsg("Ungespeichert"); /* Wird erst beim Klick auf Speichern persistiert */
   }
 
   /* Effektive Rechte: editierte oder Default */
@@ -6381,7 +6404,20 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             <InfoBox text="Klicke auf eine Checkbox um die Rechte anzupassen. Toggle links schaltet das Modul global ein/aus." color={BL}/>
             {moduleRechte&&(
               <div style={{display:"flex",gap:8,flexShrink:0}}>
-                <button onClick={()=>{setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);}}
+                <button onClick={async()=>{
+                  if(supabase&&moduleRechte){
+                    const rows=[];
+                    Object.entries(moduleRechte).forEach(([rolle,module])=>{
+                      ALLE_MODULE.forEach(m=>{
+                        rows.push({modul:m.key,rolle,hat_zugriff:(module||[]).includes(m.key)});
+                      });
+                    });
+                    const{error}=await supabase.from("modul_rechte").upsert(rows,{onConflict:"modul,rolle"});
+                    if(error){setSaveMsg("Fehler: "+error.message);setTimeout(()=>setSaveMsg(""),3000);return;}
+                  }
+                  try{localStorage.setItem("fch-module-rechte",JSON.stringify(moduleRechte));}catch{}
+                  setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);
+                }}
                   style={{padding:"7px 14px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,whiteSpace:"nowrap"}}>
                   Speichern
                 </button>
@@ -6512,17 +6548,25 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 {id:4,name:"Stufenleitende",farbe:"#F97316",module:["team","training","events","attendance_central","members","helpers"]},
                 {id:5,name:"Schiedsrichterwesen",farbe:"#06B6D4",module:["schedule","training","docs"]},
               ]).map(g=>(
-                <div key={g.id} onClick={()=>setSelectedGruppe(selectedGruppe?.id===g.id?null:g)}
+                <div key={g.id}
                   style={{
-                    padding:"10px 13px",borderRadius:10,marginBottom:6,cursor:"pointer",
+                    padding:"10px 13px",borderRadius:10,marginBottom:6,
                     border:`1.5px solid ${selectedGruppe?.id===g.id?g.farbe:"var(--border)"}`,
                     background:selectedGruppe?.id===g.id?g.farbe+"10":"var(--surface)"
                   }}>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
-                    <div style={{width:10,height:10,borderRadius:"50%",background:g.farbe,flexShrink:0}}/>
-                    <span style={{fontWeight:600,fontSize:13,color:"var(--text)"}}>{g.name}</span>
+                    <div onClick={()=>setSelectedGruppe(selectedGruppe?.id===g.id?null:g)}
+                      style={{display:"flex",alignItems:"center",gap:8,flex:1,cursor:"pointer",minWidth:0}}>
+                      <div style={{width:10,height:10,borderRadius:"50%",background:g.farbe,flexShrink:0}}/>
+                      <span style={{fontWeight:600,fontSize:13,color:"var(--text)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{g.name}</span>
+                    </div>
+                    <button onClick={e=>{e.stopPropagation();setEditGruppe(g);setGruppeForm({name:g.name,beschreibung:g.beschreibung||"",module:g.module||[],farbe:g.farbe||"#8B5CF6"});setShowGruppeForm(true);}}
+                      style={{width:26,height:26,borderRadius:7,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
+                      <TI n="edit" size={12}/>
+                    </button>
                   </div>
-                  <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                  <div onClick={()=>setSelectedGruppe(selectedGruppe?.id===g.id?null:g)}
+                    style={{display:"flex",flexWrap:"wrap",gap:4,cursor:"pointer"}}>
                     {(g.module||[]).slice(0,4).map(m=>(
                       <span key={m} style={{fontSize:10,padding:"1px 7px",borderRadius:8,background:g.farbe+"15",color:g.farbe}}>{m}</span>
                     ))}
@@ -6625,7 +6669,29 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 </div>
               </div>
               <div style={{display:"flex",gap:10,marginTop:8}}>
-                <button style={{flex:1,padding:"10px",borderRadius:10,background:BK,color:"#fff",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                <button onClick={async()=>{
+                  if(!gruppeForm.name.trim()) return;
+                  const payload={name:gruppeForm.name,beschreibung:gruppeForm.beschreibung||"",module:gruppeForm.module,farbe:gruppeForm.farbe||"#8B5CF6",aktiv:true};
+                  if(supabase){
+                    if(editGruppe?.id){
+                      const{error}=await supabase.from("portal_gruppen").update(payload).eq("id",editGruppe.id);
+                      if(error){setSaveMsg("Fehler: "+error.message);setTimeout(()=>setSaveMsg(""),3000);return;}
+                    } else {
+                      const{data,error}=await supabase.from("portal_gruppen").insert(payload).select().single();
+                      if(error){setSaveMsg("Fehler: "+error.message);setTimeout(()=>setSaveMsg(""),3000);return;}
+                      if(data){setGruppen(prev=>[...prev,data]);setShowGruppeForm(false);setSaveMsg("Gruppe erstellt");setTimeout(()=>setSaveMsg(""),2000);return;}
+                    }
+                  }
+                  if(editGruppe){
+                    setGruppen(prev=>prev.map(g=>g.id===editGruppe.id?{...g,...payload}:g));
+                    if(selectedGruppe?.id===editGruppe.id) setSelectedGruppe(g=>({...g,...payload}));
+                  } else {
+                    setGruppen(prev=>[...prev,{id:Date.now(),...payload}]);
+                  }
+                  setShowGruppeForm(false);
+                  setSaveMsg(editGruppe?"Gruppe gespeichert":"Gruppe erstellt");
+                  setTimeout(()=>setSaveMsg(""),2000);
+                }} style={{flex:1,padding:"10px",borderRadius:10,background:BK,color:"#fff",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
                   {editGruppe?"Speichern":"Gruppe erstellen"}
                 </button>
                 <Btn onClick={()=>setShowGruppeForm(false)}>Abbrechen</Btn>
