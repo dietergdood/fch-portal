@@ -7725,6 +7725,315 @@ function MaterialView(){
   );
 }
 
+/* ══════════════════════════════════════════
+   TEAMS VERWALTUNG (Admin)
+══════════════════════════════════════════ */
+function TeamsAdminView({sb}){
+  const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
+  const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",trainer:"",trainer2:"",aktiv:true,beschreibung:""};
+
+  const [teams,setTeams]=useState([
+    {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", trainer:"Hans Muster",  trainer2:"",            aktiv:true},
+    {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", trainer:"Peter Meier",  trainer2:"",            aktiv:true},
+    {id:3, name:"1. Mannschaft Frauen",  kategorie:"Frauen",      liga:"Frauen 2. Liga",   saison:"2024/25", trainer:"Anna Koch",    trainer2:"",            aktiv:true},
+    {id:4, name:"A-Junioren",            kategorie:"Junioren A",  liga:"U16 Liga A",       saison:"2024/25", trainer:"Beat Huber",   trainer2:"",            aktiv:true},
+    {id:5, name:"Ba-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga A",       saison:"2024/25", trainer:"Marc Rüegg",   trainer2:"",            aktiv:true},
+    {id:6, name:"Bb-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga B",       saison:"2024/25", trainer:"Simon Baur",   trainer2:"",            aktiv:true},
+    {id:7, name:"Ca-Junioren",           kategorie:"Junioren C",  liga:"U13 Liga A",       saison:"2024/25", trainer:"Leo Frei",     trainer2:"",            aktiv:true},
+    {id:8, name:"Cc-Junioren",           kategorie:"Junioren C",  liga:"U12 Liga A",       saison:"2024/25", trainer:"Daniel Vogel", trainer2:"Urs Berger",  aktiv:true},
+    {id:9, name:"Da-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga A",       saison:"2024/25", trainer:"Reto Müller",  trainer2:"",            aktiv:true},
+    {id:10,name:"Db-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga B",       saison:"2024/25", trainer:"Sandro Kalt",  trainer2:"",            aktiv:true},
+    {id:11,name:"C-Juniorinnen",         kategorie:"Juniorinnen", liga:"U13 Mädchen",      saison:"2024/25", trainer:"Eva Steiner",  trainer2:"",            aktiv:true},
+    {id:12,name:"D-Juniorinnen",         kategorie:"Juniorinnen", liga:"U11 Mädchen",      saison:"2024/25", trainer:"Nina Wirth",   trainer2:"",            aktiv:true},
+    {id:13,name:"E-Juniorinnen",         kategorie:"Juniorinnen", liga:"U10 Mädchen",      saison:"2024/25", trainer:"Lea Bucher",   trainer2:"",            aktiv:true},
+    {id:14,name:"F-Juniorinnen",         kategorie:"Juniorinnen", liga:"U9 Mädchen",       saison:"2024/25", trainer:"Sara Lüscher", trainer2:"",            aktiv:true},
+  ]);
+  const [loading,setLoading]=useState(false);
+  const [search,setSearch]=useState("");
+  const [filterKat,setFilterKat]=useState("alle");
+  const [showForm,setShowForm]=useState(false);
+  const [editTeam,setEditTeam]=useState(null); // null = neu, object = bearbeiten
+  const [form,setForm]=useState(EMPTY);
+  const [saving,setSaving]=useState(false);
+  const [msg,setMsg]=useState(null); // {type:"ok"|"error", text}
+  const [deleteConfirm,setDeleteConfirm]=useState(null);
+
+  /* Supabase: Teams laden */
+  useEffect(()=>{
+    if(!sb) return;
+    setLoading(true);
+    sb.from("teams").select("*").order("kategorie").order("name")
+      .then(({data,error})=>{
+        setLoading(false);
+        if(data&&data.length>0) setTeams(data);
+        if(error) console.warn("[Teams]",error.message);
+      });
+  },[sb]);
+
+  /* Supabase: Speichern */
+  async function handleSave(){
+    if(!form.name.trim()){setMsg({type:"error",text:"Name ist Pflichtfeld."});return;}
+    setSaving(true); setMsg(null);
+    try{
+      if(sb){
+        if(editTeam){
+          const{error}=await sb.from("teams").update({...form,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
+          if(error) throw error;
+          setTeams(ts=>ts.map(t=>t.id===editTeam.id?{...t,...form}:t));
+        }else{
+          const{data,error}=await sb.from("teams").insert({...form,created_at:new Date().toISOString()}).select().single();
+          if(error) throw error;
+          setTeams(ts=>[...ts,data]);
+        }
+      }else{
+        // Demo-Modus
+        if(editTeam){
+          setTeams(ts=>ts.map(t=>t.id===editTeam.id?{...t,...form}:t));
+        }else{
+          setTeams(ts=>[...ts,{...form,id:Date.now()}]);
+        }
+      }
+      setMsg({type:"ok",text:editTeam?"Team gespeichert.":"Team erstellt."});
+      setTimeout(()=>{setShowForm(false);setMsg(null);},900);
+    }catch(e){
+      setMsg({type:"error",text:e.message||"Fehler beim Speichern."});
+    }
+    setSaving(false);
+  }
+
+  /* Supabase: Löschen */
+  async function handleDelete(team){
+    setSaving(true);
+    try{
+      if(sb){
+        const{error}=await sb.from("teams").delete().eq("id",team.id);
+        if(error) throw error;
+      }
+      setTeams(ts=>ts.filter(t=>t.id!==team.id));
+      setDeleteConfirm(null);
+    }catch(e){
+      setMsg({type:"error",text:e.message||"Fehler beim Löschen."});
+    }
+    setSaving(false);
+  }
+
+  /* Aktiv/Inaktiv toggeln */
+  async function toggleAktiv(team){
+    const neu=!team.aktiv;
+    try{
+      if(sb) await sb.from("teams").update({aktiv:neu}).eq("id",team.id);
+      setTeams(ts=>ts.map(t=>t.id===team.id?{...t,aktiv:neu}:t));
+    }catch(e){}
+  }
+
+  function openNeu(){setForm(EMPTY);setEditTeam(null);setMsg(null);setShowForm(true);}
+  function openEdit(t){setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",trainer:t.trainer||"",trainer2:t.trainer2||"",aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
+
+  const katList=["alle",...Array.from(new Set(teams.map(t=>t.kategorie).filter(Boolean)))];
+  const filtered=teams.filter(t=>{
+    const matchSearch=!search||t.name.toLowerCase().includes(search.toLowerCase())||t.trainer?.toLowerCase().includes(search.toLowerCase());
+    const matchKat=filterKat==="alle"||t.kategorie===filterKat;
+    return matchSearch&&matchKat;
+  });
+
+  const inputStyle={width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"};
+  const labelStyle={fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:5,display:"block",textTransform:"uppercase",letterSpacing:0.5};
+
+  const KAT_COLORS={"Herren":BL,"Frauen":"#7C3AED","Junioren A":R,"Junioren B":R,"Junioren C":R,"Junioren D":R,"Junioren E":R,"Junioren F":R,"Juniorinnen":"#EC4899","Senioren":AM};
+
+  return(
+    <div>
+      {/* Header */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
+        <div>
+          <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
+          <div style={{fontSize:13,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
+        </div>
+        <Btn variant="primary" color={BK} onClick={openNeu}>+ Neues Team</Btn>
+      </div>
+
+      {/* Filter */}
+      <div style={{display:"flex",gap:10,marginBottom:16,flexWrap:"wrap"}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Team oder Trainer suchen…"
+          style={{flex:1,minWidth:180,...inputStyle}}/>
+        <select value={filterKat} onChange={e=>setFilterKat(e.target.value)}
+          style={{...inputStyle,width:"auto",minWidth:140,flex:"0 0 auto"}}>
+          {katList.map(k=><option key={k} value={k}>{k==="alle"?"Alle Kategorien":k}</option>)}
+        </select>
+      </div>
+
+      {/* Teams Liste */}
+      {loading?(
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {[1,2,3].map(i=><SkelCard key={i}/>)}
+        </div>
+      ):(
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {filtered.length===0&&(
+            <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:13}}>
+              Keine Teams gefunden.
+            </div>
+          )}
+          {filtered.map(team=>{
+            const katColor=KAT_COLORS[team.kategorie]||BL;
+            const isInaktiv=team.aktiv===false;
+            return(
+              <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s"}}>
+                <div style={{display:"flex",alignItems:"center",gap:12}}>
+                  {/* Kategorie-Dot */}
+                  <div style={{width:42,height:42,borderRadius:11,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                    <TI n="ball-football" size={18} style={{color:katColor}}/>
+                  </div>
+                  {/* Info */}
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                      <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</span>
+                      <Chip text={team.kategorie} color={katColor}/>
+                      {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
+                    </div>
+                    <div style={{fontSize:12,color:"var(--sub)",marginTop:3,display:"flex",gap:12,flexWrap:"wrap"}}>
+                      {team.liga&&<span>{team.liga}</span>}
+                      {team.saison&&<span>Saison {team.saison}</span>}
+                      {team.trainer&&<span>Trainer: {team.trainer}{team.trainer2?", "+team.trainer2:""}</span>}
+                    </div>
+                  </div>
+                  {/* Aktionen */}
+                  <div style={{display:"flex",gap:6,flexShrink:0}}>
+                    <button onClick={()=>toggleAktiv(team)} title={isInaktiv?"Aktivieren":"Deaktivieren"}
+                      style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
+                      <TI n={isInaktiv?"eye":"eye"} size={14}/>
+                    </button>
+                    <button onClick={()=>openEdit(team)} title="Bearbeiten"
+                      style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
+                      <TI n="edit" size={14}/>
+                    </button>
+                    <button onClick={()=>setDeleteConfirm(team)} title="Löschen"
+                      style={{width:32,height:32,borderRadius:8,border:"1px solid "+R+"40",background:RL,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:R}}>
+                      <TI n="trash" size={14}/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Team erstellen / bearbeiten Modal */}
+      <ModalOrSheet open={showForm} onClose={()=>setShowForm(false)} maxWidth={520}>
+        <div style={{padding:"20px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
+          <h2 style={{margin:0,fontSize:16,fontWeight:700,color:"var(--text)"}}>{editTeam?"Team bearbeiten":"Neues Team"}</h2>
+          <button onClick={()=>setShowForm(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
+        </div>
+        <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px",display:"flex",flexDirection:"column",gap:14}}>
+          {/* Name */}
+          <div>
+            <label style={labelStyle}>Teamname *</label>
+            <input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))}
+              placeholder="z.B. Cc-Junioren" style={inputStyle} autoFocus/>
+          </div>
+          {/* Kategorie + Liga */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div>
+              <label style={labelStyle}>Kategorie</label>
+              <select value={form.kategorie} onChange={e=>setForm(p=>({...p,kategorie:e.target.value}))} style={inputStyle}>
+                {KATEGORIEN.map(k=><option key={k} value={k}>{k}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Liga / Wettbewerb</label>
+              <input value={form.liga} onChange={e=>setForm(p=>({...p,liga:e.target.value}))}
+                placeholder="z.B. U13 Liga A" style={inputStyle}/>
+            </div>
+          </div>
+          {/* Saison + Status */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div>
+              <label style={labelStyle}>Saison</label>
+              <input value={form.saison} onChange={e=>setForm(p=>({...p,saison:e.target.value}))}
+                placeholder="2024/25" style={inputStyle}/>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+              <label style={labelStyle}>Status</label>
+              <div style={{display:"flex",alignItems:"center",gap:10,height:38}}>
+                <button onClick={()=>setForm(p=>({...p,aktiv:!p.aktiv}))} style={{
+                  position:"relative",width:44,height:24,borderRadius:12,border:"none",
+                  background:form.aktiv?"#f8de09":"var(--border)",cursor:"pointer",padding:0,flexShrink:0,
+                  transition:"background 0.2s"
+                }}>
+                  <div style={{position:"absolute",top:3,left:form.aktiv?21:3,width:18,height:18,borderRadius:"50%",background:form.aktiv?"#111":"#fff",boxShadow:"0 1px 3px rgba(0,0,0,0.2)",transition:"left 0.2s"}}/>
+                </button>
+                <span style={{fontSize:13,color:"var(--text)",fontWeight:500}}>{form.aktiv?"Aktiv":"Inaktiv"}</span>
+              </div>
+            </div>
+          </div>
+          {/* Trainer */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div>
+              <label style={labelStyle}>Trainer / Coach</label>
+              <input value={form.trainer} onChange={e=>setForm(p=>({...p,trainer:e.target.value}))}
+                placeholder="Vorname Nachname" style={inputStyle}/>
+            </div>
+            <div>
+              <label style={labelStyle}>Co-Trainer</label>
+              <input value={form.trainer2} onChange={e=>setForm(p=>({...p,trainer2:e.target.value}))}
+                placeholder="Vorname Nachname" style={inputStyle}/>
+            </div>
+          </div>
+          {/* Beschreibung */}
+          <div>
+            <label style={labelStyle}>Beschreibung (optional)</label>
+            <textarea value={form.beschreibung} onChange={e=>setForm(p=>({...p,beschreibung:e.target.value}))}
+              placeholder="Zusätzliche Infos zum Team…" rows={3}
+              style={{...inputStyle,resize:"vertical"}}/>
+          </div>
+          {/* Status-Meldung */}
+          {msg&&(
+            <div style={{padding:"10px 14px",borderRadius:9,fontSize:13,fontWeight:600,
+              background:msg.type==="ok"?"#ECFDF5":RL,
+              color:msg.type==="ok"?GN:R,
+              border:"1px solid "+(msg.type==="ok"?GN:R)}}>
+              {msg.text}
+            </div>
+          )}
+          {/* Buttons */}
+          <div style={{display:"flex",gap:10}}>
+            <button onClick={handleSave} disabled={saving} style={{
+              flex:1,padding:"11px",borderRadius:10,background:BK,color:"#fff",border:"none",
+              fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
+              opacity:saving?0.6:1,transition:"opacity 0.2s"
+            }}>
+              {saving?"Speichern…":editTeam?"Änderungen speichern":"Team erstellen"}
+            </button>
+            <Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn>
+          </div>
+          {!sb&&<div style={{fontSize:12,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
+        </div>
+      </ModalOrSheet>
+
+      {/* Löschen bestätigen */}
+      <ModalOrSheet open={!!deleteConfirm} onClose={()=>setDeleteConfirm(null)} maxWidth={420}>
+        <div style={{padding:"24px 20px",textAlign:"center"}}>
+          <div style={{width:52,height:52,borderRadius:"50%",background:RL,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px"}}>
+            <TI n="trash" size={22} style={{color:R}}/>
+          </div>
+          <div style={{fontWeight:700,fontSize:16,color:"var(--text)",marginBottom:8}}>Team löschen?</div>
+          <div style={{fontSize:13,color:"var(--sub)",marginBottom:20}}>
+            <strong style={{color:"var(--text)"}}>{deleteConfirm?.name}</strong> wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.
+          </div>
+          <div style={{display:"flex",gap:10}}>
+            <button onClick={()=>handleDelete(deleteConfirm)} disabled={saving}
+              style={{flex:1,padding:"11px",borderRadius:10,background:R,color:"#fff",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,opacity:saving?0.6:1}}>
+              {saving?"Löschen…":"Ja, löschen"}
+            </button>
+            <Btn onClick={()=>setDeleteConfirm(null)}>Abbrechen</Btn>
+          </div>
+        </div>
+      </ModalOrSheet>
+    </div>
+  );
+}
+
 function LockersView(){
   const START=7,END=22,H=24;
   const fmt=v=>v%1===0?`${v}:00`:Math.floor(v)+":30";
@@ -8716,7 +9025,7 @@ export default function Portal({supabaseClient}){
     if(!na.find(n=>n.key===active)) return <Dashboard role={role} setActive={setActive}/>;
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
-      case "team":              return <TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account}/>;
+      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account}/>;
       case "members":           return <MembersView role={role}/>;
       case "users":             return <PortalverwaltungView initialTab="users"/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis"/>;
