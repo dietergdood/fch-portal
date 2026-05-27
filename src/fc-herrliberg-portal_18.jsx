@@ -8258,10 +8258,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
           <div style={{fontSize:13,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
         </div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-          <Btn onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);}}>
-            <TI n="calendar" size={13} style={{marginRight:5}}/>Saison wechseln
-          </Btn>
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {/* View Toggle */}
           <div style={{display:"flex",border:"1px solid var(--border)",borderRadius:9,overflow:"hidden"}}>
             {["list","grid"].map(m=>(
@@ -8274,7 +8271,38 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
               </button>
             ))}
           </div>
-          <Btn variant="primary" color={BK} onClick={openNeu}>+ Neues Team</Btn>
+          {/* Dreipunkt-Menü */}
+          <div style={{position:"relative"}}>
+            <button onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} style={{
+              width:36,height:36,borderRadius:9,border:"1px solid var(--border)",
+              background:"var(--surface2)",cursor:"pointer",display:"flex",
+              alignItems:"center",justifyContent:"center",color:"var(--sub)"
+            }}>
+              <TI n="dots-vertical" size={15}/>
+            </button>
+            {openMenuId==="header"&&(
+              <div style={{position:"absolute",right:0,top:40,zIndex:200,
+                background:"var(--surface)",border:"1px solid var(--border)",
+                borderRadius:12,boxShadow:"0 4px 20px rgba(0,0,0,0.12)",
+                minWidth:180,overflow:"hidden"}}>
+                <button onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);setOpenMenuId(null);}}
+                  style={{width:"100%",padding:"11px 16px",border:"none",background:"none",cursor:"pointer",
+                    display:"flex",alignItems:"center",gap:10,fontFamily:FONT,fontSize:13,color:"var(--text)",textAlign:"left"}}
+                  onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
+                  onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                  <TI n="calendar" size={14} style={{color:"var(--sub)",flexShrink:0}}/>Saison wechseln
+                </button>
+                <div style={{height:1,background:"var(--border)",margin:"0 12px"}}/>
+                <button onClick={()=>{openNeu();setOpenMenuId(null);}}
+                  style={{width:"100%",padding:"11px 16px",border:"none",background:"none",cursor:"pointer",
+                    display:"flex",alignItems:"center",gap:10,fontFamily:FONT,fontSize:13,color:"var(--text)",textAlign:"left",fontWeight:600}}
+                  onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
+                  onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                  <TI n="edit" size={14} style={{color:"var(--sub)",flexShrink:0}}/>+ Neues Team
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
