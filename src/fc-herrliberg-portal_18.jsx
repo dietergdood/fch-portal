@@ -10,6 +10,43 @@ const R="#C8102E",RL="#FEF2F2",BK="#1A1A1A",GR="#F5F5F3",GB="#E0DED8",BL="#2563E
 const FONT="'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
 const BP_MOBILE=680, BP_TABLET=1024;
 
+/* ── TEAM-HIERARCHIE (Baumstruktur) ── */
+const TEAM_HIERARCHY={
+  "Aktivfussball":{
+    "Aktive Herren":  ["Aktive Herren"],
+    "Aktive Frauen":  ["Aktive Frauen"],
+  },
+  "Juniorenfussball":{
+    "Junioren A":["Junioren A"],
+    "Junioren B":["Junioren B"],
+    "Junioren C":["Junioren C"],
+    "Junioren D":["Junioren D-9","Junioren D-7"],
+  },
+  "Kinderfussball Junioren":{
+    "Junioren E":["Junioren E"],
+    "Junioren F":["Junioren F"],
+    "Junioren G":["Junioren G"],
+  },
+  "Juniorinnenfussball":{
+    "Juniorinnen B / FF-21":["Juniorinnen FF-21"],
+    "Juniorinnen C / FF-17":["Juniorinnen FF-17"],
+    "Juniorinnen D / FF-14":["Juniorinnen FF-14 9v9","Juniorinnen FF-14 7v7","Juniorinnen FF-14"],
+  },
+  "Kinderfussball Juniorinnen":{
+    "Juniorinnen E / FF-11":["Juniorinnen FF-11"],
+    "Juniorinnen F / FF-9": ["Juniorinnen FF-9"],
+    "Juniorinnen G / FF-7": ["Juniorinnen FF-7"],
+  },
+  "Seniorenfussball":{
+    "Senioren 30+":["Senioren 30+"],
+    "Senioren 40+":["Senioren 40+"],
+    "Senioren 50+":["Senioren 50+"],
+    "Senioren 60+":["Senioren 60+"],
+  },
+};
+
+
+
 /* ── PWA THEME SYSTEM ── */
 const ThemeCtx = createContext({dark:false, toggle:()=>{}});
 const useTheme = ()=>useContext(ThemeCtx);
@@ -7920,24 +7957,59 @@ function MaterialView(){
 /* ══════════════════════════════════════════
    TEAMS VERWALTUNG (Admin)
 ══════════════════════════════════════════ */
-function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
+function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCustomBack}){
   const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
-  const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",haupttrainer:[],co_trainers:[],staff:[],aktiv:true,beschreibung:""};
+  const EMPTY={stufe_id:null,stufe_ebene1:"",stufe_ebene2:"",stufe_ebene3_id:null,hauptbereich:"Juniorenfussball",vereinsstufe:"Junioren C",verbandskategorie:"",name:"",kurzname:"",stufenleitung:"",liga:"",saison:"2024/25",haupttrainer:[],co_trainers:[],staff:[],aktiv:true,beschreibung:""};
   const FALLBACK=[
-    {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", haupttrainer:["Hans Muster"],  co_trainers:[],              staff:[],aktiv:true},
-    {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", haupttrainer:["Peter Meier"],  co_trainers:[],              staff:[],aktiv:true},
-    {id:3, name:"1. Mannschaft Frauen",  kategorie:"Frauen",      liga:"Frauen 2. Liga",   saison:"2024/25", haupttrainer:["Anna Koch"],    co_trainers:[],              staff:[],aktiv:true},
-    {id:4, name:"A-Junioren",            kategorie:"Junioren A",  liga:"U16 Liga A",       saison:"2024/25", haupttrainer:["Beat Huber"],   co_trainers:[],              staff:[],aktiv:true},
-    {id:5, name:"Ba-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga A",       saison:"2024/25", haupttrainer:["Marc Rüegg"],   co_trainers:[],              staff:[],aktiv:true},
-    {id:6, name:"Bb-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga B",       saison:"2024/25", haupttrainer:["Simon Baur"],   co_trainers:[],              staff:[],aktiv:true},
-    {id:7, name:"Ca-Junioren",           kategorie:"Junioren C",  liga:"U13 Liga A",       saison:"2024/25", haupttrainer:["Leo Frei"],     co_trainers:[],              staff:[],aktiv:true},
-    {id:8, name:"Cc-Junioren",           kategorie:"Junioren C",  liga:"U12 Liga A",       saison:"2024/25", haupttrainer:["Daniel Vogel"], co_trainers:["Urs Berger"],  staff:[],aktiv:true},
-    {id:9, name:"Da-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga A",       saison:"2024/25", haupttrainer:["Reto Müller"],  co_trainers:[],              staff:[],aktiv:true},
-    {id:10,name:"Db-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga B",       saison:"2024/25", haupttrainer:["Sandro Kalt"],  co_trainers:[],              staff:[],aktiv:true},
-    {id:11,name:"C-Juniorinnen",         kategorie:"Juniorinnen", liga:"U13 Mädchen",      saison:"2024/25", haupttrainer:["Eva Steiner"],  co_trainers:[],              staff:[],aktiv:true},
-    {id:12,name:"D-Juniorinnen",         kategorie:"Juniorinnen", liga:"U11 Mädchen",      saison:"2024/25", haupttrainer:["Nina Wirth"],   co_trainers:[],              staff:[],aktiv:true},
-    {id:13,name:"E-Juniorinnen",         kategorie:"Juniorinnen", liga:"U10 Mädchen",      saison:"2024/25", haupttrainer:["Lea Bucher"],   co_trainers:[],              staff:[],aktiv:true},
-    {id:14,name:"F-Juniorinnen",         kategorie:"Juniorinnen", liga:"U9 Mädchen",       saison:"2024/25", haupttrainer:["Sara Lüscher"], co_trainers:[],              staff:[],aktiv:true},
+    /* Aktivfussball – Aktive Herren */
+    {id:1, hauptbereich:"Aktivfussball",          vereinsstufe:"Aktive Herren",        verbandskategorie:"Aktive Herren",       name:"1. Mannschaft",    kurzname:"FCH 1",    stufenleitung:"Stufenleitung Aktive Herren",   liga:"1. Liga",           saison:"2024/25",haupttrainer:["Hans Muster"],  co_trainers:[],staff:[],aktiv:true},
+    {id:2, hauptbereich:"Aktivfussball",          vereinsstufe:"Aktive Herren",        verbandskategorie:"Aktive Herren",       name:"2. Mannschaft",    kurzname:"FCH 2",    stufenleitung:"Stufenleitung Aktive Herren",   liga:"2. Liga",           saison:"2024/25",haupttrainer:["Peter Meier"], co_trainers:[],staff:[],aktiv:true},
+    {id:3, hauptbereich:"Aktivfussball",          vereinsstufe:"Aktive Herren",        verbandskategorie:"Aktive Herren",       name:"3. Mannschaft",    kurzname:"FCH 3",    stufenleitung:"Stufenleitung Aktive Herren",   liga:"3. Liga",           saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:4, hauptbereich:"Aktivfussball",          vereinsstufe:"Aktive Herren",        verbandskategorie:"Aktive Herren",       name:"4. Mannschaft",    kurzname:"FCH 4",    stufenleitung:"Stufenleitung Aktive Herren",   liga:"4. Liga",           saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    /* Aktivfussball – Aktive Frauen */
+    {id:5, hauptbereich:"Aktivfussball",          vereinsstufe:"Aktive Frauen",        verbandskategorie:"Aktive Frauen",       name:"1. Mannschaft - Frauen",kurzname:"Frauen 1",stufenleitung:"Stufenleitung Aktive Frauen",liga:"Frauen 2. Liga",    saison:"2024/25",haupttrainer:["Anna Koch"],   co_trainers:[],staff:[],aktiv:true},
+    /* Juniorenfussball */
+    {id:6, hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren A",           verbandskategorie:"Junioren A",          name:"A-Junioren",       kurzname:"A",        stufenleitung:"Stufenleitung Junioren A",      liga:"U16 Liga A",        saison:"2024/25",haupttrainer:["Beat Huber"],  co_trainers:[],staff:[],aktiv:true},
+    {id:7, hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren B",           verbandskategorie:"Junioren B",          name:"Ba-Junioren",      kurzname:"Ba",       stufenleitung:"Stufenleitung Junioren B",      liga:"U15 Liga A",        saison:"2024/25",haupttrainer:["Marc Rüegg"],  co_trainers:[],staff:[],aktiv:true},
+    {id:8, hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren B",           verbandskategorie:"Junioren B",          name:"Bb-Junioren",      kurzname:"Bb",       stufenleitung:"Stufenleitung Junioren B",      liga:"U15 Liga B",        saison:"2024/25",haupttrainer:["Simon Baur"],  co_trainers:[],staff:[],aktiv:true},
+    {id:9, hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren B",           verbandskategorie:"Junioren B",          name:"Bc-Junioren",      kurzname:"Bc",       stufenleitung:"Stufenleitung Junioren B",      liga:"U15 Liga C",        saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:10,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren C",           verbandskategorie:"Junioren C",          name:"Ca-Junioren",      kurzname:"Ca",       stufenleitung:"Stufenleitung Junioren C",      liga:"U13 Liga A",        saison:"2024/25",haupttrainer:["Leo Frei"],    co_trainers:[],staff:[],aktiv:true},
+    {id:11,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren C",           verbandskategorie:"Junioren C",          name:"Cb-Junioren",      kurzname:"Cb",       stufenleitung:"Stufenleitung Junioren C",      liga:"U13 Liga B",        saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:12,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren C",           verbandskategorie:"Junioren C",          name:"Cc-Junioren",      kurzname:"Cc",       stufenleitung:"Stufenleitung Junioren C",      liga:"U12 Liga A",        saison:"2024/25",haupttrainer:["Daniel Vogel"],co_trainers:["Urs Berger"],staff:[],aktiv:true},
+    {id:13,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren D",           verbandskategorie:"Junioren D-9",        name:"Da-Junioren",      kurzname:"Da",       stufenleitung:"Stufenleitung Junioren D",      liga:"U11 Liga A",        saison:"2024/25",haupttrainer:["Reto Müller"], co_trainers:[],staff:[],aktiv:true},
+    {id:14,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren D",           verbandskategorie:"Junioren D-9",        name:"Db-Junioren",      kurzname:"Db",       stufenleitung:"Stufenleitung Junioren D",      liga:"U11 Liga B",        saison:"2024/25",haupttrainer:["Sandro Kalt"], co_trainers:[],staff:[],aktiv:true},
+    {id:15,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren D",           verbandskategorie:"Junioren D-7",        name:"Dc-Junioren",      kurzname:"Dc",       stufenleitung:"Stufenleitung Junioren D",      liga:"U10 Liga",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:16,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren D",           verbandskategorie:"Junioren D-7",        name:"Dd-Junioren",      kurzname:"Dd",       stufenleitung:"Stufenleitung Junioren D",      liga:"U10 Liga",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:17,hauptbereich:"Juniorenfussball",       vereinsstufe:"Junioren D",           verbandskategorie:"Junioren D-7",        name:"De-Junioren",      kurzname:"De",       stufenleitung:"Stufenleitung Junioren D",      liga:"U10 Liga",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    /* Kinderfussball Junioren */
+    {id:18,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren E",           verbandskategorie:"Junioren E",          name:"Ea-Junioren",      kurzname:"Ea",       stufenleitung:"Stufenleitung Junioren E",      liga:"U9",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:19,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren E",           verbandskategorie:"Junioren E",          name:"Eb-Junioren",      kurzname:"Eb",       stufenleitung:"Stufenleitung Junioren E",      liga:"U9",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:20,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren E",           verbandskategorie:"Junioren E",          name:"Ec-Junioren",      kurzname:"Ec",       stufenleitung:"Stufenleitung Junioren E",      liga:"U9",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:21,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren E",           verbandskategorie:"Junioren E",          name:"Ed-Junioren",      kurzname:"Ed",       stufenleitung:"Stufenleitung Junioren E",      liga:"U9",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:22,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren E",           verbandskategorie:"Junioren E",          name:"E-Pool",           kurzname:"E-Pool",   stufenleitung:"Stufenleitung Junioren E",      liga:"U9",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:23,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren F",           verbandskategorie:"Junioren F",          name:"F1-Junioren",      kurzname:"F1",       stufenleitung:"Stufenleitung Junioren F",      liga:"U8",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:24,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren F",           verbandskategorie:"Junioren F",          name:"F2-Junioren",      kurzname:"F2",       stufenleitung:"Stufenleitung Junioren F",      liga:"U8",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:25,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren G",           verbandskategorie:"Junioren G",          name:"G1-Junioren",      kurzname:"G1",       stufenleitung:"Stufenleitung Junioren G",      liga:"U7",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:26,hauptbereich:"Kinderfussball Junioren",vereinsstufe:"Junioren G",           verbandskategorie:"Junioren G",          name:"G2-Junioren",      kurzname:"G2",       stufenleitung:"Stufenleitung Junioren G",      liga:"U7",                saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    /* Juniorinnenfussball */
+    {id:27,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen B / FF-21",verbandskategorie:"Juniorinnen FF-21",   name:"Ba-Juniorinnen",   kurzname:"Ba-Girls", stufenleitung:"Stufenleitung Juniorinnen",     liga:"U15 Mädchen",       saison:"2024/25",haupttrainer:["Eva Steiner"], co_trainers:[],staff:[],aktiv:true},
+    {id:28,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen B / FF-21",verbandskategorie:"Juniorinnen FF-21",   name:"Bb-Juniorinnen",   kurzname:"Bb-Girls", stufenleitung:"Stufenleitung Juniorinnen",     liga:"U15 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:29,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen B / FF-21",verbandskategorie:"Juniorinnen FF-21",   name:"B-Juniorinnen",    kurzname:"B-Girls",  stufenleitung:"Stufenleitung Juniorinnen",     liga:"U15 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:30,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen C / FF-17",verbandskategorie:"Juniorinnen FF-17",   name:"Ca-Juniorinnen",   kurzname:"Ca-Girls", stufenleitung:"Stufenleitung Juniorinnen",     liga:"U13 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:31,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen C / FF-17",verbandskategorie:"Juniorinnen FF-17",   name:"Cb-Juniorinnen",   kurzname:"Cb-Girls", stufenleitung:"Stufenleitung Juniorinnen",     liga:"U13 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:32,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen C / FF-17",verbandskategorie:"Juniorinnen FF-17",   name:"C-Juniorinnen",    kurzname:"C-Girls",  stufenleitung:"Stufenleitung Juniorinnen",     liga:"U13 Mädchen",       saison:"2024/25",haupttrainer:["Nina Wirth"],  co_trainers:[],staff:[],aktiv:true},
+    {id:33,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen D / FF-14",verbandskategorie:"Juniorinnen FF-14 9v9",name:"Da-Juniorinnen",  kurzname:"Da-Girls", stufenleitung:"Stufenleitung Juniorinnen",     liga:"U11 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:34,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen D / FF-14",verbandskategorie:"Juniorinnen FF-14 7v7",name:"Db-Juniorinnen",  kurzname:"Db-Girls", stufenleitung:"Stufenleitung Juniorinnen",     liga:"U11 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:35,hauptbereich:"Juniorinnenfussball",    vereinsstufe:"Juniorinnen D / FF-14",verbandskategorie:"Juniorinnen FF-14",   name:"D-Juniorinnen",    kurzname:"D-Girls",  stufenleitung:"Stufenleitung Juniorinnen",     liga:"U11 Mädchen",       saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    /* Kinderfussball Juniorinnen */
+    {id:36,hauptbereich:"Kinderfussball Juniorinnen",vereinsstufe:"Juniorinnen E / FF-11",verbandskategorie:"Juniorinnen FF-11",name:"E-Juniorinnen",   kurzname:"E-Girls",  stufenleitung:"Stufenleitung Juniorinnen",     liga:"U9 Mädchen",        saison:"2024/25",haupttrainer:["Lea Bucher"],  co_trainers:[],staff:[],aktiv:true},
+    {id:37,hauptbereich:"Kinderfussball Juniorinnen",vereinsstufe:"Juniorinnen F / FF-9", verbandskategorie:"Juniorinnen FF-9", name:"F-Juniorinnen",   kurzname:"F-Girls",  stufenleitung:"Stufenleitung Juniorinnen",     liga:"U8 Mädchen",        saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:38,hauptbereich:"Kinderfussball Juniorinnen",vereinsstufe:"Juniorinnen G / FF-7", verbandskategorie:"Juniorinnen FF-7", name:"G-Juniorinnen",   kurzname:"G-Girls",  stufenleitung:"Stufenleitung Juniorinnen",     liga:"U7 Mädchen",        saison:"2024/25",haupttrainer:["Sara Lüscher"],co_trainers:[],staff:[],aktiv:true},
+    /* Seniorenfussball */
+    {id:39,hauptbereich:"Seniorenfussball",       vereinsstufe:"Senioren 30+",         verbandskategorie:"Senioren 30+",        name:"Senioren 30+",     kurzname:"30+",      stufenleitung:"Stufenleitung Senioren",        liga:"Senioren",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:40,hauptbereich:"Seniorenfussball",       vereinsstufe:"Senioren 40+",         verbandskategorie:"Senioren 40+",        name:"Senioren 40+",     kurzname:"40+",      stufenleitung:"Stufenleitung Senioren",        liga:"Senioren",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:41,hauptbereich:"Seniorenfussball",       vereinsstufe:"Senioren 50+",         verbandskategorie:"Senioren 50+",        name:"Senioren 50+",     kurzname:"50+",      stufenleitung:"Stufenleitung Senioren",        liga:"Senioren",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
+    {id:42,hauptbereich:"Seniorenfussball",       vereinsstufe:"Senioren 60+",         verbandskategorie:"Senioren 60+",        name:"Senioren 60+",     kurzname:"60+",      stufenleitung:"Stufenleitung Senioren",        liga:"Senioren",          saison:"2024/25",haupttrainer:[],             co_trainers:[],staff:[],aktiv:true},
   ];
   const [localTeams,setLocalTeams]=useState(FALLBACK);
   /* Nutze dbTeams wenn geladen, sonst localTeams */
@@ -7945,6 +8017,37 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   const setTeams = dbTeams.length>0
     ? (fn)=>{ const next=typeof fn==="function"?fn(dbTeams):fn; if(setDbTeams) setDbTeams(next); }
     : setLocalTeams;
+
+  /* Stufen-Helfer: aus DB oder TEAM_HIERARCHY als Fallback */
+  const stufen1 = dbStufen.length>0
+    ? dbStufen.filter(s=>s.ebene===1).sort((a,b)=>a.sortorder-b.sortorder)
+    : Object.keys(TEAM_HIERARCHY).map((n,i)=>({id:n,name:n,ebene:1,sortorder:i}));
+  const getStufen2=(e1id)=> dbStufen.length>0
+    ? dbStufen.filter(s=>s.ebene===2&&s.parent_id===e1id).sort((a,b)=>a.sortorder-b.sortorder)
+    : Object.keys(TEAM_HIERARCHY[e1id]||{}).map((n,i)=>({id:n,name:n,ebene:2,sortorder:i,stufenleitung:""}));
+  const getStufen3=(e2id)=> dbStufen.length>0
+    ? dbStufen.filter(s=>s.ebene===3&&s.parent_id===e2id).sort((a,b)=>a.sortorder-b.sortorder)
+    : (()=>{
+        for(const [hb,vs] of Object.entries(TEAM_HIERARCHY)){
+          for(const [vs2,cats] of Object.entries(vs)){
+            if(vs2===e2id) return cats.map((n,i)=>({id:n,name:n,ebene:3,sortorder:i}));
+          }
+        }
+        return [];
+      })();
+  /* Stufe-ID → Pfad-Objekte {e1,e2,e3} */
+  function getStufePath(team){
+    if(dbStufen.length>0 && team.stufe_id){
+      const e3=dbStufen.find(s=>s.id===team.stufe_id);
+      const e2=e3?dbStufen.find(s=>s.id===e3.parent_id):null;
+      const e1=e2?dbStufen.find(s=>s.id===e2.parent_id):null;
+      return{e1:e1?.name||"",e2:e2?.name||"",e3:e3?.name||"",e2stufenleitung:e2?.stufenleitung||""};
+    }
+    return{e1:team.hauptbereich||"",e2:team.vereinsstufe||team.kategorie||"",e3:team.verbandskategorie||"",e2stufenleitung:team.stufenleitung||""};
+  }
+  /* Stufenauswahl im Formular: lokaler State für kaskadierende Dropdowns */
+  const getE1fromForm=()=>form.stufe_ebene1||(dbStufen.length===0?form.hauptbereich:"");
+  const getE2fromForm=()=>form.stufe_ebene2||(dbStufen.length===0?form.vereinsstufe:"");
   const [loading,setLoading]=useState(false);
   const [search,setSearch]=useState("");
   const [filterKat,setFilterKat]=useState("alle");
@@ -7979,11 +8082,11 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
     try{
       if(sb){
         if(editTeam){
-          const{error}=await sb.from("teams").update({...form,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
+          const saveData={...form};if(form.stufe_id) saveData.stufe_id=form.stufe_id;const{error}=await sb.from("teams").update({...saveData,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
           if(error) throw error;
           setTeams(ts=>ts.map(t=>t.id===editTeam.id?{...t,...form}:t));
         }else{
-          const{data,error}=await sb.from("teams").insert({...form,created_at:new Date().toISOString()}).select().single();
+          const saveData={...form};if(form.stufe_id) saveData.stufe_id=form.stufe_id;const{data,error}=await sb.from("teams").insert({...saveData,created_at:new Date().toISOString()}).select().single();
           if(error) throw error;
           setTeams(ts=>[...ts,data]);
         }
@@ -8029,7 +8132,24 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   }
 
   function openNeu(){setForm(EMPTY);setEditTeam(null);setMsg(null);setShowForm(true);}
-  function openEdit(t){const ht=t.haupttrainer||(t.trainer?[t.trainer]:[]);const co=t.co_trainers||(t.trainer2?[t.trainer2]:[]);setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",haupttrainer:ht,co_trainers:co,staff:t.staff||[],aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
+  function openEdit(t){
+    const ht=t.haupttrainer||(t.trainer?[t.trainer]:[]);
+    const co=t.co_trainers||(t.trainer2?[t.trainer2]:[]);
+    const path=getStufePath(t);
+    const e3=t.stufe_id?dbStufen.find(s=>s.id===t.stufe_id):null;
+    const e2=e3?dbStufen.find(s=>s.id===e3.parent_id):null;
+    setForm({
+      stufe_id:t.stufe_id||null,
+      stufe_ebene1:e2?(dbStufen.find(s=>s.id===e2.parent_id)?.id||""):"",
+      stufe_ebene2:e2?.id||"",
+      hauptbereich:path.e1||"Juniorenfussball",
+      vereinsstufe:path.e2||"",
+      verbandskategorie:path.e3||"",
+      name:t.name||"",kurzname:t.kurzname||"",stufenleitung:path.e2stufenleitung||"",
+      liga:t.liga||"",saison:t.saison||"2024/25",
+      haupttrainer:ht,co_trainers:co,staff:t.staff||[],
+      aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""
+    });setEditTeam(t);setMsg(null);setShowForm(true);}
 
   /* Saison für alle Teams setzen */
   async function handleSaisonAlle(){
@@ -8049,17 +8169,17 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
     setSaving(false);
   }
 
-  const katList=["alle",...Array.from(new Set(teams.map(t=>t.kategorie).filter(Boolean)))];
+  const katList=["alle",...Array.from(new Set(teams.map(t=>t.hauptbereich||t.kategorie).filter(Boolean))).sort()];
   const filtered=teams.filter(t=>{
     const matchSearch=!search||t.name.toLowerCase().includes(search.toLowerCase())||t.trainer?.toLowerCase().includes(search.toLowerCase());
-    const matchKat=filterKat==="alle"||t.kategorie===filterKat;
+    const matchKat=filterKat==="alle"||t.hauptbereich===filterKat||t.vereinsstufe===filterKat||t.kategorie===filterKat;
     return matchSearch&&matchKat;
   });
 
   const inputStyle={width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"};
   const labelStyle={fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:5,display:"block",textTransform:"uppercase",letterSpacing:0.5};
 
-  const KAT_COLORS={"Herren":BL,"Frauen":"#7C3AED","Junioren A":R,"Junioren B":R,"Junioren C":R,"Junioren D":R,"Junioren E":R,"Junioren F":R,"Juniorinnen":"#EC4899","Senioren":AM};
+  const KAT_COLORS={"Aktivfussball":BL,"Juniorenfussball":R,"Kinderfussball Junioren":"#F97316","Juniorinnenfussball":"#EC4899","Kinderfussball Juniorinnen":"#DB2777","Seniorenfussball":AM};
 
   return(
     <div>
@@ -8125,8 +8245,9 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
             </div>
           )}
           {filtered.map(team=>{
-            const katColor=KAT_COLORS[team.kategorie]||BL;
+            const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
+            const sp=getStufePath(team);
             const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
             const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             return(
@@ -8140,11 +8261,13 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
                       <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</span>
-                      <Chip text={team.kategorie} color={katColor}/>
+                      {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
                       {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
                     </div>
                     <div style={{fontSize:12,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
-                      {team.liga&&<span>{team.liga}</span>}
+                      {sp.e1&&<span style={{fontWeight:500}}>{sp.e1}</span>}
+                      {sp.e2&&<span>· {sp.e2}</span>}
+                      {team.liga&&<span>· {team.liga}</span>}
                       {team.saison&&<span>{team.saison}</span>}
                       <span style={{display:"flex",alignItems:"center",gap:3}}>
                         <TI n="users" size={11}/> {spielerCount} Spieler
@@ -8183,19 +8306,64 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
           <button onClick={()=>setShowForm(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
         </div>
         <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px",display:"flex",flexDirection:"column",gap:14}}>
-          {/* Name */}
+          {/* Ebene 1 */}
           <div>
-            <label style={labelStyle}>Teamname *</label>
-            <input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))}
-              placeholder="z.B. Cc-Junioren" style={inputStyle} autoFocus/>
+            <label style={labelStyle}>Hauptbereich (Ebene 1)</label>
+            <select value={dbStufen.length>0?form.stufe_ebene1:form.hauptbereich}
+              onChange={e=>{
+                if(dbStufen.length>0) setForm(p=>({...p,stufe_ebene1:Number(e.target.value)||e.target.value,stufe_ebene2:"",stufe_id:null}));
+                else setForm(p=>({...p,hauptbereich:e.target.value,vereinsstufe:"",verbandskategorie:""}));
+              }} style={inputStyle}>
+              <option value="">— wählen —</option>
+              {stufen1.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
           </div>
-          {/* Kategorie + Liga */}
+          {/* Ebene 2 + 3 */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
             <div>
-              <label style={labelStyle}>Kategorie</label>
-              <select value={form.kategorie} onChange={e=>setForm(p=>({...p,kategorie:e.target.value}))} style={inputStyle}>
-                {KATEGORIEN.map(k=><option key={k} value={k}>{k}</option>)}
+              <label style={labelStyle}>Vereinsstufe (Ebene 2)</label>
+              <select value={dbStufen.length>0?form.stufe_ebene2:form.vereinsstufe}
+                onChange={e=>{
+                  if(dbStufen.length>0){
+                    const s2=dbStufen.find(s=>s.id===(Number(e.target.value)||e.target.value));
+                    setForm(p=>({...p,stufe_ebene2:Number(e.target.value)||e.target.value,stufe_id:null,stufenleitung:s2?.stufenleitung||p.stufenleitung}));
+                  }else setForm(p=>({...p,vereinsstufe:e.target.value,verbandskategorie:""}));
+                }} style={inputStyle}>
+                <option value="">— wählen —</option>
+                {getStufen2(dbStufen.length>0?form.stufe_ebene1:form.hauptbereich).map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Verbandskategorie (Ebene 3)</label>
+              <select value={dbStufen.length>0?form.stufe_id:form.verbandskategorie}
+                onChange={e=>{
+                  if(dbStufen.length>0) setForm(p=>({...p,stufe_id:Number(e.target.value)||e.target.value||null}));
+                  else setForm(p=>({...p,verbandskategorie:e.target.value}));
+                }} style={inputStyle}>
+                <option value="">— wählen —</option>
+                {getStufen3(dbStufen.length>0?form.stufe_ebene2:form.vereinsstufe).map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+          </div>
+          {/* Ebene 4: Teamname + Kurzname */}
+          <div style={{display:"grid",gridTemplateColumns:"2fr 1fr",gap:12}}>
+            <div>
+              <label style={labelStyle}>Teamname (Ebene 4) *</label>
+              <input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))}
+                placeholder="z.B. Cc-Junioren" style={inputStyle} autoFocus/>
+            </div>
+            <div>
+              <label style={labelStyle}>Kurzname</label>
+              <input value={form.kurzname} onChange={e=>setForm(p=>({...p,kurzname:e.target.value}))}
+                placeholder="z.B. Cc" style={inputStyle}/>
+            </div>
+          </div>
+          {/* Stufenleitung + Liga */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div>
+              <label style={labelStyle}>Stufenleitung</label>
+              <input value={form.stufenleitung} onChange={e=>setForm(p=>({...p,stufenleitung:e.target.value}))}
+                placeholder="z.B. Stufenleitung Junioren C" style={inputStyle}/>
             </div>
             <div>
               <label style={labelStyle}>Liga / Wettbewerb</label>
@@ -9163,6 +9331,7 @@ export default function Portal({supabaseClient}){
   const [session,setSession]=useState(sb ? undefined : null);
   const [dbUser,setDbUser]=useState(null);
   const [dbTeams,setDbTeams]=useState([]);
+  const [dbStufen,setDbStufen]=useState([]); // team_stufen Baum
   const [accountKey,setAccountKey]=useState("trainer");
   const [activeSubRole,setActiveSubRole]=useState(null);
   const [active,setActive]=useState(()=>{
@@ -9244,11 +9413,11 @@ export default function Portal({supabaseClient}){
     if(!sb){ setSession(null); return; }
     sb.auth.getSession().then(({data:{session}})=>{
       setSession(session||null);
-      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); }
+      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); }
     });
     const {data:{subscription}}=sb.auth.onAuthStateChange(function(_,session){
       setSession(session||null);
-      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); }
+      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); }
       else setDbUser(null);
     });
     return function(){ subscription.unsubscribe(); };
@@ -9272,9 +9441,17 @@ export default function Portal({supabaseClient}){
   async function loadDbTeams(){
     if(!sb) return;
     try{
-      const{data}=await sb.from("teams").select("*").eq("aktiv",true).order("kategorie").order("name");
+      const{data}=await sb.from("teams").select("*").eq("aktiv",true).order("hauptbereich").order("name");
       if(data&&data.length>0) setDbTeams(data);
     }catch(e){ console.warn("[FCH] loadDbTeams:", e.message); }
+  }
+
+  async function loadDbStufen(){
+    if(!sb) return;
+    try{
+      const{data}=await sb.from("team_stufen").select("*").order("ebene").order("sortorder");
+      if(data&&data.length>0) setDbStufen(data);
+    }catch(e){ console.warn("[FCH] loadDbStufen:", e.message); }
   }
 
   async function handleLogout(){
@@ -9335,7 +9512,7 @@ export default function Portal({supabaseClient}){
     if(!na.find(n=>n.key===active)) return <Dashboard role={role} setActive={setActive}/>;
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
-      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} setCustomBack={setCustomBack}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
+      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBack}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
       case "members":           return <MembersView role={role}/>;
       case "users":             return <PortalverwaltungView initialTab="users"/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis"/>;
