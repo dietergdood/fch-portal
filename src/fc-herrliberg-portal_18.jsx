@@ -6392,8 +6392,14 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <tr style={{background:"var(--surface2)",position:"sticky",top:0}}>
                   <th style={{textAlign:"left",padding:"9px 14px",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.5,minWidth:200}}>Modul</th>
                   {ROLLEN.map(r=>(
-                    <th key={r} style={{textAlign:"center",padding:"9px 8px",fontWeight:700,color:ROLES[r]?.color||"var(--sub)",fontSize:11,minWidth:80}}>
+                    <th key={r} style={{
+                      textAlign:"center",padding:"9px 8px",fontWeight:700,
+                      color:r==="administrator"?"var(--sub)":ROLES[r]?.color||"var(--sub)",
+                      fontSize:11,minWidth:80,
+                      background:r==="administrator"?"var(--surface2)":"transparent"
+                    }}>
                       {ROLLEN_LABELS[r]}
+                      {r==="administrator"&&<div style={{fontSize:9,fontWeight:400,color:"var(--sub)",marginTop:1}}>gesperrt</div>}
                     </th>
                   ))}
                 </tr>
@@ -6441,24 +6447,27 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                             const hasAccess=isAktiv&&effRechte[r]?.includes(m.key);
                             const isEdited=moduleRechte&&(moduleRechte[r]?.includes(m.key))!==(ROLLEN_MODULE_DEFAULT[r]?.includes(m.key));
                             return(
-                              <td key={r} style={{textAlign:"center",padding:"8px 8px"}}>
+                              <td key={r} style={{
+                                textAlign:"center",padding:"8px 8px",
+                                background:isAdmin?"var(--surface2)":"transparent"
+                              }}>
                                 {r==="funktionaer"
                                   ?<span style={{fontSize:10,color:"var(--sub)",fontStyle:"italic"}}>via Gruppe</span>
                                   :<div onClick={isAdmin?undefined:()=>isAktiv&&toggleModulRolle(m.key,r)}
                                     title={isAdmin?"Administrator hat immer Zugriff":isAktiv?`${ROLLEN_LABELS[r]} ${hasAccess?"entfernen":"hinzufügen"}`:"Modul ist inaktiv"}
                                     style={{
                                       width:20,height:20,borderRadius:5,margin:"0 auto",
-                                      background:hasAccess?(ROLES[r]?.color||GN)+"25":"transparent",
-                                      border:`${isEdited?"2px":"1px"} solid ${hasAccess?(ROLES[r]?.color||GN)+(isEdited?"":"70"):"var(--border)"}`,
+                                      background:isAdmin?"var(--border)":hasAccess?(ROLES[r]?.color||GN)+"25":"transparent",
+                                      border:`${isEdited&&!isAdmin?"2px":"1px"} solid ${isAdmin?"var(--border)":hasAccess?(ROLES[r]?.color||GN)+(isEdited?"":"70"):"var(--border)"}`,
                                       display:"flex",alignItems:"center",justifyContent:"center",
-                                      cursor:isAdmin||!isAktiv?"default":"pointer",
+                                      cursor:isAdmin||!isAktiv?"not-allowed":"pointer",
                                       transition:"all 0.15s",
                                       opacity:!isAktiv?0.3:1
                                     }}
                                     onMouseEnter={e=>{if(!isAdmin&&isAktiv)e.currentTarget.style.transform="scale(1.15)";}}
                                     onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";}}
                                   >
-                                    {hasAccess&&<TI n="check" size={11} style={{color:ROLES[r]?.color||GN}}/>}
+                                    {hasAccess&&<TI n="check" size={11} style={{color:isAdmin?"var(--sub)":ROLES[r]?.color||GN}}/>}
                                   </div>
                                 }
                               </td>
