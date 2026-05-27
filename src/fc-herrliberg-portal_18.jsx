@@ -7732,6 +7732,29 @@ function TeamsAdminView({sb}){
   const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
   const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",trainer:"",trainer2:"",aktiv:true,beschreibung:""};
 
+  const [selectedTeam,setSelectedTeam]=useState(null); // Detail-Ansicht
+
+  /* Wenn ein Team ausgewählt: TeamView als Admin anzeigen */
+  if(selectedTeam){
+    return(
+      <div>
+        {/* Zurück-Header */}
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
+          <button onClick={()=>setSelectedTeam(null)} style={{
+            display:"flex",alignItems:"center",gap:6,padding:"7px 14px",
+            borderRadius:9,border:"1px solid var(--border)",background:"var(--surface)",
+            cursor:"pointer",fontSize:13,fontWeight:600,color:"var(--text)",fontFamily:FONT
+          }}>
+            <TI n="chevron-left" size={16}/> Alle Teams
+          </button>
+          <span style={{color:"var(--sub)",fontSize:13}}>→</span>
+          <span style={{fontWeight:700,fontSize:15,color:"var(--text)"}}>{selectedTeam.name}</span>
+        </div>
+        <TeamView role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null}/>
+      </div>
+    );
+  }
+
   const [teams,setTeams]=useState([
     {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", trainer:"Hans Muster",  trainer2:"",            aktiv:true},
     {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", trainer:"Peter Meier",  trainer2:"",            aktiv:true},
@@ -7752,11 +7775,13 @@ function TeamsAdminView({sb}){
   const [search,setSearch]=useState("");
   const [filterKat,setFilterKat]=useState("alle");
   const [showForm,setShowForm]=useState(false);
-  const [editTeam,setEditTeam]=useState(null); // null = neu, object = bearbeiten
+  const [editTeam,setEditTeam]=useState(null);
   const [form,setForm]=useState(EMPTY);
   const [saving,setSaving]=useState(false);
-  const [msg,setMsg]=useState(null); // {type:"ok"|"error", text}
+  const [msg,setMsg]=useState(null);
   const [deleteConfirm,setDeleteConfirm]=useState(null);
+  const [showSaison,setShowSaison]=useState(false);
+  const [saisonDraft,setSaisonDraft]=useState("2025/26");
 
   /* Supabase: Teams laden */
   useEffect(()=>{
@@ -7829,6 +7854,24 @@ function TeamsAdminView({sb}){
   function openNeu(){setForm(EMPTY);setEditTeam(null);setMsg(null);setShowForm(true);}
   function openEdit(t){setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",trainer:t.trainer||"",trainer2:t.trainer2||"",aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
 
+  /* Saison für alle Teams setzen */
+  async function handleSaisonAlle(){
+    const s=saisonDraft.trim();
+    if(!s) return;
+    setSaving(true);
+    try{
+      if(sb){
+        const{error}=await sb.from("teams").update({saison:s,updated_at:new Date().toISOString()}).neq("id",0);
+        if(error) throw error;
+      }
+      setTeams(ts=>ts.map(t=>({...t,saison:s})));
+      setShowSaison(false);
+    }catch(e){
+      setMsg({type:"error",text:e.message||"Fehler."});
+    }
+    setSaving(false);
+  }
+
   const katList=["alle",...Array.from(new Set(teams.map(t=>t.kategorie).filter(Boolean)))];
   const filtered=teams.filter(t=>{
     const matchSearch=!search||t.name.toLowerCase().includes(search.toLowerCase())||t.trainer?.toLowerCase().includes(search.toLowerCase());
@@ -7849,8 +7892,38 @@ function TeamsAdminView({sb}){
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
           <div style={{fontSize:13,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
         </div>
-        <Btn variant="primary" color={BK} onClick={openNeu}>+ Neues Team</Btn>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+          <Btn onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);}}>
+            <TI n="calendar" size={13} style={{marginRight:5}}/>Saison wechseln
+          </Btn>
+          <Btn variant="primary" color={BK} onClick={openNeu}>+ Neues Team</Btn>
+        </div>
       </div>
+
+      {/* Saison-Modal */}
+      <ModalOrSheet open={showSaison} onClose={()=>setShowSaison(false)} maxWidth={380}>
+        <div style={{padding:"24px 20px"}}>
+          <h2 style={{margin:"0 0 6px",fontSize:16,fontWeight:700,color:"var(--text)"}}>Saison wechseln</h2>
+          <p style={{margin:"0 0 18px",fontSize:13,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
+          <div style={{marginBottom:16}}>
+            <label style={{fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:6,display:"block",textTransform:"uppercase",letterSpacing:0.5}}>Neue Saison</label>
+            <input value={saisonDraft} onChange={e=>setSaisonDraft(e.target.value)}
+              placeholder="z.B. 2025/26" autoFocus
+              style={{width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+          </div>
+          <div style={{display:"flex",gap:10}}>
+            <button onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()} style={{
+              flex:1,padding:"11px",borderRadius:10,background:BK,color:"#fff",border:"none",
+              fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
+              opacity:saving||!saisonDraft.trim()?0.5:1
+            }}>
+              {saving?"Wird gesetzt…":"Für alle übernehmen"}
+            </button>
+            <Btn onClick={()=>setShowSaison(false)}>Abbrechen</Btn>
+          </div>
+          {!sb&&<div style={{fontSize:12,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
+        </div>
+      </ModalOrSheet>
 
       {/* Filter */}
       <div style={{display:"flex",gap:10,marginBottom:16,flexWrap:"wrap"}}>
@@ -7899,9 +7972,9 @@ function TeamsAdminView({sb}){
                   </div>
                   {/* Aktionen */}
                   <div style={{display:"flex",gap:6,flexShrink:0}}>
-                    <button onClick={()=>toggleAktiv(team)} title={isInaktiv?"Aktivieren":"Deaktivieren"}
-                      style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
-                      <TI n={isInaktiv?"eye":"eye"} size={14}/>
+                    <button onClick={()=>setSelectedTeam(team)} title="Team öffnen"
+                      style={{width:32,height:32,borderRadius:8,border:"1px solid "+BL+"40",background:"#EFF6FF",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:BL}}>
+                      <TI n="eye" size={14}/>
                     </button>
                     <button onClick={()=>openEdit(team)} title="Bearbeiten"
                       style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
