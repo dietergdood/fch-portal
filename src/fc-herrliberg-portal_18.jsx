@@ -6294,8 +6294,19 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     const cur=getZugriff(rolle,modulKey)||"lesen";
     const idx=ZUGRIFF_ORDER.indexOf(cur);
     if(idx===ZUGRIFF_ORDER.length-1){
-      /* Letzter Schritt: Zugriff entfernen */
+      /* Letzter Schritt: Zugriff entfernen + Stufe zurücksetzen */
       toggleModulRolle(modulKey,rolle);
+      setZugriffStufen(prev=>{
+        if(!prev) return prev;
+        const neu={...prev};
+        if(neu[rolle]){
+          const r={...neu[rolle]};
+          delete r[modulKey];
+          neu[rolle]=r;
+        }
+        try{localStorage.setItem("fch-zugriff-stufen",JSON.stringify(neu));}catch{}
+        return neu;
+      });
     } else {
       const next=ZUGRIFF_ORDER[idx+1];
       setZugriffStufe(rolle,modulKey,next);
