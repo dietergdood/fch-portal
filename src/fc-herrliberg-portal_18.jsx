@@ -277,20 +277,84 @@ function ModalOrSheet({open,onClose,children,maxWidth=660}){
 }
 
 /* -- ROLLEN-DEFINITIONEN -- */
+/* ── PORTAL-ROLLEN (Zugriffsrechte) ────────────────────────────
+   Steuern Navigation + Sichtbarkeit im Portal.
+   Unabhängig von der Vereinsfunktion (FUNKTIONEN).
+───────────────────────────────────────────────────────────── */
 const ROLES = {
-  administrator: { label:"Administrator",    color:"#f8de09", icon:"settings", desc:"Vollzugriff auf alle Module, Einstellungen und Systemfunktionen" },
-  administration:{ label:"Administration",   color:"#f8de09", icon:"briefcase", desc:"Stammdaten, Datenqualität, Garderoben, Auswertungen, Exporte" },
-  funktionaer:   { label:"Funktionär/Vorstand", color:"#f8de09", icon:"≡", desc:"Teams, Auswertungen, Vereinsbusse, Material gemäss Aufschaltung" },
-  trainer:       { label:"Trainer",          color:"#f8de09", icon:"ball-football", desc:"Eigene Teams, Trainings, Anwesenheiten, Material, Vereinsbus" },
-  spieler:       { label:"Spieler",          color:"#f8de09", icon:"▶", desc:"Eigenes Team, Spielplan, Tabelle, Anwesenheit, Helfereinsätze" },
-  eltern:        { label:"Eltern",           color:"#f8de09", icon:"user", desc:"Daten der Kinder, Termine, Abstimmungen, Helfereinsätze" },
+  administrator: {
+    label:"Administrator", color:"#EF4444", bg:"#FEF2F2", icon:"settings",
+    desc:"Vollzugriff: alle Module, Systemeinstellungen, Benutzerverwaltung",
+    level:7
+  },
+  vorstand: {
+    label:"Vorstand", color:"#7C3AED", bg:"#F5F3FF", icon:"scale",
+    desc:"Strategische Übersicht: alle Teams, Mitglieder lesen, Auswertungen — kein System, kein AHV",
+    level:6
+  },
+  administration: {
+    label:"Administration", color:"#3B82F6", bg:"#EFF6FF", icon:"briefcase",
+    desc:"Vereinsbüro: Stammdaten, Mitglieder, alle Teams, Exporte — kein System",
+    level:5
+  },
+  funktionaer: {
+    label:"Funktionär", color:"#8B5CF6", bg:"#F5F3FF", icon:"heart-handshake",
+    desc:"Module + Teams gemäss zugewiesener Gruppe/Funktion",
+    level:4
+  },
+  trainer: {
+    label:"Trainer", color:"#F97316", bg:"#FFF7ED", icon:"ball-football",
+    desc:"Eigene Teams: Kader, Trainings, Anwesenheiten",
+    level:3
+  },
+  spieler: {
+    label:"Spieler", color:"#22C55E", bg:"#F0FDF4", icon:"target",
+    desc:"Eigenes Team lesen: Spielplan, Termine, Helfereinsätze",
+    level:2
+  },
+  eltern: {
+    label:"Eltern", color:"#06B6D4", bg:"#ECFEFF", icon:"user",
+    desc:"Nur eigene Kinder: Termine, Anwesenheit, Abstimmungen",
+    level:1
+  },
 };
+
+/* ── VEREINSFUNKTIONEN (organisatorisch) ───────────────────────
+   Was jemand im Verein IST – unabhängig vom Portal-Zugang.
+   Gespeichert in mitglieder.funktion
+───────────────────────────────────────────────────────────── */
+const FUNKTIONEN = [
+  "Spieler",
+  "Trainer",
+  "Assistent/in",
+  "Goalietrainer",
+  "Vorstand",
+  "Kassier",
+  "Materialwart",
+  "Platzwart",
+  "Schiedsrichter",
+  "Elternteil",
+  "Ehrenmitglied",
+  "Passivmitglied",
+  "Gönner",
+  "Sonstige",
+];
+
+/* ── MITGLIEDTYPEN ─────────────────────────────────────────── */
+const MITGLIEDTYPEN = [
+  "Aktivmitglied",
+  "Passivmitglied",
+  "Ehrenmitglied",
+  "Freimitglied",
+  "Gönner",
+];
+
 /* -- SAFE ROLES LOOKUP -- */
 function getRole(role){
-  // Normalize: funktionär -> funktionaer etc.
-  const norm = (role||"spieler").toLowerCase()
-    .replace("ä","ae").replace("ö","oe").replace("ü","ue");
-  return ROLES[norm] || getRole(role) || ROLES.spieler;
+  const norm=(role||"spieler").toLowerCase()
+    .replace("ä","ae").replace("ö","oe").replace("ü","ue")
+    .replace("funktionär","funktionaer");
+  return ROLES[norm]||ROLES.spieler;
 }
 
 
@@ -314,6 +378,22 @@ const NAV_BY_ROLE = {
     {key:"docs",               icon:"file-text",        label:"Dokumente"},
     {key:"portal",             icon:"settings",         label:"Portalverwaltung"},
   ],
+  vorstand: [
+    {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+    {key:"members",            icon:"users",            label:"Mitglieder"},
+    {key:"team",               icon:"ball-football",    label:"Teams"},
+    {key:"training",           icon:"calendar",         label:"Trainingsplan"},
+    {key:"schedule",           icon:"flag",             label:"Spielplan"},
+    {key:"attendance_central", icon:"chart-bar",        label:"Auswertungen"},
+    {key:"news",               icon:"news",             label:"News"},
+    {key:"events",             icon:"calendar-event",   label:"Termine"},
+    {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+    {key:"buses",              icon:"bus",              label:"Vereinsbusse"},
+    {key:"material",           icon:"package",          label:"Material"},
+    {key:"media",              icon:"speakerphone",     label:"Medien & Berichte"},
+    {key:"wiki",               icon:"book",             label:"Wiki"},
+    {key:"docs",               icon:"file-text",        label:"Dokumente"},
+  ],
   administration: [
     {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
     {key:"members",            icon:"users",            label:"Mitglieder"},
@@ -333,20 +413,8 @@ const NAV_BY_ROLE = {
     {key:"portal",             icon:"settings",         label:"Portalverwaltung"},
   ],
   funktionaer: [
-    {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
-    {key:"members",            icon:"users",            label:"Mitglieder"},
-    {key:"team",               icon:"ball-football",    label:"Teams"},
-    {key:"training",           icon:"calendar",         label:"Trainingsplan"},
-    {key:"attendance_central", icon:"chart-bar",        label:"Anwesenheitsstatistik"},
-    {key:"news",               icon:"news",             label:"News"},
-    {key:"events",             icon:"calendar-event",   label:"Termine"},
-    {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
-    {key:"buses",              icon:"bus",              label:"Vereinsbusse"},
-    {key:"material",           icon:"package",          label:"Material"},
-    {key:"lockers",            icon:"door-exit",        label:"Garderoben"},
-    {key:"media",              icon:"speakerphone",     label:"Medien & Berichte"},
-    {key:"wiki",               icon:"book",             label:"Wiki"},
-    {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    /* Basis-Navigation — wird durch dbGruppen erweitert (siehe getNavForRole) */
+    {key:"dashboard", icon:"layout-dashboard", label:"Home"},
   ],
   trainer: [
     {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
@@ -988,7 +1056,10 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
           {!collapsed&&(
             <div style={{minWidth:0,flex:1}}>
               <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
-              <div style={{marginTop:3,fontSize:10,color:rc,fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{getRole(role).label}</div>
+              <div style={{marginTop:3,fontSize:10,color:"var(--sub)",fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>
+              <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:rc,flexShrink:0}}/>
+              {getRole(role).label}
+            </div>
             </div>
           )}
           {!collapsed&&<TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>}
@@ -5745,6 +5816,27 @@ function StatsTab({team="Cc-Junioren"}){
 /* ==========================================
    ADMIN-EXKLUSIVE VIEWS
 ========================================== */
+/* Vereinsfunktion → farbiger Chip */
+function RolleChip({rolle}){
+  const colors={
+    "Spieler":     {c:"#22C55E",bg:"#F0FDF4"},
+    "Trainer":     {c:"#F97316",bg:"#FFF7ED"},
+    "Assistent/in":{c:"#F97316",bg:"#FFF7ED"},
+    "Goalietrainer":{c:"#F97316",bg:"#FFF7ED"},
+    "Vorstand":    {c:"#8B5CF6",bg:"#F5F3FF"},
+    "Kassier":     {c:"#8B5CF6",bg:"#F5F3FF"},
+    "Materialwart":{c:"#3B82F6",bg:"#EFF6FF"},
+    "Platzwart":   {c:"#3B82F6",bg:"#EFF6FF"},
+    "Schiedsrichter":{c:"#EC4899",bg:"#FDF2F8"},
+    "Elternteil":  {c:"#06B6D4",bg:"#ECFEFF"},
+    "Ehrenmitglied":{c:"#f8de09",bg:"#FFFBEB"},
+    "Passivmitglied":{c:"#9CA3AF",bg:"#F9FAFB"},
+    "Gönner":      {c:"#9CA3AF",bg:"#F9FAFB"},
+  };
+  const s=colors[rolle]||{c:"#9CA3AF",bg:"#F9FAFB"};
+  return <Chip text={rolle||"-"} color={s.c} bg={s.bg}/>;
+}
+
 function MembersView({role,dbMitglieder=[]}){
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
@@ -5831,21 +5923,24 @@ function MembersView({role,dbMitglieder=[]}){
   const MemberDetail=({m,onClose})=>{
     const raw=dbMitglieder.find(d=>d.id===m.id)||{};
     const eltern=raw.eltern||[];
+    const fv=getFieldVisibility(role);
     const rows=[
-      {l:"Vorname",    v:raw.vorname||m.name.split(" ")[0]},
-      {l:"Nachname",   v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
-      {l:"Geburtsdatum",v:raw.geburtsdatum||"-"},
+      {l:"Vorname",     v:raw.vorname||m.name.split(" ")[0]},
+      {l:"Nachname",    v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
+      ...(fv.showGebdat ?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"}]:[]),
       {l:"Nationalität",v:raw.nationalitaet||"-"},
-      {l:"Adresse",    v:raw.strasse?`${raw.strasse}, ${raw.plz} ${raw.ort}`:m.location||"-"},
-      {l:"E-Mail",     v:raw.email||"-"},
-      {l:"Telefon",    v:raw.telefon||"-"},
-      {l:"Rolle",      v:m.role},
-      {l:"Team(s)",    v:m.team},
-      {l:"Mitgliedtyp",v:m.type},
-      {l:"Position",   v:raw.position||"-"},
-      {l:"Spielerpass",v:raw.spielerpass||"-"},
-      {l:"J+S Nr.",    v:raw.js_nr||"-"},
-      {l:"Fairgate-ID",v:raw.fairgate_id||"-"},
+      ...(fv.showAdresse?[{l:"Adresse",v:raw.strasse?`${raw.strasse}, ${raw.plz} ${raw.ort}`:m.location||"-"}]:[]),
+      ...(fv.showEmail  ?[{l:"E-Mail",  v:raw.email||"-"}]:[]),
+      ...(fv.showTelefon?[{l:"Telefon", v:raw.telefon||"-"}]:[]),
+      {l:"Rolle",       v:m.role},
+      {l:"Team(s)",     v:m.team},
+      {l:"Mitgliedtyp", v:m.type},
+      {l:"Position",    v:raw.position||"-"},
+      ...(fv.showPass   ?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
+      ...(fv.showAhv    ?[{l:"AHV-Nr.",    v:raw.ahv_nr||"-"}]:[]),
+      ...(fv.showPass   ?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
+      ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
+      ...(fv.showNotizen?[{l:"Notizen",    v:raw.notizen||"-"}]:[]),
     ];
     return(
       <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
@@ -6002,7 +6097,7 @@ function MembersView({role,dbMitglieder=[]}){
                         <span style={{fontWeight:600,color:"var(--text)"}}>{m.name}</span>
                       </div>
                     </td>
-                    <td style={{padding:"9px 13px"}}><Chip text={m.role} color={R}/></td>
+                    <td style={{padding:"9px 13px"}}><RolleChip rolle={m.role}/></td>
                     <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.team}</td>
                     <td style={{padding:"9px 13px"}}><Chip text={m.type} color={BL} bg="#EFF6FF"/></td>
                     <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.location}</td>
@@ -8171,9 +8266,10 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
   const [sortCol,setSortCol]=useState("hauptbereich");
   const [sortDir,setSortDir]=useState("asc");
   const [groupBy,setGroupBy]=useState("hauptbereich");
-  const [viewMode,setViewMode]=useState("grid"); // "list"|"grid"
-  const [openMenuId,setOpenMenuId]=useState(null); // mobile 3-dot menu
+  const [viewMode,setViewMode]=useState("grid");
+  const [openMenuId,setOpenMenuId]=useState(null);
   const isMobile=useIsMobile();
+  const [formTab,setFormTab]=useState("info");
   const [showForm,setShowForm]=useState(false);
   const [editTeam,setEditTeam]=useState(null);
   const [form,setForm]=useState(EMPTY);
@@ -8632,6 +8728,18 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           <button onClick={()=>setShowForm(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
         </div>
         <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px",display:"flex",flexDirection:"column",gap:14}}>
+          {editTeam&&(
+            <div style={{display:"flex",gap:4,marginBottom:4}}>
+              {["info","module"].map(t=>(
+                <button key={t} onClick={()=>setFormTab(t)} style={{
+                  padding:"5px 14px",borderRadius:8,border:"none",cursor:"pointer",fontFamily:FONT,
+                  fontSize:12,fontWeight:600,
+                  background:formTab===t?"var(--text)":"var(--surface2)",
+                  color:formTab===t?"var(--surface)":"var(--sub)"
+                }}>{t==="info"?"Team-Info":"Module"}</button>
+              ))}
+            </div>
+          )}
           {/* Ebene 1 */}
           <div>
             <label style={labelStyle}>Hauptbereich (Ebene 1)</label>
@@ -8759,6 +8867,54 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
               color:msg.type==="ok"?GN:R,
               border:"1px solid "+(msg.type==="ok"?GN:R)}}>
               {msg.text}
+            </div>
+          )}
+          {/* Modul-Tab: nur bei bestehenden Teams */}
+          {editTeam&&formTab==="module"&&(
+            <div>
+              <div style={{fontSize:12,color:"var(--sub)",marginBottom:12}}>
+                Module ein/ausschalten für dieses Team. Trainer sehen nur aktive Module.
+              </div>
+              {[
+                {key:"team",        label:"Kader"},
+                {key:"training",    label:"Trainingsplan"},
+                {key:"events",      label:"Termine / Anwesenheit"},
+                {key:"spielplan",   label:"Spielplan & Tabelle"},
+                {key:"attendance_central",label:"Anwesenheitsstatistik"},
+                {key:"helpers",     label:"Helfereinsätze"},
+                {key:"roster",      label:"Kaderliste"},
+                {key:"polls",       label:"Abstimmungen"},
+                {key:"stats",       label:"Statistik"},
+                {key:"media",       label:"Medien & Berichte"},
+                {key:"news",        label:"News"},
+                {key:"wiki",        label:"Wiki"},
+                {key:"docs",        label:"Dokumente"},
+              ].map(mod=>{
+                const isActive=(form.module_aktiv||editTeam.module_aktiv||[]).includes(mod.key);
+                return(
+                  <div key={mod.key} onClick={()=>setForm(p=>{
+                    const cur=p.module_aktiv||editTeam.module_aktiv||[];
+                    return{...p,module_aktiv:isActive?cur.filter(m=>m!==mod.key):[...cur,mod.key]};
+                  })} style={{
+                    display:"flex",alignItems:"center",justifyContent:"space-between",
+                    padding:"9px 12px",borderRadius:9,marginBottom:6,cursor:"pointer",
+                    background:isActive?"var(--surface2)":"transparent",
+                    border:"1px solid "+(isActive?"var(--border)":"transparent")
+                  }}>
+                    <span style={{fontSize:13,color:"var(--text)"}}>{mod.label}</span>
+                    <div style={{
+                      width:36,height:20,borderRadius:10,transition:"background 0.2s",
+                      background:isActive?BK:"var(--border)",position:"relative"
+                    }}>
+                      <div style={{
+                        position:"absolute",top:3,width:14,height:14,borderRadius:"50%",
+                        background:"#fff",transition:"left 0.2s",
+                        left:isActive?19:3
+                      }}/>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
           {/* Buttons */}
@@ -9421,13 +9577,13 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             </div>
 
             {/* Rollen-Badge */}
-            <div style={{marginTop:8,padding:12,background:"var(--surface2)",borderRadius:10,border:"1px solid var(--border)"}}>
-              <div style={{fontSize:11,color:"var(--sub)",marginBottom:6,fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>Zugriffsrechte</div>
-              <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <div style={{marginTop:8,padding:14,background:getRole(role).bg||"var(--surface2)",borderRadius:10,border:`1px solid ${rc}30`}}>
+              <div style={{fontSize:11,color:"var(--sub)",marginBottom:8,fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>Portal-Zugriffsrolle</div>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
                 <div style={{width:10,height:10,borderRadius:"50%",background:rc,flexShrink:0}}/>
-                <span style={{fontSize:13,color:"var(--text)",fontWeight:600}}>{getRole(role).label}</span>
+                <span style={{fontSize:14,color:rc,fontWeight:700}}>{getRole(role).label}</span>
               </div>
-              <div style={{fontSize:12,color:"var(--sub)",marginTop:4,lineHeight:1.5}}>{getRole(role).desc||""}</div>
+              <div style={{fontSize:12,color:"var(--sub)",lineHeight:1.5}}>{getRole(role).desc||""}</div>
             </div>
 
             {nameStatus==="ok"&&!editName&&<StatusBox status="ok" msg={nameMsg}/>}
@@ -9491,6 +9647,68 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
     </ModalOrSheet>
   );
 }
+
+/* ── Feld-Sichtbarkeit gemäss Rolle (revDSG) ──────────────────
+   Bestimmt welche Felder in der Mitgliederliste sichtbar sind.
+──────────────────────────────────────────────────────────── */
+function getFieldVisibility(role){
+  const lvl = ROLES[role]?.level||0;
+  return {
+    showAhv:       lvl>=5 && role==="administration" || role==="administrator",
+    showGebdat:    lvl>=3,   // ab trainer
+    showAdresse:   lvl>=5,   // ab administration
+    showTelefon:   lvl>=3,   // ab trainer
+    showEmail:     lvl>=2,   // ab spieler (eigene)
+    showPass:      lvl>=3,   // ab trainer
+    showFairgateId:lvl>=5,   // ab administration
+    showNotizen:   lvl>=5,   // ab administration
+  };
+}
+
+/* ── Dynamische Navigation für funktionaer/stufenleitung ─────
+   Baut die Nav-Items aus den zugewiesenen Gruppen auf.
+   Alle anderen Rollen nutzen NAV_BY_ROLE direkt.
+──────────────────────────────────────────────────────────── */
+const ALL_NAV_ITEMS=[
+  {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+  {key:"members",            icon:"users",            label:"Mitglieder"},
+  {key:"team",               icon:"ball-football",    label:"Meine Stufe"},
+  {key:"training",           icon:"calendar",         label:"Trainingsplan"},
+  {key:"schedule",           icon:"flag",             label:"Spielplan"},
+  {key:"attendance_central", icon:"chart-bar",        label:"Anwesenheiten"},
+  {key:"news",               icon:"news",             label:"News"},
+  {key:"events",             icon:"calendar-event",   label:"Termine"},
+  {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+  {key:"buses",              icon:"bus",              label:"Vereinsbusse"},
+  {key:"material",           icon:"package",          label:"Material"},
+  {key:"lockers",            icon:"door-exit",        label:"Garderoben"},
+  {key:"media",              icon:"speakerphone",     label:"Medien & Berichte"},
+  {key:"wiki",               icon:"book",             label:"Wiki"},
+  {key:"docs",               icon:"file-text",        label:"Dokumente"},
+  {key:"portal",             icon:"settings",         label:"Portalverwaltung"},
+];
+
+function getNavForRole(role, funktionen=[]){
+  if(role!=="funktionaer") return NAV_BY_ROLE[role]||NAV_BY_ROLE.spieler;
+  /* Vereinte Module aus allen zugewiesenen Funktionen (via Gruppe + override) */
+  const allModule=new Set(["dashboard"]);
+  funktionen.filter(f=>f?.aktiv!==false).forEach(f=>{
+    const gruppe=f.portal_gruppen||f.gruppe||{};
+    const baseModule=f.module_override?.length>0 ? f.module_override : (gruppe.module||[]);
+    baseModule.forEach(m=>allModule.add(m));
+  });
+  return ALL_NAV_ITEMS.filter(n=>allModule.has(n.key));
+}
+
+/* Vereinte Teams aus allen Funktionen */
+function getTeamsFromFunktionen(funktionen=[]){
+  const all=new Set();
+  funktionen.filter(f=>f?.aktiv!==false).forEach(f=>(f.teams||[]).forEach(t=>all.add(t)));
+  return [...all];
+}
+
+/* Rückwärtskompatibilität */
+function getTeamsFromGruppen(gruppen=[]){ return getTeamsFromFunktionen(gruppen); }
 
 /* ==========================================
    APP ROOT
@@ -9659,6 +9877,7 @@ export default function Portal({supabaseClient}){
   const [dbTeams,setDbTeams]=useState([]);
   const [dbStufen,setDbStufen]=useState([]);
   const [dbMitglieder,setDbMitglieder]=useState([]);
+  const [dbFunktionen,setDbFunktionen]=useState([]); // portal_funktionen des eingeloggten Benutzers
   const [accountKey,setAccountKey]=useState("trainer");
   const [activeSubRole,setActiveSubRole]=useState(null);
   const [active,setActive]=useState(()=>{
@@ -9748,7 +9967,7 @@ export default function Portal({supabaseClient}){
     if(!sb){ setSession(null); return; }
     sb.auth.getSession().then(({data:{session}})=>{
       setSession(session||null);
-      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); loadDbMitglieder(); }
+      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); loadDbMitglieder(); loadDbFunktionen(session?.user?.id); loadDbGruppen(session?.user?.id); }
     });
     const {data:{subscription}}=sb.auth.onAuthStateChange(function(_,session){
       setSession(session||null);
@@ -9776,8 +9995,11 @@ export default function Portal({supabaseClient}){
   async function loadDbTeams(){
     if(!sb) return;
     try{
-      const{data}=await sb.from("teams").select("*").eq("aktiv",true).order("hauptbereich").order("name");
-      if(data&&data.length>0) setDbTeams(data);
+      const{data}=await sb.from("teams").select("*, team_module(modul,aktiv)").eq("aktiv",true).order("hauptbereich").order("name");
+      if(data&&data.length>0) setDbTeams(data.map(t=>({
+        ...t,
+        module_aktiv:(t.team_module||[]).filter(m=>m.aktiv).map(m=>m.modul)
+      })));
     }catch(e){ console.warn("[FCH] loadDbTeams:", e.message); }
   }
 
@@ -9787,6 +10009,16 @@ export default function Portal({supabaseClient}){
       const{data}=await sb.from("team_stufen").select("*").order("ebene").order("sortorder");
       if(data&&data.length>0) setDbStufen(data);
     }catch(e){ console.warn("[FCH] loadDbStufen:", e.message); }
+  }
+
+  async function loadDbFunktionen(uid){
+    if(!sb||!uid) return;
+    try{
+      const{data}=await sb.from("benutzer_funktionen")
+        .select("funktion_id, portal_funktionen(*, portal_gruppen(*))")
+        .eq("benutzer_id",uid);
+      if(data) setDbFunktionen(data.map(d=>d.portal_funktionen).filter(Boolean));
+    }catch(e){ console.warn("[FCH] loadDbFunktionen:", e.message); }
   }
 
   async function loadDbMitglieder(){
@@ -9832,7 +10064,6 @@ export default function Portal({supabaseClient}){
 
   const account = dbAccount || USER_ACCOUNTS[accountKey] || USER_ACCOUNTS.trainer;
   const rawRole = activeSubRole || account.primaryRole || "spieler";
-  // Normalisiere Rolle (DB hat evtl. "funktionär" mit Umlaut)
   const role = rawRole.toLowerCase()
     .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue");
   const kinder = account.kinder||[];
@@ -9843,6 +10074,8 @@ export default function Portal({supabaseClient}){
     : kinder.length>0 ? [...new Set(kinder.map(k=>k.team))]
     : spielerTeam.length>0 ? spielerTeam : ["Cc-Junioren"];
   const myRosterId = account.rosterId||(role==="spieler"?1:role==="eltern"?1:role==="trainer"?200:null);
+  /* Dynamische Navigation (funktionaer/stufenleitung aus Gruppen) */
+  const effectiveNav = getNavForRole(role, dbFunktionen);
 
   const handleAccountChange=(key)=>{
     setAccountKey(key);
