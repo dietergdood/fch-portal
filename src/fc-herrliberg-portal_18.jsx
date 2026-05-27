@@ -6190,17 +6190,28 @@ function PortalverwaltungView({initialTab="module"}){
   const [saveMsg,setSaveMsg]=useState("");
   const [expandedModul,setExpandedModul]=useState(null);
   const [benutzerListe,setBenutzerListe]=useState([]);
+  /* Gruppen & Funktionen */
+  const [gruppen,setGruppen]=useState([]);
+  const [funktionen,setFunktionen]=useState([]);
+  const [selectedGruppe,setSelectedGruppe]=useState(null);
+  const [showGruppeForm,setShowGruppeForm]=useState(false);
+  const [showFunktionForm,setShowFunktionForm]=useState(false);
+  const [editGruppe,setEditGruppe]=useState(null);
+  const [editFunktion,setEditFunktion]=useState(null);
+  const [gruppeForm,setGruppeForm]=useState({name:"",beschreibung:"",module:[],farbe:"#8B5CF6"});
+  const [funktionForm,setFunktionForm]=useState({name:"",beschreibung:"",gruppe_id:"",module_override:[],teams:[],filter:{}});
 
   const TABS=[
-    {key:"module",    label:"Module & Rechte",   icon:"layout-grid"},
-    {key:"users",     label:"Benutzer & Rollen", icon:"users"},
-    {key:"feldvis",   label:"Feldsichtbarkeit",  icon:"eye"},
-    {key:"api",       label:"API-Verbindungen",  icon:"plug"},
-    {key:"audit",     label:"Audit-Logs",        icon:"clipboard-list"},
+    {key:"module",    label:"Module & Rechte",      icon:"layout-grid"},
+    {key:"gruppen",   label:"Gruppen & Funktionen",  icon:"sitemap"},
+    {key:"users",     label:"Benutzer & Rollen",     icon:"users"},
+    {key:"feldvis",   label:"Feldsichtbarkeit",       icon:"eye"},
+    {key:"api",       label:"API-Verbindungen",       icon:"plug"},
+    {key:"audit",     label:"Audit-Logs",             icon:"clipboard-list"},
   ];
 
-  const ROLLEN=["administrator","administration","funktionaer","trainer","spieler","eltern"];
-  const ROLLEN_LABELS={administrator:"Admin",administration:"Verwaltung",funktionaer:"Funktionär",trainer:"Trainer",spieler:"Spieler",eltern:"Eltern"};
+  const ROLLEN=["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"];
+  const ROLLEN_LABELS={administrator:"Admin",vorstand:"Vorstand",administration:"Verwaltung",funktionaer:"Funktionär",trainer:"Trainer",spieler:"Spieler",eltern:"Eltern"};
   const KATEGORIEN=["kern","sport","kommunikation","betrieb","verwaltung","admin"];
   const KAT_LABELS={kern:"Kern",sport:"Sport",kommunikation:"Kommunikation",betrieb:"Betrieb",verwaltung:"Verwaltung",admin:"Systemverwaltung"};
 
@@ -6212,34 +6223,53 @@ function PortalverwaltungView({initialTab="module"}){
     sfa:        {description:"Spielerdaten und Lizenzen von Swiss Football Association",felder:["Spielerlizenzen","Transferdaten","Sperren"]},
   };
 
+  /* ── Alle Module als Fallback ── */
+  const ALLE_MODULE=[
+    {key:"dashboard",  label:"Dashboard",         icon:"layout-dashboard", kat:"kern"},
+    {key:"members",    label:"Mitglieder",         icon:"users",            kat:"verwaltung"},
+    {key:"team",       label:"Teams",              icon:"ball-football",    kat:"sport"},
+    {key:"training",   label:"Trainingsplan",      icon:"calendar",         kat:"sport"},
+    {key:"schedule",   label:"Spielplan/FVRZ",     icon:"flag",             kat:"sport"},
+    {key:"attendance_central",label:"Anwesenheitsstatistik",icon:"chart-bar",kat:"sport"},
+    {key:"events",     label:"Termine",            icon:"calendar-event",   kat:"sport"},
+    {key:"helpers",    label:"Helfereinsätze",     icon:"heart-handshake",  kat:"betrieb"},
+    {key:"buses",      label:"Vereinsbusse",       icon:"bus",              kat:"betrieb"},
+    {key:"material",   label:"Material",           icon:"package",          kat:"betrieb"},
+    {key:"lockers",    label:"Garderoben",         icon:"door-exit",        kat:"betrieb"},
+    {key:"media",      label:"Medien & Berichte",  icon:"speakerphone",     kat:"kommunikation"},
+    {key:"news",       label:"News",               icon:"news",             kat:"kommunikation"},
+    {key:"wiki",       label:"Wiki",               icon:"book",             kat:"kommunikation"},
+    {key:"docs",       label:"Dokumente",          icon:"file-text",        kat:"kommunikation"},
+    {key:"portal",     label:"Portalverwaltung",   icon:"settings",         kat:"admin"},
+  ];
+
+  const ROLLEN_MODULE_DEFAULT={
+    administrator:   ALLE_MODULE.map(m=>m.key),
+    vorstand:        ["dashboard","members","team","training","schedule","attendance_central","events","helpers","buses","material","media","news","wiki","docs"],
+    administration:  ["dashboard","members","team","training","schedule","attendance_central","events","helpers","buses","material","lockers","media","news","wiki","docs","portal"],
+    funktionaer:     ["dashboard"],
+    trainer:         ["dashboard","team","training","events","helpers","buses","material","lockers","news","wiki","docs"],
+    spieler:         ["dashboard","team","events","helpers","docs","news"],
+    eltern:          ["dashboard","team","events","helpers","docs","news"],
+  };
+
   useEffect(function(){
     (async function(){
       setLoading(true);
       try{
         if(supabase){
-          const [modR,cfgR,bercR,feldR,apiR,audR,benuR]=await Promise.all([
-            supabase.from("module").select("*").order("sort_order"),
-            supabase.from("module_config").select("*"),
-            supabase.from("module_berechtigungen").select("*"),
-            supabase.from("feldsichtbarkeit").select("*"),
+          const [apiR,audR,benuR,gruppenR,funktionenR]=await Promise.all([
             supabase.from("api_verbindungen").select("*").order("sort_order"),
             supabase.from("api_sync_log").select("*,api_verbindungen(label)").order("gestartet_am",{ascending:false}).limit(50),
-            supabase.from("benutzer").select("id,name,email,role,active").order("name"),
+            supabase.from("benutzer").select("id,name,email,role,aktiv").order("name"),
+            supabase.from("portal_gruppen").select("*").order("name"),
+            supabase.from("portal_funktionen").select("*, portal_gruppen(name,farbe)").order("name"),
           ]);
-          if(modR.data) setModule(modR.data);
-          if(cfgR.data){const c={};cfgR.data.forEach(r=>{c[r.modul_id]=r;});setModuleConfig(c);}
-          if(bercR.data){
-            const b={};
-            bercR.data.forEach(r=>{
-              if(!b[r.modul_id]) b[r.modul_id]={};
-              b[r.modul_id][r.role]=r;
-            });
-            setModuleBerechtigungen(b);
-          }
-          if(feldR.data) setFelder(feldR.data);
           if(apiR.data) setApiVerbindungen(apiR.data);
           if(audR.data) setAuditLogs(audR.data);
           if(benuR.data) setBenutzerListe(benuR.data);
+          if(gruppenR.data) setGruppen(gruppenR.data);
+          if(funktionenR.data) setFunktionen(funktionenR.data);
         }
       }catch(e){console.warn("[FCH] Portalverwaltung laden:",e.message);}
       setLoading(false);
@@ -6320,82 +6350,257 @@ function PortalverwaltungView({initialTab="module"}){
       {/* ── TAB: MODULE & RECHTE ── */}
       {!loading&&tab==="module"&&(
         <div>
-          <InfoBox text="Module ein/aus schaltet das Modul für den ganzen Verein. Berechtigungen steuern wer lesen, schreiben oder verwalten darf." color={BL}/>
+          <InfoBox text="Übersicht welche Rollen welche Module sehen. Für Funktionäre werden Module über Gruppen & Funktionen gesteuert." color={BL}/>
           <div style={{height:16}}/>
-          {KATEGORIEN.filter(k=>moduleNachKat[k]?.length>0).map(kat=>(
-            <div key={kat} style={{marginBottom:24}}>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.8,marginBottom:8}}>{KAT_LABELS[kat]}</div>
-              <Card style={{padding:0}}>
-                {moduleNachKat[kat].map((m,i)=>{
-                  const cfg=moduleConfig[m.id];
-                  const aktiv=cfg?.active!==false;
-                  const berc=moduleBerechtigungen[m.id]||{};
-                  const expanded=expandedModul===m.id;
-                  return(
-                    <div key={m.id} style={{borderTop:i>0?`0.5px solid ${GB}`:"none"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",cursor:"pointer"}}
-                        onClick={()=>setExpandedModul(expanded?null:m.id)}>
-                        <TI n={m.icon||"circle"} size={16} />
+          {["kern","sport","betrieb","kommunikation","verwaltung","admin"].map(kat=>{
+            const mods=ALLE_MODULE.filter(m=>m.kat===kat);
+            if(!mods.length) return null;
+            const KAT_LABELS={kern:"Kern",sport:"Sport",betrieb:"Betrieb",kommunikation:"Kommunikation",verwaltung:"Verwaltung",admin:"Systemverwaltung"};
+            return(
+              <div key={kat} style={{marginBottom:24}}>
+                <div style={{fontSize:12,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.8,marginBottom:8}}>{KAT_LABELS[kat]}</div>
+                <Card style={{padding:0,overflowX:"auto"}}>
+                  <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:700}}>
+                    <thead>
+                      <tr style={{background:"var(--surface2)"}}>
+                        <th style={{textAlign:"left",padding:"8px 12px",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.5}}>Modul</th>
+                        {ROLLEN.map(r=>(
+                          <th key={r} style={{textAlign:"center",padding:"8px 8px",fontWeight:600,color:ROLES[r]?.color||"var(--sub)",fontSize:11,minWidth:72}}>
+                            {ROLLEN_LABELS[r]}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mods.map((m,i)=>(
+                        <tr key={m.key} style={{borderTop:"0.5px solid var(--border)"}}>
+                          <td style={{padding:"9px 12px"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:8}}>
+                              <TI n={m.icon} size={14} style={{color:"var(--sub)"}}/>
+                              <span style={{fontWeight:500,color:"var(--text)"}}>{m.label}</span>
+                            </div>
+                          </td>
+                          {ROLLEN.map(r=>{
+                            const hasAccess=ROLLEN_MODULE_DEFAULT[r]?.includes(m.key);
+                            return(
+                              <td key={r} style={{textAlign:"center",padding:"9px 8px"}}>
+                                {r==="funktionaer"
+                                  ?<span style={{fontSize:10,color:"var(--sub)"}}>via Gruppe</span>
+                                  :<div style={{
+                                    width:20,height:20,borderRadius:4,
+                                    background:hasAccess?(ROLES[r]?.color||GN)+"30":"var(--surface2)",
+                                    border:`1px solid ${hasAccess?(ROLES[r]?.color||GN)+"60":"var(--border)"}`,
+                                    display:"inline-flex",alignItems:"center",justifyContent:"center"
+                                  }}>
+                                    {hasAccess&&<TI n="check" size={11} style={{color:ROLES[r]?.color||GN}}/>}
+                                  </div>
+                                }
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── TAB: GRUPPEN & FUNKTIONEN ── */}
+      {!loading&&tab==="gruppen"&&(
+        <div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <InfoBox text="Gruppen bündeln Module für Funktionäre. Funktionen schränken innerhalb einer Gruppe ein (Teams, Filter)." color={BL}/>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"280px 1fr",gap:16,alignItems:"start"}}>
+            {/* Gruppen-Liste */}
+            <div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                <div style={{fontSize:12,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5}}>Gruppen</div>
+                <button onClick={()=>{setEditGruppe(null);setGruppeForm({name:"",beschreibung:"",module:[],farbe:"#8B5CF6"});setShowGruppeForm(true);}}
+                  style={{padding:"4px 10px",borderRadius:7,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                  + Gruppe
+                </button>
+              </div>
+              {(gruppen.length>0?gruppen:[
+                {id:1,name:"Vereinsleben & Events",farbe:"#8B5CF6",module:["events","helpers","members","news","docs"]},
+                {id:2,name:"Betrieb & Infrastruktur",farbe:"#3B82F6",module:["material","buses","lockers","docs"]},
+                {id:3,name:"Kommunikation & Medien",farbe:"#22C55E",module:["media","wiki","news","docs"]},
+                {id:4,name:"Stufenleitende",farbe:"#F97316",module:["team","training","events","attendance_central","members","helpers"]},
+                {id:5,name:"Schiedsrichterwesen",farbe:"#06B6D4",module:["schedule","training","docs"]},
+              ]).map(g=>(
+                <div key={g.id} onClick={()=>setSelectedGruppe(selectedGruppe?.id===g.id?null:g)}
+                  style={{
+                    padding:"10px 13px",borderRadius:10,marginBottom:6,cursor:"pointer",
+                    border:`1.5px solid ${selectedGruppe?.id===g.id?g.farbe:"var(--border)"}`,
+                    background:selectedGruppe?.id===g.id?g.farbe+"10":"var(--surface)"
+                  }}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                    <div style={{width:10,height:10,borderRadius:"50%",background:g.farbe,flexShrink:0}}/>
+                    <span style={{fontWeight:600,fontSize:13,color:"var(--text)"}}>{g.name}</span>
+                  </div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                    {(g.module||[]).slice(0,4).map(m=>(
+                      <span key={m} style={{fontSize:10,padding:"1px 7px",borderRadius:8,background:g.farbe+"15",color:g.farbe}}>{m}</span>
+                    ))}
+                    {(g.module||[]).length>4&&<span style={{fontSize:10,color:"var(--sub)"}}>+{(g.module||[]).length-4}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Funktionen für gewählte Gruppe */}
+            <div>
+              {selectedGruppe?(
+                <div>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                    <div>
+                      <div style={{fontSize:15,fontWeight:700,color:"var(--text)"}}>{selectedGruppe.name}</div>
+                      <div style={{fontSize:12,color:"var(--sub)",marginTop:2}}>
+                        Module: {(selectedGruppe.module||[]).join(", ")}
+                      </div>
+                    </div>
+                    <button onClick={()=>{setEditFunktion(null);setFunktionForm({name:"",beschreibung:"",gruppe_id:selectedGruppe.id,module_override:[],teams:[],filter:{}});setShowFunktionForm(true);}}
+                      style={{padding:"6px 14px",borderRadius:8,border:"none",background:selectedGruppe.farbe,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                      + Funktion
+                    </button>
+                  </div>
+                  {funktionen.filter(f=>f.gruppe_id===selectedGruppe.id||f.portal_gruppen?.id===selectedGruppe.id).length===0&&(
+                    <div style={{padding:"24px",textAlign:"center",color:"var(--sub)",fontSize:13,border:"1px dashed var(--border)",borderRadius:10}}>
+                      Noch keine Funktionen in dieser Gruppe.<br/>
+                      <span style={{fontSize:12}}>Klicke «+ Funktion» um eine zu erstellen.</span>
+                    </div>
+                  )}
+                  {funktionen.filter(f=>f.gruppe_id===selectedGruppe.id||f.portal_gruppen?.id===selectedGruppe.id).map(f=>(
+                    <div key={f.id} className="fch-card" style={{borderRadius:10,border:"0.5px solid",padding:"12px 14px",marginBottom:8}}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                         <div style={{flex:1}}>
-                          <div style={{fontSize:13,fontWeight:600,color:aktiv?BK:"#aaa"}}>{m.label}</div>
-                          <div style={{fontSize:13,color:"var(--sub)"}}>{m.description}</div>
-                        </div>
-                        {/* Toggle aktiv */}
-                        <div style={{display:"flex",alignItems:"center",gap:8}}>
-                          <span style={{fontSize:13,color:"var(--sub)"}}>{aktiv?"Aktiv":"Inaktiv"}</span>
-                          <div onClick={function(e){e.stopPropagation();toggleModulAktiv(m.id,!aktiv);}}
-                            style={{width:36,height:20,borderRadius:10,background:aktiv?"#22c55e":"#d1d5db",cursor:"pointer",position:"relative",transition:"background 0.2s"}}>
-                            <div style={{position:"absolute",top:2,left:aktiv?18:2,width:16,height:16,borderRadius:"50%",background:"var(--surface)",transition:"left 0.2s"}}/>
+                          <div style={{fontWeight:600,fontSize:13,color:"var(--text)",marginBottom:3}}>{f.name}</div>
+                          {f.beschreibung&&<div style={{fontSize:12,color:"var(--sub)",marginBottom:6}}>{f.beschreibung}</div>}
+                          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                            {f.module_override?.length>0&&f.module_override.map(m=>(
+                              <span key={m} style={{fontSize:10,padding:"1px 7px",borderRadius:8,background:"#3B82F615",color:"#3B82F6"}}>↳ {m}</span>
+                            ))}
+                            {f.teams?.length>0&&f.teams.slice(0,3).map(t=>(
+                              <span key={t} style={{fontSize:10,padding:"1px 7px",borderRadius:8,background:"#F9731615",color:"#F97316"}}>{t}</span>
+                            ))}
+                            {f.teams?.length>3&&<span style={{fontSize:10,color:"var(--sub)"}}>+{f.teams.length-3} Teams</span>}
+                            {Object.keys(f.filter||{}).length>0&&(
+                              <span style={{fontSize:10,padding:"1px 7px",borderRadius:8,background:"#8B5CF615",color:"#8B5CF6"}}>
+                                Filter: {JSON.stringify(f.filter)}
+                              </span>
+                            )}
                           </div>
-                          <TI n={expanded?"chevron-up":"chevron-down"}/>
+                        </div>
+                        <div style={{display:"flex",gap:6}}>
+                          <button onClick={()=>{setEditFunktion(f);setFunktionForm({name:f.name,beschreibung:f.beschreibung||"",gruppe_id:f.gruppe_id||selectedGruppe.id,module_override:f.module_override||[],teams:f.teams||[],filter:f.filter||{}});setShowFunktionForm(true);}}
+                            style={{width:28,height:28,borderRadius:7,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
+                            <TI n="edit" size={13}/>
+                          </button>
                         </div>
                       </div>
-                      {/* Expandierte Berechtigungen */}
-                      {expanded&&(
-                        <div style={{background:"var(--surface2)",borderTop:"0.5px solid var(--border)",padding:"12px 16px"}}>
-                          <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:10}}>Berechtigungen pro Rolle</div>
-                          <div style={{overflowX:"auto"}}>
-                            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-                              <thead>
-                                <tr>
-                                  <th style={{textAlign:"left",padding:"4px 8px",color:"var(--sub)",fontWeight:600,fontSize:13}}>Rolle</th>
-                                  <th style={{textAlign:"center",padding:"4px 8px",color:"var(--sub)",fontWeight:600,fontSize:13}}>Lesen</th>
-                                  <th style={{textAlign:"center",padding:"4px 8px",color:"var(--sub)",fontWeight:600,fontSize:13}}>Schreiben</th>
-                                  <th style={{textAlign:"center",padding:"4px 8px",color:"var(--sub)",fontWeight:600,fontSize:13}}>Verwalten</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {ROLLEN.map(rolle=>{
-                                  const b=berc[rolle]||{};
-                                  const isAdmin=rolle==="administrator";
-                                  return(
-                                    <tr key={rolle} style={{borderTop:"0.5px solid var(--border)"}}>
-                                      <td style={{padding:"6px 8px",fontWeight:600,fontSize:13}}>{ROLLEN_LABELS[rolle]}</td>
-                                      {["kann_lesen","kann_schreiben","kann_verwalten"].map(feld=>{
-                                        const val=isAdmin?true:(b[feld]||false);
-                                        return(
-                                          <td key={feld} style={{textAlign:"center",padding:"6px 8px"}}>
-                                            <div onClick={isAdmin?undefined:()=>toggleBerechtigung(m.id,rolle,feld,!val)}
-                                              style={{width:20,height:20,borderRadius:4,background:val?GN:"#e5e7eb",cursor:isAdmin?"not-allowed":"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",border:`1px solid ${val?"#16a34a":"#d1d5db"}`}}>
-                                              {val&&<TI n="check" style={{fontSize:13,color:"#fff"}}/>}
-                                            </div>
-                                          </td>
-                                        );
-                                      })}
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      )}
                     </div>
-                  );
-                })}
-              </Card>
+                  ))}
+                </div>
+              ):(
+                <div style={{padding:"40px",textAlign:"center",color:"var(--sub)",fontSize:13,border:"1px dashed var(--border)",borderRadius:10}}>
+                  Wähle eine Gruppe um die Funktionen zu sehen.
+                </div>
+              )}
             </div>
-          ))}
+          </div>
+
+          {/* Gruppe bearbeiten Modal */}
+          <ModalOrSheet open={showGruppeForm} onClose={()=>setShowGruppeForm(false)} maxWidth={480}>
+            <div style={{padding:"20px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <h2 style={{margin:0,fontSize:15,fontWeight:700,color:"var(--text)"}}>{editGruppe?"Gruppe bearbeiten":"Neue Gruppe"}</h2>
+              <button onClick={()=>setShowGruppeForm(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"var(--sub)"}}>×</button>
+            </div>
+            <div style={{padding:"16px 20px 20px",display:"flex",flexDirection:"column",gap:12}}>
+              <div>
+                <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:4,display:"block"}}>Name *</label>
+                <input value={gruppeForm.name} onChange={e=>setGruppeForm(p=>({...p,name:e.target.value}))}
+                  placeholder="z.B. Vereinsleben & Events"
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box"}}/>
+              </div>
+              <div>
+                <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:4,display:"block"}}>Module (klicken zum Auswählen)</label>
+                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                  {ALLE_MODULE.filter(m=>m.key!=="dashboard"&&m.key!=="portal").map(m=>{
+                    const sel=(gruppeForm.module||[]).includes(m.key);
+                    return(
+                      <button key={m.key} onClick={()=>setGruppeForm(p=>{
+                        const cur=p.module||[];
+                        return{...p,module:sel?cur.filter(x=>x!==m.key):[...cur,m.key]};
+                      })} style={{
+                        padding:"4px 10px",borderRadius:8,border:`1px solid ${sel?gruppeForm.farbe:"var(--border)"}`,
+                        background:sel?gruppeForm.farbe+"20":"transparent",
+                        color:sel?gruppeForm.farbe:"var(--sub)",fontSize:12,cursor:"pointer",fontFamily:FONT
+                      }}>{m.label}</button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div style={{display:"flex",gap:10,marginTop:8}}>
+                <button style={{flex:1,padding:"10px",borderRadius:10,background:BK,color:"#fff",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                  {editGruppe?"Speichern":"Gruppe erstellen"}
+                </button>
+                <Btn onClick={()=>setShowGruppeForm(false)}>Abbrechen</Btn>
+              </div>
+            </div>
+          </ModalOrSheet>
+
+          {/* Funktion bearbeiten Modal */}
+          <ModalOrSheet open={showFunktionForm} onClose={()=>setShowFunktionForm(false)} maxWidth={520}>
+            <div style={{padding:"20px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <h2 style={{margin:0,fontSize:15,fontWeight:700,color:"var(--text)"}}>{editFunktion?"Funktion bearbeiten":"Neue Funktion"}</h2>
+              <button onClick={()=>setShowFunktionForm(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"var(--sub)"}}>×</button>
+            </div>
+            <div style={{padding:"16px 20px 20px",display:"flex",flexDirection:"column",gap:12,overflowY:"auto"}}>
+              <div>
+                <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:4,display:"block"}}>Name *</label>
+                <input value={funktionForm.name} onChange={e=>setFunktionForm(p=>({...p,name:e.target.value}))}
+                  placeholder="z.B. Chef Anlässe"
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box"}}/>
+              </div>
+              <div>
+                <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:4,display:"block"}}>Beschreibung</label>
+                <input value={funktionForm.beschreibung} onChange={e=>setFunktionForm(p=>({...p,beschreibung:e.target.value}))}
+                  placeholder="Was macht diese Funktion?"
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box"}}/>
+              </div>
+              <div>
+                <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,display:"block"}}>
+                  Module einschränken <span style={{fontWeight:400,fontSize:11}}>(leer = alles der Gruppe)</span>
+                </label>
+                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                  {(selectedGruppe?.module||ALLE_MODULE.filter(m=>m.key!=="dashboard").map(m=>m.key)).map(mk=>{
+                    const m=ALLE_MODULE.find(x=>x.key===mk)||{key:mk,label:mk};
+                    const sel=(funktionForm.module_override||[]).includes(mk);
+                    return(
+                      <button key={mk} onClick={()=>setFunktionForm(p=>{
+                        const cur=p.module_override||[];
+                        return{...p,module_override:sel?cur.filter(x=>x!==mk):[...cur,mk]};
+                      })} style={{
+                        padding:"4px 10px",borderRadius:8,border:`1px solid ${sel?"#3B82F6":"var(--border)"}`,
+                        background:sel?"#3B82F615":"transparent",
+                        color:sel?"#3B82F6":"var(--sub)",fontSize:12,cursor:"pointer",fontFamily:FONT
+                      }}>{m.label}</button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div style={{display:"flex",gap:10,marginTop:8}}>
+                <button style={{flex:1,padding:"10px",borderRadius:10,background:BK,color:"#fff",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                  {editFunktion?"Speichern":"Funktion erstellen"}
+                </button>
+                <Btn onClick={()=>setShowFunktionForm(false)}>Abbrechen</Btn>
+              </div>
+            </div>
+          </ModalOrSheet>
         </div>
       )}
 
