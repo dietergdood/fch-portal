@@ -7733,20 +7733,20 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
   const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",haupttrainer:[],co_trainers:[],staff:[],aktiv:true,beschreibung:""};
   const FALLBACK=[
-    {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", trainer:"Hans Muster",  trainer2:"",           aktiv:true},
-    {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", trainer:"Peter Meier",  trainer2:"",           aktiv:true},
-    {id:3, name:"1. Mannschaft Frauen",  kategorie:"Frauen",      liga:"Frauen 2. Liga",   saison:"2024/25", trainer:"Anna Koch",    trainer2:"",           aktiv:true},
-    {id:4, name:"A-Junioren",            kategorie:"Junioren A",  liga:"U16 Liga A",       saison:"2024/25", trainer:"Beat Huber",   trainer2:"",           aktiv:true},
-    {id:5, name:"Ba-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga A",       saison:"2024/25", trainer:"Marc Rüegg",   trainer2:"",           aktiv:true},
-    {id:6, name:"Bb-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga B",       saison:"2024/25", trainer:"Simon Baur",   trainer2:"",           aktiv:true},
-    {id:7, name:"Ca-Junioren",           kategorie:"Junioren C",  liga:"U13 Liga A",       saison:"2024/25", trainer:"Leo Frei",     trainer2:"",           aktiv:true},
-    {id:8, name:"Cc-Junioren",           kategorie:"Junioren C",  liga:"U12 Liga A",       saison:"2024/25", trainer:"Daniel Vogel", trainer2:"Urs Berger", aktiv:true},
-    {id:9, name:"Da-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga A",       saison:"2024/25", trainer:"Reto Müller",  trainer2:"",           aktiv:true},
-    {id:10,name:"Db-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga B",       saison:"2024/25", trainer:"Sandro Kalt",  trainer2:"",           aktiv:true},
-    {id:11,name:"C-Juniorinnen",         kategorie:"Juniorinnen", liga:"U13 Mädchen",      saison:"2024/25", trainer:"Eva Steiner",  trainer2:"",           aktiv:true},
-    {id:12,name:"D-Juniorinnen",         kategorie:"Juniorinnen", liga:"U11 Mädchen",      saison:"2024/25", trainer:"Nina Wirth",   trainer2:"",           aktiv:true},
-    {id:13,name:"E-Juniorinnen",         kategorie:"Juniorinnen", liga:"U10 Mädchen",      saison:"2024/25", trainer:"Lea Bucher",   trainer2:"",           aktiv:true},
-    {id:14,name:"F-Juniorinnen",         kategorie:"Juniorinnen", liga:"U9 Mädchen",       saison:"2024/25", trainer:"Sara Lüscher", trainer2:"",           aktiv:true},
+    {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", haupttrainer:["Hans Muster"],  co_trainers:[],              staff:[],aktiv:true},
+    {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", haupttrainer:["Peter Meier"],  co_trainers:[],              staff:[],aktiv:true},
+    {id:3, name:"1. Mannschaft Frauen",  kategorie:"Frauen",      liga:"Frauen 2. Liga",   saison:"2024/25", haupttrainer:["Anna Koch"],    co_trainers:[],              staff:[],aktiv:true},
+    {id:4, name:"A-Junioren",            kategorie:"Junioren A",  liga:"U16 Liga A",       saison:"2024/25", haupttrainer:["Beat Huber"],   co_trainers:[],              staff:[],aktiv:true},
+    {id:5, name:"Ba-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga A",       saison:"2024/25", haupttrainer:["Marc Rüegg"],   co_trainers:[],              staff:[],aktiv:true},
+    {id:6, name:"Bb-Junioren",           kategorie:"Junioren B",  liga:"U15 Liga B",       saison:"2024/25", haupttrainer:["Simon Baur"],   co_trainers:[],              staff:[],aktiv:true},
+    {id:7, name:"Ca-Junioren",           kategorie:"Junioren C",  liga:"U13 Liga A",       saison:"2024/25", haupttrainer:["Leo Frei"],     co_trainers:[],              staff:[],aktiv:true},
+    {id:8, name:"Cc-Junioren",           kategorie:"Junioren C",  liga:"U12 Liga A",       saison:"2024/25", haupttrainer:["Daniel Vogel"], co_trainers:["Urs Berger"],  staff:[],aktiv:true},
+    {id:9, name:"Da-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga A",       saison:"2024/25", haupttrainer:["Reto Müller"],  co_trainers:[],              staff:[],aktiv:true},
+    {id:10,name:"Db-Junioren",           kategorie:"Junioren D",  liga:"U11 Liga B",       saison:"2024/25", haupttrainer:["Sandro Kalt"],  co_trainers:[],              staff:[],aktiv:true},
+    {id:11,name:"C-Juniorinnen",         kategorie:"Juniorinnen", liga:"U13 Mädchen",      saison:"2024/25", haupttrainer:["Eva Steiner"],  co_trainers:[],              staff:[],aktiv:true},
+    {id:12,name:"D-Juniorinnen",         kategorie:"Juniorinnen", liga:"U11 Mädchen",      saison:"2024/25", haupttrainer:["Nina Wirth"],   co_trainers:[],              staff:[],aktiv:true},
+    {id:13,name:"E-Juniorinnen",         kategorie:"Juniorinnen", liga:"U10 Mädchen",      saison:"2024/25", haupttrainer:["Lea Bucher"],   co_trainers:[],              staff:[],aktiv:true},
+    {id:14,name:"F-Juniorinnen",         kategorie:"Juniorinnen", liga:"U9 Mädchen",       saison:"2024/25", haupttrainer:["Sara Lüscher"], co_trainers:[],              staff:[],aktiv:true},
   ];
   const [localTeams,setLocalTeams]=useState(FALLBACK);
   /* Nutze dbTeams wenn geladen, sonst localTeams */
@@ -7838,7 +7838,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   }
 
   function openNeu(){setForm(EMPTY);setEditTeam(null);setMsg(null);setShowForm(true);}
-  function openEdit(t){setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",haupttrainer:t.haupttrainer||[],co_trainers:t.co_trainers||[],staff:t.staff||[],aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
+  function openEdit(t){const ht=t.haupttrainer||(t.trainer?[t.trainer]:[]);const co=t.co_trainers||(t.trainer2?[t.trainer2]:[]);setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",haupttrainer:ht,co_trainers:co,staff:t.staff||[],aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
 
   /* Saison für alle Teams setzen */
   async function handleSaisonAlle(){
@@ -7937,7 +7937,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
             const katColor=KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
-            const haupttrainerArr=team.haupttrainer||[];const coArr=team.co_trainers||[];const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
+            const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             return(
               <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s"}}>
                 <div style={{display:"flex",alignItems:"center",gap:12}}>
