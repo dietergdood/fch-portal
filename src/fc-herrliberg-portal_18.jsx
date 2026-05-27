@@ -8416,7 +8416,9 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             const openMenu=()=>setOpenMenuId(menuOpen?null:team.id);
             const closeMenu=()=>setOpenMenuId(null);
             return(
-              <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s",position:"relative",cursor:viewMode==="grid"?"pointer":"default"}} onClick={viewMode==="grid"?()=>{setSelectedTeam(team);setCustomBack&&setCustomBack(()=>()=>{setSelectedTeam(null);setCustomBack&&setCustomBack(null);});}:undefined}>
+              <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s",position:"relative",cursor:viewMode==="grid"?"pointer":"default"}} onClick={viewMode==="grid"?()=>{setSelectedTeam(team);
+          try{window.history.pushState({page:"team",teamDetail:true},"","#team-detail");}catch{}
+          setCustomBack&&setCustomBack(()=>()=>{setSelectedTeam(null);setCustomBack&&setCustomBack(null);try{window.history.back();}catch{}});}:undefined}>
                 {viewMode==="grid"?(
                   /* ── KACHEL-LAYOUT ── */
                   <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -9585,13 +9587,21 @@ export default function Portal({supabaseClient}){
   const {isMobile,isTablet}=useBreakpoint();
   const [mobileProfileOpen,setMobileProfileOpen]=useState(false);
   const [customBack,setCustomBack]=useState(null);
+  const customBackRef=useRef(null);
+  const setCustomBackAndRef=(fn)=>{customBackRef.current=fn||null;setCustomBack(fn);};
 
   /* Browser Zurück/Vor via popstate */
   useEffect(()=>{
     const onPop=(e)=>{
+      /* Sub-Navigation offen (z.B. Team-Detail): zurück zur Übersicht */
+      if(customBackRef.current){
+        customBackRef.current();
+        customBackRef.current=null;
+        setCustomBack(null);
+        return;
+      }
       const key=e.state?.page||(window.location.hash.replace("#","")||"dashboard");
       setActive(key);
-      setCustomBack(null);
       try{sessionStorage.setItem("fch-active",key);}catch{}
     };
     window.addEventListener("popstate",onPop);
@@ -9745,7 +9755,7 @@ export default function Portal({supabaseClient}){
     if(!na.find(n=>n.key===active)) return <Dashboard role={role} setActive={setActive}/>;
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
-      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBack}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
+      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBackAndRef}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
       case "members":           return <MembersView role={role}/>;
       case "users":             return <PortalverwaltungView initialTab="users"/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis"/>;
