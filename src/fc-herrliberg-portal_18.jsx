@@ -908,7 +908,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
   );
 }
 
-function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout,isMobile,onOpenProfile}){
+function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setActiveSubRole,onLogout,isMobile,onOpenProfile,onBack}){
   const acc=account||USER_ACCOUNTS[role]||{name:getRole(role).label,rollen:[role],primaryRole:role,kinder:[]};
   const {dark,toggle}=useTheme();
   const initials=(acc.name||"U").split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
@@ -930,7 +930,7 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
         ):(
           /* Andere Seiten: Zurück-Button + Seitentitel */
           <div style={{display:"flex",alignItems:"center",gap:4,flexShrink:0,minWidth:0}}>
-            <button onClick={()=>setActive("dashboard")} style={{
+            <button onClick={()=>onBack?onBack():setActive("dashboard")} style={{
               width:36,height:36,borderRadius:9,background:"none",border:"none",
               display:"flex",alignItems:"center",justifyContent:"center",
               cursor:"pointer",color:"var(--text)",flexShrink:0,
@@ -7732,7 +7732,7 @@ function MaterialView(){
 /* ══════════════════════════════════════════
    TEAMS VERWALTUNG (Admin)
 ══════════════════════════════════════════ */
-function TeamsAdminView({sb,dbTeams=[],setDbTeams}){
+function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
   const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",trainer:"",trainer2:"",aktiv:true,beschreibung:""};
   const FALLBACK=[
@@ -7776,7 +7776,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams}){
     return(
       <div>
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
-          <button onClick={()=>setSelectedTeam(null)} style={{
+          <button onClick={()=>{setSelectedTeam(null);if(setCustomBack)setCustomBack(null);}} style={{
             display:"flex",alignItems:"center",gap:6,padding:"7px 14px",
             borderRadius:9,border:"1px solid var(--border)",background:"var(--surface)",
             cursor:"pointer",fontSize:13,fontWeight:600,color:"var(--text)",fontFamily:FONT
@@ -7968,7 +7968,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams}){
                   </div>
                   {/* Aktionen */}
                   <div style={{display:"flex",gap:6,flexShrink:0}}>
-                    <button onClick={()=>setSelectedTeam(team)} title="Team öffnen"
+                    <button onClick={()=>{setSelectedTeam(team);if(setCustomBack)setCustomBack(()=>()=>{setSelectedTeam(null);if(setCustomBack)setCustomBack(null);});}} title="Team öffnen"
                       style={{width:32,height:32,borderRadius:8,border:"1px solid "+BL+"40",background:"#EFF6FF",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:BL}}>
                       <TI n="eye" size={14}/>
                     </button>
@@ -8964,9 +8964,10 @@ export default function Portal({supabaseClient}){
   const [accountKey,setAccountKey]=useState("trainer");
   const [activeSubRole,setActiveSubRole]=useState(null);
   const [active,setActive]=useState("dashboard");
-  const setActivePersist=(key)=>{try{sessionStorage.setItem("fch-active",key);}catch{}setActive(key);};
+  const setActivePersist=(key)=>{try{sessionStorage.setItem("fch-active",key);}catch{}setActive(key);setCustomBack(null);};
   const {isMobile,isTablet}=useBreakpoint();
   const [mobileProfileOpen,setMobileProfileOpen]=useState(false);
+  const [customBack,setCustomBack]=useState(null);
   /* Aktive Seite aus Session wiederherstellen (einmalig beim Mount) */
   useEffect(()=>{try{const s=sessionStorage.getItem("fch-active");if(s&&s!=="dashboard")setActive(s);}catch{}},[]);
   /* ── Dark Mode ── */
@@ -9102,7 +9103,7 @@ export default function Portal({supabaseClient}){
     if(!na.find(n=>n.key===active)) return <Dashboard role={role} setActive={setActive}/>;
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
-      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
+      case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} setCustomBack={setCustomBack}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
       case "members":           return <MembersView role={role}/>;
       case "users":             return <PortalverwaltungView initialTab="users"/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis"/>;
@@ -9138,7 +9139,8 @@ export default function Portal({supabaseClient}){
             account={account} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole}
             onRoleChange={(key)=>handleAccountChange(key)} isMobile={isMobile}
             onLogout={sb&&session ? handleLogout : undefined}
-            onOpenProfile={()=>setMobileProfileOpen(true)}/>}
+            onOpenProfile={()=>setMobileProfileOpen(true)}
+            onBack={customBack}/>}
           <main key={active} className="fch-page" style={{flex:1,padding:isMobile?"16px 14px 90px":isTablet?"20px 24px 28px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
           {isMobile&&<MobileNav role={role} active={active} setActive={setActivePersist} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
         </div>
