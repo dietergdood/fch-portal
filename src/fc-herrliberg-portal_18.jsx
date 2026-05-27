@@ -6380,10 +6380,16 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:16}}>
             <InfoBox text="Klicke auf eine Checkbox um die Rechte anzupassen. Toggle links schaltet das Modul global ein/aus." color={BL}/>
             {moduleRechte&&(
-              <button onClick={()=>{setModuleRechte(null);try{localStorage.removeItem("fch-module-rechte");}catch{}setSaveMsg("Zurückgesetzt");setTimeout(()=>setSaveMsg(""),2000);}}
-                style={{padding:"7px 14px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,flexShrink:0,whiteSpace:"nowrap"}}>
-                ↺ Auf Standard zurücksetzen
-              </button>
+              <div style={{display:"flex",gap:8,flexShrink:0}}>
+                <button onClick={()=>{setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);}}
+                  style={{padding:"7px 14px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,whiteSpace:"nowrap"}}>
+                  Speichern
+                </button>
+                <button onClick={()=>{setModuleRechte(null);try{localStorage.removeItem("fch-module-rechte");}catch{}setSaveMsg("Verworfen");setTimeout(()=>setSaveMsg(""),2000);}}
+                  style={{padding:"7px 14px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,whiteSpace:"nowrap"}}>
+                  Verwerfen
+                </button>
+              </div>
             )}
           </div>
           <Card style={{padding:0,overflowX:"auto"}}>
