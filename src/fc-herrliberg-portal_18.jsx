@@ -8049,7 +8049,10 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
   const getE2fromForm=()=>form.stufe_ebene2||(dbStufen.length===0?form.vereinsstufe:"");
   const [loading,setLoading]=useState(false);
   const [search,setSearch]=useState("");
-  const [filterKat,setFilterKat]=useState("alle");
+  const [filterVals,setFilterVals]=useState([]);
+  const [sortCol,setSortCol]=useState("hauptbereich");
+  const [sortDir,setSortDir]=useState("asc");
+  const [groupBy,setGroupBy]=useState("hauptbereich");
   const [showForm,setShowForm]=useState(false);
   const [editTeam,setEditTeam]=useState(null);
   const [form,setForm]=useState(EMPTY);
@@ -8168,12 +8171,49 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
     setSaving(false);
   }
 
-  const katList=["alle",...Array.from(new Set(teams.map(t=>t.hauptbereich||t.kategorie).filter(Boolean))).sort()];
+  const GROUP_OPTS=[
+    {val:"none",        label:"Keine Gruppierung"},
+    {val:"hauptbereich",label:"Hauptbereich"},
+    {val:"vereinsstufe",label:"Vereinsstufe"},
+    {val:"verbandskategorie",label:"Verbandskategorie"},
+  ];
+  const SORT_OPTS=[
+    {val:"hauptbereich",label:"Hauptbereich"},
+    {val:"vereinsstufe",label:"Vereinsstufe"},
+    {val:"name",        label:"Teamname"},
+    {val:"kurzname",    label:"Kurzname"},
+    {val:"liga",        label:"Liga"},
+  ];
+  /* Alle Werte für den aktiven groupBy */
+  const filterOptions=groupBy!=="none"
+    ? [...new Set(teams.map(t=>t[groupBy]||"-").filter(Boolean))].sort()
+    : [];
+
   const filtered=teams.filter(t=>{
-    const matchSearch=!search||t.name.toLowerCase().includes(search.toLowerCase())||t.trainer?.toLowerCase().includes(search.toLowerCase());
-    const matchKat=filterKat==="alle"||t.hauptbereich===filterKat||t.vereinsstufe===filterKat||t.kategorie===filterKat;
-    return matchSearch&&matchKat;
+    const matchSearch=!search||
+      t.name?.toLowerCase().includes(search.toLowerCase())||
+      (t.haupttrainer||[]).join(" ").toLowerCase().includes(search.toLowerCase())||
+      t.kurzname?.toLowerCase().includes(search.toLowerCase());
+    const matchFilter=filterVals.length===0||filterVals.includes(t[groupBy]||"-");
+    return matchSearch&&matchFilter;
   });
+
+  const sorted=[...filtered].sort((a,b)=>{
+    const av=a[sortCol]||""; const bv=b[sortCol]||"";
+    return sortDir==="asc"?av.localeCompare(bv):bv.localeCompare(av);
+  });
+
+  /* Gruppierung anwenden */
+  const groupedTeams=groupBy==="none"
+    ?[{key:"",items:sorted}]
+    :Object.entries(
+        sorted.reduce((acc,t)=>{
+          const k=t[groupBy]||"-";
+          if(!acc[k]) acc[k]=[];
+          acc[k].push(t);
+          return acc;
+        },{})
+      ).sort(([a],[b])=>a.localeCompare(b)).map(([key,items])=>({key,items}));
 
   const inputStyle={width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"};
   const labelStyle={fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:5,display:"block",textTransform:"uppercase",letterSpacing:0.5};
@@ -8221,15 +8261,61 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
         </div>
       </ModalOrSheet>
 
-      {/* Filter */}
-      <div style={{display:"flex",gap:10,marginBottom:16,flexWrap:"wrap"}}>
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Team oder Trainer suchen…"
+      {/* Filter-Zeile */}
+      <div style={{display:"flex",gap:8,marginBottom:filterOptions.length?8:14,flexWrap:"wrap"}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Team, Trainer, Kurzname…"
           style={{flex:1,minWidth:180,...inputStyle}}/>
-        <select value={filterKat} onChange={e=>setFilterKat(e.target.value)}
-          style={{...inputStyle,width:"auto",minWidth:140,flex:"0 0 auto"}}>
-          {katList.map(k=><option key={k} value={k}>{k==="alle"?"Alle Kategorien":k}</option>)}
+        {/* Gruppieren nach */}
+        <select value={groupBy} onChange={e=>{setGroupBy(e.target.value);setFilterVals([]);}}
+          style={{...inputStyle,width:"auto",minWidth:160,flex:"0 0 auto"}}>
+          {GROUP_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
         </select>
+        {/* Sortieren nach */}
+        <div style={{display:"flex",gap:4}}>
+          <select value={sortCol} onChange={e=>setSortCol(e.target.value)}
+            style={{...inputStyle,width:"auto",minWidth:130,flex:"0 0 auto"}}>
+            {SORT_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
+          </select>
+          <button onClick={()=>setSortDir(d=>d==="asc"?"desc":"asc")}
+            style={{padding:"9px 11px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
+            {sortDir==="asc"?"↑":"↓"}
+          </button>
+        </div>
       </div>
+      {/* Filter-Chips */}
+      {filterOptions.length>0&&(
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14,alignItems:"center"}}>
+          <button onClick={()=>setFilterVals([])}
+            style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
+              background:filterVals.length===0?BK:"var(--surface)",
+              color:filterVals.length===0?"#fff":"var(--sub)",
+              fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
+            Alle
+          </button>
+          {filterOptions.map(v=>{
+            const active=filterVals.includes(v);
+            const c=KAT_COLORS[v]||(active?BK:"var(--sub)");
+            return(
+              <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
+                style={{padding:"4px 12px",borderRadius:20,fontFamily:FONT,fontSize:12,fontWeight:600,cursor:"pointer",
+                  transition:"all 0.15s",display:"flex",alignItems:"center",gap:4,
+                  border:"1px solid "+(active?c:"var(--border)"),
+                  background:active?c+"18":"var(--surface)",
+                  color:active?c:"var(--sub)"}}>
+                {active&&<span style={{fontSize:9}}>✓</span>}{v}
+                <span style={{opacity:0.55,fontWeight:400}}>{teams.filter(t=>(t[groupBy]||"-")===v).length}</span>
+              </button>
+            );
+          })}
+          {filterVals.length>0&&(
+            <button onClick={()=>setFilterVals([])}
+              style={{padding:"4px 10px",borderRadius:20,border:"1px solid var(--border)",
+                background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+              × zurücksetzen
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Teams Liste */}
       {loading?(
@@ -8237,13 +8323,26 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           {[1,2,3].map(i=><SkelCard key={i}/>)}
         </div>
       ):(
-        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        <div style={{display:"flex",flexDirection:"column",gap:0}}>
+          {groupedTeams.map(({key,items})=>(
+            <div key={key||"all"}>
+              {groupBy!=="none"&&key&&(
+                <div style={{padding:"10px 4px 6px",fontWeight:700,fontSize:12,color:"var(--sub)",
+                  textTransform:"uppercase",letterSpacing:0.7,marginTop:8,
+                  borderBottom:"1px solid var(--border)",marginBottom:8}}>
+                  {key} <span style={{fontWeight:400,opacity:0.6}}>({items.length})</span>
+                </div>
+              )}
+              <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:groupBy!=="none"?16:8}}>
+              </div>
+            </div>
+          ))}
           {filtered.length===0&&(
             <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:13}}>
               Keine Teams gefunden.
             </div>
           )}
-          {filtered.map(team=>{
+              {items.map(team=>{
             const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const sp=getStufePath(team);
