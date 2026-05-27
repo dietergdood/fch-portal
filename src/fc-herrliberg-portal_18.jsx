@@ -138,6 +138,7 @@ const TI_PATHS={
     "chevron-right":"<polyline points=\"9 18 15 12 9 6\"/>",
     "chevrons-left":"<polyline points=\"11 17 6 12 11 7\"/><polyline points=\"18 17 13 12 18 7\"/>",
     "chevrons-right":"<polyline points=\"13 17 18 12 13 7\"/><polyline points=\"6 17 11 12 6 7\"/>",
+    "dots-vertical":"<circle cx=\"12\" cy=\"5\" r=\"1\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"12\" cy=\"19\" r=\"1\"/>",
 };
 function TI({n,size=16,style}){
   const p=TI_PATHS[n];
@@ -8053,6 +8054,9 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
   const [sortCol,setSortCol]=useState("hauptbereich");
   const [sortDir,setSortDir]=useState("asc");
   const [groupBy,setGroupBy]=useState("hauptbereich");
+  const [viewMode,setViewMode]=useState("list"); // "list"|"grid"
+  const [openMenuId,setOpenMenuId]=useState(null); // mobile 3-dot menu
+  const isMobile=useIsMobile();
   const [showForm,setShowForm]=useState(false);
   const [editTeam,setEditTeam]=useState(null);
   const [form,setForm]=useState(EMPTY);
@@ -8232,6 +8236,18 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           <Btn onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);}}>
             <TI n="calendar" size={13} style={{marginRight:5}}/>Saison wechseln
           </Btn>
+          {/* View Toggle */}
+          <div style={{display:"flex",border:"1px solid var(--border)",borderRadius:9,overflow:"hidden"}}>
+            {["list","grid"].map(m=>(
+              <button key={m} onClick={()=>setViewMode(m)} style={{
+                padding:"7px 11px",border:"none",cursor:"pointer",fontFamily:FONT,
+                background:viewMode===m?BK:"var(--surface2)",
+                color:viewMode===m?"#fff":"var(--sub)",transition:"all 0.15s"
+              }}>
+                <TI n={m==="list"?"layout-dashboard":"layout-grid"} size={14}/>
+              </button>
+            ))}
+          </div>
           <Btn variant="primary" color={BK} onClick={openNeu}>+ Neues Team</Btn>
         </div>
       </div>
@@ -8333,56 +8349,126 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                   {key} <span style={{fontWeight:400,opacity:0.6}}>({items.length})</span>
                 </div>
               )}
-              <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:groupBy!=="none"?16:8}}>
+              <div style={viewMode==="grid"
+                ?{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:12,marginBottom:groupBy!=="none"?16:8}
+                :{display:"flex",flexDirection:"column",gap:8,marginBottom:groupBy!=="none"?16:8}}>
                 {items.map(team=>{
             const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const sp=getStufePath(team);
             const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
             const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
+            const menuOpen=openMenuId===team.id;
+            const openMenu=()=>setOpenMenuId(menuOpen?null:team.id);
+            const closeMenu=()=>setOpenMenuId(null);
             return(
-              <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s"}}>
-                <div style={{display:"flex",alignItems:"center",gap:12}}>
-                  {/* Kategorie-Icon */}
-                  <div style={{width:42,height:42,borderRadius:11,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                    <TI n="ball-football" size={18} style={{color:katColor}}/>
-                  </div>
-                  {/* Info */}
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                      <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</span>
-                      {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
-                      {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
+              <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s",position:"relative"}}>
+                {viewMode==="grid"?(
+                  /* ── KACHEL-LAYOUT ── */
+                  <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                    <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
+                      <div style={{display:"flex",alignItems:"center",gap:10}}>
+                        <div style={{width:40,height:40,borderRadius:10,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                          <TI n="ball-football" size={18} style={{color:katColor}}/>
+                        </div>
+                        <div>
+                          <div style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</div>
+                          {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor}}>{team.kurzname}</span>}
+                        </div>
+                      </div>
+                      {/* 3-Dot Menu */}
+                      <div style={{position:"relative"}}>
+                        <button onClick={openMenu} style={{width:28,height:28,borderRadius:7,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
+                          <TI n="dots-vertical" size={13}/>
+                        </button>
+                        {menuOpen&&(
+                          <div style={{position:"absolute",right:0,top:32,zIndex:100,background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,boxShadow:"0 4px 16px rgba(0,0,0,0.12)",minWidth:140,overflow:"hidden"}}>
+                            {[
+                              {icon:"eye",  label:"Öffnen",    color:BL, fn:()=>{setSelectedTeam(team);setCustomBack&&setCustomBack(()=>()=>{setSelectedTeam(null);setCustomBack&&setCustomBack(null);});closeMenu();}},
+                              {icon:"edit", label:"Bearbeiten",color:"var(--text)", fn:()=>{openEdit(team);closeMenu();}},
+                              {icon:"trash",label:"Löschen",   color:R,  fn:()=>{setDeleteConfirm(team);closeMenu();}},
+                            ].map(a=>(
+                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"9px 14px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:9,fontFamily:FONT,fontSize:13,color:a.color,textAlign:"left"}}
+                                onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
+                                onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                                <TI n={a.icon} size={13}/>{a.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div style={{fontSize:12,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
-                      {sp.e1&&<span style={{fontWeight:500}}>{sp.e1}</span>}
-                      {sp.e2&&<span>· {sp.e2}</span>}
-                      {team.liga&&<span>· {team.liga}</span>}
-                      {team.saison&&<span>{team.saison}</span>}
-                      <span style={{display:"flex",alignItems:"center",gap:3}}>
-                        <TI n="users" size={11}/> {spielerCount} Spieler
-                      </span>
-                      <span style={{display:"flex",alignItems:"center",gap:3}}>
-                        <TI n="user" size={11}/> {trainerCount} Trainer
-                      </span>
+                    <div style={{fontSize:12,color:"var(--sub)",display:"flex",flexDirection:"column",gap:3}}>
+                      <span>{sp.e1}{sp.e2?" · "+sp.e2:""}</span>
+                      {team.liga&&<span>{team.liga}</span>}
+                      <div style={{display:"flex",gap:10,marginTop:4}}>
+                        <span><TI n="users" size={11}/> {spielerCount}</span>
+                        <span><TI n="user" size={11}/> {trainerCount}</span>
+                        {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
+                      </div>
                     </div>
                   </div>
-                  {/* Aktionen */}
-                  <div style={{display:"flex",gap:6,flexShrink:0}}>
-                    <button onClick={()=>{setSelectedTeam(team);if(setCustomBack)setCustomBack(()=>()=>{setSelectedTeam(null);if(setCustomBack)setCustomBack(null);});}} title="Team öffnen"
-                      style={{width:32,height:32,borderRadius:8,border:"1px solid "+BL+"40",background:"#EFF6FF",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:BL}}>
-                      <TI n="eye" size={14}/>
-                    </button>
-                    <button onClick={()=>openEdit(team)} title="Bearbeiten"
-                      style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
-                      <TI n="edit" size={14}/>
-                    </button>
-                    <button onClick={()=>setDeleteConfirm(team)} title="Löschen"
-                      style={{width:32,height:32,borderRadius:8,border:"1px solid "+R+"40",background:RL,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:R}}>
-                      <TI n="trash" size={14}/>
-                    </button>
+                ):(
+                  /* ── LISTEN-LAYOUT ── */
+                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                    <div style={{width:42,height:42,borderRadius:11,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                      <TI n="ball-football" size={18} style={{color:katColor}}/>
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                        <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</span>
+                        {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
+                        {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
+                      </div>
+                      <div style={{fontSize:12,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+                        {sp.e1&&<span style={{fontWeight:500}}>{sp.e1}</span>}
+                        {sp.e2&&<span>· {sp.e2}</span>}
+                        {team.liga&&<span>· {team.liga}</span>}
+                        {team.saison&&<span>{team.saison}</span>}
+                        <span style={{display:"flex",alignItems:"center",gap:3}}><TI n="users" size={11}/> {spielerCount} Spieler</span>
+                        <span style={{display:"flex",alignItems:"center",gap:3}}><TI n="user" size={11}/> {trainerCount} Trainer</span>
+                      </div>
+                    </div>
+                    {/* Aktionen: 3-Dot auf Mobile, Buttons auf Desktop */}
+                    {isMobile?(
+                      <div style={{position:"relative",flexShrink:0}}>
+                        <button onClick={openMenu} style={{width:34,height:34,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
+                          <TI n="dots-vertical" size={14}/>
+                        </button>
+                        {menuOpen&&(
+                          <div style={{position:"absolute",right:0,top:38,zIndex:100,background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,boxShadow:"0 4px 16px rgba(0,0,0,0.15)",minWidth:150,overflow:"hidden"}}>
+                            {[
+                              {icon:"eye",  label:"Öffnen",    color:BL, fn:()=>{setSelectedTeam(team);setCustomBack&&setCustomBack(()=>()=>{setSelectedTeam(null);setCustomBack&&setCustomBack(null);});closeMenu();}},
+                              {icon:"edit", label:"Bearbeiten",color:"var(--text)", fn:()=>{openEdit(team);closeMenu();}},
+                              {icon:"trash",label:"Löschen",   color:R,  fn:()=>{setDeleteConfirm(team);closeMenu();}},
+                            ].map(a=>(
+                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"10px 16px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:9,fontFamily:FONT,fontSize:13,color:a.color,textAlign:"left"}}
+                                onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
+                                onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                                <TI n={a.icon} size={14}/>{a.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ):(
+                      <div style={{display:"flex",gap:6,flexShrink:0}}>
+                        <button onClick={()=>{setSelectedTeam(team);setCustomBack&&setCustomBack(()=>()=>{setSelectedTeam(null);setCustomBack&&setCustomBack(null);});}} title="Team öffnen"
+                          style={{width:32,height:32,borderRadius:8,border:"1px solid "+BL+"40",background:"#EFF6FF",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:BL}}>
+                          <TI n="eye" size={14}/>
+                        </button>
+                        <button onClick={()=>openEdit(team)} title="Bearbeiten"
+                          style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
+                          <TI n="edit" size={14}/>
+                        </button>
+                        <button onClick={()=>setDeleteConfirm(team)} title="Löschen"
+                          style={{width:32,height:32,borderRadius:8,border:"1px solid "+R+"40",background:RL,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:R}}>
+                          <TI n="trash" size={14}/>
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
