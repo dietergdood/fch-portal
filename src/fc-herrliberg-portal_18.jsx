@@ -2006,7 +2006,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
               "Da-Junioren":        "Elternabend Mi 04.06. um 19:00 Uhr. Neue Spielschuhe im Materialraum. Turnier in Küsnacht Sa 14.06.",
               "Db-Junioren":        "Training fällt aus am Fr 30.05. (Feiertag). Nachholtraining Di 03.06. Neue Leibchen verteilt.",
               "Ba-Junioren":        "Konditionstest nächsten Di. Elterninformation zum Trainingslager verschickt. Auswärtsspiel Sa 24.05. - Abfahrt 13:30.",
-              "Bb-Junioren":        "Trainingsplan für Juni hängt im Materialraum. Neuer Co-Trainer ab Juni. Teamfoto beim nächsten Heimspiel.",
+              "Bb-Junioren":        "Trainingsplan für Juni hängt im Materialraum. Neuer Assistent/in ab Juni. Teamfoto beim nächsten Heimspiel.",
               "D-Juniorinnen":      "Schnuppertraining für Neue am Sa 07.06. Neues Trainingsmaterial eingetroffen. Turnier in Herrliberg am 21.06.",
               "E-Juniorinnen":      "Spielfest am Sa 14.06. - bitte bis Fr 06.06. anmelden. Neue Bälle im Materialraum.",
               "F-Juniorinnen":      "Elternabend Do 05.06. um 18:30. Trikots für neue Spielerinnen bestellt. Nächstes Spielfest am 21.06.",
@@ -2390,7 +2390,7 @@ function RosterTab({role,team,initialSelected=null}){
                 <td style={{padding:"9px 13px",textAlign:"right",color:"var(--sub)",fontSize:13}}>›</td>
               </tr>
               );
-              const ROLLE_ORDER=["Trainer","Co-Trainer","Coach","Admin"];
+              const ROLLE_ORDER=["Trainer","Assistent/in","Coach","Admin"];
               const trainerSorted=[...trainer].sort((a,b)=>{
                 const ia=ROLLE_ORDER.indexOf(a.role||"");
                 const ib=ROLLE_ORDER.indexOf(b.role||"");
@@ -7731,7 +7731,7 @@ function MaterialView(){
 ══════════════════════════════════════════ */
 function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
-  const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",trainer:"",trainer2:"",aktiv:true,beschreibung:""};
+  const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",haupttrainer:[],co_trainers:[],staff:[],aktiv:true,beschreibung:""};
   const FALLBACK=[
     {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", trainer:"Hans Muster",  trainer2:"",           aktiv:true},
     {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", trainer:"Peter Meier",  trainer2:"",           aktiv:true},
@@ -7838,7 +7838,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
   }
 
   function openNeu(){setForm(EMPTY);setEditTeam(null);setMsg(null);setShowForm(true);}
-  function openEdit(t){setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",trainer:t.trainer||"",trainer2:t.trainer2||"",aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
+  function openEdit(t){setForm({name:t.name,kategorie:t.kategorie||"",liga:t.liga||"",saison:t.saison||"2024/25",haupttrainer:t.haupttrainer||[],co_trainers:t.co_trainers||[],staff:t.staff||[],aktiv:t.aktiv!==false,beschreibung:t.beschreibung||""});setEditTeam(t);setMsg(null);setShowForm(true);}
 
   /* Saison für alle Teams setzen */
   async function handleSaisonAlle(){
@@ -7936,10 +7936,12 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
           {filtered.map(team=>{
             const katColor=KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
+            const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
+            const haupttrainerArr=team.haupttrainer||[];const coArr=team.co_trainers||[];const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             return(
               <div key={team.id} className="fch-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px",opacity:isInaktiv?0.55:1,transition:"opacity 0.2s"}}>
                 <div style={{display:"flex",alignItems:"center",gap:12}}>
-                  {/* Kategorie-Dot */}
+                  {/* Kategorie-Icon */}
                   <div style={{width:42,height:42,borderRadius:11,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                     <TI n="ball-football" size={18} style={{color:katColor}}/>
                   </div>
@@ -7950,10 +7952,15 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
                       <Chip text={team.kategorie} color={katColor}/>
                       {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
                     </div>
-                    <div style={{fontSize:12,color:"var(--sub)",marginTop:3,display:"flex",gap:12,flexWrap:"wrap"}}>
+                    <div style={{fontSize:12,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
                       {team.liga&&<span>{team.liga}</span>}
-                      {team.saison&&<span>Saison {team.saison}</span>}
-                      {team.trainer&&<span>Trainer: {team.trainer}{team.trainer2?", "+team.trainer2:""}</span>}
+                      {team.saison&&<span>{team.saison}</span>}
+                      <span style={{display:"flex",alignItems:"center",gap:3}}>
+                        <TI n="users" size={11}/> {spielerCount} Spieler
+                      </span>
+                      <span style={{display:"flex",alignItems:"center",gap:3}}>
+                        <TI n="user" size={11}/> {trainerCount} Trainer
+                      </span>
                     </div>
                   </div>
                   {/* Aktionen */}
@@ -8026,19 +8033,31 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,setCustomBack}){
               </div>
             </div>
           </div>
-          {/* Trainer */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-            <div>
-              <label style={labelStyle}>Trainer / Coach</label>
-              <input value={form.trainer} onChange={e=>setForm(p=>({...p,trainer:e.target.value}))}
-                placeholder="Vorname Nachname" style={inputStyle}/>
+          {/* Staff Arrays */}
+          {[
+            {key:"haupttrainer",label:"Trainer/in",  placeholder:"Vorname Nachname"},
+            {key:"co_trainers", label:"Assistent/in",placeholder:"Vorname Nachname"},
+            {key:"staff",       label:"Weiterer Staff",placeholder:"Name / Funktion"},
+          ].map(({key,label,placeholder})=>(
+            <div key={key}>
+              <label style={labelStyle}>{label}</label>
+              <div style={{display:"flex",flexDirection:"column",gap:7}}>
+                {(form[key]||[]).map((val,i)=>(
+                  <div key={i} style={{display:"flex",gap:8}}>
+                    <input value={val}
+                      onChange={e=>setForm(p=>({...p,[key]:p[key].map((v,j)=>j===i?e.target.value:v)}))}
+                      placeholder={placeholder} style={{...inputStyle,flex:1}}/>
+                    <button onClick={()=>setForm(p=>({...p,[key]:p[key].filter((_,j)=>j!==i)}))}
+                      style={{width:36,height:38,borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",color:R,flexShrink:0,fontSize:16}}>×</button>
+                  </div>
+                ))}
+                <button onClick={()=>setForm(p=>({...p,[key]:[...(p[key]||[]),""]}))  }
+                  style={{padding:"7px 14px",borderRadius:9,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
+                  + {label} hinzufügen
+                </button>
+              </div>
             </div>
-            <div>
-              <label style={labelStyle}>Co-Trainer</label>
-              <input value={form.trainer2} onChange={e=>setForm(p=>({...p,trainer2:e.target.value}))}
-                placeholder="Vorname Nachname" style={inputStyle}/>
-            </div>
-          </div>
+          ))}
           {/* Beschreibung */}
           <div>
             <label style={labelStyle}>Beschreibung (optional)</label>
