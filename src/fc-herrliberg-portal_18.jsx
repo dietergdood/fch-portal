@@ -7735,29 +7735,6 @@ function MaterialView(){
 function TeamsAdminView({sb,dbTeams=[],setDbTeams}){
   const KATEGORIEN=["Herren","Frauen","Junioren A","Junioren B","Junioren C","Junioren D","Junioren E","Junioren F","Juniorinnen","Senioren"];
   const EMPTY={name:"",kategorie:"Junioren C",liga:"",saison:"2024/25",trainer:"",trainer2:"",aktiv:true,beschreibung:""};
-
-  const [selectedTeam,setSelectedTeam]=useState(null);
-
-  if(selectedTeam){
-    return(
-      <div>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
-          <button onClick={()=>setSelectedTeam(null)} style={{
-            display:"flex",alignItems:"center",gap:6,padding:"7px 14px",
-            borderRadius:9,border:"1px solid var(--border)",background:"var(--surface)",
-            cursor:"pointer",fontSize:13,fontWeight:600,color:"var(--text)",fontFamily:FONT
-          }}>
-            <TI n="chevron-left" size={16}/> Alle Teams
-          </button>
-          <span style={{color:"var(--sub)",fontSize:13}}>→</span>
-          <span style={{fontWeight:700,fontSize:15,color:"var(--text)"}}>{selectedTeam.name}</span>
-        </div>
-        <TeamView role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} dbTeams={dbTeams}/>
-      </div>
-    );
-  }
-
-  /* Teams: aus Supabase (dbTeams) wenn vorhanden, sonst lokaler State als Fallback */
   const FALLBACK=[
     {id:1, name:"1. Mannschaft Herren",  kategorie:"Herren",      liga:"1. Liga",          saison:"2024/25", trainer:"Hans Muster",  trainer2:"",           aktiv:true},
     {id:2, name:"2. Mannschaft Herren",  kategorie:"Herren",      liga:"3. Liga",          saison:"2024/25", trainer:"Peter Meier",  trainer2:"",           aktiv:true},
@@ -7791,8 +7768,28 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams}){
   const [deleteConfirm,setDeleteConfirm]=useState(null);
   const [showSaison,setShowSaison]=useState(false);
   const [saisonDraft,setSaisonDraft]=useState("2025/26");
+  const [selectedTeam,setSelectedTeam]=useState(null);
 
   /* Teams kommen via dbTeams Prop aus App (dort geladen) */
+
+  if(selectedTeam){
+    return(
+      <div>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
+          <button onClick={()=>setSelectedTeam(null)} style={{
+            display:"flex",alignItems:"center",gap:6,padding:"7px 14px",
+            borderRadius:9,border:"1px solid var(--border)",background:"var(--surface)",
+            cursor:"pointer",fontSize:13,fontWeight:600,color:"var(--text)",fontFamily:FONT
+          }}>
+            <TI n="chevron-left" size={16}/> Alle Teams
+          </button>
+          <span style={{color:"var(--sub)",fontSize:13}}>→</span>
+          <span style={{fontWeight:700,fontSize:15,color:"var(--text)"}}>{selectedTeam.name}</span>
+        </div>
+        <TeamView role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} dbTeams={dbTeams}/>
+      </div>
+    );
+  }
 
   /* Supabase: Speichern */
   async function handleSave(){
