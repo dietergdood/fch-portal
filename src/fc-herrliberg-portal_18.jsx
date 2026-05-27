@@ -773,10 +773,22 @@ function Btn({children,onClick,variant="outline",color=BK,small,style={}}){
   return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:"1px solid var(--border)",background:"var(--surface)",color:"var(--text)",transition:"background 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"} onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>{children}</button>;
 }
 function Tabs({tabs,active,setActive}){
+  const isMobile=useIsMobile();
   return(
-    <div style={{display:"flex",gap:1,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap"}}>
+    <div style={{display:"flex",gap:1,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
       {tabs.map(t=>(
-        <button key={t.key} onClick={()=>setActive(t.key)} style={{padding:"7px 12px",border:"none",borderRadius:7,background:active===t.key?"var(--surface)":"transparent",color:active===t.key?"var(--text)":"var(--sub)",fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:13,boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",whiteSpace:"nowrap",fontFamily:FONT,minHeight:34,transition:"all 0.15s"}}>{t.label}</button>
+        <button key={t.key} onClick={()=>setActive(t.key)} style={{
+          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:7,
+          background:active===t.key?"var(--surface)":"transparent",
+          color:active===t.key?"var(--text)":"var(--sub)",
+          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:12,
+          boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
+          whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
+          display:"flex",alignItems:"center",gap:5,WebkitTapHighlightColor:"transparent"
+        }}>
+          {isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>}
+          {isMobile&&t.short?t.short:t.label}
+        </button>
       ))}
     </div>
   );
@@ -1698,6 +1710,7 @@ function DashboardEltern({account,meineTeams,setActive}){
    MEIN TEAM (rollenabhängig)
 ========================================== */
 function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,account,dbTeams=[]}){
+  const isMobile=useIsMobile();
   const [responses,setResponses]=useState(ATT_INITIAL);
   useEffect(()=>{
     (async()=>{
@@ -1764,16 +1777,22 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
   const actualCount=ROSTER.filter(p=>(p.teams||[]).includes(activeTeam)).length||teamInfo.count;
 
   const TABS_ALL=[
-    {key:"overview",label:"Übersicht"},{key:"roster",label:"Kader"},
-    {key:"attendance",label:"Termine"},{key:"training",label:"Trainingsplan"},
-    {key:"spielplan",label:"Spielplan & Tabelle"},
-    {key:"polls",label:"Abstimmungen"},
-    {key:"helpers",label:"Helfereinsätze"},{key:"stats",label:"Statistik"},
+    {key:"overview",  label:"Übersicht",    short:"Übersicht", icon:"layout-dashboard"},
+    {key:"roster",    label:"Kader",        short:"Kader",     icon:"users"},
+    {key:"attendance",label:"Termine",      short:"Termine",   icon:"calendar"},
+    {key:"training",  label:"Trainingsplan",short:"Training",  icon:"clock"},
+    {key:"spielplan", label:"Spielplan & Tabelle",short:"Spiele",icon:"flag"},
+    {key:"polls",     label:"Abstimmungen", short:"Polls",     icon:"speakerphone"},
+    {key:"helpers",   label:"Helfereinsätze",short:"Helfer",   icon:"heart-handshake"},
+    {key:"stats",     label:"Statistik",    short:"Stats",     icon:"chart-bar"},
   ];
   const TABS_LIMITED=[
-    {key:"overview",label:"Übersicht"},{key:"roster",label:"Kader"},
-    {key:"attendance",label:"Termine"},{key:"spielplan",label:"Spielplan & Tabelle"},
-    {key:"polls",label:"Abstimmungen"},{key:"helpers",label:"Helfereinsätze"},
+    {key:"overview",  label:"Übersicht",    short:"Übersicht", icon:"layout-dashboard"},
+    {key:"roster",    label:"Kader",        short:"Kader",     icon:"users"},
+    {key:"attendance",label:"Termine",      short:"Termine",   icon:"calendar"},
+    {key:"spielplan", label:"Spielplan & Tabelle",short:"Spiele",icon:"flag"},
+    {key:"polls",     label:"Abstimmungen", short:"Polls",     icon:"speakerphone"},
+    {key:"helpers",   label:"Helfereinsätze",short:"Helfer",   icon:"heart-handshake"},
   ];
   const tabs=limited?TABS_LIMITED:TABS_ALL;
   const [tab,setTab]=useState(()=>{const t=NAV_TARGET.tab||"overview";NAV_TARGET.tab=null;return t;});
@@ -1799,13 +1818,17 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
   return(
     <div>
       {/* Team-Header */}
-      <div style={{display:"flex",alignItems:"flex-start",gap:12,marginBottom:hasMultiTeams?12:18}}>
-        <div style={{width:8,height:42,borderRadius:4,background:"#f8de09",flexShrink:0,marginTop:2}}/>
-        <div style={{flex:1}}>
-          <h1 style={{fontSize:21,fontWeight:800,margin:0}}>{isEltern?`Mein Kind - ${kinderNames}${activeKind?.team?" · "+activeKind.team:""}`:`Mein Team - ${activeTeam}`}</h1>
-          <p style={{color:"var(--sub)",margin:0,fontSize:13}}>
-            {isEltern?"Elternzugang · ":""}
-            {actualCount} Spieler · Saison {teamInfo.season} · {teamInfo.liga}
+      <div style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:hasMultiTeams?10:isMobile?14:18}}>
+        <div style={{width:6,height:isMobile?36:44,borderRadius:3,background:"#f8de09",flexShrink:0,marginTop:2}}/>
+        <div style={{flex:1,minWidth:0}}>
+          <h1 style={{fontSize:isMobile?17:21,fontWeight:800,margin:0,letterSpacing:-0.3,whiteSpace:isMobile?"nowrap":"normal",overflow:"hidden",textOverflow:"ellipsis"}}>
+            {isEltern?`${kinderNames}${activeKind?.team?" · "+activeKind.team:""}`:`${activeTeam}`}
+          </h1>
+          <p style={{color:"var(--sub)",margin:"2px 0 0",fontSize:12,display:"flex",flexWrap:"wrap",gap:"0 8px"}}>
+            {isEltern&&<span>Elternzugang</span>}
+            <span>{actualCount} Spieler</span>
+            <span>Saison {teamInfo.season}</span>
+            <span>{teamInfo.liga}</span>
           </p>
         </div>
       </div>
@@ -1838,28 +1861,31 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
 
       {/* Team-Selektor (Trainer) */}
       {hasMultiTeams&&(
-        <div style={{display:"flex",gap:8,marginBottom:18,flexWrap:"wrap",padding:"12px 14px",background:"var(--surface)",borderRadius:12,border:"0.5px solid var(--border)",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}>
-          <span style={{fontSize:13,color:"var(--sub)",fontWeight:600,alignSelf:"center",marginRight:4,textTransform:"uppercase",letterSpacing:0.5}}>Team:</span>
-          {trainerTeams.map(team=>{
-            const info=TEAMS_DATA[team]||{count:18,liga:"Liga A"};
-            const isActive=activeTeam===team;
-            const cnt=ROSTER.filter(p=>(p.teams||[]).includes(team)).length||info.count;
-            return(
-              <button key={team} onClick={()=>handleTeamSwitch(team)}
-                style={{display:"flex",alignItems:"center",gap:7,padding:"7px 14px",borderRadius:10,
-                  border:`0.5px solid ${isActive?"#f8de09":GB}`,
-                  background:isActive?"#f8de0930":"#fff",
-                  cursor:"pointer",transition:"all 0.12s"}}>
-                <div style={{width:22,height:22,borderRadius:"50%",background:isActive?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:isActive?BK:"#888",flexShrink:0}}>
-                  {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
-                </div>
-                <div style={{textAlign:"left"}}>
-                  <div style={{fontSize:13,fontWeight:700,color:isActive?BK:BK,whiteSpace:"nowrap"}}>{team}</div>
-                  <div style={{fontSize:13,color:isActive?"rgba(0,0,0,0.5)":"#aaa"}}>{cnt} Spieler · {info.liga}</div>
-                </div>
-              </button>
-            );
-          })}
+        <div style={{marginBottom:14,background:"var(--surface)",borderRadius:12,border:"0.5px solid var(--border)",overflow:"hidden"}}>
+          <div style={{padding:"8px 10px",fontSize:11,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8,borderBottom:"0.5px solid var(--border)"}}>Team wechseln</div>
+          <div style={{display:"flex",gap:6,padding:"10px",overflowX:"auto",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+            {trainerTeams.map(team=>{
+              const info=TEAMS_DATA[team]||{count:18,liga:"Liga A"};
+              const isActive=activeTeam===team;
+              const cnt=ROSTER.filter(p=>(p.teams||[]).includes(team)).length||info.count;
+              return(
+                <button key={team} onClick={()=>handleTeamSwitch(team)}
+                  style={{display:"flex",alignItems:"center",gap:8,padding:isMobile?"8px 12px":"7px 14px",
+                    borderRadius:10,border:`1.5px solid ${isActive?"#f8de09":"var(--border)"}`,
+                    background:isActive?"#f8de0920":"transparent",
+                    cursor:"pointer",transition:"all 0.15s",flexShrink:0,
+                    WebkitTapHighlightColor:"transparent",minHeight:44}}>
+                  <div style={{width:28,height:28,borderRadius:"50%",background:isActive?"#f8de09":"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}>
+                    {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
+                  </div>
+                  <div style={{textAlign:"left",minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{team}</div>
+                    <div style={{fontSize:11,color:"var(--sub)"}}>{cnt} · {info.liga}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
