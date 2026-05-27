@@ -5686,7 +5686,7 @@ function MembersView({role}){
   const [sortCol,setSortCol]=useState("name");
   const [sortDir,setSortDir]=useState("asc"); // "asc"|"desc"
   const [groupBy,setGroupBy]=useState("none");
-  const [filterVal,setFilterVal]=useState(""); // aktiver Gruppen-Filter
+  const [filterVals,setFilterVals]=useState([]); // aktive Gruppen-Filter (Mehrfach)
   const canExport=role==="administrator"||role==="administration";
 
   const COLS=[
@@ -5714,7 +5714,7 @@ function MembersView({role}){
     (!search||m.name.toLowerCase().includes(search.toLowerCase())||
     m.role.toLowerCase().includes(search.toLowerCase())||
     m.team.toLowerCase().includes(search.toLowerCase()))
-    &&(!filterVal||m[groupBy]===filterVal)
+    &&(filterVals.length===0||filterVals.includes(m[groupBy]||"-"))
   );
 
   const sorted=[...filtered].sort((a,b)=>{
@@ -5763,7 +5763,7 @@ function MembersView({role}){
         <input value={search} onChange={e=>setSearch(e.target.value)}
           placeholder="Suchen nach Name, Rolle, Team…"
           style={{...inputStyle,flex:1,minWidth:180}}/>
-        <select value={groupBy} onChange={e=>{setGroupBy(e.target.value);setFilterVal("");}}
+        <select value={groupBy} onChange={e=>{setGroupBy(e.target.value);setFilterVals([]);}}
           style={{...inputStyle,minWidth:170}}>
           {GROUP_OPTIONS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
         </select>
@@ -5772,24 +5772,39 @@ function MembersView({role}){
       {groupBy!=="none"&&(()=>{
         const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
         return(
-          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
-            <button onClick={()=>setFilterVal("")}
+          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14,alignItems:"center"}}>
+            <button onClick={()=>setFilterVals([])}
               style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
-                background:filterVal===""?BK:"var(--surface)",color:filterVal===""?"#fff":"var(--sub)",
+                background:filterVals.length===0?BK:"var(--surface)",
+                color:filterVals.length===0?"#fff":"var(--sub)",
                 fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
               Alle
             </button>
-            {vals.map(v=>(
-              <button key={v} onClick={()=>setFilterVal(filterVal===v?"":v)}
-                style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
-                  background:filterVal===v?BK:"var(--surface)",color:filterVal===v?"#fff":"var(--sub)",
-                  fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
-                {v}
-                <span style={{marginLeft:5,opacity:0.6,fontWeight:400}}>
-                  {MEMBERS.filter(m=>(m[groupBy]||"-")===v).length}
-                </span>
+            {vals.map(v=>{
+              const active=filterVals.includes(v);
+              return(
+                <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
+                  style={{padding:"4px 12px",borderRadius:20,
+                    border:"1px solid "+(active?BK:"var(--border)"),
+                    background:active?BK:"var(--surface)",
+                    color:active?"#fff":"var(--sub)",
+                    fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s",
+                    display:"flex",alignItems:"center",gap:5}}>
+                  {active&&<span style={{fontSize:9}}>✓</span>}
+                  {v}
+                  <span style={{opacity:0.55,fontWeight:400}}>
+                    {MEMBERS.filter(m=>(m[groupBy]||"-")===v).length}
+                  </span>
+                </button>
+              );
+            })}
+            {filterVals.length>0&&(
+              <button onClick={()=>setFilterVals([])}
+                style={{padding:"4px 10px",borderRadius:20,border:"1px solid var(--border)",
+                  background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                × zurücksetzen
               </button>
-            ))}
+            )}
           </div>
         );
       })()}
