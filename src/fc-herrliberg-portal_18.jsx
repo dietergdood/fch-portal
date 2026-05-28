@@ -1849,23 +1849,32 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
 
   const TABS_ALL=[
     {key:"overview",  label:"Übersicht",    short:"Übersicht", icon:"layout-dashboard"},
-    {key:"roster",    label:"Kader",        short:"Kader",     icon:"users"},
-    {key:"attendance",label:"Termine",      short:"Termine",   icon:"calendar"},
-    {key:"training",  label:"Trainingsplan",short:"Training",  icon:"clock"},
-    {key:"spielplan", label:"Spielplan & Tabelle",short:"Spiele",icon:"flag"},
-    {key:"polls",     label:"Abstimmungen", short:"Polls",     icon:"speakerphone"},
-    {key:"helpers",   label:"Helfereinsätze",short:"Helfer",   icon:"heart-handshake"},
-    {key:"stats",     label:"Statistik",    short:"Stats",     icon:"chart-bar"},
+    {key:"roster",    label:"Kader",        short:"Kader",     icon:"users",            modul:"roster"},
+    {key:"attendance",label:"Termine",      short:"Termine",   icon:"calendar",         modul:"events"},
+    {key:"training",  label:"Trainingsplan",short:"Training",  icon:"clock",            modul:"training"},
+    {key:"spielplan", label:"Spielplan & Tabelle",short:"Spiele",icon:"flag",           modul:"spielplan"},
+    {key:"polls",     label:"Abstimmungen", short:"Polls",     icon:"speakerphone",     modul:"polls"},
+    {key:"helpers",   label:"Helfereinsätze",short:"Helfer",   icon:"heart-handshake",  modul:"helpers"},
+    {key:"stats",     label:"Statistik",    short:"Stats",     icon:"chart-bar",        modul:"stats"},
   ];
   const TABS_LIMITED=[
     {key:"overview",  label:"Übersicht",    short:"Übersicht", icon:"layout-dashboard"},
-    {key:"roster",    label:"Kader",        short:"Kader",     icon:"users"},
-    {key:"attendance",label:"Termine",      short:"Termine",   icon:"calendar"},
-    {key:"spielplan", label:"Spielplan & Tabelle",short:"Spiele",icon:"flag"},
-    {key:"polls",     label:"Abstimmungen", short:"Polls",     icon:"speakerphone"},
-    {key:"helpers",   label:"Helfereinsätze",short:"Helfer",   icon:"heart-handshake"},
+    {key:"roster",    label:"Kader",        short:"Kader",     icon:"users",            modul:"roster"},
+    {key:"attendance",label:"Termine",      short:"Termine",   icon:"calendar",         modul:"events"},
+    {key:"spielplan", label:"Spielplan & Tabelle",short:"Spiele",icon:"flag",           modul:"spielplan"},
+    {key:"polls",     label:"Abstimmungen", short:"Polls",     icon:"speakerphone",     modul:"polls"},
+    {key:"helpers",   label:"Helfereinsätze",short:"Helfer",   icon:"heart-handshake",  modul:"helpers"},
   ];
-  const tabs=limited?TABS_LIMITED:TABS_ALL;
+
+  /* Aktives Team-Objekt aus dbTeams → module_aktiv */
+  const activeTeamObj=dbTeams.find(t=>t.name===activeTeam)||null;
+  const teamModuleAktiv=activeTeamObj?.module_aktiv||null; // null = alle aktiv
+
+  /* Tabs filtern: nur anzeigen wenn in team_module aktiv (oder keine Konfiguration) */
+  const filterTabs=(tabList)=>tabList.filter(t=>
+    !t.modul || !teamModuleAktiv || teamModuleAktiv.includes(t.modul)
+  );
+  const tabs=filterTabs(limited?TABS_LIMITED:TABS_ALL);
   const [tab,setTab]=useState(()=>{const t=NAV_TARGET.tab||"overview";NAV_TARGET.tab=null;return t;});
   const [attFilter,setAttFilter]=useState(()=>{const f=NAV_TARGET.filter||[];NAV_TARGET.filter=null;return f;});
   const [rosterInitial,setRosterInitial]=useState(null);
@@ -10701,8 +10710,18 @@ export default function Portal({supabaseClient}){
     : spielerTeam.length>0 ? spielerTeam : ["Cc-Junioren"];
   const myRosterId = account.rosterId||(role==="spieler"?1:role==="eltern"?1:role==="trainer"?200:null);
   /* Dynamische Navigation (funktionaer/stufenleitung aus Gruppen) */
+  /* Effektive Modul-Rechte für aktuelle Rolle */
+  const effModuleForRole = moduleRechte?.[role] ?? (()=>{
+    // Fallback: NAV_BY_ROLE Keys für diese Rolle
+    const nav = getNavForRole(role, dbFunktionen);
+    return nav.map(n=>n.key);
+  })();
+
   const effectiveNav = getNavForRole(role, dbFunktionen)
-    .filter(n=>n.key==="dashboard"||moduleAktiv[n.key]!==false);
+    .filter(n=>
+      n.key==="dashboard" ||
+      (moduleAktiv[n.key]!==false && effModuleForRole.includes(n.key))
+    );
 
   const handleAccountChange=(key)=>{
     setAccountKey(key);
@@ -10711,8 +10730,11 @@ export default function Portal({supabaseClient}){
   };
 
   const getView=()=>{
-    const na=NAV_BY_ROLE[role]||[];
-    if(!na.find(n=>n.key===active)) return <Dashboard role={role} setActive={setActive}/>;
+    /* Zugriffsprüfung: Modul global aktiv + Rolle hat Zugriff */
+    const isAllowed=(key)=>
+      key==="dashboard" ||
+      (moduleAktiv[key]!==false && effModuleForRole.includes(key));
+    if(!isAllowed(active)) return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
       case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBackAndRef}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams}/>;
