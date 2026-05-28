@@ -2542,23 +2542,50 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
       </div>
       {isMobile?(
         <Card style={{padding:0}}>
-          {filtered.map((p,i)=>(
-            <div key={p.id} onClick={()=>setSelected(p)}
-              style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderTop:i>0?`0.5px solid ${GB}`:"none",cursor:"pointer",background:"var(--surface)"}}
-              onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
-              onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
-              <Av name={p.name} size={44} bg={p.role?"#7C3AED":"#9CA3AF"}/>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{p.lastName} {p.firstName}</div>
-                <div style={{fontSize:13,color:"var(--sub)",marginTop:3,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                  {positions[p.id]&&<span style={{background:"#F3F4F6",color:"var(--sub)",padding:"2px 9px",borderRadius:20}}>{positions[p.id]}</span>}
-                  {rueckennrn[p.id]&&<span style={{color:"var(--sub)"}}>Nr. {rueckennrn[p.id]}</span>}
-                  {p.role&&<span style={{background:"#7C3AED18",color:"#7C3AED",padding:"2px 9px",borderRadius:20}}>{p.role}</span>}
+          {groupByFunktion
+            ? grouped.flatMap(({key,items})=>[
+                key&&<div key={`grp-${key}`} style={{
+                  padding:"8px 16px 5px",
+                  fontSize:11,fontWeight:700,color:"var(--sub)",
+                  textTransform:"uppercase",letterSpacing:0.6,
+                  background:"var(--surface2)",
+                  borderTop:"0.5px solid var(--border)"
+                }}>{key} <span style={{fontWeight:400,opacity:0.6}}>({items.length})</span></div>,
+                ...items.map((p,i)=>(
+                  <div key={p.id} onClick={()=>setSelected(p)}
+                    style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderTop:`0.5px solid ${GB}`,cursor:"pointer",background:"var(--surface)"}}
+                    onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
+                    onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>
+                    <Av name={p.name} size={40} bg={p.role?"#7C3AED":"#9CA3AF"}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:700,fontSize:15,color:"var(--text)"}}>{p.lastName} {p.firstName}</div>
+                      <div style={{fontSize:12,color:"var(--sub)",marginTop:3,display:"flex",gap:6,flexWrap:"wrap",alignItems:"center"}}>
+                        {positions[p.id]&&<span style={{background:"#F3F4F6",color:"var(--sub)",padding:"2px 8px",borderRadius:20}}>{positions[p.id]}</span>}
+                        {rueckennrn[p.id]&&<span style={{color:"var(--sub)"}}>Nr. {rueckennrn[p.id]}</span>}
+                      </div>
+                    </div>
+                    <span style={{color:"var(--sub)",fontSize:18}}>›</span>
+                  </div>
+                ))
+              ]).filter(Boolean)
+            : filtered.map((p,i)=>(
+                <div key={p.id} onClick={()=>setSelected(p)}
+                  style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderTop:i>0?`0.5px solid ${GB}`:"none",cursor:"pointer",background:"var(--surface)"}}
+                  onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
+                  onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>
+                  <Av name={p.name} size={44} bg={p.role?"#7C3AED":"#9CA3AF"}/>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{p.lastName} {p.firstName}</div>
+                    <div style={{fontSize:13,color:"var(--sub)",marginTop:3,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+                      {positions[p.id]&&<span style={{background:"#F3F4F6",color:"var(--sub)",padding:"2px 9px",borderRadius:20}}>{positions[p.id]}</span>}
+                      {rueckennrn[p.id]&&<span style={{color:"var(--sub)"}}>Nr. {rueckennrn[p.id]}</span>}
+                      {p.role&&<span style={{background:"#7C3AED18",color:"#7C3AED",padding:"2px 9px",borderRadius:20}}>{p.role}</span>}
+                    </div>
+                  </div>
+                  <span style={{color:"var(--sub)",fontSize:18}}>›</span>
                 </div>
-              </div>
-              <span style={{color:"var(--sub)",fontSize:18}}>›</span>
-            </div>
-          ))}
+              ))
+          }
         </Card>
       ):(
       <Card style={{padding:0,overflowX:"auto"}}>
