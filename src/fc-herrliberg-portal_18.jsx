@@ -2489,6 +2489,7 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
         if(ia>=0) return -1; if(ib>=0) return 1;
         return String(a||"").localeCompare(String(b||""));
       })
+      .map(([key,items])=>({key,items}))
     :[{key:null,items:f}];
 
   const SortIcon=({col})=>{
