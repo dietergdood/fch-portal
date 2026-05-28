@@ -2474,8 +2474,19 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
   });
 
   /* Gruppierung nach Funktion */
-  const FUNKTION_ORDER=["Trainer/in","Goalietrainer/in","Assistent/in","TW","V","IV","RV","LV","DM","ZM","MF","LM","RM","ST"];
-  const getFunktionLabel=(p)=>p.role||positions[p.id]||"-";
+  const FUNKTION_ORDER=["Trainer/in","Co-Trainer/in","Assistent/in","Goalietrainer/in","Masseur/in","Admin","TW","V","IV","RV","LV","DM","ZM","MF","LM","RM","ST"];
+  const normFunktion=(s)=>{
+    if(!s) return "-";
+    const l=s.toLowerCase();
+    if(l.includes("goalietrain")||l.includes("goalitrain")) return "Goalietrainer/in";
+    if(l.includes("co-train")||l.includes("co train")||l.includes("cotrainer")) return "Co-Trainer/in";
+    if(l.includes("assistent")||l.includes("assistenz")) return "Assistent/in";
+    if(l.includes("masseur")||l.includes("physiother")) return "Masseur/in";
+    if(l.includes("admin")||l.includes("sekretär")||l.includes("aktuarin")) return "Admin";
+    if(l.includes("train")) return "Trainer/in";
+    return s;
+  };
+  const getFunktionLabel=(p)=>normFunktion(p.role||positions[p.id])||"-";
   const grouped=groupByFunktion
     ?Object.entries(f.reduce((acc,p)=>{
         const key=getFunktionLabel(p)||"Spieler";
