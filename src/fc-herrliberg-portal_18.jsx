@@ -10373,6 +10373,7 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
 function LoginScreen({onLogin, sb}){
   const [email,setEmail]=useState("");
   const [pw,setPw]=useState("");
+  const [showPw,setShowPw]=useState(false);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState("");
   const [resetSent,setResetSent]=useState(false);
@@ -10431,9 +10432,15 @@ function LoginScreen({onLogin, sb}){
                 </div>
                 <div style={{marginBottom:20}}>
                   <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>Passwort</label>
-                  <input type="password" value={pw} onChange={e=>setPw(e.target.value)} required
-                    style={{width:"100%",padding:"10px 12px",borderRadius:8,border:"1px solid "+GB,fontSize:14,outline:"none",boxSizing:"border-box"}}
-                    placeholder="••••••••" autoComplete="current-password"/>
+                  <div style={{position:"relative"}}>
+                    <input type={showPw?"text":"password"} value={pw} onChange={e=>setPw(e.target.value)} required
+                      style={{width:"100%",padding:"10px 40px 10px 12px",borderRadius:8,border:"1px solid "+GB,fontSize:14,outline:"none",boxSizing:"border-box"}}
+                      placeholder="••••••••" autoComplete="current-password"/>
+                    <button type="button" onClick={()=>setShowPw(p=>!p)}
+                      style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:4,display:"flex",alignItems:"center"}}>
+                      <TI n={showPw?"eye-off":"eye"} size={16}/>
+                    </button>
+                  </div>
                 </div>
                 {error&&<div style={{fontSize:13,color:"#DC2626",background:"#FEF2F2",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                 <button type="submit" disabled={loading}
