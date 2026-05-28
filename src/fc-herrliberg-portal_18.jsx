@@ -6221,6 +6221,151 @@ function AuditView(){ return <PortalverwaltungView initialTab="audit"/>; }
    Tabs: Module & Rechte | Benutzer & Rollen | Feldsichtbarkeit |
          API-Verbindungen | Audit-Logs
    ══════════════════════════════════════════════════════════════════ */
+function TeamModuleMatrix({supabase,setSaveMsg}){
+  const sb=supabase||window.__sb;
+  const [teams,setTeams]=useState([]);
+  const [moduleMap,setModuleMap]=useState({}); // {team_id: [modul,...]}
+  const [loading,setLoading]=useState(true);
+  const [saving,setSaving]=useState(false);
+  const [filterHaupt,setFilterHaupt]=useState("alle");
+
+  const TEAM_MODS=[
+    {key:"roster",           label:"Kader"},
+    {key:"training",         label:"Training"},
+    {key:"spielplan",        label:"Spielplan"},
+    {key:"events",           label:"Termine"},
+    {key:"attendance_central",label:"Anwesenheit"},
+    {key:"helpers",          label:"Helfer"},
+    {key:"polls",            label:"Abstimmungen"},
+    {key:"stats",            label:"Statistik"},
+    {key:"media",            label:"Medien"},
+    {key:"news",             label:"News"},
+    {key:"wiki",             label:"Wiki"},
+    {key:"docs",             label:"Dokumente"},
+  ];
+
+  useEffect(()=>{
+    (async()=>{
+      setLoading(true);
+      try{
+        if(sb){
+          const[tR,tmR]=await Promise.all([
+            sb.from("teams").select("id,name,hauptbereich,kurzname").eq("aktiv",true).order("hauptbereich").order("name"),
+            sb.from("team_module").select("team_id,modul,aktiv"),
+          ]);
+          if(tR.data) setTeams(tR.data);
+          if(tmR.data){
+            const m={};
+            tmR.data.forEach(r=>{
+              if(!m[r.team_id]) m[r.team_id]=[];
+              if(r.aktiv!==false) m[r.team_id].push(r.modul);
+            });
+            setModuleMap(m);
+          }
+        }
+      }catch(e){ console.warn("[FCH] TeamModuleMatrix:", e.message); }
+      setLoading(false);
+    })();
+  },[]);
+
+  async function toggleTeamModul(teamId, modul){
+    const cur=moduleMap[teamId]||TEAM_MODS.map(m=>m.key);
+    const isOn=cur.includes(modul);
+    const neu={...moduleMap,[teamId]:isOn?cur.filter(m=>m!==modul):[...cur,modul]};
+    setModuleMap(neu);
+    if(sb){
+      await sb.from("team_module").upsert({team_id:teamId,modul,aktiv:!isOn},{onConflict:"team_id,modul"});
+    }
+  }
+
+  async function applyToAll(modul, aktiv){
+    if(!sb) return;
+    setSaving(true);
+    const rows=teams.map(t=>({team_id:t.id,modul,aktiv}));
+    await sb.from("team_module").upsert(rows,{onConflict:"team_id,modul"});
+    const neu={...moduleMap};
+    teams.forEach(t=>{
+      const cur=neu[t.id]||TEAM_MODS.map(m=>m.key);
+      neu[t.id]=aktiv?[...new Set([...cur,modul])]:cur.filter(m=>m!==modul);
+    });
+    setModuleMap(neu);
+    setSaving(false);
+    setSaveMsg(`${TEAM_MODS.find(m=>m.key===modul)?.label||modul} für alle Teams ${aktiv?"aktiviert":"deaktiviert"}`);
+    setTimeout(()=>setSaveMsg(""),2000);
+  }
+
+  if(loading) return <div style={{padding:20,color:"var(--sub)",fontSize:13}}>Lade Team-Module…</div>;
+
+  const hauptbereiche=["alle",...[...new Set(teams.map(t=>t.hauptbereich).filter(Boolean))]];
+  const filtered=filterHaupt==="alle"?teams:teams.filter(t=>t.hauptbereich===filterHaupt);
+
+  return(
+    <div>
+      <InfoBox text="Aktiviere oder deaktiviere Module pro Team. Klick auf einen Modul-Header aktiviert/deaktiviert für alle Teams gleichzeitig." color={BL}/>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",margin:"14px 0 10px"}}>
+        {hauptbereiche.map(h=>(
+          <button key={h} onClick={()=>setFilterHaupt(h)} style={{
+            padding:"5px 12px",borderRadius:20,border:"1px solid var(--border)",fontFamily:FONT,
+            fontSize:12,cursor:"pointer",fontWeight:filterHaupt===h?600:400,
+            background:filterHaupt===h?BK:"transparent",color:filterHaupt===h?"#fff":"var(--sub)"
+          }}>{h==="alle"?"Alle Bereiche":h}</button>
+        ))}
+      </div>
+      <Card style={{padding:0,overflowX:"auto"}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+          <thead>
+            <tr style={{background:"var(--surface2)"}}>
+              <th style={{padding:"8px 14px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4,minWidth:140,position:"sticky",left:0,background:"var(--surface2)"}}>Team</th>
+              {TEAM_MODS.map(m=>(
+                <th key={m.key} style={{padding:"8px 6px",textAlign:"center",fontWeight:600,color:"var(--sub)",fontSize:11,minWidth:72,cursor:"pointer"}}
+                  title={`Alle Teams: ${m.label} ein/aus`}>
+                  <div style={{writingMode:"vertical-rl",transform:"rotate(180deg)",whiteSpace:"nowrap",padding:"2px 0"}}>{m.label}</div>
+                  <div style={{display:"flex",gap:3,justifyContent:"center",marginTop:4}}>
+                    <button onClick={()=>applyToAll(m.key,true)} title="Alle ein"
+                      style={{fontSize:9,padding:"1px 4px",borderRadius:4,border:"1px solid "+GN,background:GN+"20",color:GN,cursor:"pointer",fontFamily:FONT}}>✓</button>
+                    <button onClick={()=>applyToAll(m.key,false)} title="Alle aus"
+                      style={{fontSize:9,padding:"1px 4px",borderRadius:4,border:"1px solid "+R,background:RL,color:R,cursor:"pointer",fontFamily:FONT}}>✗</button>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((t,i)=>{
+              const aktive=moduleMap[t.id]||TEAM_MODS.map(m=>m.key);
+              return(
+                <tr key={t.id} style={{borderTop:"0.5px solid var(--border)"}}>
+                  <td style={{padding:"7px 14px",fontWeight:500,color:"var(--text)",position:"sticky",left:0,background:"var(--surface)",fontSize:12}}>
+                    <div>{t.name}</div>
+                    {t.hauptbereich&&<div style={{fontSize:10,color:"var(--sub)"}}>{t.hauptbereich}</div>}
+                  </td>
+                  {TEAM_MODS.map(m=>{
+                    const isOn=aktive.includes(m.key);
+                    return(
+                      <td key={m.key} style={{textAlign:"center",padding:"7px 6px"}}>
+                        <div onClick={()=>toggleTeamModul(t.id,m.key)}
+                          style={{
+                            width:22,height:22,borderRadius:5,margin:"0 auto",cursor:"pointer",
+                            background:isOn?GN+"25":"transparent",
+                            border:`1px solid ${isOn?GN+"70":"var(--border)"}`,
+                            display:"flex",alignItems:"center",justifyContent:"center",
+                            transition:"all 0.12s"
+                          }}>
+                          {isOn&&<TI n="check" size={12} style={{color:GN}}/>}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Card>
+    </div>
+  );
+}
+
 function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv,moduleRechte,setModuleRechte}){
   const [tab,setTab]=useState(initialTab);
   const [module,setModule]=useState([]);
@@ -6246,12 +6391,13 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   /* moduleAktiv + moduleRechte kommen als Props von App */
 
   const TABS=[
-    {key:"module",    label:"Module & Rechte",      icon:"layout-grid"},
-    {key:"gruppen",   label:"Gruppen & Funktionen",  icon:"sitemap"},
-    {key:"users",     label:"Benutzer & Rollen",     icon:"users"},
-    {key:"feldvis",   label:"Feldsichtbarkeit",       icon:"eye"},
-    {key:"api",       label:"API-Verbindungen",       icon:"plug"},
-    {key:"audit",     label:"Audit-Logs",             icon:"clipboard-list"},
+    {key:"module",      label:"Module & Rechte",      icon:"layout-grid"},
+    {key:"gruppen",     label:"Gruppen & Funktionen",  icon:"sitemap"},
+    {key:"teammodule",  label:"Team-Module",           icon:"ball-football"},
+    {key:"users",       label:"Benutzer & Rollen",     icon:"users"},
+    {key:"feldvis",     label:"Feldsichtbarkeit",       icon:"eye"},
+    {key:"api",         label:"API-Verbindungen",       icon:"plug"},
+    {key:"audit",       label:"Audit-Logs",             icon:"clipboard-list"},
   ];
 
   const ROLLEN=["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"];
@@ -7006,6 +7152,28 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           </ModalOrSheet>
         </div>
       )}
+
+      {/* ── TAB: TEAM-MODULE ── */}
+      {!loading&&tab==="teammodule"&&(()=>{
+        const TEAM_MODS=[
+          {key:"roster",    label:"Kader"},
+          {key:"training",  label:"Training"},
+          {key:"spielplan", label:"Spielplan"},
+          {key:"events",    label:"Termine"},
+          {key:"attendance_central",label:"Anwesenheit"},
+          {key:"helpers",   label:"Helfer"},
+          {key:"polls",     label:"Abstimmungen"},
+          {key:"stats",     label:"Statistik"},
+          {key:"media",     label:"Medien"},
+          {key:"news",      label:"News"},
+          {key:"wiki",      label:"Wiki"},
+          {key:"docs",      label:"Dokumente"},
+        ];
+        /* Lokaler State für Änderungen */
+        return(
+          <TeamModuleMatrix supabase={supabase} setSaveMsg={setSaveMsg}/>
+        );
+      })()}
 
       {/* ── TAB: BENUTZER & ROLLEN ── */}
       {!loading&&tab==="users"&&(
