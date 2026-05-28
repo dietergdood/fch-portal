@@ -4960,7 +4960,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
     })
     .sort((a,b)=>{
       const da=parseEvDate(a.date), db=parseEvDate(b.date);
-      return timeFilter==="vergangen"?db.localeCompare(da):da.localeCompare(db);
+      return timeFilter==="vergangen"?String(db||"").localeCompare(String(da||"")):String(da||"").localeCompare(String(db||""));
     });
   const selEv=teamEvents.find(e=>e.id===selEvent)||teamEvents[0];
 
@@ -5936,7 +5936,7 @@ function MembersView({role,dbMitglieder=[]}){
   );
 
   const sorted=[...filtered].sort((a,b)=>{
-    const av=a[sortCol]||""; const bv=b[sortCol]||"";
+    const av=String(a[sortCol]??""||""); const bv=String(b[sortCol]??""||"");
     return sortDir==="asc"?av.localeCompare(bv):bv.localeCompare(av);
   });
 
@@ -5951,7 +5951,7 @@ function MembersView({role,dbMitglieder=[]}){
       if(!map[k]) map[k]=[];
       map[k].push(m);
     });
-    groups=Object.entries(map).sort(([a],[b])=>a.localeCompare(b)).map(([k,members])=>({key:k,members}));
+    groups=Object.entries(map).sort(([a],[b])=>String(a||'').localeCompare(String(b||''))).map(([k,members])=>({key:k,members}));
   }
 
   const statusColor=s=>s==="Vollständig"?GN:s==="Prüfung fällig"?AM:R;
@@ -9239,7 +9239,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
   });
 
   const sorted=[...filtered].sort((a,b)=>{
-    const av=a[sortCol]||""; const bv=b[sortCol]||"";
+    const av=String(a[sortCol]??""||""); const bv=String(b[sortCol]??""||"");
     return sortDir==="asc"?av.localeCompare(bv):bv.localeCompare(av);
   });
 
@@ -9253,7 +9253,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           acc[k].push(t);
           return acc;
         },{})
-      ).sort(([a],[b])=>a.localeCompare(b)).map(([key,items])=>({key,items}));
+      ).sort(([a],[b])=>String(a||'').localeCompare(String(b||''))).map(([key,items])=>({key,items}));
 
   const inputStyle={width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"};
   const labelStyle={fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:5,display:"block",textTransform:"uppercase",letterSpacing:0.5};
