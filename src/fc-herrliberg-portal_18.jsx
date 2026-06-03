@@ -525,7 +525,135 @@ const NAV_BY_ROLE = {
   ],
 };
 
-/* -- FELDSICHTBARKEIT (Kap. 6.1) -- */
+/* ── MOBILE NAV: max 4 Haupt-Tabs + «Mehr» ──────────────
+   Desktop: volle NAV_BY_ROLE Sidebar
+   Mobile:  4 wichtigste + Mehr-Button (Bottom Sheet)
+─────────────────────────────────────────────────────── */
+const MOBILE_NAV_BY_ROLE = {
+  administrator: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"members",            icon:"users",            label:"Mitglieder"},
+      {key:"team",               icon:"ball-football",    label:"Teams"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+      {key:"portal",             icon:"settings",         label:"Portal"},
+    ],
+    mehr: [
+      {key:"training",           icon:"calendar",         label:"Trainingsplan"},
+      {key:"schedule",           icon:"flag",             label:"Spielplan"},
+      {key:"attendance_central", icon:"chart-bar",        label:"Anwesenheit"},
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+      {key:"buses",              icon:"bus",              label:"Busse"},
+      {key:"material",           icon:"package",          label:"Material"},
+      {key:"lockers",            icon:"door-exit",        label:"Garderoben"},
+      {key:"news",               icon:"news",             label:"News"},
+      {key:"media",              icon:"speakerphone",     label:"Medien"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    ],
+  },
+  vorstand: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"team",               icon:"ball-football",    label:"Teams"},
+      {key:"members",            icon:"users",            label:"Mitglieder"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+    ],
+    mehr: [
+      {key:"training",           icon:"calendar",         label:"Trainingsplan"},
+      {key:"schedule",           icon:"flag",             label:"Spielplan"},
+      {key:"attendance_central", icon:"chart-bar",        label:"Anwesenheit"},
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+      {key:"buses",              icon:"bus",              label:"Busse"},
+      {key:"material",           icon:"package",          label:"Material"},
+      {key:"news",               icon:"news",             label:"News"},
+      {key:"media",              icon:"speakerphone",     label:"Medien"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    ],
+  },
+  administration: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"members",            icon:"users",            label:"Mitglieder"},
+      {key:"team",               icon:"ball-football",    label:"Teams"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+      {key:"portal",             icon:"settings",         label:"Portal"},
+    ],
+    mehr: [
+      {key:"training",           icon:"calendar",         label:"Trainingsplan"},
+      {key:"schedule",           icon:"flag",             label:"Spielplan"},
+      {key:"attendance_central", icon:"chart-bar",        label:"Anwesenheit"},
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+      {key:"buses",              icon:"bus",              label:"Busse"},
+      {key:"material",           icon:"package",          label:"Material"},
+      {key:"lockers",            icon:"door-exit",        label:"Garderoben"},
+      {key:"news",               icon:"news",             label:"News"},
+      {key:"media",              icon:"speakerphone",     label:"Medien"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    ],
+  },
+  funktionaer: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfer"},
+      {key:"news",               icon:"news",             label:"News"},
+    ],
+    mehr: [
+      {key:"material",           icon:"package",          label:"Material"},
+      {key:"buses",              icon:"bus",              label:"Busse"},
+      {key:"media",              icon:"speakerphone",     label:"Medien"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    ],
+  },
+  trainer: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"team",               icon:"ball-football",    label:"Mein Team"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+      {key:"attendance_central", icon:"chart-bar",        label:"Stats"},
+    ],
+    mehr: [
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+      {key:"material",           icon:"package",          label:"Material"},
+      {key:"media",              icon:"speakerphone",     label:"Medien"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"news",               icon:"news",             label:"News"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    ],
+  },
+  spieler: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"team",               icon:"ball-football",    label:"Mein Team"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfer"},
+    ],
+    mehr: [
+      {key:"news",               icon:"news",             label:"News"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+      {key:"buses",              icon:"bus",              label:"Busse"},
+    ],
+  },
+  eltern: {
+    tabs: [
+      {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
+      {key:"team",               icon:"ball-football",    label:"Mein Kind"},
+      {key:"events",             icon:"calendar-event",   label:"Termine"},
+      {key:"helpers",            icon:"heart-handshake",  label:"Helfer"},
+    ],
+    mehr: [
+      {key:"news",               icon:"news",             label:"News"},
+      {key:"wiki",               icon:"book",             label:"Wiki"},
+      {key:"docs",               icon:"file-text",        label:"Dokumente"},
+    ],
+  },
+};
+
 /* Global nav target - allows Dashboard to set initial tab on TeamView */
 const NAV_TARGET={tab:null,filter:null,kindTeam:null,openEvId:null,selectedSpiel:null};
 const FIELD_VIS = {
@@ -11004,47 +11132,100 @@ function getTeamsFromGruppen(gruppen=[]){ return getTeamsFromFunktionen(gruppen)
 /* ==========================================
    APP ROOT
 ========================================== */
-function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
-  const nav=NAV_BY_ROLE[role]||[];
+function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effectiveNav}){
+  const mobileNav=MOBILE_NAV_BY_ROLE[role]||{tabs:[],mehr:[]};
   const rc=getRole(role).color;
   const userName=account?.name||USER_ACCOUNTS[role]?.name||getRole(role)?.label||"U";
   const initials=userName.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
   const [showProfile,setShowProfile]=useState(false);
-  const isProfileActive=active==="profile";
+  const [showMehr,setShowMehr]=useState(false);
+
+  /* Nur sichtbare Module anzeigen (Modul-Filter aus effectiveNav) */
+  const visKeys=new Set((effectiveNav||[]).map(n=>n.key));
+  const tabs=mobileNav.tabs.filter(t=>visKeys.has(t.key)||t.key==="dashboard");
+  const mehr=mobileNav.mehr.filter(t=>visKeys.has(t.key));
+
+  /* Mehr-Tab ist aktiv wenn aktueller Bereich in mehr-Liste ist */
+  const mehrActive=mehr.some(m=>m.key===active);
+
   return(
-    <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"var(--nav)",borderTop:"1px solid var(--nav-b)",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)",boxShadow:"0 -2px 16px rgba(0,0,0,0.25)"}}>
-      <div style={{display:"flex",overflowX:"auto",WebkitOverflowScrolling:"touch",scrollbarWidth:"none",msOverflowStyle:"none"}}>
-        {nav.map(n=>(
-          <button key={n.key} onClick={()=>setActive(n.key)} style={{
-            flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",
-            padding:"0",background:"none",border:"none",cursor:"pointer",
-            minWidth:60,height:56,WebkitTapHighlightColor:"transparent",
-            position:"relative"
-          }}>
-            {active===n.key&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"#f8de09"}}/>}
-            <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",background:active===n.key?"#f8de09":"transparent",transition:"background 0.15s,transform 0.1s",transform:active===n.key?"scale(1.08)":"scale(1)"}}>
-              <TI n={n.icon||"circle"} size={19} style={{color:active===n.key?"#111":"var(--nav-t)"}}/>
+    <>
+      {/* Mehr Bottom Sheet */}
+      {showMehr&&(
+        <div onClick={()=>setShowMehr(false)}
+          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:200,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+          <div onClick={e=>e.stopPropagation()}
+            style={{background:"var(--surface)",borderRadius:"20px 20px 0 0",padding:"8px 0 calc(env(safe-area-inset-bottom) + 8px)",maxHeight:"70vh",overflowY:"auto"}}>
+            {/* Handle */}
+            <div style={{width:40,height:4,borderRadius:2,background:"var(--border)",margin:"4px auto 12px"}}/>
+            <div style={{padding:"0 8px 4px",fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5}}>Weitere Module</div>
+            {mehr.map(m=>(
+              <button key={m.key} onClick={()=>{setActive(m.key);setShowMehr(false);}}
+                style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
+                  background:active===m.key?"#f8de0920":"none",border:"none",cursor:"pointer",
+                  fontFamily:"inherit",textAlign:"left"}}>
+                <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
+                  background:active===m.key?"#f8de09":"var(--surface2)",flexShrink:0}}>
+                  <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/>
+                </div>
+                <span style={{fontSize:15,fontWeight:active===m.key?600:400,color:active===m.key?"var(--text)":"var(--sub)"}}>{m.label}</span>
+                {active===m.key&&<TI n="check" size={16} style={{color:"#f8de09",marginLeft:"auto"}}/>}
+              </button>
+            ))}
+            {/* Profil */}
+            <div style={{margin:"8px 16px 0",paddingTop:12,borderTop:"0.5px solid var(--border)"}}>
+              <button onClick={()=>{setShowProfile(true);setShowMehr(false);}}
+                style={{display:"flex",alignItems:"center",gap:14,width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
+                <div style={{width:40,height:40,borderRadius:"50%",background:rc,display:"flex",alignItems:"center",
+                  justifyContent:"center",color:rc==="#f8de09"?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}>
+                  {initials}
+                </div>
+                <div style={{textAlign:"left"}}>
+                  <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{userName}</div>
+                  <div style={{fontSize:12,color:"var(--sub)"}}>{getRole(role)?.label||role}</div>
+                </div>
+              </button>
             </div>
-          </button>
-        ))}
-        {/* Profil-Button mit Initialen */}
-        <button onClick={()=>setShowProfile(true)} style={{
-          flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",
-          padding:"0",background:"none",border:"none",cursor:"pointer",
-          minWidth:60,height:56,WebkitTapHighlightColor:"transparent",
-          position:"relative",marginLeft:"auto"
-        }}>
-          {showProfile&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"#f8de09"}}/>}
-          <div style={{width:36,height:36,borderRadius:"50%",background:rc,display:"flex",alignItems:"center",
-            justifyContent:"center",color:rc==="#f8de09"?"#111":"#fff",fontWeight:700,fontSize:13,
-            flexShrink:0,border:showProfile?"2px solid #f8de09":"2px solid transparent",
-            transition:"border-color 0.15s",boxSizing:"border-box"}}>
-            {initials}
           </div>
-        </button>
-      </div>
+        </div>
+      )}
+
+      {/* Bottom Nav Bar */}
+      <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"var(--nav)",borderTop:"1px solid var(--nav-b)",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)",boxShadow:"0 -2px 16px rgba(0,0,0,0.25)"}}>
+        <div style={{display:"flex"}}>
+          {tabs.map(n=>(
+            <button key={n.key} onClick={()=>{setActive(n.key);setShowMehr(false);}} style={{
+              flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+              padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
+              minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
+            }}>
+              {active===n.key&&!mehrActive&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"#f8de09"}}/>}
+              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
+                background:active===n.key&&!mehrActive?"#f8de09":"transparent",transition:"background 0.15s"}}>
+                <TI n={n.icon||"circle"} size={19} style={{color:active===n.key&&!mehrActive?"#111":"var(--nav-t)"}}/>
+              </div>
+              <span style={{fontSize:10,color:active===n.key&&!mehrActive?"#f8de09":"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
+            </button>
+          ))}
+          {/* Mehr-Button (nur wenn mehr-Einträge vorhanden) */}
+          {mehr.length>0&&(
+            <button onClick={()=>setShowMehr(v=>!v)} style={{
+              flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+              padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
+              minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
+            }}>
+              {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"#f8de09"}}/>}
+              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
+                background:mehrActive||showMehr?"#f8de09":"transparent",transition:"background 0.15s"}}>
+                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"#111":"var(--nav-t)"}}/>
+              </div>
+              <span style={{fontSize:10,color:mehrActive||showMehr?"#f8de09":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
+            </button>
+          )}
+        </div>
+      </nav>
       <ProfileModal open={showProfile} onClose={()=>setShowProfile(false)} account={account} role={role} sb={sb} onNameUpdated={onNameUpdated} onLogout={onLogout}/>
-    </nav>
+    </>
   );
 }
 
@@ -11492,7 +11673,7 @@ export default function Portal({supabaseClient}){
             onOpenProfile={()=>setMobileProfileOpen(true)}
             onBack={customBack}/>}
           <main key={active} className="fch-page" style={{flex:1,padding:isMobile?"16px 14px 90px":isTablet?"20px 24px 28px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
-          {isMobile&&<MobileNav role={role} active={active} setActive={setActivePersist} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
+          {isMobile&&<MobileNav role={role} active={active} setActive={setActivePersist} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined} effectiveNav={effectiveNav}/>}
         </div>
       </div>
       {isMobile&&<ProfileModal open={mobileProfileOpen} onClose={()=>setMobileProfileOpen(false)} account={account} role={role} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
