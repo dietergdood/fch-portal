@@ -6931,8 +6931,8 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     themeRef.current=updated;
     setAppTheme(updated);
     /* CSS sofort anwenden via applyThemeCss */
-    console.log("[updateTheme]", key, val, "applyTheme:", typeof applyTheme);
-    if(applyTheme) applyTheme(updated);
+    console.log("[updateTheme]", key, val, "navBg in updated:", updated.navBg);
+    if(applyTheme){ applyTheme(updated); console.log("[updateTheme] --nav jetzt:", document.documentElement.style.getPropertyValue("--nav")); }
     else console.warn("[updateTheme] applyTheme ist NICHT verfügbar!");
     setThemeDirty(true);
   }
