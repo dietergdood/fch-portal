@@ -3402,7 +3402,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
     </div>
   );
 }
-function TrainingGantt({team: teamProp, role}){
+function TrainingGantt({team: teamProp, role, kannSchreiben, kannVerwalten}){
   const START = 7, END = 22, H = 52;
   const isMobile = useIsMobile();
   const canEdit = role==="administrator"||role==="administration";
@@ -9012,7 +9012,7 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
   );
 }
 
-function HelpersList({teamOnly,role,meineTeams=[],account}){
+function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerwalten}){
   const isMobile=useIsMobile();
   const [helperTab,setHelperTab]=useState(teamOnly?"team":"browse");
   const [selectedEvent,setSelectedEvent]=useState(null);
@@ -9868,7 +9868,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
   );
 }
 
-function BusesView(){
+function BusesView({role,kannSchreiben,kannVerwalten}){
   const [showForm,setShowForm]=useState(false);
   return(
     <div>
@@ -10822,7 +10822,7 @@ function MediaView(){
   );
 }
 
-function NewsView({role,meineTeams}){
+function NewsView({role,meineTeams,kannVerwalten}){
   const canCreate=kannVerwalten?kannVerwalten("media"):(["trainer","administrator","administration","funktionaer"].includes(role));
 
   /* Determine which targets are visible for this role/team */
