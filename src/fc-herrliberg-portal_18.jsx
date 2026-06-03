@@ -11725,22 +11725,6 @@ function LoginScreen({onLogin, sb, appTheme}){
   );
 }
 
-class ErrorBoundary extends React.Component{
-  constructor(p){super(p);this.state={err:null};}
-  static getDerivedStateFromError(e){return{err:e};}
-  componentDidCatch(e,i){console.error("[Portal Error]",e,i);}
-  render(){
-    if(this.state.err)return(
-      <div style={{padding:40,fontFamily:"sans-serif",color:"#333"}}>
-        <h2 style={{color:"#c00"}}>Portal-Fehler</h2>
-        <pre style={{background:"#f5f5f5",padding:16,borderRadius:8,fontSize:12,overflow:"auto"}}>{this.state.err?.message||String(this.state.err)}</pre>
-        <button onClick={()=>window.location.reload()} style={{marginTop:16,padding:"8px 16px",background:"#FFBF00",border:"none",borderRadius:8,cursor:"pointer",fontWeight:700}}>Neu laden</button>
-      </div>
-    );
-    return this.props.children;
-  }
-}
-
 export default function Portal({supabaseClient}){
   const sbRef = useRef(supabaseClient||supabase||null);
   const sb = sbRef.current;
@@ -12166,7 +12150,6 @@ export default function Portal({supabaseClient}){
   };
 
   return(
-    <ErrorBoundary>
     <ThemeCtx.Provider value={{dark,toggle:toggleDark}}>
       {splash&&<SplashScreen onDone={doneSplash}/>}
       <div data-theme={dark?"dark":"light"} style={{display:"flex",minHeight:"100vh",background:"var(--bg)",fontFamily:FONT,WebkitFontSmoothing:"antialiased",MozOsxFontSmoothing:"grayscale",color:"var(--text)",transition:"background 0.25s,color 0.25s"}}>
@@ -12184,6 +12167,5 @@ export default function Portal({supabaseClient}){
       </div>
       {isMobile&&<ProfileModal open={mobileProfileOpen} onClose={()=>setMobileProfileOpen(false)} account={account} role={role} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined}/>}
     </ThemeCtx.Provider>
-    </ErrorBoundary>
   );
 }
