@@ -66,7 +66,7 @@ const PWA_CSS=`
 :root,[data-theme=light]{
   --bg:#F5F5F3;--surface:#fff;--surface2:#f8f8f6;
   --border:#E0DED8;--text:#1A1A1A;--sub:#666;
-  --nav:#141414;--nav-b:#222;--nav-t:#9a9a9a;--nav-a:#f0f0f0;
+  --nav:#141414;--nav-b:#222;--nav-t:#ffffff;--nav-a:#FFBF00;
   --card-shadow:0 1px 4px rgba(0,0,0,0.06);
   --cc-hover:rgba(255,191,0,0.19);
   --cc-accent:#FFBF00;
@@ -81,7 +81,7 @@ const PWA_CSS=`
 [data-theme=dark]{
   --bg:#0f0f11;--surface:#18181c;--surface2:#222228;
   --border:#2c2c36;--text:#f0f0f0;--sub:#8a8a9a;
-  --nav:#0a0a0c;--nav-b:#1a1a22;--nav-t:#6a6a7a;--nav-a:#f0f0f0;
+  --nav:#0a0a0c;--nav-b:#1a1a22;--nav-t:#ffffff;--nav-a:#FFBF00;
   --card-shadow:0 1px 4px rgba(0,0,0,0.3);
   --cc-hover:rgba(255,191,0,0.12);
 }
@@ -1257,8 +1257,8 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
         </div>
         {!collapsed&&(
           <div style={{minWidth:0,overflow:"hidden"}}>
-            <div style={{color:"var(--nav-a)",fontWeight:800,fontSize:14,lineHeight:1.2,letterSpacing:-0.2,whiteSpace:"nowrap"}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
-            <div style={{color:"var(--nav-t)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>{appTheme?.portalname||"ClubCampus"}</div>
+            <div style={{color:"var(--nav-t)",fontWeight:800,fontSize:14,lineHeight:1.2,letterSpacing:-0.2,whiteSpace:"nowrap"}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
+            <div style={{color:"var(--nav-a)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>{appTheme?.portalname||"ClubCampus"}</div>
           </div>
         )}
       </div>
@@ -11865,7 +11865,21 @@ export default function Portal({supabaseClient}){
   useEffect(()=>{
     try{
       const s=localStorage.getItem("cc-theme");
-      if(s) applyThemeCss({...THEME_DEFAULT_STATIC,...JSON.parse(s)});
+      if(s){
+        const saved=JSON.parse(s);
+        const CURRENT_V=2;
+        if(!saved._v||saved._v<CURRENT_V){
+          const reset={...THEME_DEFAULT_STATIC,...saved,
+            navAccent:THEME_DEFAULT_STATIC.navAccent,
+            navText:THEME_DEFAULT_STATIC.navText,
+            navBg:THEME_DEFAULT_STATIC.navBg,
+            _v:CURRENT_V};
+          localStorage.setItem("cc-theme",JSON.stringify(reset));
+          applyThemeCss(reset);
+        } else {
+          applyThemeCss({...THEME_DEFAULT_STATIC,...saved});
+        }
+      }
     }catch{}
     /* Tenant laden (unabhängig vom Login) */
     loadTenant();
@@ -11928,12 +11942,24 @@ export default function Portal({supabaseClient}){
   }
 
   /* ── Theme aus Supabase laden ── */
+  const THEME_SCHEMA_V=2; /* Erhöhen → erzwingt Reset aller Farbwerte */
+  const THEME_COLOR_KEYS=["navBg","navText","navAccent","navHover","vereinsfarbe1","vereinsfarbe2","btnPrimary","btnPrimaryText","btnHover"];
   async function loadTheme(){
     if(!sb) return;
     try{
       const{data,error}=await sb.from("portal_einstellungen").select("wert").eq("schluessel","theme").single();
       if(error||!data) return;
-      const t={...THEME_DEFAULT_STATIC,...(data.wert||{})};
+      const saved=data.wert||{};
+      let t;
+      if(!saved._v||saved._v<THEME_SCHEMA_V){
+        /* Veraltetes Schema: Farbwerte auf Defaults zurücksetzen, Text/Logo behalten */
+        const colorDefaults=Object.fromEntries(THEME_COLOR_KEYS.map(k=>[k,THEME_DEFAULT_STATIC[k]]));
+        t={...THEME_DEFAULT_STATIC,...saved,...colorDefaults,_v:THEME_SCHEMA_V};
+        /* Korrigierten Wert zurück nach Supabase schreiben */
+        try{await sb.from("portal_einstellungen").upsert({schluessel:"theme",wert:t});}catch{}
+      } else {
+        t={...THEME_DEFAULT_STATIC,...saved};
+      }
       setAppTheme(t);
       applyThemeCss(t);
       try{localStorage.setItem("cc-theme",JSON.stringify(t));}catch{}
