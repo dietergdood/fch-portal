@@ -6946,12 +6946,13 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     r.setProperty("--btn-primary",  theme.btnPrimary);
     r.setProperty("--btn-primary-text",theme.btnPrimaryText||"#000000");
     r.setProperty("--btn-hover",    theme.btnHover||"#333333");
-    /* localStorage */
-    try{localStorage.setItem("cc-theme",JSON.stringify(theme));}catch{}
-    /* Supabase: in portal_einstellungen speichern */
+    /* React State + localStorage */
     const themeToSave={...theme,_v:2};
-    if(sb){
-      sb.from("portal_einstellungen")
+    setAppTheme(themeToSave);
+    try{localStorage.setItem("cc-theme",JSON.stringify(themeToSave));}catch{}
+    /* Supabase: in portal_einstellungen speichern */
+    if(supabase){
+      supabase.from("portal_einstellungen")
         .upsert({schluessel:"theme",wert:themeToSave},{onConflict:"schluessel"})
         .then(({error:e})=>{
           if(e) setSaveMsg("Fehler: "+e.message);
