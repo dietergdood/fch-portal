@@ -5,6 +5,14 @@ let supabase = null; // wird via setSupabaseClient() gesetzt
 
 /* -- FARBEN -- */
 const R="#C8102E",RL="#FEF2F2",BK="#1A1A1A",GR="#F5F5F3",GB="#E0DED8",BL="#2563EB",GN="#059669",AM="#D97706";
+/* Theme-Farben (folgen CSS-Variablen wenn gesetzt) */
+const BTN    ="var(--btn-primary,#1A1A1A)";   // Primary Button Hintergrund
+const BTN_TXT="var(--btn-primary-text,#fff)"; // Primary Button Text
+const ACCENT  = "var(--cc-accent,#F8DE09)";      // Vereinsfarbe Akzent
+const ACCENT2 = "var(--cc-accent2,#1A1A1A)";    // Text auf Akzent
+const ACCENT20 = "var(--cc-accent-20,rgba(248,222,9,0.12))"; // Akzent 12% opacity
+const ACCENT12 = "var(--cc-accent-12,rgba(248,222,9,0.07))"; // Akzent 7% opacity
+const ACCENT15 = "var(--cc-accent-15,rgba(248,222,9,0.09))"; // Akzent 9% opacity
 
 /* ── PWA: Schriften & Breakpoints ── */
 const FONT="'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
@@ -65,7 +73,7 @@ const PWA_CSS=`
   --border:#2c2c36;--text:#f0f0f0;--sub:#8a8a9a;
   --nav:#0a0a0c;--nav-b:#1a1a22;--nav-t:#6a6a7a;--nav-a:#f0f0f0;
   --card-shadow:0 1px 4px rgba(0,0,0,0.3);
-  --cc-hover:#f8de0920;
+  --cc-hover:rgba(248,222,9,0.12);
 }
 @keyframes fch-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes fch-pop{from{opacity:0;transform:scale(0.72)}to{opacity:1;transform:scale(1)}}
@@ -156,13 +164,13 @@ function SplashScreen({onDone}){
   useEffect(()=>{const t=setTimeout(onDone,2600);return()=>clearTimeout(t);},[]);
   return(
     <div style={{position:"fixed",inset:0,background:"#0a0a0c",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:9999,animation:"fch-splash-out 0.4s 2.2s ease-out forwards"}}>
-      <div style={{width:110,height:110,borderRadius:28,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",animation:"fch-pop 0.55s 0.1s cubic-bezier(0.34,1.56,0.64,1) both",boxShadow:"0 8px 40px rgba(248,222,9,0.35)"}}>
+      <div style={{width:110,height:110,borderRadius:28,background:ACCENT,display:"flex",alignItems:"center",justifyContent:"center",animation:"fch-pop 0.55s 0.1s cubic-bezier(0.34,1.56,0.64,1) both",boxShadow:"0 8px 40px rgba(248,222,9,0.35)"}}>
         <img src="/logo_fch_mit_rand.svg" style={{width:88,height:88,objectFit:"contain",display:"block"}} alt="FC Herrliberg"/>
       </div>
       <div style={{color:"#f0f0f0",fontWeight:800,fontSize:24,marginTop:24,letterSpacing:-0.4,fontFamily:FONT,animation:"fch-in 0.4s 0.45s ease-out both"}}>FC Herrliberg</div>
       <div style={{color:"#555",fontSize:12,marginTop:5,letterSpacing:2,textTransform:"uppercase",fontFamily:FONT,animation:"fch-in 0.4s 0.6s ease-out both"}}>ClubCampus</div>
       <div style={{display:"flex",gap:7,marginTop:40,animation:"fch-in 0.4s 0.75s ease-out both"}}>
-        {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:"#f8de09",animation:`fch-dot 1.2s ${i*0.18}s ease-in-out infinite`}}/>)}
+        {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:ACCENT,animation:`fch-dot 1.2s ${i*0.18}s ease-in-out infinite`}}/>)}
       </div>
     </div>
   );
@@ -237,7 +245,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
             }}
               onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
               onMouseLeave={e=>e.currentTarget.style.background="none"}>
-              <Av name={m.name} size={26} bg={m.role==="Trainer"?"#f8de09":"var(--border)"}/>
+              <Av name={m.name} size={26} bg={m.role==="Trainer"?ACCENT:"var(--border)"}/>
               <div>
                 <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{m.name}</div>
                 <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div>
@@ -284,6 +292,15 @@ function ModalOrSheet({open,onClose,children,maxWidth=660}){
    Unabhängig von der Vereinsfunktion (FUNKTIONEN).
 ───────────────────────────────────────────────────────────── */
 /* ── ClubCampus Theme Default (global) ── */
+/* Hex → rgba() für Hover-Farben */
+function hexToRgba(hex,alpha){
+  const h=(hex||"#F8DE09").replace("#","");
+  const r=parseInt(h.slice(0,2),16);
+  const g=parseInt(h.slice(2,4),16);
+  const b=parseInt(h.slice(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 const THEME_DEFAULT_STATIC={
   vereinsfarbe1:"#F8DE09", vereinsfarbe2:"#1A1A1A",
   navBg:"#1A1A1A", navText:"#FFFFFF", navAccent:"#F8DE09", navHover:"#2A2A2A",
@@ -1013,8 +1030,8 @@ const PSTATS=[
 /* ==========================================
    KLEINE HILFKOMPONENTEN
 ========================================== */
-function Av({name="",init,size=34,bg="#f8de09"}){
-  const textColor=bg==="#f8de09"||bg==="rgba(255,255,255,0.3)"?"#1A1A1A":"#fff";
+function Av({name="",init,size=34,bg={ACCENT}}){
+  const textColor=bg===ACCENT||bg==="#f8de09"||bg==="rgba(255,255,255,0.3)"?"#1A1A1A":"#fff";
   // init kann ein Icon-Name sein (z.B. "settings") oder Initialen
   const isIcon = init && TI_PATHS[init];
   const l = isIcon ? null : (init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase());
@@ -1050,7 +1067,7 @@ function STitle({children,action}){
 }
 function Btn({children,onClick,variant="outline",color=BK,small,style={}}){
   const p=small?"4px 11px":"7px 15px";
-  if(variant==="primary"){const lightBg=color==="#F3F4F6"||color==="#f8de09";return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:lightBg?"1px solid var(--border)":"none",background:color,color:lightBg?"#374151":"#fff",transition:"opacity 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>;}
+  if(variant==="primary"){const lightBg=color==="#F3F4F6"||color===ACCENT;return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:lightBg?"1px solid var(--border)":"none",background:color,color:lightBg?"#374151":"#fff",transition:"opacity 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>;}
   return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:"1px solid var(--border)",background:"var(--surface)",color:"var(--text)",transition:"background 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"} onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>{children}</button>;
 }
 function Tabs({tabs,active,setActive}){
@@ -1220,7 +1237,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
     <nav style={{width:W,minWidth:W,background:"var(--nav)",minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0,borderRight:"1px solid var(--nav-b)",transition:"width 0.22s cubic-bezier(0.4,0,0.2,1),min-width 0.22s cubic-bezier(0.4,0,0.2,1)",overflow:"hidden"}}>
       {/* Logo Header */}
       <div style={{padding:"18px 10px 15px",borderBottom:"1px solid var(--nav-b)",display:"flex",alignItems:"center",gap:collapsed?0:11,justifyContent:collapsed?"center":"flex-start",overflow:"hidden"}}>
-        <div style={{width:44,height:44,minWidth:44,borderRadius:12,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden",boxShadow:"0 2px 8px rgba(248,222,9,0.3)"}}>
+        <div style={{width:44,height:44,minWidth:44,borderRadius:12,background:ACCENT,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden",boxShadow:"0 2px 8px rgba(248,222,9,0.3)"}}>
           <img src="/logo_fch_mit_rand.svg" style={{width:42,height:42,objectFit:"contain",display:"block"}} alt="FCH"/>
         </div>
         {!collapsed&&(
@@ -1236,7 +1253,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
           <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined} style={{
             width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
             padding:collapsed?"10px 0":"10px 12px",borderRadius:9,border:"none",
-            background:active===n.key?"#f8de09":"transparent",
+            background:active===n.key?ACCENT:"transparent",
             color:active===n.key?"#111":"var(--nav-t)",
             cursor:"pointer",fontSize:13.5,fontWeight:active===n.key?600:400,
             textAlign:"left",marginBottom:2,letterSpacing:0.1,
@@ -1265,7 +1282,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
         onMouseLeave={e=>e.currentTarget.style.background="none"}>
         {!collapsed&&<div style={{fontSize:10,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>}
         <div style={{display:"flex",alignItems:"center",gap:9,justifyContent:collapsed?"center":"flex-start"}}>
-          <Av size={32} bg="#f8de09" name={userName}/>
+          <Av size={32} bg={ACCENT} name={userName}/>
           {!collapsed&&(
             <div style={{minWidth:0,flex:1}}>
               <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
@@ -1310,7 +1327,7 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
       {isMobile?(
         isHome?(
           <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
-            <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <div style={{width:30,height:30,borderRadius:8,background:ACCENT,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
             </div>
             <span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>
@@ -1330,7 +1347,7 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
         )
       ):(
         <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
-          <div style={{width:30,height:30,borderRadius:8,background:"#f8de09",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <div style={{width:30,height:30,borderRadius:8,background:ACCENT,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
             <img src="/logo_fch_mit_rand.svg" style={{width:26,height:26,objectFit:"contain",display:"block"}} alt="FCH"/>
           </div>
           <span style={{fontWeight:800,fontSize:15,color:"var(--text)",letterSpacing:-0.3}}>FC Herrliberg</span>
@@ -1343,12 +1360,12 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
           <button onClick={toggle} title={dark?"Hell-Modus":"Dunkel-Modus"} style={{
             display:"flex",alignItems:"center",gap:6,
             padding:"5px 10px 5px 7px",borderRadius:20,
-            border:"1px solid var(--border)",background:dark?"#f8de09":"var(--surface2)",
+            border:"1px solid var(--border)",background:dark?ACCENT:"var(--surface2)",
             cursor:"pointer",transition:"background 0.25s,border-color 0.25s",
             flexShrink:0,minHeight:34
           }}>
             <div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}>
-              <TI n={dark?"sun":"moon"} size={12} style={{color:dark?"#f8de09":"var(--sub)"}}/>
+              <TI n={dark?"sun":"moon"} size={12} style={{color:dark?ACCENT:"var(--sub)"}}/>
             </div>
             <span style={{fontSize:12,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span>
           </button>
@@ -1907,7 +1924,7 @@ function DashboardEltern({account,meineTeams,setActive}){
           <div key={ki} style={{marginBottom:24}}>
             {/* Kind-Header */}
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
-              <div style={{width:6,height:28,borderRadius:3,background:"#f8de09",flexShrink:0}}/>
+              <div style={{width:6,height:28,borderRadius:3,background:ACCENT,flexShrink:0}}/>
               <h2 style={{margin:0,fontSize:16,fontWeight:800}}>{vorname} <span style={{fontSize:13,color:"var(--sub)",fontWeight:500}}>· {team}</span></h2>
             </div>
 
@@ -2154,7 +2171,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
     <div>
       {/* Team-Header */}
       <div style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:hasMultiTeams?10:isMobile?14:18}}>
-        <div style={{width:6,height:isMobile?36:44,borderRadius:3,background:"#f8de09",flexShrink:0,marginTop:2}}/>
+        <div style={{width:6,height:isMobile?36:44,borderRadius:3,background:ACCENT,flexShrink:0,marginTop:2}}/>
         <div style={{flex:1,minWidth:0}}>
           <h1 style={{fontSize:isMobile?17:21,fontWeight:800,margin:0,letterSpacing:-0.3,whiteSpace:isMobile?"nowrap":"normal",overflow:"hidden",textOverflow:"ellipsis"}}>
             {isEltern?`${kinderNames}${activeKind?.team?" · "+activeKind.team:""}`:`${activeTeam}`}
@@ -2179,7 +2196,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
             return(
               <button key={i} onClick={()=>handleKindSwitch(k)}
                 style={{display:"flex",alignItems:"center",gap:7,padding:"7px 14px",borderRadius:10,
-                  border:`1.5px solid ${active?"#f8de09":GB}`,
+                  border:`1.5px solid ${active?ACCENT:GB}`,
                   background:active?"var(--cc-hover)":"#fff",cursor:"pointer",transition:"all 0.12s"}}>
                 <div style={{width:22,height:22,borderRadius:"50%",background:active?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"var(--text)",flexShrink:0}}>
                   {k.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
@@ -2206,11 +2223,11 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
               return(
                 <button key={team} onClick={()=>handleTeamSwitch(team)}
                   style={{display:"flex",alignItems:"center",gap:8,padding:isMobile?"8px 12px":"7px 14px",
-                    borderRadius:10,border:`1.5px solid ${isActive?"#f8de09":"var(--border)"}`,
-                    background:isActive?"#f8de0920":"transparent",
+                    borderRadius:10,border:`1.5px solid ${isActive?ACCENT:"var(--border)"}`,
+                    background:isActive?ACCENT20:"transparent",
                     cursor:"pointer",transition:"all 0.15s",flexShrink:0,
                     WebkitTapHighlightColor:"transparent",minHeight:44}}>
-                  <div style={{width:28,height:28,borderRadius:"50%",background:isActive?"#f8de09":"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}>
+                  <div style={{width:28,height:28,borderRadius:"50%",background:isActive?ACCENT:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}>
                     {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
                   </div>
                   <div style={{textAlign:"left",minWidth:0}}>
@@ -2253,13 +2270,13 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
                   {mehrTabs.map(t=>(
                     <button key={t.key} onClick={()=>{setTab(t.key);setShowMehrTab(false);}}
                       style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
-                        background:tab===t.key?"#f8de0912":"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
+                        background:tab===t.key?ACCENT12:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
                       <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
-                        background:tab===t.key?"#f8de09":"var(--surface2)",flexShrink:0}}>
+                        background:tab===t.key?ACCENT:"var(--surface2)",flexShrink:0}}>
                         <TI n={t.icon||"circle"} size={19} style={{color:tab===t.key?"#111":"var(--sub)"}}/>
                       </div>
                       <span style={{fontSize:15,fontWeight:tab===t.key?600:400,color:tab===t.key?"var(--text)":"var(--sub)"}}>{t.label}</span>
-                      {tab===t.key&&<TI n="check" size={16} style={{color:"#f8de09",marginLeft:"auto"}}/>}
+                      {tab===t.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}
                     </button>
                   ))}
                 </div>
@@ -2273,10 +2290,10 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
                   <button key={t.key} onClick={()=>{setTab(t.key);setShowMehrTab(false);}}
                     style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 4px 6px",
                       gap:3,background:"none",border:"none",cursor:"pointer",
-                      borderBottom:isActive?"2.5px solid #f8de09":"2.5px solid transparent",
+                      borderBottom:isActive?`2.5px solid ${ACCENT}`:"2.5px solid transparent",
                       fontFamily:"inherit",WebkitTapHighlightColor:"transparent"}}>
-                    <TI n={t.icon||"circle"} size={20} style={{color:isActive?"#f8de09":"var(--sub)"}}/>
-                    <span style={{fontSize:10,color:isActive?"#f8de09":"var(--sub)",fontWeight:isActive?700:400}}>{t.short||t.label}</span>
+                    <TI n={t.icon||"circle"} size={20} style={{color:isActive?ACCENT:"var(--sub)"}}/>
+                    <span style={{fontSize:10,color:isActive?ACCENT:"var(--sub)",fontWeight:isActive?700:400}}>{t.short||t.label}</span>
                   </button>
                 );
               })}
@@ -2284,10 +2301,10 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
                 <button onClick={()=>setShowMehrTab(v=>!v)}
                   style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 4px 6px",
                     gap:3,background:"none",border:"none",cursor:"pointer",
-                    borderBottom:mehrActive||showMehrTab?"2.5px solid #f8de09":"2.5px solid transparent",
+                    borderBottom:mehrActive||showMehrTab?`2.5px solid ${ACCENT}`:"2.5px solid transparent",
                     fontFamily:"inherit",WebkitTapHighlightColor:"transparent"}}>
-                  <TI n="dots" size={20} style={{color:mehrActive||showMehrTab?"#f8de09":"var(--sub)"}}/>
-                  <span style={{fontSize:10,color:mehrActive||showMehrTab?"#f8de09":"var(--sub)",fontWeight:mehrActive||showMehrTab?700:400}}>Mehr</span>
+                  <TI n="dots" size={20} style={{color:mehrActive||showMehrTab?ACCENT:"var(--sub)"}}/>
+                  <span style={{fontSize:10,color:mehrActive||showMehrTab?ACCENT:"var(--sub)",fontWeight:mehrActive||showMehrTab?700:400}}>Mehr</span>
                 </button>
               )}
             </div>
@@ -2858,7 +2875,7 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
                 a.download=`Kader_${team||"Export"}_${new Date().toISOString().slice(0,10)}.csv`;
                 a.click();
                 setShowExport(false);
-              }} style={{flex:1,padding:"9px 0",borderRadius:10,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+              }} style={{flex:1,padding:"9px 0",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
                 CSV herunterladen
               </button>
               <button onClick={()=>setShowExport(false)} style={{padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",background:"transparent",fontSize:13,cursor:"pointer",fontFamily:FONT,color:"var(--sub)"}}>
@@ -4483,7 +4500,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     <div style={{fontSize:13,fontWeight:400,color:"var(--sub)",marginTop:2}}>{isEdit?"Wird als Ausnahme gespeichert":"Einmaliger Zusatztermin"}</div>
                   </button>
                   <button onClick={()=>{ onSave(Object.assign({},form,{nurDieseWoche:false, selectedKwKey:selectedKw.key})); setShowSaveDialog(false); }}
-                    style={{padding:"10px",borderRadius:10,border:`1.5px solid ${BK}`,background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer",textAlign:"left"}}>
+                    style={{padding:"10px",borderRadius:10,border:`1.5px solid ${BK}`,background:BTN,color:BTN_TXT,fontSize:13,fontWeight:600,cursor:"pointer",textAlign:"left"}}>
                     <div style={{fontWeight:700}}>Dauerhaft (neuer Standard)</div>
                     <div style={{fontSize:13,fontWeight:400,color:"rgba(255,255,255,0.7)",marginTop:2}}>
                       {isEdit?"Gilt fur alle zukunftigen Wochen":"Ab "+selectedKw.label+" bis Ende des Trainingsplans"}
@@ -4657,7 +4674,7 @@ function PlanEditorModal({plan, plaene, onSave, onClose}){
             <label htmlFor="planAktiv" style={{fontSize:13,cursor:"pointer"}}>Plan aktiv (erscheint bei Teams als Termine)</label>
           </div>
           <button onClick={()=>onSave(form)}
-            style={{width:"100%",padding:"11px",borderRadius:10,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+            style={{width:"100%",padding:"11px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,fontSize:13,fontWeight:600,cursor:"pointer"}}>
             Speichern
           </button>
         </div>
@@ -5125,11 +5142,11 @@ function TableTab({team}){
           </thead>
           <tbody>
             {rows.map((r,i)=>(
-              <tr key={i} style={{borderTop:"0.5px solid var(--border)",background:r.me?"#f8de0920":i%2===0?"#fff":"#fafaf8"}}>
+              <tr key={i} style={{borderTop:"0.5px solid var(--border)",background:r.me?ACCENT20:i%2===0?"#fff":"#fafaf8"}}>
                 <td style={{padding:"9px 13px",fontWeight:700,color:"var(--sub)"}}>{r.rank}</td>
                 <td style={{padding:"9px 13px",fontWeight:r.me?700:400,color:r.me?BK:BK}}>
                   {r.team}
-                  {r.me&&<span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:"#f8de09",marginLeft:6,verticalAlign:"middle"}}/>}
+                  {r.me&&<span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:ACCENT,marginLeft:6,verticalAlign:"middle"}}/>}
                 </td>
                 {[r.sp,r.s,r.u,r.n].map((v,j)=><td key={j} style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{v}</td>)}
                 <td style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.tore}</td>
@@ -5664,7 +5681,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
               const label=t==="alle"?(isEltern?"Alle Kinder":"Alle Teams"):kind?`${kind.name.split(" ")[0]} · ${t}`:t;
               return(
                 <button key={t} onClick={()=>setSelectedTeam(t)}
-                  style={{padding:"4px 12px",borderRadius:20,border:`0.5px solid ${active?"#f8de09":GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
+                  style={{padding:"4px 12px",borderRadius:20,border:`0.5px solid ${active?ACCENT:GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
                   {label}
                 </button>
               );
@@ -6918,7 +6935,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       const r=document.documentElement.style;
       r.setProperty("--cc-accent",   t.vereinsfarbe1||"#F8DE09");
       r.setProperty("--cc-accent2",  t.vereinsfarbe2||"#1A1A1A");
-      r.setProperty("--cc-hover",    (t.vereinsfarbe1||"#F8DE09")+"30");
+      r.setProperty("--cc-hover",    hexToRgba(t.vereinsfarbe1||"#F8DE09",0.19));
+    r.setProperty("--cc-accent-20", hexToRgba(t.vereinsfarbe1||"#F8DE09",0.12));
+    r.setProperty("--cc-accent-15", hexToRgba(t.vereinsfarbe1||"#F8DE09",0.09));
+    r.setProperty("--cc-accent-12", hexToRgba(t.vereinsfarbe1||"#F8DE09",0.07));
       r.setProperty("--nav",         t.navBg||"#1A1A1A");
       r.setProperty("--nav-t",       t.navText||"#FFFFFF");
       r.setProperty("--nav-a",       t.navAccent||"#F8DE09");
@@ -6930,7 +6950,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     const r=document.documentElement.style;
     r.setProperty("--cc-accent",   theme.vereinsfarbe1);
     r.setProperty("--cc-accent2",  theme.vereinsfarbe2);
-    r.setProperty("--cc-hover",    theme.vereinsfarbe1+"30");
+    r.setProperty("--cc-hover",    hexToRgba(theme.vereinsfarbe1,0.19));
+    r.setProperty("--cc-accent-20", hexToRgba(theme.vereinsfarbe1,0.12));
+    r.setProperty("--cc-accent-15", hexToRgba(theme.vereinsfarbe1,0.09));
+    r.setProperty("--cc-accent-12", hexToRgba(theme.vereinsfarbe1,0.07));
     r.setProperty("--nav",         theme.navBg);
     r.setProperty("--nav-t",       theme.navText);
     r.setProperty("--nav-a",       theme.navAccent);
@@ -7398,7 +7421,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   try{localStorage.setItem("fch-module-rechte",JSON.stringify(moduleRechte));
                       if(zugriffStufen) localStorage.setItem("fch-zugriff-stufen",JSON.stringify(zugriffStufen));}catch{}
                   setModuleDirty(false); setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);
-                }} style={{padding:"5px 14px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                }} style={{padding:"5px 14px",borderRadius:9,border:"none",background:BTN,color:BTN_TXT,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
                   Speichern
                 </button>
                 <button onClick={()=>{setModuleRechte(null);setZugriffStufen(null);setModuleDirty(false);try{localStorage.removeItem("fch-module-rechte");localStorage.removeItem("fch-zugriff-stufen");}catch{}setSaveMsg("Verworfen");setTimeout(()=>setSaveMsg(""),2000);}}
@@ -7625,7 +7648,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,marginBottom:20}}>
             <InfoBox text="Gruppen bündeln Module für Funktionäre. Funktionen schränken innerhalb einer Gruppe ein (Teams, Filter)." color={BL}/>
             <button onClick={()=>{setEditGruppe(null);setGruppeForm({name:"",beschreibung:"",module:[],farbe:"#8B5CF6",modul_stufen:{}});setShowGruppeForm(true);}}
-              style={{padding:"7px 16px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,flexShrink:0}}>
+              style={{padding:"7px 16px",borderRadius:9,border:"none",background:BTN,color:BTN_TXT,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,flexShrink:0}}>
               + Neue Gruppe
             </button>
           </div>
@@ -7848,7 +7871,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   setShowGruppeForm(false); setEditGruppe(null);
                   setSaveMsg(editGruppe?"Gruppe gespeichert":"Gruppe erstellt");
                   setTimeout(()=>setSaveMsg(""),2000);
-                }} style={{flex:1,padding:"10px",borderRadius:10,background:BK,color:"#fff",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                }} style={{flex:1,padding:"10px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
                   {editGruppe?"Änderungen speichern":"Gruppe erstellen"}
                 </button>
                 <Btn onClick={()=>{setShowGruppeForm(false);setEditGruppe(null);}}>Abbrechen</Btn>
@@ -7960,7 +7983,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   setShowFunktionForm(false); setEditFunktion(null);
                   setSaveMsg(editFunktion?"Funktion gespeichert":"Funktion erstellt");
                   setTimeout(()=>setSaveMsg(""),2000);
-                }} style={{flex:1,padding:"10px",borderRadius:10,background:BK,color:"#fff",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                }} style={{flex:1,padding:"10px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
                   {editFunktion?"Änderungen speichern":"Funktion erstellen"}
                 </button>
                 <Btn onClick={()=>{setShowFunktionForm(false);setEditFunktion(null);}}>Abbrechen</Btn>
@@ -9215,7 +9238,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             const active=aktivePerson===p;
             return(
               <button key={i} onClick={()=>setAktivePerson(p)}
-                style={{padding:"6px 14px",borderRadius:20,border:`0.5px solid ${active?"#f8de09":GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
+                style={{padding:"6px 14px",borderRadius:20,border:`0.5px solid ${active?ACCENT:GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
                 {i===0?`${p} (Elternteil)`:p}
               </button>
             );
@@ -9233,7 +9256,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                 value={browseSearch}
                 onChange={e=>setBrowseSearch(e.target.value)}
                 placeholder="Einsatz oder Schicht suchen…"
-                style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${browseSearch?"#f8de09":GB}`,borderRadius:20,fontSize:13,outline:"none",width:"100%",maxWidth:210,background:"var(--surface)"}}
+                style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${browseSearch?ACCENT:GB}`,borderRadius:20,fontSize:13,outline:"none",width:"100%",maxWidth:210,background:"var(--surface)"}}
               />
               {browseSearch&&(
                 <button onClick={()=>setBrowseSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",lineHeight:1}}>×</button>
@@ -9242,7 +9265,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             <div style={{width:"1px",height:22,background:GB}}/>
             {/* Event-Filter als Dropdown */}
             <select value={selectedEvent||""} onChange={e=>setSelectedEvent(e.target.value?Number(e.target.value):null)}
-              style={{padding:"5px 10px",border:`0.5px solid ${selectedEvent?"#f8de09":GB}`,borderRadius:20,fontSize:13,color:"var(--text)",background:selectedEvent?"var(--cc-hover)":"#fff",cursor:"pointer",outline:"none",fontWeight:selectedEvent?700:400}}>
+              style={{padding:"5px 10px",border:`0.5px solid ${selectedEvent?ACCENT:GB}`,borderRadius:20,fontSize:13,color:"var(--text)",background:selectedEvent?"var(--cc-hover)":"#fff",cursor:"pointer",outline:"none",fontWeight:selectedEvent?700:400}}>
               <option value="">Alle Events</option>
               {HELPER_EVENTS.map(ev=>(
                 <option key={ev.id} value={ev.id}>{ev.name}</option>
@@ -9250,8 +9273,8 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             </select>
             <div style={{width:"1px",height:22,background:GB,margin:"0 2px"}}/>
             {/* Schichten-Filter */}
-            <button onClick={()=>setFilterOffen(false)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${!filterOffen?"#f8de09":GB}`,background:!filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:!filterOffen?700:400}}>Alle Schichten</button>
-            <button onClick={()=>setFilterOffen(true)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${filterOffen?"#f8de09":GB}`,background:filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterOffen?700:400}}>Nur offen</button>
+            <button onClick={()=>setFilterOffen(false)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${!filterOffen?ACCENT:GB}`,background:!filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:!filterOffen?700:400}}>Alle Schichten</button>
+            <button onClick={()=>setFilterOffen(true)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${filterOffen?ACCENT:GB}`,background:filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterOffen?700:400}}>Nur offen</button>
           </div>
 
           {/* Alle Events nacheinander */}
@@ -9357,7 +9380,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                     const cur=gruppenState[einsatz.id]||einsatz.gruppen;
                                     const checked=cur.includes(g);
                                     return(
-                                      <label key={g} onClick={e=>e.stopPropagation()} style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",fontSize:13,padding:"2px 8px",borderRadius:20,background:checked?"var(--cc-hover)":"#fff",border:`0.5px solid ${checked?"#f8de09":GB}`,fontWeight:checked?700:400}}>
+                                      <label key={g} onClick={e=>e.stopPropagation()} style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",fontSize:13,padding:"2px 8px",borderRadius:20,background:checked?"var(--cc-hover)":"#fff",border:`0.5px solid ${checked?ACCENT:GB}`,fontWeight:checked?700:400}}>
                                         <input type="checkbox" checked={checked} onChange={()=>setGruppenState(prev=>{const cur=prev[einsatz.id]||einsatz.gruppen;return {...prev,[einsatz.id]:checked?cur.filter(x=>x!==g):[...cur,g]};})} style={{display:"none"}}/>
                                         {g}
                                       </label>
@@ -9669,13 +9692,13 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             <div style={{position:"relative",flexShrink:0}}>
               <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"var(--sub)",pointerEvents:"none"}}><TI n="search"/></span>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Mitglied suchen…"
-                style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${search?"#f8de09":GB}`,borderRadius:20,fontSize:13,outline:"none",width:"100%",maxWidth:190,background:"var(--surface)"}}/>
+                style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${search?ACCENT:GB}`,borderRadius:20,fontSize:13,outline:"none",width:"100%",maxWidth:190,background:"var(--surface)"}}/>
               {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",lineHeight:1}}>×</button>}
             </div>
             <div style={{width:"1px",height:22,background:GB}}/>
             <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
               {["alle","Offen","Geplant erfüllt","Erfüllt","Befreit"].map(f=>(
-                <button key={f} onClick={()=>setFilterStatus(f)} style={{padding:"5px 12px",border:`0.5px solid ${filterStatus===f?"#f8de09":GB}`,borderRadius:20,background:filterStatus===f?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterStatus===f?700:400}}>{f==="alle"?"Alle":f}</button>
+                <button key={f} onClick={()=>setFilterStatus(f)} style={{padding:"5px 12px",border:`0.5px solid ${filterStatus===f?ACCENT:GB}`,borderRadius:20,background:filterStatus===f?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterStatus===f?700:400}}>{f==="alle"?"Alle":f}</button>
               ))}
             </div>
             {!isTrainer&&(
@@ -9807,7 +9830,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                     {HELPER_GRUPPEN.map(g=>{
                       const checked=newEinsatzGruppen.includes(g);
                       return(
-                        <label key={g} style={{display:"flex",alignItems:"center",gap:5,cursor:"pointer",fontSize:13,padding:"3px 8px",borderRadius:20,background:checked?"var(--cc-hover)":"#F3F4F6",border:`0.5px solid ${checked?"#f8de09":GB}`,fontWeight:checked?700:400}}>
+                        <label key={g} style={{display:"flex",alignItems:"center",gap:5,cursor:"pointer",fontSize:13,padding:"3px 8px",borderRadius:20,background:checked?"var(--cc-hover)":"#F3F4F6",border:`0.5px solid ${checked?ACCENT:GB}`,fontWeight:checked?700:400}}>
                           <input type="checkbox" checked={checked} onChange={()=>setNewEinsatzGruppen(prev=>checked?prev.filter(x=>x!==g):[...prev,g])} style={{display:"none"}}/>
                           {g}
                         </label>
@@ -10284,7 +10307,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           </div>
           <div style={{display:"flex",gap:10}}>
             <button onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()} style={{
-              flex:1,padding:"11px",borderRadius:10,background:BK,color:"#fff",border:"none",
+              flex:1,padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
               fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
               opacity:saving||!saisonDraft.trim()?0.5:1
             }}>
@@ -10595,7 +10618,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
               <div style={{display:"flex",alignItems:"center",gap:10,height:38}}>
                 <button onClick={()=>setForm(p=>({...p,aktiv:!p.aktiv}))} style={{
                   position:"relative",width:44,height:24,borderRadius:12,border:"none",
-                  background:form.aktiv?"#f8de09":"var(--border)",cursor:"pointer",padding:0,flexShrink:0,
+                  background:form.aktiv?ACCENT:"var(--border)",cursor:"pointer",padding:0,flexShrink:0,
                   transition:"background 0.2s"
                 }}>
                   <div style={{position:"absolute",top:3,left:form.aktiv?21:3,width:18,height:18,borderRadius:"50%",background:form.aktiv?"#111":"#fff",boxShadow:"0 1px 3px rgba(0,0,0,0.2)",transition:"left 0.2s"}}/>
@@ -10698,7 +10721,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           {/* Buttons */}
           <div style={{display:"flex",gap:10}}>
             <button onClick={handleSave} disabled={saving} style={{
-              flex:1,padding:"11px",borderRadius:10,background:BK,color:"#fff",border:"none",
+              flex:1,padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
               fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
               opacity:saving?0.6:1,transition:"opacity 0.2s"
             }}>
@@ -11007,7 +11030,7 @@ function PlaetzeView(){
           <p style={{fontSize:13,color:"var(--sub)",margin:0}}>Plätze verwalten, Hälften konfigurieren, aktivieren/deaktivieren</p>
         </div>
         <button onClick={function(){setShowAdd(true);}}
-          style={{padding:"8px 16px",borderRadius:10,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+          style={{padding:"8px 16px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,fontSize:13,fontWeight:600,cursor:"pointer"}}>
           + Platz
         </button>
       </div>
@@ -11035,7 +11058,7 @@ function PlaetzeView(){
                   </div>
                   <div style={{display:"flex",gap:6}}>
                     <button onClick={function(){handleRename(p.id);}}
-                      style={{flex:1,padding:"7px",borderRadius:8,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Speichern</button>
+                      style={{flex:1,padding:"7px",borderRadius:8,border:"none",background:BTN,color:BTN_TXT,fontSize:13,fontWeight:600,cursor:"pointer"}}>Speichern</button>
                     <button onClick={function(){setEditId(null);setEditName("");setEditHaelften("");}}
                       style={{padding:"7px 12px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:13,cursor:"pointer"}}>Abbrechen</button>
                   </div>
@@ -11118,7 +11141,7 @@ function PlaetzeView(){
           </div>
           <div style={{display:"flex",gap:8}}>
             <button onClick={handleAdd}
-              style={{flex:1,padding:"9px",borderRadius:8,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+              style={{flex:1,padding:"9px",borderRadius:8,border:"none",background:BTN,color:BTN_TXT,fontSize:13,fontWeight:600,cursor:"pointer"}}>
               Hinzufügen
             </button>
             <button onClick={function(){setShowAdd(false);setNewName("");setNewHaelften("");}}
@@ -11191,7 +11214,7 @@ function DarkModeRow(){
       </div>
       <button onClick={toggle} style={{
         position:"relative",width:48,height:26,borderRadius:13,border:"none",
-        background:dark?"#f8de09":"var(--border)",cursor:"pointer",
+        background:dark?ACCENT:"var(--border)",cursor:"pointer",
         transition:"background 0.25s",flexShrink:0,padding:0,
         WebkitTapHighlightColor:"transparent"
       }}>
@@ -11280,7 +11303,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
       {/* Header */}
       <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:13}}>
-          <div style={{width:46,height:46,borderRadius:"50%",background:"#f8de09",display:"flex",alignItems:"center",
+          <div style={{width:46,height:46,borderRadius:"50%",background:ACCENT,display:"flex",alignItems:"center",
             justifyContent:"center",color:"#111",fontWeight:800,fontSize:17,flexShrink:0}}>
             {initials}
           </div>
@@ -11318,7 +11341,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                     style={{...inputStyle}} autoFocus placeholder="Vor- und Nachname"/>
                   <div style={{display:"flex",gap:8}}>
                     <button onClick={handleSaveName} disabled={nameStatus==="loading"}
-                      style={{flex:1,padding:"9px",borderRadius:9,background:BK,color:"#fff",border:"none",
+                      style={{flex:1,padding:"9px",borderRadius:9,background:BTN,color:BTN_TXT,border:"none",
                         fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT,
                         opacity:nameStatus==="loading"?0.6:1}}>
                       {nameStatus==="loading"?"Speichern…":"Speichern"}
@@ -11413,7 +11436,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             </div>
             <StatusBox status={pwStatus} msg={pwMsg}/>
             <button type="submit" disabled={pwStatus==="loading"}
-              style={{padding:"11px",borderRadius:10,background:BK,color:"#fff",border:"none",
+              style={{padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
                 fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
                 opacity:pwStatus==="loading"?0.6:1,transition:"opacity 0.2s"}}>
               {pwStatus==="loading"?"Wird gespeichert…":"Passwort ändern"}
@@ -11521,14 +11544,14 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
             {mehr.map(m=>(
               <button key={m.key} onClick={()=>{setActive(m.key);setShowMehr(false);}}
                 style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
-                  background:active===m.key?"#f8de0920":"none",border:"none",cursor:"pointer",
+                  background:active===m.key?ACCENT20:"none",border:"none",cursor:"pointer",
                   fontFamily:"inherit",textAlign:"left"}}>
                 <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
-                  background:active===m.key?"#f8de09":"var(--surface2)",flexShrink:0}}>
+                  background:active===m.key?ACCENT:"var(--surface2)",flexShrink:0}}>
                   <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/>
                 </div>
                 <span style={{fontSize:15,fontWeight:active===m.key?600:400,color:active===m.key?"var(--text)":"var(--sub)"}}>{m.label}</span>
-                {active===m.key&&<TI n="check" size={16} style={{color:"#f8de09",marginLeft:"auto"}}/>}
+                {active===m.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}
               </button>
             ))}
             {/* Profil */}
@@ -11536,7 +11559,7 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
               <button onClick={()=>{setShowProfile(true);setShowMehr(false);}}
                 style={{display:"flex",alignItems:"center",gap:14,width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
                 <div style={{width:40,height:40,borderRadius:"50%",background:rc,display:"flex",alignItems:"center",
-                  justifyContent:"center",color:rc==="#f8de09"?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}>
+                  justifyContent:"center",color:rc===ACCENT?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}>
                   {initials}
                 </div>
                 <div style={{textAlign:"left"}}>
@@ -11558,12 +11581,12 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
               padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
               minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
             }}>
-              {active===n.key&&!mehrActive&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"#f8de09"}}/>}
+              {active===n.key&&!mehrActive&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:ACCENT}}/>}
               <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:active===n.key&&!mehrActive?"#f8de09":"transparent",transition:"background 0.15s"}}>
+                background:active===n.key&&!mehrActive?ACCENT:"transparent",transition:"background 0.15s"}}>
                 <TI n={n.icon||"circle"} size={19} style={{color:active===n.key&&!mehrActive?"#111":"var(--nav-t)"}}/>
               </div>
-              <span style={{fontSize:10,color:active===n.key&&!mehrActive?"#f8de09":"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
+              <span style={{fontSize:10,color:active===n.key&&!mehrActive?ACCENT:"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
             </button>
           ))}
           {/* Mehr-Button (nur wenn mehr-Einträge vorhanden) */}
@@ -11573,12 +11596,12 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
               padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
               minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
             }}>
-              {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"#f8de09"}}/>}
+              {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:ACCENT}}/>}
               <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:mehrActive||showMehr?"#f8de09":"transparent",transition:"background 0.15s"}}>
+                background:mehrActive||showMehr?ACCENT:"transparent",transition:"background 0.15s"}}>
                 <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"#111":"var(--nav-t)"}}/>
               </div>
-              <span style={{fontSize:10,color:mehrActive||showMehr?"#f8de09":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
+              <span style={{fontSize:10,color:mehrActive||showMehr?ACCENT:"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
             </button>
           )}
         </div>
@@ -11633,7 +11656,7 @@ function LoginScreen({onLogin, sb}){
       <div style={{width:"100%",maxWidth:400,padding:"0 20px"}}>
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
-          <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><TI n="ball-football"/></div>
+          <div style={{width:64,height:64,background:ACCENT,borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><TI n="ball-football"/></div>
           <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>ClubCampus</div>
           <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>FC Herrliberg</div>
         </div>
@@ -11663,7 +11686,7 @@ function LoginScreen({onLogin, sb}){
                 </div>
                 {error&&<div style={{fontSize:13,color:"#DC2626",background:"#FEF2F2",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                 <button type="submit" disabled={loading}
-                  style={{width:"100%",padding:"11px",borderRadius:8,border:"none",background:"#f8de09",color:"var(--text)",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",opacity:loading?0.7:1}}>
+                  style={{width:"100%",padding:"11px",borderRadius:8,border:"none",background:ACCENT,color:"var(--text)",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",opacity:loading?0.7:1}}>
                   {loading?"Wird angemeldet…":"Anmelden"}
                 </button>
               </form>
@@ -11690,7 +11713,7 @@ function LoginScreen({onLogin, sb}){
                   </div>
                   {error&&<div style={{fontSize:13,color:"#DC2626",background:"#FEF2F2",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                   <button type="submit" disabled={loading}
-                    style={{width:"100%",padding:"11px",borderRadius:8,border:"none",background:"#f8de09",color:"var(--text)",fontWeight:700,fontSize:14,cursor:"pointer"}}>
+                    style={{width:"100%",padding:"11px",borderRadius:8,border:"none",background:ACCENT,color:"var(--text)",fontWeight:700,fontSize:14,cursor:"pointer"}}>
                     {loading?"Wird gesendet…":"Link senden"}
                   </button>
                 </form>
@@ -11865,7 +11888,7 @@ export default function Portal({supabaseClient}){
     const r=document.documentElement.style;
     r.setProperty("--cc-accent",   t.vereinsfarbe1||"#F8DE09");
     r.setProperty("--cc-accent2",  t.vereinsfarbe2||"#1A1A1A");
-    r.setProperty("--cc-hover",    (t.vereinsfarbe1||"#F8DE09")+"30");
+    r.setProperty("--cc-hover",    hexToRgba(t.vereinsfarbe1||"#F8DE09",0.19));
     r.setProperty("--nav",         t.navBg||"#1A1A1A");
     r.setProperty("--nav-t",       t.navText||"#FFFFFF");
     r.setProperty("--nav-a",       t.navAccent||"#F8DE09");
@@ -11935,7 +11958,7 @@ export default function Portal({supabaseClient}){
     return(
       <div style={{minHeight:"100vh",background:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{textAlign:"center"}}>
-          <div style={{width:48,height:48,background:"#f8de09",borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}><TI n="ball-football"/></div>
+          <div style={{width:48,height:48,background:ACCENT,borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}><TI n="ball-football"/></div>
           <div style={{fontSize:13,color:"var(--sub)"}}>Wird geladen…</div>
         </div>
       </div>
