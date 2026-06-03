@@ -6948,26 +6948,15 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     r.setProperty("--btn-hover",    theme.btnHover||"#333333");
     /* localStorage */
     try{localStorage.setItem("cc-theme",JSON.stringify(theme));}catch{}
-    /* Supabase: in vereine.theme speichern (Tenant-Architektur) */
-    if(supabase){
-      const slug=window.location.hostname.split(".")[0]==="localhost"?"fch":window.location.hostname.split(".")[0];
-      supabase.from("vereine")
-        .update({theme})
-        .eq("slug",slug)
-        .then(({error:e1})=>{
-          if(e1){
-            /* Fallback: portal_einstellungen */
-            supabase.from("portal_einstellungen")
-              .upsert({schluessel:"theme",wert:theme},{onConflict:"schluessel"})
-              .then(({error:e2})=>{
-                if(e2) setSaveMsg("Fehler: "+e2.message);
-                else setSaveMsg("Theme gespeichert");
-                setTimeout(()=>setSaveMsg(""),2000);
-              });
-          } else {
-            setSaveMsg("Theme gespeichert");
-            setTimeout(()=>setSaveMsg(""),2000);
-          }
+    /* Supabase: in portal_einstellungen speichern */
+    const themeToSave={...theme,_v:2};
+    if(sb){
+      sb.from("portal_einstellungen")
+        .upsert({schluessel:"theme",wert:themeToSave},{onConflict:"schluessel"})
+        .then(({error:e})=>{
+          if(e) setSaveMsg("Fehler: "+e.message);
+          else setSaveMsg("Theme gespeichert ✓");
+          setTimeout(()=>setSaveMsg(""),2500);
         });
     } else {
       setSaveMsg("Lokal gespeichert");
