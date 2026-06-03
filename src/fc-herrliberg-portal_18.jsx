@@ -58,12 +58,14 @@ const PWA_CSS=`
   --border:#E0DED8;--text:#1A1A1A;--sub:#666;
   --nav:#141414;--nav-b:#222;--nav-t:#9a9a9a;--nav-a:#f0f0f0;
   --card-shadow:0 1px 4px rgba(0,0,0,0.06);
+  --cc-hover:var(--cc-hover);
 }
 [data-theme=dark]{
   --bg:#0f0f11;--surface:#18181c;--surface2:#222228;
   --border:#2c2c36;--text:#f0f0f0;--sub:#8a8a9a;
   --nav:#0a0a0c;--nav-b:#1a1a22;--nav-t:#6a6a7a;--nav-a:#f0f0f0;
   --card-shadow:0 1px 4px rgba(0,0,0,0.3);
+  --cc-hover:#f8de0920;
 }
 @keyframes fch-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes fch-pop{from{opacity:0;transform:scale(0.72)}to{opacity:1;transform:scale(1)}}
@@ -158,7 +160,7 @@ function SplashScreen({onDone}){
         <img src="/logo_fch_mit_rand.svg" style={{width:88,height:88,objectFit:"contain",display:"block"}} alt="FC Herrliberg"/>
       </div>
       <div style={{color:"#f0f0f0",fontWeight:800,fontSize:24,marginTop:24,letterSpacing:-0.4,fontFamily:FONT,animation:"fch-in 0.4s 0.45s ease-out both"}}>FC Herrliberg</div>
-      <div style={{color:"#555",fontSize:12,marginTop:5,letterSpacing:2,textTransform:"uppercase",fontFamily:FONT,animation:"fch-in 0.4s 0.6s ease-out both"}}>Vereinsportal</div>
+      <div style={{color:"#555",fontSize:12,marginTop:5,letterSpacing:2,textTransform:"uppercase",fontFamily:FONT,animation:"fch-in 0.4s 0.6s ease-out both"}}>ClubCampus</div>
       <div style={{display:"flex",gap:7,marginTop:40,animation:"fch-in 0.4s 0.75s ease-out both"}}>
         {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:"#f8de09",animation:`fch-dot 1.2s ${i*0.18}s ease-in-out infinite`}}/>)}
       </div>
@@ -283,37 +285,37 @@ function ModalOrSheet({open,onClose,children,maxWidth=660}){
 ───────────────────────────────────────────────────────────── */
 const ROLES = {
   administrator: {
-    label:"Administrator", color:"#EF4444", bg:"#FEF2F2", icon:"settings",
+    label:"Administrator", color:"#1A1A1A", bg:"#F5F5F5", icon:"settings",
     desc:"Vollzugriff: alle Module, Systemeinstellungen, Benutzerverwaltung",
     level:7
   },
   vorstand: {
-    label:"Vorstand", color:"#7C3AED", bg:"#F5F3FF", icon:"scale",
+    label:"Vorstand", color:"#1A1A1A", bg:"#F5F5F5", icon:"scale",
     desc:"Strategische Übersicht: alle Teams, Mitglieder lesen, Auswertungen — kein System, kein AHV",
     level:6
   },
   administration: {
-    label:"Administration", color:"#3B82F6", bg:"#EFF6FF", icon:"briefcase",
+    label:"Administration", color:"#1A1A1A", bg:"#F5F5F5", icon:"briefcase",
     desc:"Vereinsbüro: Stammdaten, Mitglieder, alle Teams, Exporte — kein System",
     level:5
   },
   funktionaer: {
-    label:"Funktionär", color:"#8B5CF6", bg:"#F5F3FF", icon:"heart-handshake",
+    label:"Funktionär", color:"#1A1A1A", bg:"#F5F5F5", icon:"heart-handshake",
     desc:"Module + Teams gemäss zugewiesener Gruppe/Funktion",
     level:4
   },
   trainer: {
-    label:"Trainer", color:"#F97316", bg:"#FFF7ED", icon:"ball-football",
+    label:"Trainer", color:"#1A1A1A", bg:"#F5F5F5", icon:"ball-football",
     desc:"Eigene Teams: Kader, Trainings, Anwesenheiten",
     level:3
   },
   spieler: {
-    label:"Spieler", color:"#22C55E", bg:"#F0FDF4", icon:"target",
+    label:"Spieler", color:"#1A1A1A", bg:"#F5F5F5", icon:"target",
     desc:"Eigenes Team lesen: Spielplan, Termine, Helfereinsätze",
     level:2
   },
   eltern: {
-    label:"Eltern", color:"#06B6D4", bg:"#ECFEFF", icon:"user",
+    label:"Eltern", color:"#1A1A1A", bg:"#F5F5F5", icon:"user",
     desc:"Nur eigene Kinder: Termine, Anwesenheit, Abstimmungen",
     level:1
   },
@@ -1216,7 +1218,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout}){
         {!collapsed&&(
           <div style={{minWidth:0,overflow:"hidden"}}>
             <div style={{color:"var(--nav-a)",fontWeight:800,fontSize:14,lineHeight:1.2,letterSpacing:-0.2,whiteSpace:"nowrap"}}>FC Herrliberg</div>
-            <div style={{color:"var(--nav-t)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>Vereinsportal</div>
+            <div style={{color:"var(--nav-t)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>ClubCampus</div>
           </div>
         )}
       </div>
@@ -1381,7 +1383,7 @@ function DashboardAdmin({setActive,account}){
   return(
     <div>
       <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"#111"}}>Hallo, {vorname}</h1>
-      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>FC Herrliberg &ndash; Systemübersicht</p>
+      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>ClubCampus – Systemübersicht</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:12,marginBottom:24}}>
         <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" color="#7C3AED" icon="users"/>
         <Stat label="Aktive Benutzer" value="134" sub="in den letzten 30 Tagen" color={BL} icon="user"/>
@@ -1453,7 +1455,7 @@ function DashboardAdministration({setActive,account}){
   return(
     <div>
       <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"#111"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
-      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>FC Herrliberg &ndash; Übersicht</p>
+      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Mitglieder total" value="187" color={BL}/>
@@ -1517,7 +1519,7 @@ function DashboardFunktionaer({setActive,account}){
   return(
     <div>
       <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"#111"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
-      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>FC Herrliberg &ndash; Übersicht</p>
+      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Offene Rückmeldungen" value="22" color={R}/>
@@ -2170,7 +2172,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
               <button key={i} onClick={()=>handleKindSwitch(k)}
                 style={{display:"flex",alignItems:"center",gap:7,padding:"7px 14px",borderRadius:10,
                   border:`1.5px solid ${active?"#f8de09":GB}`,
-                  background:active?"#f8de0930":"#fff",cursor:"pointer",transition:"all 0.12s"}}>
+                  background:active?"var(--cc-hover)":"#fff",cursor:"pointer",transition:"all 0.12s"}}>
                 <div style={{width:22,height:22,borderRadius:"50%",background:active?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"var(--text)",flexShrink:0}}>
                   {k.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
                 </div>
@@ -2726,6 +2728,10 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
   const [sortKey,setSortKey]=useState("name");
   const [sortDir,setSortDir]=useState(1); /* 1=asc, -1=desc */
   const [groupByFunktion,setGroupByFunktion]=useState(true);
+  const [showExport,setShowExport]=useState(false);
+  const EXPORT_ROLES=["trainer","funktionaer","vorstand","administration","administrator"];
+  const canExport=EXPORT_ROLES.includes(role);
+  const [exportFields,setExportFields]=useState(["name","role","pos","nr"]);
 
   const handleSort=(key)=>{
     if(sortKey===key) setSortDir(d=>d*-1);
@@ -2786,8 +2792,9 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
     return <span style={{color:R,fontSize:13,marginLeft:3}}>{sortDir===1?<TI n="upload"/>:"↓"}</span>;
   };
 
-  const COL_DEF=[
+  const COL_DEF_ALL=[
     {key:"name",    label:"Name / Vorname", always:true},
+    {key:"role",    label:"Funktion",       always:true},
     {key:"pos",     label:"Position",       always:true},
     {key:"nr",      label:"Nr.",            always:true},
     {key:"dob",     label:"Geburtsdatum",   field:"dob"},
@@ -2798,14 +2805,73 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
     {key:"ahv",     label:"AHV-Nummer",     field:"ahv"},
     {key:"fairgate",label:"Fairgate-ID",    field:"fairgate"},
   ];
+  const SIMPLE_ROLES=["trainer","spieler","eltern"];
+  const isSimpleView=SIMPLE_ROLES.includes(role);
+  const COL_DEF=isSimpleView
+    ?COL_DEF_ALL.filter(c=>["name","role","pos","nr"].includes(c.key))
+    :COL_DEF_ALL;
   const cols=COL_DEF.filter(c=>c.always||vis.includes(c.field));
 
   return(
     <div>
       {selected&&<MitgliedDetail person={selected} role={role} onClose={()=>setSelected(null)} nr={rueckennrn[selected.id]} onUpdateNr={v=>saveNr({...rueckennrn,[selected.id]:v})}/>}
+      {/* Export Modal */}
+      {showExport&&(
+        <div onClick={()=>setShowExport(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"var(--surface)",borderRadius:16,padding:24,width:340,maxWidth:"90vw",boxShadow:"0 8px 40px rgba(0,0,0,0.2)"}}>
+            <div style={{fontWeight:700,fontSize:16,marginBottom:4}}>Kaderliste exportieren</div>
+            <div style={{fontSize:12,color:"var(--sub)",marginBottom:16}}>Felder auswählen die exportiert werden sollen</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
+              {COL_DEF_ALL.map(c=>(
+                <label key={c.key} style={{display:"flex",alignItems:"center",gap:10,padding:"6px 10px",borderRadius:8,background:"var(--surface2)",cursor:"pointer"}}>
+                  <input type="checkbox" checked={exportFields.includes(c.key)}
+                    onChange={e=>setExportFields(prev=>e.target.checked?[...prev,c.key]:prev.filter(k=>k!==c.key))}
+                    style={{width:16,height:16,accentColor:BK,cursor:"pointer"}}/>
+                  <span style={{fontSize:13,color:"var(--text)"}}>{c.label}</span>
+                </label>
+              ))}
+            </div>
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>{
+                const fields=COL_DEF_ALL.filter(c=>exportFields.includes(c.key));
+                const header=fields.map(c=>c.label).join(";");
+                const rows=f.map(p=>{
+                  return fields.map(c=>{
+                    if(c.key==="name") return `${p.lastName||""} ${p.firstName||""}`.trim()||p.name||"";
+                    if(c.key==="role") return p.role||"Spieler/in";
+                    if(c.key==="pos") return positions[p.id]||"";
+                    if(c.key==="nr") return rueckennrn[p.id]||"";
+                    return p[c.field]||p[c.key]||"";
+                  }).join(";");
+                }).join("\n");
+                const csv=`${header}\n${rows}`;
+                const a=document.createElement("a");
+                a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+                a.download=`Kader_${team||"Export"}_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                setShowExport(false);
+              }} style={{flex:1,padding:"9px 0",borderRadius:10,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                CSV herunterladen
+              </button>
+              <button onClick={()=>setShowExport(false)} style={{padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",background:"transparent",fontSize:13,cursor:"pointer",fontFamily:FONT,color:"var(--sub)"}}>
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12,flexWrap:"wrap",gap:8}}>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Spieler suchen…" style={{padding:"7px 12px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",width:200}}/>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
+          {canExport&&(
+              <button onClick={()=>setShowExport(true)} style={{
+                display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:8,
+                border:"1px solid var(--border)",background:"transparent",
+                color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT
+              }}>
+                <TI n="file-download" size={15} style={{color:GN}}/>Export
+              </button>
+            )}
           <button onClick={()=>setGroupByFunktion(g=>!g)} style={{
             display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:8,
             border:`1px solid ${groupByFunktion?BK:"var(--border)"}`,
@@ -2832,7 +2898,7 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
                 ...items.map((p,i)=>(
                   <div key={p.id} onClick={()=>setSelected(p)}
                     style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderTop:`0.5px solid ${GB}`,cursor:"pointer",background:"var(--surface)"}}
-                    onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
+                    onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
                     onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>
                     <Av name={p.name} size={40} bg={p.role?"#7C3AED":"#9CA3AF"}/>
                     <div style={{flex:1,minWidth:0}}>
@@ -2849,7 +2915,7 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
             : filtered.map((p,i)=>(
                 <div key={p.id} onClick={()=>setSelected(p)}
                   style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderTop:i>0?`0.5px solid ${GB}`:"none",cursor:"pointer",background:"var(--surface)"}}
-                  onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
+                  onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
                   onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>
                   <Av name={p.name} size={44} bg={p.role?"#7C3AED":"#9CA3AF"}/>
                   <div style={{flex:1,minWidth:0}}>
@@ -2892,9 +2958,17 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
                 key={p.id}
                 onClick={()=>setSelected(p)}
                 style={{borderTop:"0.5px solid var(--border)",background:bg,cursor:"pointer"}}
-                onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
+                onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
                 onMouseLeave={e=>e.currentTarget.style.background=bg}>
                 {cols.map((c,j)=>{
+                  if(c.key==="role") return(
+                    <td key={j} style={{padding:"9px 13px"}}>
+                      {p.role
+                        ?<span style={{fontSize:11,background:"#7C3AED18",color:"#7C3AED",fontWeight:700,padding:"2px 7px",borderRadius:8,whiteSpace:"nowrap"}}>{p.role}</span>
+                        :<span style={{fontSize:12,color:"var(--sub)"}}>Spieler/in</span>
+                      }
+                    </td>
+                  );
                   if(c.key==="nr") return(
                     <td key={j} style={{padding:"9px 10px",width:44,textAlign:"center"}} onClick={e=>e.stopPropagation()}>
                       {canEditPos&&editingNr===p.id?(
@@ -5007,7 +5081,7 @@ function ScheduleTab({role,team,initialSelected}){
                 key={g.id}
                 onClick={()=>setSelected(g)}
                 style={{borderTop:"0.5px solid var(--border)",background:g.result?"#fafaf8":"#fff",cursor:"pointer",transition:"background 0.1s",height:isMobile?52:40}}
-                onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
+                onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
                 onMouseLeave={e=>e.currentTarget.style.background=g.result?"#fafaf8":"#fff"}>
                 <td style={{padding:"11px 13px",fontWeight:600,whiteSpace:"nowrap"}}>{g.date}</td>
                 {!isMobile&&<td style={{padding:"9px 13px"}}>{g.time+" Uhr"}</td>}
@@ -5582,7 +5656,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
               const label=t==="alle"?(isEltern?"Alle Kinder":"Alle Teams"):kind?`${kind.name.split(" ")[0]} · ${t}`:t;
               return(
                 <button key={t} onClick={()=>setSelectedTeam(t)}
-                  style={{padding:"4px 12px",borderRadius:20,border:`0.5px solid ${active?"#f8de09":GB}`,background:active?"#f8de0930":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
+                  style={{padding:"4px 12px",borderRadius:20,border:`0.5px solid ${active?"#f8de09":GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
                   {label}
                 </button>
               );
@@ -6804,8 +6878,48 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [gruppeForm,setGruppeForm]=useState({name:"",beschreibung:"",module:[],farbe:"#8B5CF6",modul_stufen:{}});
   const [funktionForm,setFunktionForm]=useState({name:"",beschreibung:"",gruppe_id:"",module_override:[],teams:[],filter:{},stufe_override:{}});
   /* Module & Rechte View-Toggle */
-  const [moduleViewMode,setModuleViewMode]=useState("modul"); // "modul" | "rolle"
+  const [moduleViewMode,setModuleViewMode]=useState("modul");
   const [moduleDirty,setModuleDirty]=useState(false);
+
+  /* ── Aussehen / Theme ── */
+  const THEME_DEFAULT={
+    vereinsfarbe1:"#F8DE09",
+    vereinsfarbe2:"#1A1A1A",
+    navBg:"#1A1A1A",
+    navText:"#FFFFFF",
+    navAccent:"#F8DE09",
+    navHover:"#2A2A2A",
+    btnPrimary:"#1A1A1A",
+    btnPrimaryText:"#FFFFFF",
+    btnHover:"#333333",
+    vereinsname:"FC Herrliberg",
+    portalname:"ClubCampus",
+    logo:null,
+  };
+  const [theme,setTheme]=useState(()=>{
+    try{const s=localStorage.getItem("cc-theme");return s?{...THEME_DEFAULT,...JSON.parse(s)}:THEME_DEFAULT;}catch{return THEME_DEFAULT;}
+  });
+  const [themeDirty,setThemeDirty]=useState(false);
+
+  function updateTheme(key,val){
+    setTheme(t=>({...t,[key]:val}));
+    setThemeDirty(true);
+  }
+  function saveTheme(){
+    try{localStorage.setItem("cc-theme",JSON.stringify(theme));}catch{}
+    /* CSS-Variablen live anwenden */
+    const r=document.documentElement.style;
+    r.setProperty("--cc-accent",  theme.vereinsfarbe1);
+    r.setProperty("--cc-accent2", theme.vereinsfarbe2);
+    r.setProperty("--cc-hover",   theme.vereinsfarbe1+"30");
+    r.setProperty("--nav-bg",     theme.navBg);
+    r.setProperty("--nav-t",      theme.navText);
+    r.setProperty("--nav-a",      theme.navAccent);
+    r.setProperty("--nav-hover",  theme.navHover||"#2A2A2A");
+    r.setProperty("--btn-primary",theme.btnPrimary);
+    r.setProperty("--btn-hover",  theme.btnHover||"#333333");
+    setThemeDirty(false);
+  }
   /* moduleAktiv + moduleRechte kommen als Props von App */
 
   const TABS=[
@@ -6813,6 +6927,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     {key:"gruppen",     label:"Gruppen & Funktionen",  icon:"sitemap"},
     {key:"teammodule",  label:"Team-Module",           icon:"ball-football"},
     {key:"users",       label:"Benutzer & Rollen",     icon:"users"},
+    {key:"aussehen",    label:"Aussehen",               icon:"palette"},
     {key:"feldvis",     label:"Feldsichtbarkeit",       icon:"eye"},
     {key:"api",         label:"API-Verbindungen",       icon:"plug"},
     {key:"audit",       label:"Audit-Logs",             icon:"clipboard-list"},
@@ -7970,6 +8085,144 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       )}
 
       {/* ── TAB: API-VERBINDUNGEN ── */}
+      {/* ── TAB: AUSSEHEN ── */}
+      {!loading&&tab==="aussehen"&&(
+        <div style={{maxWidth:600}}>
+          <InfoBox text="Farben und Branding des Portals anpassen. Änderungen werden sofort in der Vorschau angezeigt und nach dem Speichern live übernommen." color={BL}/>
+
+          {/* Vorschau */}
+          <Card style={{marginTop:14,padding:0,overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,borderBottom:"0.5px solid var(--border)"}}>Vorschau</div>
+            <div style={{padding:16,display:"flex",gap:12,flexWrap:"wrap",alignItems:"flex-start"}}>
+              {/* Mini-Navbar */}
+              <div style={{background:theme.navBg,borderRadius:10,padding:"8px 12px",display:"flex",alignItems:"center",gap:10,minWidth:180}}>
+                <div style={{width:24,height:24,borderRadius:6,background:theme.vereinsfarbe1,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0}}>
+                  {theme.logo
+                    ?<img src={theme.logo} style={{width:"100%",height:"100%",objectFit:"contain"}} alt="Logo"/>
+                    :<TI n="ball-football" size={13} style={{color:theme.vereinsfarbe2}}/>
+                  }
+                </div>
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:theme.navAccent}}>{theme.portalname}</div>
+                  <div style={{fontSize:9,color:theme.navText,opacity:0.6}}>{theme.vereinsname}</div>
+                </div>
+              </div>
+              {/* Buttons */}
+              <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+                <button style={{padding:"7px 16px",borderRadius:8,border:"none",background:theme.btnPrimary,color:theme.btnPrimaryText,fontSize:12,fontWeight:600,cursor:"default"}}>Speichern</button>
+                <span style={{padding:"4px 10px",borderRadius:20,background:theme.vereinsfarbe1,color:theme.vereinsfarbe2,fontSize:11,fontWeight:700}}>Aktiv</span>
+                <div style={{width:32,height:32,borderRadius:"50%",background:theme.vereinsfarbe1,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <span style={{fontSize:12,fontWeight:700,color:theme.vereinsfarbe2}}>DG</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Farb-Einstellungen */}
+          <Card style={{marginTop:12,padding:0,overflow:"hidden"}}>
+            {[
+              {key:"vereinsfarbe1", label:"Vereinsfarbe (Akzent)",    hint:"Gelb bei FCH — für Badges, Highlights, aktive Elemente"},
+              {key:"vereinsfarbe2", label:"Text auf Vereinsfarbe",    hint:"Schwarz bei FCH — muss auf Vereinsfarbe lesbar sein"},
+              {key:"navBg",         label:"Menü-Hintergrund",          hint:"Hintergrundfarbe der Navigationsleiste"},
+              {key:"navText",       label:"Menü-Text",                 hint:"Farbe der inaktiven Menüpunkte"},
+              {key:"navAccent",     label:"Menü Aktiv-Farbe",          hint:"Farbe des aktiven Menüpunkts"},
+              {key:"btnPrimary",    label:"Primary Button",            hint:"Hintergrundfarbe für Haupt-Buttons"},
+              {key:"btnPrimaryText",label:"Primary Button Text",       hint:"Textfarbe für Haupt-Buttons"},
+              {key:"btnHover",      label:"Button Hover",              hint:"Hintergrundfarbe beim Überfahren mit der Maus"},
+              {key:"navHover",      label:"Menü Hover",                hint:"Farbe beim Überfahren eines Menüpunkts"},
+            ].map((item,i)=>(
+              <div key={item.key} style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderTop:i>0?"0.5px solid var(--border)":"none"}}>
+                <input type="color" value={theme[item.key]} onChange={e=>updateTheme(item.key,e.target.value)}
+                  style={{width:36,height:36,borderRadius:8,border:"0.5px solid var(--border)",padding:2,cursor:"pointer",background:"none"}}/>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{item.label}</div>
+                  <div style={{fontSize:11,color:"var(--sub)",marginTop:1}}>{item.hint}</div>
+                </div>
+                <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:5}}>{theme[item.key]}</code>
+                <button onClick={()=>updateTheme(item.key,THEME_DEFAULT[item.key])} title="Zurücksetzen"
+                  style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:4}}>
+                  <TI n="refresh" size={14}/>
+                </button>
+              </div>
+            ))}
+          </Card>
+
+          {/* Vereinslogo */}
+          <Card style={{marginTop:12,padding:0,overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,borderBottom:"0.5px solid var(--border)"}}>Vereinslogo</div>
+            <div style={{padding:16,display:"flex",alignItems:"center",gap:16}}>
+              {/* Aktuelles Logo */}
+              <div style={{width:72,height:72,borderRadius:14,border:"0.5px solid var(--border)",background:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden"}}>
+                {theme.logo
+                  ?<img src={theme.logo} style={{width:"100%",height:"100%",objectFit:"contain"}} alt="Logo"/>
+                  :<TI n="photo" size={28} style={{color:"var(--sub)"}}/>
+                }
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:6}}>Logo hochladen</div>
+                <div style={{fontSize:11,color:"var(--sub)",marginBottom:10}}>SVG oder PNG, empfohlen mind. 200×200px</div>
+                <div style={{display:"flex",gap:8}}>
+                  <label style={{
+                    display:"inline-flex",alignItems:"center",gap:6,padding:"7px 14px",
+                    borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",
+                    color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer"
+                  }}>
+                    <TI n="upload" size={13}/>Datei wählen
+                    <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>{
+                      const file=e.target.files?.[0];
+                      if(!file) return;
+                      const reader=new FileReader();
+                      reader.onload=ev=>{updateTheme("logo",ev.target.result);};
+                      reader.readAsDataURL(file);
+                    }}/>
+                  </label>
+                  {theme.logo&&(
+                    <button onClick={()=>updateTheme("logo",null)} style={{
+                      padding:"7px 14px",borderRadius:8,border:"1px solid var(--border)",
+                      background:"transparent",color:"var(--sub)",fontSize:12,cursor:"pointer",fontFamily:FONT
+                    }}>
+                      <TI n="trash" size={13}/> Entfernen
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Vereinsname / Portalname */}
+          <Card style={{marginTop:12,padding:0,overflow:"hidden"}}>
+            {[
+              {key:"vereinsname", label:"Vereinsname",  hint:"Wird unter dem Portal-Logo angezeigt"},
+              {key:"portalname",  label:"Portal-Name",  hint:"Produktname (ClubCampus)"},
+            ].map((item,i)=>(
+              <div key={item.key} style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderTop:i>0?"0.5px solid var(--border)":"none"}}>
+                <TI n={i===0?"building-community":"layout-dashboard"} size={18} style={{color:"var(--sub)",flexShrink:0}}/>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:4}}>{item.label}</div>
+                  <input value={theme[item.key]} onChange={e=>updateTheme(item.key,e.target.value)}
+                    style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",outline:"none",fontFamily:FONT}}/>
+                  <div style={{fontSize:11,color:"var(--sub)",marginTop:3}}>{item.hint}</div>
+                </div>
+              </div>
+            ))}
+          </Card>
+
+          {/* Speichern */}
+          <div style={{display:"flex",gap:10,marginTop:16}}>
+            <button onClick={saveTheme} disabled={!themeDirty} style={{
+              padding:"9px 24px",borderRadius:10,border:"none",
+              background:themeDirty?BK:"var(--surface2)",
+              color:themeDirty?"#fff":"var(--sub)",
+              fontSize:13,fontWeight:700,cursor:themeDirty?"pointer":"not-allowed",fontFamily:FONT
+            }}>Speichern & anwenden</button>
+            <button onClick={()=>{setTheme(THEME_DEFAULT);setThemeDirty(true);}} style={{
+              padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",
+              background:"transparent",color:"var(--sub)",fontSize:13,cursor:"pointer",fontFamily:FONT
+            }}>Standard wiederherstellen</button>
+          </div>
+        </div>
+      )}
+
       {!loading&&tab==="api"&&(
         <div>
           <InfoBox text="API-Keys werden aus Sicherheitsgründen nicht in der Datenbank gespeichert. Sie werden als Vercel Environment Variables konfiguriert." color={AM}/>
@@ -8928,7 +9181,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             const active=aktivePerson===p;
             return(
               <button key={i} onClick={()=>setAktivePerson(p)}
-                style={{padding:"6px 14px",borderRadius:20,border:`0.5px solid ${active?"#f8de09":GB}`,background:active?"#f8de0930":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
+                style={{padding:"6px 14px",borderRadius:20,border:`0.5px solid ${active?"#f8de09":GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
                 {i===0?`${p} (Elternteil)`:p}
               </button>
             );
@@ -8955,7 +9208,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             <div style={{width:"1px",height:22,background:GB}}/>
             {/* Event-Filter als Dropdown */}
             <select value={selectedEvent||""} onChange={e=>setSelectedEvent(e.target.value?Number(e.target.value):null)}
-              style={{padding:"5px 10px",border:`0.5px solid ${selectedEvent?"#f8de09":GB}`,borderRadius:20,fontSize:13,color:"var(--text)",background:selectedEvent?"#f8de0930":"#fff",cursor:"pointer",outline:"none",fontWeight:selectedEvent?700:400}}>
+              style={{padding:"5px 10px",border:`0.5px solid ${selectedEvent?"#f8de09":GB}`,borderRadius:20,fontSize:13,color:"var(--text)",background:selectedEvent?"var(--cc-hover)":"#fff",cursor:"pointer",outline:"none",fontWeight:selectedEvent?700:400}}>
               <option value="">Alle Events</option>
               {HELPER_EVENTS.map(ev=>(
                 <option key={ev.id} value={ev.id}>{ev.name}</option>
@@ -8963,8 +9216,8 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             </select>
             <div style={{width:"1px",height:22,background:GB,margin:"0 2px"}}/>
             {/* Schichten-Filter */}
-            <button onClick={()=>setFilterOffen(false)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${!filterOffen?"#f8de09":GB}`,background:!filterOffen?"#f8de0930":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:!filterOffen?700:400}}>Alle Schichten</button>
-            <button onClick={()=>setFilterOffen(true)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${filterOffen?"#f8de09":GB}`,background:filterOffen?"#f8de0930":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterOffen?700:400}}>Nur offen</button>
+            <button onClick={()=>setFilterOffen(false)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${!filterOffen?"#f8de09":GB}`,background:!filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:!filterOffen?700:400}}>Alle Schichten</button>
+            <button onClick={()=>setFilterOffen(true)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${filterOffen?"#f8de09":GB}`,background:filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterOffen?700:400}}>Nur offen</button>
           </div>
 
           {/* Alle Events nacheinander */}
@@ -9070,7 +9323,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                                     const cur=gruppenState[einsatz.id]||einsatz.gruppen;
                                     const checked=cur.includes(g);
                                     return(
-                                      <label key={g} onClick={e=>e.stopPropagation()} style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",fontSize:13,padding:"2px 8px",borderRadius:20,background:checked?"#f8de0930":"#fff",border:`0.5px solid ${checked?"#f8de09":GB}`,fontWeight:checked?700:400}}>
+                                      <label key={g} onClick={e=>e.stopPropagation()} style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",fontSize:13,padding:"2px 8px",borderRadius:20,background:checked?"var(--cc-hover)":"#fff",border:`0.5px solid ${checked?"#f8de09":GB}`,fontWeight:checked?700:400}}>
                                         <input type="checkbox" checked={checked} onChange={()=>setGruppenState(prev=>{const cur=prev[einsatz.id]||einsatz.gruppen;return {...prev,[einsatz.id]:checked?cur.filter(x=>x!==g):[...cur,g]};})} style={{display:"none"}}/>
                                         {g}
                                       </label>
@@ -9388,7 +9641,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
             <div style={{width:"1px",height:22,background:GB}}/>
             <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
               {["alle","Offen","Geplant erfüllt","Erfüllt","Befreit"].map(f=>(
-                <button key={f} onClick={()=>setFilterStatus(f)} style={{padding:"5px 12px",border:`0.5px solid ${filterStatus===f?"#f8de09":GB}`,borderRadius:20,background:filterStatus===f?"#f8de0930":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterStatus===f?700:400}}>{f==="alle"?"Alle":f}</button>
+                <button key={f} onClick={()=>setFilterStatus(f)} style={{padding:"5px 12px",border:`0.5px solid ${filterStatus===f?"#f8de09":GB}`,borderRadius:20,background:filterStatus===f?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterStatus===f?700:400}}>{f==="alle"?"Alle":f}</button>
               ))}
             </div>
             {!isTrainer&&(
@@ -9416,9 +9669,9 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                   .map((m,i)=>(
                   <>
                     <tr key={m.id} onClick={()=>setExpandedMember(expandedMember===m.id?null:m.id)}
-                      style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"#f8de0930":"#fff",cursor:"pointer"}}
-                      onMouseEnter={e=>e.currentTarget.style.background="#f8de0930"}
-                      onMouseLeave={e=>e.currentTarget.style.background=expandedMember===m.id?"#f8de0930":"#fff"}>
+                      style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"var(--cc-hover)":"#fff",cursor:"pointer"}}
+                      onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
+                      onMouseLeave={e=>e.currentTarget.style.background=expandedMember===m.id?"var(--cc-hover)":"#fff"}>
                       <td style={{padding:"9px 12px"}}>
                         <div style={{display:"flex",alignItems:"center",gap:7}}>
                           <Av name={m.name} size={22} bg={SC[m.status]?.c||"#6B7280"}/>
@@ -9520,7 +9773,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account}){
                     {HELPER_GRUPPEN.map(g=>{
                       const checked=newEinsatzGruppen.includes(g);
                       return(
-                        <label key={g} style={{display:"flex",alignItems:"center",gap:5,cursor:"pointer",fontSize:13,padding:"3px 8px",borderRadius:20,background:checked?"#f8de0930":"#F3F4F6",border:`0.5px solid ${checked?"#f8de09":GB}`,fontWeight:checked?700:400}}>
+                        <label key={g} style={{display:"flex",alignItems:"center",gap:5,cursor:"pointer",fontSize:13,padding:"3px 8px",borderRadius:20,background:checked?"var(--cc-hover)":"#F3F4F6",border:`0.5px solid ${checked?"#f8de09":GB}`,fontWeight:checked?700:400}}>
                           <input type="checkbox" checked={checked} onChange={()=>setNewEinsatzGruppen(prev=>checked?prev.filter(x=>x!==g):[...prev,g])} style={{display:"none"}}/>
                           {g}
                         </label>
@@ -11347,8 +11600,8 @@ function LoginScreen({onLogin, sb}){
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
           <div style={{width:64,height:64,background:"#f8de09",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:32,marginBottom:12}}><TI n="ball-football"/></div>
-          <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>FC Herrliberg</div>
-          <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>Vereinsportal</div>
+          <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>ClubCampus</div>
+          <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>FC Herrliberg</div>
         </div>
 
         <div style={{background:"var(--surface)",borderRadius:16,padding:28,boxShadow:"var(--card-shadow)",border:"1px solid var(--border)"}}>
