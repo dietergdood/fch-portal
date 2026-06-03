@@ -1682,6 +1682,9 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
 
 function DashboardEltern({account,meineTeams,setActive}){
   const parentName=account?.name?.split(" ")[0]||"Elternteil";
+  /* Stufen-Checks */
+  const darfAnmelden=kannSchreiben?kannSchreiben("events"):true;
+  const darfVerwalten=kannVerwalten?kannVerwalten("events"):isTrainer||isAdmin;
   const kinder=account?.kinder||[];
   const today="2026-05-23";
   const parseD=(d)=>{const c=(d||"").replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim();const p=c.split(".");return p.length>=2?`2026-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`:""};
@@ -4823,7 +4826,7 @@ function TableTab({team}){
   );
 }
 
-function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRosterIdProp,initialFilter="alle",responses:responsesProp,onResponseChange,allTeams,account}){
+function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRosterIdProp,initialFilter="alle",responses:responsesProp,onResponseChange,allTeams,account,kannSchreiben,kannVerwalten}){
   const isMobile=useIsMobile();
   const isTrainer=["trainer"].includes(role);
   const isAdmin=["administrator","administration","funktionaer"].includes(role);
@@ -5148,6 +5151,8 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
 
   const canEditEvent=(ev)=>{
     if(!ev) return false;
+    /* Stufe aus Portalverwaltung prüfen falls verfügbar */
+    if(kannVerwalten&&!kannVerwalten("events")) return false;
     const typ=ev.subtype==="Vereinsanlass"?"vereinsanlass":ev.subtype==="Team-Event"?"team_event":ev.type==="Spiel"?"spiel":"training";
     return kannTerminBearbeiten(role, typ, ev.team, allTeams||[team]);
   };
@@ -6013,7 +6018,7 @@ function RolleChip({rolle}){
   return <Chip text={rolle||"-"} color={s.c} bg={s.bg}/>;
 }
 
-function MembersView({role,dbMitglieder=[]}){
+function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
   const [sortDir,setSortDir]=useState("asc");
@@ -7787,7 +7792,7 @@ function ProfileView({role,myRosterId,account}){
 function EventsList({teamOnly,role}){
   const isAdmin=["administrator","administration","funktionaer"].includes(role);
   const isTrainer=role==="trainer";
-  const canCreate=kannTerminErstellen(role, isTrainer?"team_event":"vereinsanlass", null, meineTeams||[]);
+  const canCreate=kannVerwalten?kannVerwalten("helpers"):kannHelferEinsatzErstellen(role,"team",null,meineTeams||[]);
   const [showForm,setShowForm]=useState(false);
   const [newEvent,setNewEvent]=useState({title:"",type:isTrainer?"Team-Event":"Team-Event",date:"",time:"",loc:"",rsvp:true});
 
@@ -10170,7 +10175,7 @@ function MediaView(){
 }
 
 function NewsView({role,meineTeams}){
-  const canCreate=["trainer","administrator","administration","funktionaer"].includes(role);
+  const canCreate=kannVerwalten?kannVerwalten("media"):(["trainer","administrator","administration","funktionaer"].includes(role));
 
   /* Determine which targets are visible for this role/team */
   const myTeams=meineTeams||["Cc-Junioren"];
@@ -11273,6 +11278,29 @@ export default function Portal({supabaseClient}){
   const effectiveNav = getNavForRole(role, dbFunktionen)
     .filter(n=>isModuleVisible(n.key));
 
+  /* ── App-Level Zugriffstufen-Hilfsfunktionen ── */
+  const APP_ZUGRIFF_DEFAULT={
+    administrator:  {_all:"verwalten"},
+    vorstand:       {_all:"lesen"},
+    administration: {_all:"verwalten",dashboard:"lesen"},
+    funktionaer:    {_all:"lesen"},
+    trainer:        {_all:"lesen",team:"verwalten",training:"verwalten",events:"verwalten",attendance_central:"schreiben",helpers:"verwalten",buses:"schreiben",material:"schreiben",media:"schreiben",wiki:"schreiben",members:"schreiben",schedule:"lesen"},
+    spieler:        {_all:"lesen",events:"schreiben",helpers:"schreiben",buses:"schreiben"},
+    eltern:         {_all:"lesen",events:"schreiben",helpers:"schreiben",schedule:"lesen"},
+  };
+
+  function getZugriff(modulKey){
+    const effR=moduleRechte||{};
+    const hatZugriff=effR[role]?effR[role].includes(modulKey):(APP_ZUGRIFF_DEFAULT[role]?.[modulKey]||APP_ZUGRIFF_DEFAULT[role]?._all||"lesen")!=="none";
+    if(!hatZugriff) return null;
+    const zs=typeof zugriffStufen!=="undefined"?zugriffStufen:null;
+    return zs?.[role]?.[modulKey]||APP_ZUGRIFF_DEFAULT[role]?.[modulKey]||APP_ZUGRIFF_DEFAULT[role]?._all||"lesen";
+  }
+
+  const kannLesen   =(mod)=>!!getZugriff(mod);
+  const kannSchreiben=(mod)=>["schreiben","verwalten"].includes(getZugriff(mod));
+  const kannVerwalten=(mod)=>getZugriff(mod)==="verwalten";
+
   const handleAccountChange=(key)=>{
     setAccountKey(key);
     setActiveSubRole(null);
@@ -11284,16 +11312,16 @@ export default function Portal({supabaseClient}){
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
       case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBackAndRef}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams} isModuleVisible={isModuleVisible} dbMitglieder={dbMitglieder}/>;
-      case "members":           return <MembersView role={role} dbMitglieder={dbMitglieder}/>;
+      case "members":           return <MembersView role={role} dbMitglieder={dbMitglieder} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
       case "users":             return <PortalverwaltungView initialTab="users" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte}/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte}/>;
       case "portal":            return <PortalverwaltungView initialTab="module" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte}/>;
-      case "training":          return <TrainingGantt role={role} team={role==="trainer"?meineTeams?.[0]:undefined}/>;
+      case "training":          return <TrainingGantt role={role} team={role==="trainer"?meineTeams?.[0]:undefined} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
       case "schedule":          return <ScheduleTab role={role}/>;
       case "attendance_central":return <AttendanceCentral/>;
-      case "events":            return <div style={{maxWidth:900}}><h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Termine</h1><p style={{fontSize:13,color:"var(--sub)",margin:"0 0 18px"}}>Bitte alle notwendigen Termine zu- oder absagen.</p><AttendanceTab role={role} team={meineTeams?.[0]||"Cc-Junioren"} allTeams={meineTeams} myRosterId={myRosterId} account={account} setActive={setActive} onNavigateToSpiel={(spiel)=>{NAV_TARGET.tab="spielplan";NAV_TARGET.selectedSpiel=spiel;setActive("team");}}/></div>;
-      case "helpers":           return <HelpersList role={role} meineTeams={meineTeams} account={account}/>;
-      case "buses":             return <BusesView/>;
+      case "events":            return <div style={{maxWidth:900}}><h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Termine</h1><p style={{fontSize:13,color:"var(--sub)",margin:"0 0 18px"}}>Bitte alle notwendigen Termine zu- oder absagen.</p><AttendanceTab role={role} team={meineTeams?.[0]||"Cc-Junioren"} allTeams={meineTeams} myRosterId={myRosterId} account={account} setActive={setActive} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} onNavigateToSpiel={(spiel)=>{NAV_TARGET.tab="spielplan";NAV_TARGET.selectedSpiel=spiel;setActive("team");}}/></div>;
+      case "helpers":           return <HelpersList role={role} meineTeams={meineTeams} account={account} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
+      case "buses":             return <BusesView role={role} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
       case "material":          return <MaterialView/>;
       case "lockers":           return <LockersView/>;
       case "media":             return <MediaView/>;
