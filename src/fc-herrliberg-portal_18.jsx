@@ -8,7 +8,7 @@ const R="#C8102E",RL="#FEF2F2",BK="#1A1A1A",GR="#F5F5F3",GB="#E0DED8",BL="#2563E
 /* Theme-Farben (folgen CSS-Variablen wenn gesetzt) */
 const BTN    ="var(--btn-primary,#FFBF00)";    // Primary Button Hintergrund
 const BTN_TXT="var(--btn-primary-text,#000)"; // Primary Button Text
-const BTN_HOV ="var(--btn-hover,#E6AC00)";        // Primary Button Hover
+const BTN_HOV ="#E6AC00";                         // Primary Button Hover
 const ACCENT  = "var(--cc-accent,#FFBF00)";      // Vereinsfarbe Akzent
 const ACCENT2 = "var(--cc-accent2,#000000)";    // Text auf Akzent
 const ACCENT20 = "var(--cc-accent-20,rgba(255,191,0,0.12))"; // Akzent 12% opacity
@@ -322,6 +322,8 @@ const THEME_DEFAULT_STATIC={
   btnPrimary:"#FFBF00", btnPrimaryText:"#000000", btnHover:BTN_HOV,
   vereinsname:"Mein Verein", portalname:"ClubCampus", logo:null,
 };
+const THEME_SCHEMA_V=2;
+const THEME_COLOR_KEYS=["navBg","navText","navAccent","navHover","vereinsfarbe1","vereinsfarbe2","btnPrimary","btnPrimaryText","btnHover"];
 
 const ROLES = {
   administrator: {
@@ -6931,39 +6933,46 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     setThemeDirty(true);
   }
   function saveTheme(){
-    /* CSS sofort anwenden */
-    const r=document.documentElement.style;
-    r.setProperty("--cc-accent",    theme.vereinsfarbe1);
-    r.setProperty("--cc-accent2",   theme.vereinsfarbe2);
-    r.setProperty("--cc-hover",     hexToRgba(theme.vereinsfarbe1,0.19));
-    r.setProperty("--cc-accent-20", hexToRgba(theme.vereinsfarbe1,0.12));
-    r.setProperty("--cc-accent-15", hexToRgba(theme.vereinsfarbe1,0.09));
-    r.setProperty("--cc-accent-12", hexToRgba(theme.vereinsfarbe1,0.07));
-    r.setProperty("--nav",          theme.navBg);
-    r.setProperty("--nav-t",        theme.navText);
-    r.setProperty("--nav-a",        theme.navAccent);
-    r.setProperty("--nav-hover",    theme.navHover||"#2A2A2A");
-    r.setProperty("--btn-primary",  theme.btnPrimary);
-    r.setProperty("--btn-primary-text",theme.btnPrimaryText||"#000000");
-    r.setProperty("--btn-hover",    theme.btnHover||"#333333");
-    /* React State + localStorage */
-    const themeToSave={...theme,_v:2};
-    setAppTheme(themeToSave);
-    try{localStorage.setItem("cc-theme",JSON.stringify(themeToSave));}catch{}
-    /* Supabase: in portal_einstellungen speichern */
-    if(supabase){
-      supabase.from("portal_einstellungen")
-        .upsert({schluessel:"theme",wert:themeToSave},{onConflict:"schluessel"})
-        .then(({error:e})=>{
-          if(e) setSaveMsg("Fehler: "+e.message);
-          else setSaveMsg("Theme gespeichert ✓");
-          setTimeout(()=>setSaveMsg(""),2500);
-        });
-    } else {
-      setSaveMsg("Lokal gespeichert");
-      setTimeout(()=>setSaveMsg(""),2000);
+    try{
+      /* CSS sofort anwenden */
+      const r=document.documentElement.style;
+      const t={...THEME_DEFAULT_STATIC,...theme};
+      r.setProperty("--cc-accent",    t.vereinsfarbe1||"#FFBF00");
+      r.setProperty("--cc-accent2",   t.vereinsfarbe2||"#000000");
+      r.setProperty("--cc-hover",     hexToRgba(t.vereinsfarbe1||"#FFBF00",0.19));
+      r.setProperty("--cc-accent-20", hexToRgba(t.vereinsfarbe1||"#FFBF00",0.12));
+      r.setProperty("--cc-accent-15", hexToRgba(t.vereinsfarbe1||"#FFBF00",0.09));
+      r.setProperty("--cc-accent-12", hexToRgba(t.vereinsfarbe1||"#FFBF00",0.07));
+      r.setProperty("--nav",          t.navBg||"#000000");
+      r.setProperty("--nav-t",        t.navText||"#FFFFFF");
+      r.setProperty("--nav-a",        t.navAccent||"#FFBF00");
+      r.setProperty("--nav-hover",    t.navHover||"#1A1A1A");
+      r.setProperty("--btn-primary",  t.btnPrimary||"#FFBF00");
+      r.setProperty("--btn-primary-text",t.btnPrimaryText||"#000000");
+      r.setProperty("--btn-hover",    t.btnHover||"#E6AC00");
+      /* React State + localStorage */
+      const themeToSave={...t,_v:THEME_SCHEMA_V};
+      setAppTheme(themeToSave);
+      try{localStorage.setItem("cc-theme",JSON.stringify(themeToSave));}catch{}
+      /* Supabase */
+      if(supabase){
+        supabase.from("portal_einstellungen")
+          .upsert({schluessel:"theme",wert:themeToSave},{onConflict:"schluessel"})
+          .then(({error:e})=>{
+            if(e) setSaveMsg("Fehler: "+e.message);
+            else setSaveMsg("Theme gespeichert ✓");
+            setTimeout(()=>setSaveMsg(""),2500);
+          });
+      } else {
+        setSaveMsg("Lokal gespeichert");
+        setTimeout(()=>setSaveMsg(""),2000);
+      }
+      setThemeDirty(false);
+    }catch(err){
+      console.error("[saveTheme]",err);
+      setSaveMsg("Fehler: "+err.message);
+      setTimeout(()=>setSaveMsg(""),4000);
     }
-    setThemeDirty(false);
   }
   /* moduleAktiv + moduleRechte kommen als Props von App */
 
@@ -11932,8 +11941,6 @@ export default function Portal({supabaseClient}){
   }
 
   /* ── Theme aus Supabase laden ── */
-  const THEME_SCHEMA_V=2; /* Erhöhen → erzwingt Reset aller Farbwerte */
-  const THEME_COLOR_KEYS=["navBg","navText","navAccent","navHover","vereinsfarbe1","vereinsfarbe2","btnPrimary","btnPrimaryText","btnHover"];
   async function loadTheme(){
     if(!sb) return;
     try{
@@ -11942,10 +11949,8 @@ export default function Portal({supabaseClient}){
       const saved=data.wert||{};
       let t;
       if(!saved._v||saved._v<THEME_SCHEMA_V){
-        /* Veraltetes Schema: Farbwerte auf Defaults zurücksetzen, Text/Logo behalten */
         const colorDefaults=Object.fromEntries(THEME_COLOR_KEYS.map(k=>[k,THEME_DEFAULT_STATIC[k]]));
         t={...THEME_DEFAULT_STATIC,...saved,...colorDefaults,_v:THEME_SCHEMA_V};
-        /* Korrigierten Wert zurück nach Supabase schreiben */
         try{await sb.from("portal_einstellungen").upsert({schluessel:"theme",wert:t});}catch{}
       } else {
         t={...THEME_DEFAULT_STATIC,...saved};
