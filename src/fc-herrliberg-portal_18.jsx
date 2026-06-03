@@ -6929,7 +6929,11 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [themeDirty,setThemeDirty]=useState(false);
 
   function updateTheme(key,val){
-    setAppTheme(t=>({...t,[key]:val}));
+    setAppTheme(t=>{
+      const updated={...t,[key]:val};
+      applyThemeCss(updated);
+      return updated;
+    });
     setThemeDirty(true);
   }
   function saveTheme(){
