@@ -6644,7 +6644,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {label:"Trainings ansehen",              wer:["administrator","vorstand","administration","funktionaer","trainer"],min:"lesen"},
       {label:"Training absagen",               wer:["administrator","administration","trainer"],min:"schreiben",  spez:"Trainer: nur eigene Teams"},
       {label:"Training erstellen / bearbeiten",wer:["administrator","administration","trainer"],min:"verwalten",  spez:"Trainer: nur eigene Teams"},
-      {label:"Vorlagen verwalten",             wer:["administrator","administration","trainer"],min:"verwalten",  spez:"Trainer: nur eigene Teams"},
+      {label:"Vorlagen verwalten",             wer:["administrator","administration"],min:"verwalten"},
     ],
     schedule:   [
       {label:"Spielplan + Tabelle ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},
@@ -7193,6 +7193,41 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </Card>
                 );
               })}
+
+              {/* Funktionär: via Gruppen */}
+              <Card style={{padding:0,overflow:"hidden"}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 16px",background:"var(--surface2)",borderBottom:"0.5px solid var(--border)"}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:ROLES["funktionaer"]?.color||"#8B5CF6",flexShrink:0}}/>
+                  <span style={{fontWeight:600,fontSize:14,color:ROLES["funktionaer"]?.color||"#8B5CF6"}}>Funktionär</span>
+                  <span style={{fontSize:11,color:"var(--sub)",marginLeft:4}}>Module via Gruppen & Funktionen</span>
+                </div>
+                <div style={{padding:"12px 16px"}}>
+                  <InfoBox text="Funktionäre erhalten keinen fixen Modulzugang. Stattdessen werden ihnen Gruppen zugewiesen, welche die erlaubten Module definieren. Die Einschränkung auf bestimmte Teams oder Filter erfolgt über Funktionen innerhalb der Gruppe." color={BL}/>
+                  <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:6}}>
+                    {(gruppen.length>0?gruppen:[
+                      {name:"Vereinsleben & Events",farbe:"#8B5CF6",module:["events","helpers","members","news","docs"]},
+                      {name:"Betrieb & Infrastruktur",farbe:"#3B82F6",module:["material","buses","lockers","docs"]},
+                      {name:"Kommunikation & Medien", farbe:"#22C55E",module:["media","wiki","news","docs"]},
+                      {name:"Stufenleitende",          farbe:"#F97316",module:["team","training","events","attendance_central","members","helpers"]},
+                      {name:"Schiedsrichterwesen",     farbe:"#06B6D4",module:["schedule","training","docs"]},
+                    ]).map(g=>(
+                      <div key={g.name} style={{display:"flex",alignItems:"center",gap:10,padding:"7px 10px",borderRadius:8,border:"0.5px solid var(--border)"}}>
+                        <div style={{width:8,height:8,borderRadius:"50%",background:g.farbe,flexShrink:0}}/>
+                        <span style={{fontWeight:500,fontSize:13,flex:1}}>{g.name}</span>
+                        <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                          {(g.module||[]).map(mk=>{
+                            const mod=ALLE_MODULE.find(m=>m.key===mk);
+                            return mod?<span key={mk} style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:g.farbe+"15",color:g.farbe}}>{mod.name||mod.label}</span>:null;
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{marginTop:10,fontSize:11,color:"var(--sub)"}}>
+                    Gruppen und Module konfigurierst du unter <strong>Gruppen & Funktionen</strong>.
+                  </div>
+                </div>
+              </Card>
             </div>
           )}
         </div>
