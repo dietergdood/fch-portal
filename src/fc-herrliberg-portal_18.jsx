@@ -6,13 +6,14 @@ let supabase = null; // wird via setSupabaseClient() gesetzt
 /* -- FARBEN -- */
 const R="#C8102E",RL="#FEF2F2",BK="#1A1A1A",GR="#F5F5F3",GB="#E0DED8",BL="#2563EB",GN="#059669",AM="#D97706";
 /* Theme-Farben (folgen CSS-Variablen wenn gesetzt) */
-const BTN    ="var(--btn-primary,#1A1A1A)";   // Primary Button Hintergrund
-const BTN_TXT="var(--btn-primary-text,#fff)"; // Primary Button Text
-const ACCENT  = "var(--cc-accent,#F8DE09)";      // Vereinsfarbe Akzent
-const ACCENT2 = "var(--cc-accent2,#1A1A1A)";    // Text auf Akzent
-const ACCENT20 = "var(--cc-accent-20,rgba(248,222,9,0.12))"; // Akzent 12% opacity
-const ACCENT12 = "var(--cc-accent-12,rgba(248,222,9,0.07))"; // Akzent 7% opacity
-const ACCENT15 = "var(--cc-accent-15,rgba(248,222,9,0.09))"; // Akzent 9% opacity
+const BTN    ="var(--btn-primary,#FFBF00)";    // Primary Button Hintergrund
+const BTN_TXT="var(--btn-primary-text,#000)"; // Primary Button Text
+const BTN_HOV ="var(--btn-hover,#E6AC00)";        // Primary Button Hover
+const ACCENT  = "var(--cc-accent,#FFBF00)";      // Vereinsfarbe Akzent
+const ACCENT2 = "var(--cc-accent2,#000000)";    // Text auf Akzent
+const ACCENT20 = "var(--cc-accent-20,rgba(255,191,0,0.12))"; // Akzent 12% opacity
+const ACCENT12 = "var(--cc-accent-12,rgba(255,191,0,0.07))"; // Akzent 7% opacity
+const ACCENT15 = "var(--cc-accent-15,rgba(255,191,0,0.09))"; // Akzent 9% opacity
 
 /* ── PWA: Schriften & Breakpoints ── */
 const FONT="'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
@@ -66,14 +67,22 @@ const PWA_CSS=`
   --border:#E0DED8;--text:#1A1A1A;--sub:#666;
   --nav:#141414;--nav-b:#222;--nav-t:#9a9a9a;--nav-a:#f0f0f0;
   --card-shadow:0 1px 4px rgba(0,0,0,0.06);
-  --cc-hover:var(--cc-hover);
+  --cc-hover:rgba(255,191,0,0.19);
+  --cc-accent:#FFBF00;
+  --cc-accent2:#000000;
+  --cc-accent-20:rgba(255,191,0,0.12);
+  --cc-accent-15:rgba(255,191,0,0.09);
+  --cc-accent-12:rgba(255,191,0,0.07);
+  --btn-primary:#FFBF00;
+  --btn-primary-text:#000000;
+  --btn-hover:#E6AC00;
 }
 [data-theme=dark]{
   --bg:#0f0f11;--surface:#18181c;--surface2:#222228;
   --border:#2c2c36;--text:#f0f0f0;--sub:#8a8a9a;
   --nav:#0a0a0c;--nav-b:#1a1a22;--nav-t:#6a6a7a;--nav-a:#f0f0f0;
   --card-shadow:0 1px 4px rgba(0,0,0,0.3);
-  --cc-hover:rgba(248,222,9,0.12);
+  --cc-hover:rgba(255,191,0,0.12);
 }
 @keyframes fch-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes fch-pop{from{opacity:0;transform:scale(0.72)}to{opacity:1;transform:scale(1)}}
@@ -84,6 +93,7 @@ const PWA_CSS=`
 .fch-card{background:var(--surface)!important;border-color:var(--border)!important;box-shadow:var(--card-shadow)!important}
 .fch-topbar{background:var(--bg)!important;border-color:var(--border)!important}
 .fch-main{background:var(--bg)!important}
+.hov-row:hover{background:var(--cc-hover)!important;cursor:pointer}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 html{scroll-behavior:smooth}
 button:active:not([disabled]){transform:scale(0.96)}
@@ -245,7 +255,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
             }}
               onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
               onMouseLeave={e=>e.currentTarget.style.background="none"}>
-              <Av name={m.name} size={26} bg={m.role==="Trainer"?ACCENT:"var(--border)"}/>
+              <Av name={m.name} size={26} bg="var(--surface2)"/>
               <div>
                 <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{m.name}</div>
                 <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div>
@@ -302,10 +312,10 @@ function hexToRgba(hex,alpha){
 }
 
 const THEME_DEFAULT_STATIC={
-  vereinsfarbe1:"#F8DE09", vereinsfarbe2:"#1A1A1A",
-  navBg:"#1A1A1A", navText:"#FFFFFF", navAccent:"#F8DE09", navHover:"#2A2A2A",
-  btnPrimary:"#1A1A1A", btnPrimaryText:"#FFFFFF", btnHover:"#333333",
-  vereinsname:"FC Herrliberg", portalname:"ClubCampus", logo:null,
+  vereinsfarbe1:"#FFBF00", vereinsfarbe2:"#000000",
+  navBg:"#000000", navText:"#FFFFFF", navAccent:"#FFBF00", navHover:"#1A1A1A",
+  btnPrimary:"#FFBF00", btnPrimaryText:"#000000", btnHover:BTN_HOV,
+  vereinsname:"Mein Verein", portalname:"ClubCampus", logo:null,
 };
 
 const ROLES = {
@@ -1030,8 +1040,8 @@ const PSTATS=[
 /* ==========================================
    KLEINE HILFKOMPONENTEN
 ========================================== */
-function Av({name="",init,size=34,bg={ACCENT}}){
-  const textColor=bg===ACCENT||bg==="#f8de09"||bg==="rgba(255,255,255,0.3)"?"#1A1A1A":"#fff";
+function Av({name="",init,size=34,bg="var(--surface2)"}){
+  const textColor=bg===ACCENT||bg==="rgba(255,255,255,0.3)"?"#000":bg==="var(--surface2)"||bg==="var(--border)"||bg==="#e5e5e5"?"var(--sub)":"#fff";
   // init kann ein Icon-Name sein (z.B. "settings") oder Initialen
   const isIcon = init && TI_PATHS[init];
   const l = isIcon ? null : (init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase());
@@ -2923,8 +2933,7 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
                 ...items.map((p,i)=>(
                   <div key={p.id} onClick={()=>setSelected(p)}
                     style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderTop:`0.5px solid ${GB}`,cursor:"pointer",background:"var(--surface)"}}
-                    onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
-                    onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>
+                    className="hov-row">
                     <Av name={p.name} size={40} bg={p.role?"#7C3AED":"#9CA3AF"}/>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontWeight:700,fontSize:15,color:"var(--text)"}}>{p.lastName} {p.firstName}</div>
@@ -2940,8 +2949,7 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
             : filtered.map((p,i)=>(
                 <div key={p.id} onClick={()=>setSelected(p)}
                   style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderTop:i>0?`0.5px solid ${GB}`:"none",cursor:"pointer",background:"var(--surface)"}}
-                  onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
-                  onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>
+                  className="hov-row">
                   <Av name={p.name} size={44} bg={p.role?"#7C3AED":"#9CA3AF"}/>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{p.lastName} {p.firstName}</div>
@@ -2982,9 +2990,8 @@ function RosterTab({role,team,initialSelected=null,teamRosterData=null}){
               <tr
                 key={p.id}
                 onClick={()=>setSelected(p)}
-                style={{borderTop:"0.5px solid var(--border)",background:bg,cursor:"pointer"}}
-                onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
-                onMouseLeave={e=>e.currentTarget.style.background=bg}>
+                className="hov-row"
+                style={{borderTop:"0.5px solid var(--border)",background:bg,cursor:"pointer"}}>
                 {cols.map((c,j)=>{
                   if(c.key==="role") return(
                     <td key={j} style={{padding:"9px 13px"}}>
@@ -5105,9 +5112,8 @@ function ScheduleTab({role,team,initialSelected}){
               <tr
                 key={g.id}
                 onClick={()=>setSelected(g)}
-                style={{borderTop:"0.5px solid var(--border)",background:g.result?"var(--surface2)":"var(--surface)",cursor:"pointer",transition:"background 0.1s",height:isMobile?52:40}}
-                onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
-                onMouseLeave={e=>e.currentTarget.style.background=g.result?"var(--surface2)":"var(--surface)"}>
+                className="hov-row"
+                style={{borderTop:"0.5px solid var(--border)",background:g.result?"var(--surface2)":"var(--surface)",cursor:"pointer",height:isMobile?52:40}}>
                 <td style={{padding:"11px 13px",fontWeight:600,whiteSpace:"nowrap"}}>{g.date}</td>
                 {!isMobile&&<td style={{padding:"9px 13px"}}>{g.time+" Uhr"}</td>}
                 <td style={{padding:"9px 13px",fontWeight:600}}>{g.opponent}</td>
@@ -6880,7 +6886,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
   );
 }
 
-function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv,moduleRechte,setModuleRechte,sb:supabase}){
+function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv,moduleRechte,setModuleRechte,sb:supabase,appTheme,setAppTheme}){
   const [tab,setTab]=useState(initialTab);
   const [module,setModule]=useState([]);
   const [moduleConfig,setModuleConfig]=useState({});
@@ -6907,27 +6913,16 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [moduleDirty,setModuleDirty]=useState(false);
 
   /* ── Aussehen / Theme ── */
-  const THEME_DEFAULT={
-    vereinsfarbe1:"#F8DE09",
-    vereinsfarbe2:"#1A1A1A",
-    navBg:"#1A1A1A",
-    navText:"#FFFFFF",
-    navAccent:"#F8DE09",
-    navHover:"#2A2A2A",
-    btnPrimary:"#1A1A1A",
-    btnPrimaryText:"#FFFFFF",
-    btnHover:"#333333",
-    vereinsname:"FC Herrliberg",
-    portalname:"ClubCampus",
-    logo:null,
+  const THEME_DEFAULT=THEME_DEFAULT_STATIC;
+  const theme=appTheme||THEME_DEFAULT_STATIC;
+  const setTheme=(updater)=>{
+    const newTheme=typeof updater==="function"?updater(theme):updater;
+    setAppTheme(newTheme);
   };
-  const [theme,setTheme]=useState(()=>{
-    try{const s=localStorage.getItem("cc-theme");return s?{...THEME_DEFAULT,...JSON.parse(s)}:THEME_DEFAULT;}catch{return THEME_DEFAULT;}
-  });
   const [themeDirty,setThemeDirty]=useState(false);
 
   function updateTheme(key,val){
-    setTheme(t=>({...t,[key]:val}));
+    setAppTheme(t=>({...t,[key]:val}));
     setThemeDirty(true);
   }
   function saveTheme(){
@@ -6944,6 +6939,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     r.setProperty("--nav-a",        theme.navAccent);
     r.setProperty("--nav-hover",    theme.navHover||"#2A2A2A");
     r.setProperty("--btn-primary",  theme.btnPrimary);
+    r.setProperty("--btn-primary-text",theme.btnPrimaryText||"#000000");
     r.setProperty("--btn-hover",    theme.btnHover||"#333333");
     /* localStorage */
     try{localStorage.setItem("cc-theme",JSON.stringify(theme));}catch{}
@@ -9711,8 +9707,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   <>
                     <tr key={m.id} onClick={()=>setExpandedMember(expandedMember===m.id?null:m.id)}
                       style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"var(--cc-hover)":"#fff",cursor:"pointer"}}
-                      onMouseEnter={e=>e.currentTarget.style.background="var(--cc-hover)"}
-                      onMouseLeave={e=>e.currentTarget.style.background=expandedMember===m.id?"var(--cc-hover)":"var(--surface)"}>
+                      className="hov-row">
                       <td style={{padding:"9px 12px"}}>
                         <div style={{display:"flex",alignItems:"center",gap:7}}>
                           <Av name={m.name} size={22} bg={SC[m.status]?.c||"#6B7280"}/>
@@ -11782,6 +11777,11 @@ export default function Portal({supabaseClient}){
     try{const s=localStorage.getItem("fch-dark");return s?JSON.parse(s):window.matchMedia("(prefers-color-scheme: dark)").matches;}catch{return false;}
   });
   const toggleDark=()=>setDark(d=>{const n=!d;try{localStorage.setItem("fch-dark",n);}catch{}return n;});
+
+  /* ── App-Level Theme State ── */
+  const [appTheme,setAppTheme]=useState(()=>{
+    try{const s=localStorage.getItem("cc-theme");return s?{...THEME_DEFAULT_STATIC,...JSON.parse(s)}:THEME_DEFAULT_STATIC;}catch{return THEME_DEFAULT_STATIC;}
+  });
   /* ── Splash Screen ── */
   const [splash,setSplash]=useState(()=>{try{return !sessionStorage.getItem("fch-splash");}catch{return true;}});
   const doneSplash=()=>{try{sessionStorage.setItem("fch-splash","1");}catch{}setSplash(false);};
@@ -12052,9 +12052,9 @@ export default function Portal({supabaseClient}){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
       case "team":              return role==="administrator"||role==="administration"?<TeamsAdminView sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBackAndRef}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams} isModuleVisible={isModuleVisible} dbMitglieder={dbMitglieder}/>;
       case "members":           return <MembersView role={role} dbMitglieder={dbMitglieder} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
-      case "users":             return <PortalverwaltungView initialTab="users" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte}/>;
-      case "fieldvis":          return <PortalverwaltungView initialTab="feldvis" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte}/>;
-      case "portal":            return <PortalverwaltungView initialTab="module" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte}/>;
+      case "users":             return <PortalverwaltungView initialTab="users" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme}/>;
+      case "fieldvis":          return <PortalverwaltungView initialTab="feldvis" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme}/>;
+      case "portal":            return <PortalverwaltungView initialTab="module" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme}/>;
       case "training":          return <TrainingGantt role={role} team={role==="trainer"?meineTeams?.[0]:undefined} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
       case "schedule":          return <ScheduleTab role={role}/>;
       case "attendance_central":return <AttendanceCentral/>;
