@@ -6605,6 +6605,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [funktionForm,setFunktionForm]=useState({name:"",beschreibung:"",gruppe_id:"",module_override:[],teams:[],filter:{},stufe_override:{}});
   /* Module & Rechte View-Toggle */
   const [moduleViewMode,setModuleViewMode]=useState("modul"); // "modul" | "rolle"
+  const [moduleDirty,setModuleDirty]=useState(false);
   /* moduleAktiv + moduleRechte kommen als Props von App */
 
   const TABS=[
@@ -6830,7 +6831,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     } else {
       const next=ZUGRIFF_ORDER[idx+1];
       setZugriffStufe(rolle,modulKey,next);
-      setSaveMsg("Ungespeichert");
+      setModuleDirty(true); setSaveMsg("Ungespeichert");
     }
   }
 
@@ -6943,7 +6944,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
         .then(({error})=>{ if(error) console.warn("[FCH] module_config:", error.message); });
       return neu;
     });
-    setSaveMsg("Gespeichert"); setTimeout(()=>setSaveMsg(""),2000);
+    setModuleDirty(true); setSaveMsg("Ungespeichert");
   }
 
   function toggleModulRolle(modulKey, rolle){
@@ -6956,7 +6957,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       try{localStorage.setItem("fch-module-rechte",JSON.stringify(neu));}catch{}
       return neu;
     });
-    setSaveMsg("Ungespeichert"); /* Wird erst beim Klick auf Speichern persistiert */
+    setModuleDirty(true); setSaveMsg("Ungespeichert");
   }
 
   /* Effektive Rechte: editierte oder Default */
@@ -6980,7 +6981,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Portalverwaltung</h1>
           <div style={{fontSize:13,color:"var(--sub)",marginTop:3}}>Module, Benutzer, API-Verbindungen und Einstellungen</div>
         </div>
-        {saveMsg&&<Chip text={saveMsg} color={GN} bg="#ECFDF5"/>}
+        {saveMsg&&<Chip text={saveMsg} color={saveMsg==="Ungespeichert"?R:GN} bg={saveMsg==="Ungespeichert"?RL:"#ECFDF5"}/>}
       </div>
 
       {/* Tabs */}
@@ -7030,7 +7031,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 }}>{v==="modul"?"nach Modul":"nach Rolle"}</button>
               ))}
             </div>
-            {moduleRechte&&(
+            {moduleDirty&&(
               <>
                 <button onClick={async()=>{
                   if(supabase&&moduleRechte){
@@ -7047,11 +7048,11 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   }
                   try{localStorage.setItem("fch-module-rechte",JSON.stringify(moduleRechte));
                       if(zugriffStufen) localStorage.setItem("fch-zugriff-stufen",JSON.stringify(zugriffStufen));}catch{}
-                  setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);
+                  setModuleDirty(false); setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);
                 }} style={{padding:"5px 14px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
                   Speichern
                 </button>
-                <button onClick={()=>{setModuleRechte(null);setZugriffStufen(null);try{localStorage.removeItem("fch-module-rechte");localStorage.removeItem("fch-zugriff-stufen");}catch{}setSaveMsg("Verworfen");setTimeout(()=>setSaveMsg(""),2000);}}
+                <button onClick={()=>{setModuleRechte(null);setZugriffStufen(null);setModuleDirty(false);try{localStorage.removeItem("fch-module-rechte");localStorage.removeItem("fch-zugriff-stufen");}catch{}setSaveMsg("Verworfen");setTimeout(()=>setSaveMsg(""),2000);}}
                   style={{padding:"5px 14px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
                   Verwerfen
                 </button>
