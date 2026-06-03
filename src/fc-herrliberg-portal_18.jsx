@@ -6514,6 +6514,8 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [editFunktion,setEditFunktion]=useState(null);
   const [gruppeForm,setGruppeForm]=useState({name:"",beschreibung:"",module:[],farbe:"#8B5CF6"});
   const [funktionForm,setFunktionForm]=useState({name:"",beschreibung:"",gruppe_id:"",module_override:[],teams:[],filter:{}});
+  /* Module & Rechte View-Toggle */
+  const [moduleViewMode,setModuleViewMode]=useState("modul"); // "modul" | "rolle"
   /* moduleAktiv + moduleRechte kommen als Props von App */
 
   const TABS=[
@@ -6569,15 +6571,63 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     eltern:          ["dashboard","team","events","helpers","docs","news"],
   };
 
-  /* Zugriffstufen: "lesen" | "schreiben" | "verwalten"
+  /* Modul-Aktionen für Detail-Ansicht */
+  const MODUL_AKTIONEN={
+    dashboard:  [{label:"Übersicht ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"}],
+    team:       [{label:"Team + Kader ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Position / Nummer ändern",wer:["administrator","administration","trainer"],min:"schreiben"},{label:"Spieler hinzufügen / entfernen",wer:["administrator","administration"],min:"verwalten"},{label:"Team erstellen / bearbeiten",wer:["administrator","administration"],min:"verwalten"},{label:"Trainer zuweisen",wer:["administrator","administration"],min:"verwalten"}],
+    members:    [{label:"Name, Tel, E-Mail sehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Basis-Felder bearbeiten",wer:["administrator","administration","trainer"],min:"schreiben"},{label:"AHV, Bankdaten sehen",wer:["administrator","administration"],min:"verwalten"},{label:"Neue Mitglieder, Export, löschen",wer:["administrator","administration"],min:"verwalten"}],
+    training:   [{label:"Trainings ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer"],min:"lesen"},{label:"Training absagen",wer:["administrator","administration","trainer"],min:"schreiben"},{label:"Training erstellen / bearbeiten",wer:["administrator","administration","trainer"],min:"verwalten"},{label:"Vorlagen verwalten",wer:["administrator","administration","trainer"],min:"verwalten"}],
+    schedule:   [{label:"Spielplan + Tabelle ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Daten ändern",wer:[],min:"verwalten",note:"Nur via FVRZ-Sync"}],
+    attendance_central:[{label:"Eigene Statistik sehen",wer:["administrator","vorstand","administration","funktionaer","trainer"],min:"lesen"},{label:"Anwesenheiten eintragen / ändern",wer:["administrator","administration","trainer"],min:"schreiben"},{label:"Alle Teams auswerten, exportieren",wer:["administrator","administration"],min:"verwalten"}],
+    events:     [{label:"Termine ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"An- / Abmelden",wer:["administrator","administration","funktionaer","trainer","spieler","eltern"],min:"schreiben"},{label:"Termin erstellen / bearbeiten",wer:["administrator","administration","funktionaer","trainer"],min:"verwalten"},{label:"Termin absagen / löschen",wer:["administrator","administration","funktionaer","trainer"],min:"verwalten"}],
+    helpers:    [{label:"Einsätze ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"An- / Abmelden",wer:["administrator","administration","funktionaer","trainer","spieler","eltern"],min:"schreiben"},{label:"Einsätze + Schichten erstellen",wer:["administrator","administration","funktionaer","trainer"],min:"verwalten"},{label:"Zuteilungen verwalten",wer:["administrator","administration","funktionaer","trainer"],min:"verwalten"}],
+    buses:      [{label:"Fahrten + Belegung ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Platz reservieren / abmelden",wer:["administrator","administration","trainer","spieler"],min:"schreiben"},{label:"Fahrten erstellen / verwalten",wer:["administrator","administration","funktionaer"],min:"verwalten"}],
+    material:   [{label:"Inventar ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler"],min:"lesen"},{label:"Ausleihe beantragen",wer:["administrator","administration","trainer"],min:"schreiben"},{label:"Ausleihen genehmigen",wer:["administrator","administration","funktionaer"],min:"verwalten"},{label:"Inventar + Bestände verwalten",wer:["administrator","administration","funktionaer"],min:"verwalten"}],
+    lockers:    [{label:"Eigene Zuteilung ansehen",wer:["administrator","vorstand","administration","funktionaer","trainer"],min:"lesen"},{label:"Zuteilungen verwalten",wer:["administrator","administration"],min:"verwalten"}],
+    news:       [{label:"Artikel lesen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Artikel erstellen / bearbeiten",wer:["administrator","administration","funktionaer"],min:"verwalten"},{label:"Publizieren, löschen",wer:["administrator","administration","funktionaer"],min:"verwalten"}],
+    wiki:       [{label:"Artikel lesen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Artikel bearbeiten",wer:["administrator","administration","funktionaer","trainer"],min:"schreiben"},{label:"Erstellen, löschen, Kategorien",wer:["administrator","administration","funktionaer"],min:"verwalten"}],
+    docs:       [{label:"Herunterladen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"],min:"lesen"},{label:"Hochladen, löschen",wer:["administrator","administration","funktionaer"],min:"verwalten"},{label:"Ordner / Kategorien verwalten",wer:["administrator","administration"],min:"verwalten"}],
+    media:      [{label:"Anschauen",wer:["administrator","vorstand","administration","funktionaer","trainer","spieler"],min:"lesen"},{label:"Fotos hochladen, Bericht schreiben",wer:["administrator","administration","funktionaer","trainer"],min:"schreiben"},{label:"Publizieren, Alben verwalten",wer:["administrator","administration","funktionaer"],min:"verwalten"}],
+    portal:     [{label:"Benutzer, Module, Berechtigungen",wer:["administrator","administration"],min:"verwalten"}],
+  };
+
+
      Standard-Stufen pro Rolle (nur für Module mit Zugriff) */
   const ZUGRIFF_DEFAULT={
     administrator:  {_all:"verwalten"},
-    vorstand:       {_all:"lesen", members:"lesen", team:"lesen", attendance_central:"lesen"},
-    administration: {_all:"schreiben", portal:"verwalten", members:"verwalten"},
-    trainer:        {_all:"schreiben", team:"verwalten", training:"verwalten"},
-    spieler:        {_all:"lesen"},
-    eltern:         {_all:"lesen"},
+    vorstand:       {_all:"lesen"},
+    administration: {
+      _all:"verwalten",
+      dashboard:"lesen",
+    },
+    funktionaer:    {_all:"lesen"},
+    trainer:        {
+      _all:"lesen",
+      team:"verwalten",
+      training:"verwalten",
+      events:"verwalten",
+      schedule:"lesen",            // Spielplan = nur anzeigen, Interaktion via Termine
+      attendance_central:"schreiben",
+      helpers:"verwalten",
+      buses:"schreiben",
+      material:"schreiben",
+      media:"schreiben",
+      wiki:"schreiben",
+      members:"schreiben",
+    },
+    spieler:        {
+      _all:"lesen",
+      events:"schreiben",          // An-/Abmelden (inkl. auto-generierte Spiel-Termine)
+      helpers:"schreiben",
+      buses:"schreiben",
+      schedule:"lesen",
+    },
+    eltern:         {
+      _all:"lesen",
+      events:"schreiben",
+      helpers:"schreiben",
+      schedule:"lesen",
+    },
   };
 
   const ZUGRIFF_LABELS={"lesen":"Lesen","schreiben":"Schreiben","verwalten":"Verwalten"};
@@ -6798,159 +6848,239 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {/* ── TAB: MODULE & RECHTE ── */}
       {!loading&&tab==="module"&&(
         <div>
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:16}}>
-            <InfoBox text="Klicke auf eine Zelle um den Zugriff zu aktivieren. Bei aktivem Zugriff klicken wechselt zwischen Lesen → Schreiben → Verwalten." color={BL}/>
-            <div style={{display:"flex",gap:6,flexShrink:0,flexWrap:"wrap",justifyContent:"flex-end"}}>
+          {/* Header: InfoBox + Legende + Toggle + Speichern */}
+          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:14,flexWrap:"wrap"}}>
+            <InfoBox text="Klick auf ein Modul-Name öffnet die Detail-Aktionen. Klick auf eine Stufe ändert die Berechtigung." color={BL}/>
+            <div style={{display:"flex",gap:8,flexShrink:0,flexWrap:"wrap",alignItems:"center"}}>
               {/* Legende */}
-              {["lesen","schreiben","verwalten"].map(s=>(
-                <span key={s} style={{display:"flex",alignItems:"center",gap:4,padding:"4px 8px",borderRadius:7,background:ZUGRIFF_COLORS[s]+"15",border:`1px solid ${ZUGRIFF_COLORS[s]}40`}}>
+              {ZUGRIFF_ORDER.map(s=>(
+                <span key={s} style={{display:"flex",alignItems:"center",gap:4,padding:"3px 9px",borderRadius:6,background:ZUGRIFF_COLORS[s]+"20",border:`1px solid ${ZUGRIFF_COLORS[s]}40`}}>
                   <TI n={ZUGRIFF_ICONS[s]} size={11} style={{color:ZUGRIFF_COLORS[s]}}/>
                   <span style={{fontSize:11,fontWeight:600,color:ZUGRIFF_COLORS[s]}}>{ZUGRIFF_LABELS[s]}</span>
                 </span>
               ))}
             </div>
           </div>
-          {moduleRechte&&(
-            <div style={{display:"flex",gap:8,marginBottom:12}}>
-              <button onClick={async()=>{
-                if(supabase&&moduleRechte){
-                  const rows=[];
-                  Object.entries(moduleRechte).forEach(([rolle,module])=>{
-                    ALLE_MODULE.forEach(m=>{
-                      const hatZugriff=(module||[]).includes(m.key);
-                      const stufe=hatZugriff?(zugriffStufen?.[rolle]?.[m.key]||effZugriff[rolle]?.[m.key]||effZugriff[rolle]?._all||"lesen"):"lesen";
-                      rows.push({modul:m.key,rolle,hat_zugriff:hatZugriff,stufe});
+
+          {/* View-Toggle + Speichern */}
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            {/* nach Modul / nach Rolle */}
+            <div style={{display:"flex",border:"0.5px solid var(--border)",borderRadius:8,overflow:"hidden"}}>
+              {["modul","rolle"].map(v=>(
+                <button key={v} onClick={()=>setModuleViewMode(v)} style={{
+                  padding:"5px 12px",fontSize:11,fontWeight:500,cursor:"pointer",
+                  border:"none",fontFamily:FONT,transition:"all .15s",
+                  background:moduleViewMode===v?BK:"transparent",
+                  color:moduleViewMode===v?"#fff":"var(--sub)"
+                }}>{v==="modul"?"nach Modul":"nach Rolle"}</button>
+              ))}
+            </div>
+            {moduleRechte&&(
+              <>
+                <button onClick={async()=>{
+                  if(supabase&&moduleRechte){
+                    const rows=[];
+                    Object.entries(moduleRechte).forEach(([rolle,module])=>{
+                      ALLE_MODULE.forEach(m=>{
+                        const hatZugriff=(module||[]).includes(m.key);
+                        const stufe=hatZugriff?(zugriffStufen?.[rolle]?.[m.key]||effZugriff[rolle]?.[m.key]||effZugriff[rolle]?._all||"lesen"):"lesen";
+                        rows.push({modul:m.key,rolle,hat_zugriff:hatZugriff,stufe});
+                      });
                     });
-                  });
-                  const{error}=await supabase.from("modul_rechte").upsert(rows,{onConflict:"modul,rolle"});
-                  if(error){setSaveMsg("Fehler: "+error.message);setTimeout(()=>setSaveMsg(""),3000);return;}
-                }
-                try{localStorage.setItem("fch-module-rechte",JSON.stringify(moduleRechte));
-                    if(zugriffStufen) localStorage.setItem("fch-zugriff-stufen",JSON.stringify(zugriffStufen));}catch{}
-                setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);
-              }} style={{padding:"7px 14px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,whiteSpace:"nowrap"}}>
-                Speichern
-              </button>
-              <button onClick={()=>{setModuleRechte(null);setZugriffStufen(null);try{localStorage.removeItem("fch-module-rechte");localStorage.removeItem("fch-zugriff-stufen");}catch{}setSaveMsg("Verworfen");setTimeout(()=>setSaveMsg(""),2000);}}
-                style={{padding:"7px 14px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,whiteSpace:"nowrap"}}>
-                Verwerfen
-              </button>
+                    const{error}=await supabase.from("modul_rechte").upsert(rows,{onConflict:"modul,rolle"});
+                    if(error){setSaveMsg("Fehler: "+error.message);setTimeout(()=>setSaveMsg(""),3000);return;}
+                  }
+                  try{localStorage.setItem("fch-module-rechte",JSON.stringify(moduleRechte));
+                      if(zugriffStufen) localStorage.setItem("fch-zugriff-stufen",JSON.stringify(zugriffStufen));}catch{}
+                  setSaveMsg("Gespeichert");setTimeout(()=>setSaveMsg(""),2000);
+                }} style={{padding:"5px 14px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                  Speichern
+                </button>
+                <button onClick={()=>{setModuleRechte(null);setZugriffStufen(null);try{localStorage.removeItem("fch-module-rechte");localStorage.removeItem("fch-zugriff-stufen");}catch{}setSaveMsg("Verworfen");setTimeout(()=>setSaveMsg(""),2000);}}
+                  style={{padding:"5px 14px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",color:"var(--sub)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                  Verwerfen
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* ── ANSICHT: NACH MODUL ── */}
+          {moduleViewMode==="modul"&&(()=>{
+            const [expandedModul,setExpandedModulState]=React.useState(null);
+            return(
+              <Card style={{padding:0,overflowX:"auto"}}>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:700}}>
+                  <thead>
+                    <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
+                      <th style={{padding:"9px 14px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.5,minWidth:180,position:"sticky",left:0,background:"var(--surface2)",zIndex:2}}>Modul</th>
+                      {ROLLEN.map(r=>(
+                        <th key={r} style={{textAlign:"center",padding:"9px 8px",fontWeight:700,
+                          color:r==="administrator"?"var(--sub)":ROLES[r]?.color||"var(--sub)",
+                          fontSize:11,minWidth:90,
+                          background:r==="administrator"?"var(--surface2)":"transparent"
+                        }}>{ROLLEN_LABELS[r]}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {["kern","sport","betrieb","kommunikation","verwaltung","admin"].map(kat=>{
+                      const mods=ALLE_MODULE.filter(m=>m.kat===kat);
+                      if(!mods.length) return null;
+                      const KAT_LABELS={kern:"Kern",sport:"Sport",betrieb:"Betrieb",kommunikation:"Kommunikation",verwaltung:"Verwaltung",admin:"Systemverwaltung"};
+                      return([
+                        <tr key={"kat-"+kat}>
+                          <td colSpan={ROLLEN.length+1} style={{padding:"6px 14px 4px",fontSize:10,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.8,background:"var(--surface2)",borderTop:"1px solid var(--border)"}}>{KAT_LABELS[kat]}</td>
+                        </tr>,
+                        ...mods.map(m=>{
+                          const isAktiv=moduleAktiv[m.key]!==false;
+                          const isPflicht=!!m.pflicht;
+                          const isExpanded=expandedModul===m.key;
+                          return([
+                            <tr key={m.key} style={{borderTop:"0.5px solid var(--border)",opacity:isAktiv?1:0.35,background:isPflicht?"#FFFBEB":"transparent"}}>
+                              <td style={{padding:"0",position:"sticky",left:0,background:isPflicht?"#FFFBEB":isExpanded?"var(--surface2)":"var(--surface)",zIndex:1}}>
+                                <div onClick={()=>setExpandedModulState(isExpanded?null:m.key)}
+                                  style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",cursor:"pointer"}}>
+                                  <div onClick={e=>{e.stopPropagation();if(!isPflicht)toggleModulGlobal(m.key);}}
+                                    title={isPflicht?"Pflichtmodul":isAktiv?"Deaktivieren":"Aktivieren"}
+                                    style={{width:26,height:15,borderRadius:8,flexShrink:0,background:isPflicht?"#F59E0B":isAktiv?GN:"var(--border)",cursor:isPflicht?"not-allowed":"pointer",position:"relative",transition:"background 0.2s"}}>
+                                    <div style={{position:"absolute",top:2,width:11,height:11,borderRadius:"50%",background:"#fff",transition:"left 0.15s",left:isAktiv||isPflicht?13:2}}/>
+                                  </div>
+                                  <TI n={m.icon} size={13} style={{color:isPflicht?"#B45309":"var(--sub)",flexShrink:0}}/>
+                                  <span style={{fontWeight:500,color:isPflicht?"#B45309":isExpanded?"var(--text)":"var(--text)",fontSize:13}}>{m.name||m.label}</span>
+                                  {isPflicht&&<span style={{fontSize:9,padding:"1px 5px",borderRadius:5,background:"#FEF3C7",color:"#B45309",fontWeight:600}}>Pflicht</span>}
+                                  <TI n={isExpanded?"chevron-up":"chevron-down"} size={11} style={{color:"var(--sub)",marginLeft:"auto"}}/>
+                                </div>
+                              </td>
+                              {ROLLEN.map(r=>{
+                                const isAdmin=r==="administrator";
+                                const stufe=getZugriff(r,m.key);
+                                const hasAccess=isAktiv&&effRechte[r]?.includes(m.key);
+                                const isEdited=moduleRechte&&(moduleRechte[r]?.includes(m.key))!==(ROLLEN_MODULE_DEFAULT[r]?.includes(m.key));
+                                return(
+                                  <td key={r} style={{textAlign:"center",padding:"7px 6px",background:isAdmin?"var(--surface2)":"transparent"}}>
+                                    {r==="funktionaer"
+                                      ?<span style={{fontSize:10,color:"var(--sub)",fontStyle:"italic"}}>via Gruppe</span>
+                                      :(()=>{
+                                        const sc=stufe?ZUGRIFF_COLORS[stufe]:"var(--border)";
+                                        return(
+                                          <div onClick={isAdmin?undefined:()=>{
+                                            if(!isAktiv) return;
+                                            if(hasAccess) cycleZugriff(r,m.key);
+                                            else toggleModulRolle(m.key,r);
+                                          }}
+                                            title={isAdmin?"Administrator – immer vollen Zugriff":
+                                              !isAktiv?"Modul inaktiv":
+                                              hasAccess?(stufe==="verwalten"?`${ROLLEN_LABELS[r]}: Verwalten → klicken zum Entfernen`:`${ROLLEN_LABELS[r]}: ${ZUGRIFF_LABELS[stufe||"lesen"]} → klicken für nächste Stufe`):
+                                              `${ROLLEN_LABELS[r]}: kein Zugriff → klicken für Lesen`}
+                                            style={{
+                                              width:hasAccess?80:22,height:24,borderRadius:6,margin:"0 auto",
+                                              background:isAdmin?"var(--surface2)":hasAccess?sc+"20":"transparent",
+                                              border:`${isEdited&&!isAdmin?"2px":"1px"} solid ${isAdmin?"var(--border)":hasAccess?sc:"var(--border)"}`,
+                                              display:"flex",alignItems:"center",justifyContent:"center",gap:4,
+                                              cursor:isAdmin||!isAktiv?"not-allowed":"pointer",
+                                              transition:"all 0.15s",opacity:!isAktiv?0.3:1,
+                                              padding:hasAccess?"0 6px":"0"
+                                            }}
+                                            onMouseEnter={e=>{if(!isAdmin&&isAktiv&&!hasAccess)e.currentTarget.style.transform="scale(1.1)";}}
+                                            onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";}}
+                                          >
+                                            {hasAccess&&<><TI n={ZUGRIFF_ICONS[stufe||"lesen"]} size={11} style={{color:isAdmin?"var(--sub)":sc}}/><span style={{fontSize:10,fontWeight:600,color:isAdmin?"var(--sub)":sc}}>{ZUGRIFF_LABELS[stufe||"lesen"]}</span></>}
+                                          </div>
+                                        );
+                                      })()
+                                    }
+                                  </td>
+                                );
+                              })}
+                            </tr>,
+                            isExpanded&&(
+                              <tr key={m.key+"-detail"} style={{borderTop:"0.5px solid var(--border)"}}>
+                                <td colSpan={ROLLEN.length+1} style={{padding:"10px 14px",background:"var(--surface2)"}}>
+                                  <div style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Aktionen — wer darf was?</div>
+                                  {(MODUL_AKTIONEN[m.key]||[]).map((a,ai)=>(
+                                    <div key={ai} style={{display:"flex",alignItems:"center",gap:10,padding:"5px 0",borderTop:ai>0?"0.5px solid var(--border)":"none"}}>
+                                      <span style={{flex:1,fontSize:12,color:"var(--text)"}}>{a.label}{a.note&&<span style={{fontSize:10,color:"var(--sub)",marginLeft:4}}>({a.note})</span>}</span>
+                                      <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                                        {a.wer.length===0
+                                          ?<span style={{fontSize:11,color:"var(--sub)",fontStyle:"italic"}}>niemand manuell</span>
+                                          :a.wer.map(w=>{
+                                            const role=ROLES[w];
+                                            return role?<span key={w} style={{padding:"2px 7px",borderRadius:5,fontSize:10,fontWeight:500,background:(role.color||"#888")+"20",color:role.color||"#888"}}>{ROLLEN_LABELS[w]}</span>:null;
+                                          })
+                                        }
+                                      </div>
+                                      <span style={{fontSize:10,padding:"2px 8px",borderRadius:5,background:ZUGRIFF_COLORS[a.min]+"20",color:ZUGRIFF_COLORS[a.min],fontWeight:600,minWidth:70,textAlign:"center"}}>{ZUGRIFF_LABELS[a.min]}</span>
+                                    </div>
+                                  ))}
+                                  {!MODUL_AKTIONEN[m.key]&&<span style={{fontSize:12,color:"var(--sub)"}}>Keine Detail-Aktionen definiert.</span>}
+                                </td>
+                              </tr>
+                            )
+                          ]);
+                        })
+                      ]);
+                    })}
+                  </tbody>
+                </table>
+              </Card>
+            );
+          })()}
+
+          {/* ── ANSICHT: NACH ROLLE ── */}
+          {moduleViewMode==="rolle"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              {ROLLEN.filter(r=>r!=="funktionaer").map(role=>{
+                const zugMods=ALLE_MODULE.filter(m=>effRechte[role]?.includes(m.key)&&moduleAktiv[m.key]!==false);
+                if(!zugMods.length) return null;
+                const roleInfo=ROLES[role]||{};
+                return(
+                  <Card key={role} style={{padding:0,overflow:"hidden"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 16px",background:"var(--surface2)",borderBottom:"0.5px solid var(--border)"}}>
+                      <div style={{width:10,height:10,borderRadius:"50%",background:roleInfo.color||"#888",flexShrink:0}}/>
+                      <span style={{fontWeight:600,fontSize:14,color:roleInfo.color||"var(--text)"}}>{ROLLEN_LABELS[role]}</span>
+                      <span style={{fontSize:11,color:"var(--sub)",marginLeft:4}}>{zugMods.length} Module</span>
+                    </div>
+                    <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                      <thead>
+                        <tr style={{background:"var(--surface2)"}}>
+                          <th style={{padding:"7px 14px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:10,textTransform:"uppercase",letterSpacing:0.5}}>Modul</th>
+                          <th style={{padding:"7px 10px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:10,textTransform:"uppercase",letterSpacing:0.5,width:90}}>Stufe</th>
+                          <th style={{padding:"7px 10px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:10,textTransform:"uppercase",letterSpacing:0.5}}>Kann</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {zugMods.map((m,i)=>{
+                          const stufe=getZugriff(role,m.key)||"lesen";
+                          const kann=(MODUL_AKTIONEN[m.key]||[]).filter(a=>a.wer.includes(role)).map(a=>a.label);
+                          const sc=ZUGRIFF_COLORS[stufe];
+                          return(
+                            <tr key={m.key} style={{borderTop:"0.5px solid var(--border)"}}>
+                              <td style={{padding:"8px 14px"}}>
+                                <div style={{display:"flex",alignItems:"center",gap:7}}>
+                                  <TI n={m.icon} size={13} style={{color:"var(--sub)"}}/>
+                                  <span style={{fontWeight:500,fontSize:13}}>{m.name||m.label}</span>
+                                </div>
+                              </td>
+                              <td style={{padding:"8px 10px"}}>
+                                <div onClick={()=>{const aktiv=moduleAktiv[m.key]!==false;if(aktiv&&role!=="administrator")cycleZugriff(role,m.key);}}
+                                  style={{display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",borderRadius:6,background:sc+"20",border:`1px solid ${sc}50`,cursor:"pointer"}}>
+                                  <TI n={ZUGRIFF_ICONS[stufe]} size={11} style={{color:sc}}/>
+                                  <span style={{fontSize:10,fontWeight:600,color:sc}}>{ZUGRIFF_LABELS[stufe]}</span>
+                                </div>
+                              </td>
+                              <td style={{padding:"8px 10px",fontSize:11,color:"var(--sub)"}}>{kann.length?kann.join(" · "):"Nur ansehen"}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </Card>
+                );
+              })}
             </div>
           )}
-          <Card style={{padding:0,overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:700}}>
-              <thead>
-                <tr style={{background:"var(--surface2)",position:"sticky",top:0}}>
-                  <th style={{textAlign:"left",padding:"9px 14px",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.5,minWidth:200}}>Modul</th>
-                  {ROLLEN.map(r=>(
-                    <th key={r} style={{
-                      textAlign:"center",padding:"9px 8px",fontWeight:700,
-                      color:r==="administrator"?"var(--sub)":ROLES[r]?.color||"var(--sub)",
-                      fontSize:11,minWidth:80,
-                      background:r==="administrator"?"var(--surface2)":"transparent"
-                    }}>
-                      {ROLLEN_LABELS[r]}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {["kern","sport","betrieb","kommunikation","verwaltung","admin"].map(kat=>{
-                  const mods=ALLE_MODULE.filter(m=>m.kat===kat);
-                  if(!mods.length) return null;
-                  const KAT_LABELS={kern:"Kern",sport:"Sport",betrieb:"Betrieb",kommunikation:"Kommunikation",verwaltung:"Verwaltung",admin:"Systemverwaltung"};
-                  return([
-                    <tr key={"kat-"+kat}>
-                      <td colSpan={ROLLEN.length+1} style={{
-                        padding:"8px 14px 5px",
-                        fontSize:11,fontWeight:700,color:"var(--sub)",
-                        textTransform:"uppercase",letterSpacing:0.8,
-                        background:"var(--surface2)",
-                        borderTop:"1px solid var(--border)"
-                      }}>{KAT_LABELS[kat]}</td>
-                    </tr>,
-                    ...mods.map(m=>{
-                      const isAktiv=moduleAktiv[m.key]!==false;
-                      const isPflicht=!!m.pflicht;
-                      return(
-                        <tr key={m.key} style={{borderTop:"0.5px solid var(--border)",opacity:isAktiv?1:0.35,transition:"opacity 0.2s",background:isPflicht?"#FFFBEB":"transparent"}}>
-                          <td style={{padding:"8px 14px"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:9}}>
-                              <div onClick={isPflicht?undefined:()=>toggleModulGlobal(m.key)}
-                                title={isPflicht?"Pflichtmodul – kann nicht deaktiviert werden":isAktiv?"Deaktivieren":"Aktivieren"}
-                                style={{
-                                  width:28,height:16,borderRadius:8,flexShrink:0,
-                                  background:isPflicht?"#F59E0B":isAktiv?GN:"var(--border)",
-                                  cursor:isPflicht?"not-allowed":"pointer",
-                                  position:"relative",transition:"background 0.2s",
-                                }}>
-                                <div style={{position:"absolute",top:2,width:12,height:12,borderRadius:"50%",
-                                  background:"#fff",transition:"left 0.15s",left:isAktiv||isPflicht?14:2}}/>
-                              </div>
-                              <TI n={m.icon} size={13} style={{color:isPflicht?"#B45309":"var(--sub)",flexShrink:0}}/>
-                              <span style={{fontWeight:500,color:isPflicht?"#B45309":"var(--text)",fontSize:13}}>{m.label}</span>
-                              {isPflicht&&<span style={{fontSize:10,padding:"1px 6px",borderRadius:6,background:"#FEF3C7",color:"#B45309",fontWeight:600,marginLeft:2}}>Pflicht</span>}
-                            </div>
-                          </td>
-                          {ROLLEN.map(r=>{
-                            const isAdmin=r==="administrator";
-                            const hasAccess=isAktiv&&effRechte[r]?.includes(m.key);
-                            const isEdited=moduleRechte&&(moduleRechte[r]?.includes(m.key))!==(ROLLEN_MODULE_DEFAULT[r]?.includes(m.key));
-                            return(
-                              <td key={r} style={{
-                                textAlign:"center",padding:"8px 8px",
-                                background:isAdmin?"var(--surface2)":"transparent"
-                              }}>
-                                {r==="funktionaer"
-                                  ?<span style={{fontSize:10,color:"var(--sub)",fontStyle:"italic"}}>via Gruppe</span>
-                                  :(()=>{
-                                    const stufe=getZugriff(r,m.key);
-                                    const sc=stufe?ZUGRIFF_COLORS[stufe]:"var(--border)";
-                                    return(
-                                      <div onClick={isAdmin?undefined:()=>{
-                                        if(!isAktiv) return;
-                                        if(hasAccess) cycleZugriff(r,m.key);
-                                        else toggleModulRolle(m.key,r);
-                                      }}
-                                        title={isAdmin?"Administrator – immer vollen Zugriff":
-                                          !isAktiv?"Modul inaktiv":
-                                          hasAccess?(stufe==="verwalten"?`${ROLLEN_LABELS[r]}: Verwalten → klicken zum Entfernen`:`${ROLLEN_LABELS[r]}: ${ZUGRIFF_LABELS[stufe||"lesen"]} → klicken für ${ZUGRIFF_LABELS[ZUGRIFF_ORDER[ZUGRIFF_ORDER.indexOf(stufe||"lesen")+1]]||"Verwalten"}`):
-                                          `${ROLLEN_LABELS[r]}: kein Zugriff → klicken für Lesen`}
-                                        style={{
-                                          width:hasAccess?72:20,height:22,borderRadius:6,margin:"0 auto",
-                                          background:isAdmin?"var(--surface2)":hasAccess?sc+"20":"transparent",
-                                          border:`1px solid ${isAdmin?"var(--border)":hasAccess?sc:"var(--border)"}`,
-                                          display:"flex",alignItems:"center",justifyContent:"center",gap:4,
-                                          cursor:isAdmin||!isAktiv?"not-allowed":"pointer",
-                                          transition:"all 0.15s",opacity:!isAktiv?0.3:1,
-                                          padding:hasAccess?"0 6px":"0"
-                                        }}
-                                        onMouseEnter={e=>{if(!isAdmin&&isAktiv&&!hasAccess)e.currentTarget.style.transform="scale(1.15)";}}
-                                        onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";}}
-                                      >
-                                        {hasAccess?(
-                                          <>
-                                            <TI n={ZUGRIFF_ICONS[stufe||"lesen"]} size={11} style={{color:isAdmin?"var(--sub)":sc}}/>
-                                            <span style={{fontSize:10,fontWeight:600,color:isAdmin?"var(--sub)":sc}}>{ZUGRIFF_LABELS[stufe||"lesen"]}</span>
-                                          </>
-                                        ):null}
-                                      </div>
-                                    );
-                                  })()
-                                }
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })
-                  ]);
-                })}
-              </tbody>
-            </table>
-          </Card>
         </div>
-      )}
+      )}}
 
       {/* ── TAB: GRUPPEN & FUNKTIONEN ── */}
       {!loading&&tab==="gruppen"&&(
