@@ -6936,22 +6936,22 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     try{
       /* CSS sofort anwenden */
       const r=document.documentElement.style;
-      const t={...THEME_DEFAULT_STATIC,...theme};
-      r.setProperty("--cc-accent",    t.vereinsfarbe1||"#FFBF00");
-      r.setProperty("--cc-accent2",   t.vereinsfarbe2||"#000000");
-      r.setProperty("--cc-hover",     hexToRgba(t.vereinsfarbe1||"#FFBF00",0.19));
-      r.setProperty("--cc-accent-20", hexToRgba(t.vereinsfarbe1||"#FFBF00",0.12));
-      r.setProperty("--cc-accent-15", hexToRgba(t.vereinsfarbe1||"#FFBF00",0.09));
-      r.setProperty("--cc-accent-12", hexToRgba(t.vereinsfarbe1||"#FFBF00",0.07));
-      r.setProperty("--nav",          t.navBg||"#000000");
-      r.setProperty("--nav-t",        t.navText||"#FFFFFF");
-      r.setProperty("--nav-a",        t.navAccent||"#FFBF00");
-      r.setProperty("--nav-hover",    t.navHover||"#1A1A1A");
-      r.setProperty("--btn-primary",  t.btnPrimary||"#FFBF00");
-      r.setProperty("--btn-primary-text",t.btnPrimaryText||"#000000");
-      r.setProperty("--btn-hover",    t.btnHover||"#E6AC00");
+      const td={...THEME_DEFAULT_STATIC,...theme};
+      r.setProperty("--cc-accent",    td.vereinsfarbe1||"#FFBF00");
+      r.setProperty("--cc-accent2",   td.vereinsfarbe2||"#000000");
+      r.setProperty("--cc-hover",     hexToRgba(td.vereinsfarbe1||"#FFBF00",0.19));
+      r.setProperty("--cc-accent-20", hexToRgba(td.vereinsfarbe1||"#FFBF00",0.12));
+      r.setProperty("--cc-accent-15", hexToRgba(td.vereinsfarbe1||"#FFBF00",0.09));
+      r.setProperty("--cc-accent-12", hexToRgba(td.vereinsfarbe1||"#FFBF00",0.07));
+      r.setProperty("--nav",          td.navBg||"#000000");
+      r.setProperty("--nav-t",        td.navText||"#FFFFFF");
+      r.setProperty("--nav-a",        td.navAccent||"#FFBF00");
+      r.setProperty("--nav-hover",    td.navHover||"#1A1A1A");
+      r.setProperty("--btn-primary",  td.btnPrimary||"#FFBF00");
+      r.setProperty("--btn-primary-text",td.btnPrimaryText||"#000000");
+      r.setProperty("--btn-hover",    td.btnHover||"#E6AC00");
       /* React State + localStorage */
-      const themeToSave={...t,_v:THEME_SCHEMA_V};
+      const themeToSave={...td,_v:THEME_SCHEMA_V};
       setAppTheme(themeToSave);
       try{localStorage.setItem("cc-theme",JSON.stringify(themeToSave));}catch{}
       /* Supabase */
