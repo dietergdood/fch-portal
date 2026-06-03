@@ -322,7 +322,7 @@ const THEME_DEFAULT_STATIC={
   btnPrimary:"#FFBF00", btnPrimaryText:"#000000", btnHover:BTN_HOV,
   vereinsname:"Mein Verein", portalname:"ClubCampus", logo:null,
 };
-const THEME_SCHEMA_V=2;
+const THEME_SCHEMA_V=3;
 const THEME_COLOR_KEYS=["navBg","navText","navAccent","navHover","vereinsfarbe1","vereinsfarbe2","btnPrimary","btnPrimaryText","btnHover"];
 
 const ROLES = {
@@ -6955,15 +6955,18 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       setAppTheme(themeToSave);
       try{localStorage.setItem("cc-theme",JSON.stringify(themeToSave));}catch{}
       /* Supabase */
+      console.log("[saveTheme] supabase:", !!supabase, "themeToSave:", themeToSave);
       if(supabase){
         supabase.from("portal_einstellungen")
           .upsert({schluessel:"theme",wert:themeToSave},{onConflict:"schluessel"})
           .then(({error:e})=>{
+            console.log("[saveTheme] upsert result:", e);
             if(e) setSaveMsg("Fehler: "+e.message);
             else setSaveMsg("Theme gespeichert ✓");
             setTimeout(()=>setSaveMsg(""),2500);
           });
       } else {
+        console.log("[saveTheme] kein Supabase - lokal gespeichert");
         setSaveMsg("Lokal gespeichert");
         setTimeout(()=>setSaveMsg(""),2000);
       }
@@ -11866,7 +11869,7 @@ export default function Portal({supabaseClient}){
       const s=localStorage.getItem("cc-theme");
       if(s){
         const saved=JSON.parse(s);
-        const CURRENT_V=2;
+        const CURRENT_V=3;
         if(!saved._v||saved._v<CURRENT_V){
           const reset={...THEME_DEFAULT_STATIC,...saved,
             navAccent:THEME_DEFAULT_STATIC.navAccent,
