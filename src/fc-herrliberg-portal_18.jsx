@@ -389,6 +389,42 @@ function getTerminTypLabel(typ){
   return {vereinsanlass:"Vereinsanlass",team_event:"Team-Event",spiel:"Spiel",training:"Training"}[typ]||typ||"Termin";
 }
 
+/* ── Funktionär: effektive Zugriffstufe berechnen ─────
+   Gruppe = Default-Stufe, Funktion = Override (höher gewinnt)
+─────────────────────────────────────────────────────── */
+const STUFE_RANG={lesen:1,schreiben:2,verwalten:3};
+
+function maxStufe(a, b){
+  if(!a) return b; if(!b) return a;
+  return STUFE_RANG[a]>STUFE_RANG[b]?a:b;
+}
+
+function getEffektiveStufeForFunktionaer(dbFunktionen, modulKey){
+  let best=null;
+  (dbFunktionen||[]).forEach(f=>{
+    /* Gruppen-Default */
+    const gs=f.portal_gruppen?.modul_stufen?.[modulKey]||f.gruppe_modul_stufen?.[modulKey];
+    if(gs) best=maxStufe(best,gs);
+    /* Funktions-Override */
+    const fo=f.stufe_override?.[modulKey];
+    if(fo) best=maxStufe(best,fo);
+  });
+  return best; /* null = kein Zugriff */
+}
+
+function getModuleForFunktionaer(dbFunktionen){
+  const mods=new Set();
+  (dbFunktionen||[]).forEach(f=>{
+    /* Module aus Gruppe */
+    (f.portal_gruppen?.module||f.gruppe_module||[]).forEach(m=>mods.add(m));
+    /* module_override überschreibt (Einschränkung) */
+    if(f.module_override?.length>0){
+      /* nur die override-Module behalten */
+    }
+  });
+  return[...mods];
+}
+
 function getRole(role){
   const norm=(role||"spieler").toLowerCase()
     .replace("ä","ae").replace("ö","oe").replace("ü","ue")
@@ -6565,8 +6601,8 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [showFunktionForm,setShowFunktionForm]=useState(false);
   const [editGruppe,setEditGruppe]=useState(null);
   const [editFunktion,setEditFunktion]=useState(null);
-  const [gruppeForm,setGruppeForm]=useState({name:"",beschreibung:"",module:[],farbe:"#8B5CF6"});
-  const [funktionForm,setFunktionForm]=useState({name:"",beschreibung:"",gruppe_id:"",module_override:[],teams:[],filter:{}});
+  const [gruppeForm,setGruppeForm]=useState({name:"",beschreibung:"",module:[],farbe:"#8B5CF6",modul_stufen:{}});
+  const [funktionForm,setFunktionForm]=useState({name:"",beschreibung:"",gruppe_id:"",module_override:[],teams:[],filter:{},stufe_override:{}});
   /* Module & Rechte View-Toggle */
   const [moduleViewMode,setModuleViewMode]=useState("modul"); // "modul" | "rolle"
   /* moduleAktiv + moduleRechte kommen als Props von App */
@@ -6808,7 +6844,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             supabase.from("api_sync_log").select("*,api_verbindungen(label)").order("gestartet_am",{ascending:false}).limit(50),
             supabase.from("benutzer").select("id,name,email,role").order("name"),
             supabase.from("portal_gruppen").select("*").order("name"),
-            supabase.from("portal_funktionen").select("*, portal_gruppen(name,farbe)").order("name"),
+            supabase.from("portal_funktionen").select("*, portal_gruppen(name,farbe,module,modul_stufen), stufe_override").order("name"),
             supabase.from("module_config").select("*"),
             supabase.from("modul_rechte").select("*"),
           ]);
@@ -7238,7 +7274,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
         <div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,marginBottom:20}}>
             <InfoBox text="Gruppen bündeln Module für Funktionäre. Funktionen schränken innerhalb einer Gruppe ein (Teams, Filter)." color={BL}/>
-            <button onClick={()=>{setEditGruppe(null);setGruppeForm({name:"",beschreibung:"",module:[],farbe:"#8B5CF6"});setShowGruppeForm(true);}}
+            <button onClick={()=>{setEditGruppe(null);setGruppeForm({name:"",beschreibung:"",module:[],farbe:"#8B5CF6",modul_stufen:{}});setShowGruppeForm(true);}}
               style={{padding:"7px 16px",borderRadius:9,border:"none",background:BK,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,flexShrink:0}}>
               + Neue Gruppe
             </button>
@@ -7283,7 +7319,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </div>
                   {/* Aktionen */}
                   <div style={{display:"flex",alignItems:"center",gap:6,padding:"0 14px",flexShrink:0}}>
-                    <button onClick={e=>{e.stopPropagation();setEditGruppe(g);setGruppeForm({name:g.name,beschreibung:g.beschreibung||"",module:g.module||[],farbe:g.farbe||"#8B5CF6"});setShowGruppeForm(true);}}
+                    <button onClick={e=>{e.stopPropagation();setEditGruppe(g);setGruppeForm({name:g.name,beschreibung:g.beschreibung||"",module:g.module||[],farbe:g.farbe||"#8B5CF6",modul_stufen:g.modul_stufen||{}});setShowGruppeForm(true);}}
                       style={{width:30,height:30,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
                       <TI n="edit" size={13}/>
                     </button>
@@ -7396,25 +7432,38 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               {/* Module */}
               <div>
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,display:"block"}}>
-                  Module <span style={{fontWeight:400,fontSize:11}}>— {(gruppeForm.module||[]).length} ausgewählt</span>
+                  Module & Zugriffstufen <span style={{fontWeight:400,fontSize:11}}>— {(gruppeForm.module||[]).length} ausgewählt</span>
                 </label>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+                <div style={{display:"flex",flexDirection:"column",gap:4}}>
                   {ALLE_MODULE.filter(m=>m.key!=="dashboard"&&m.key!=="portal").map(m=>{
                     const sel=(gruppeForm.module||[]).includes(m.key);
+                    const stufe=(gruppeForm.modul_stufen||{})[m.key]||"lesen";
+                    const STUFEN=["lesen","schreiben","verwalten"];
                     return(
-                      <button key={m.key} onClick={()=>setGruppeForm(p=>{
-                        const cur=p.module||[];
-                        return{...p,module:sel?cur.filter(x=>x!==m.key):[...cur,m.key]};
-                      })} style={{
-                        display:"flex",alignItems:"center",gap:7,
-                        padding:"7px 10px",borderRadius:8,textAlign:"left",
-                        border:`1px solid ${sel?gruppeForm.farbe:"var(--border)"}`,
-                        background:sel?gruppeForm.farbe+"15":"transparent",
-                        cursor:"pointer",fontFamily:FONT,transition:"all 0.12s"
-                      }}>
-                        <TI n={m.icon} size={13} style={{color:sel?gruppeForm.farbe:"var(--sub)",flexShrink:0}}/>
-                        <span style={{fontSize:12,color:sel?gruppeForm.farbe:"var(--sub)",fontWeight:sel?600:400}}>{m.label}</span>
-                      </button>
+                      <div key={m.key} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:8,border:`1px solid ${sel?gruppeForm.farbe:"var(--border)"}`,background:sel?gruppeForm.farbe+"08":"transparent"}}>
+                        {/* Modul aktivieren */}
+                        <button onClick={()=>setGruppeForm(p=>{
+                          const cur=p.module||[];
+                          const newMods=sel?cur.filter(x=>x!==m.key):[...cur,m.key];
+                          const newStufen={...p.modul_stufen};
+                          if(!sel) newStufen[m.key]="lesen";
+                          return{...p,module:newMods,modul_stufen:newStufen};
+                        })} style={{display:"flex",alignItems:"center",gap:6,flex:1,background:"none",border:"none",cursor:"pointer",padding:0,textAlign:"left",fontFamily:FONT}}>
+                          <TI n={m.icon} size={13} style={{color:sel?gruppeForm.farbe:"var(--sub)",flexShrink:0}}/>
+                          <span style={{fontSize:12,color:sel?gruppeForm.farbe:"var(--sub)",fontWeight:sel?600:400}}>{m.label}</span>
+                        </button>
+                        {/* Stufen-Toggle (nur wenn aktiv) */}
+                        {sel&&(
+                          <div style={{display:"flex",gap:2,flexShrink:0}}>
+                            {STUFEN.map(s=>(
+                              <button key={s} onClick={()=>setGruppeForm(p=>({...p,modul_stufen:{...p.modul_stufen,[m.key]:s}}))}
+                                style={{padding:"2px 7px",borderRadius:5,border:`1px solid ${stufe===s?ZUGRIFF_COLORS[s]:"var(--border)"}`,background:stufe===s?ZUGRIFF_COLORS[s]+"20":"transparent",color:stufe===s?ZUGRIFF_COLORS[s]:"var(--sub)",fontSize:10,fontWeight:stufe===s?700:400,cursor:"pointer",fontFamily:FONT}}>
+                                {ZUGRIFF_LABELS[s]}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -7423,7 +7472,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               <div style={{display:"flex",gap:10,paddingTop:4,borderTop:"1px solid var(--border)"}}>
                 <button onClick={async()=>{
                   if(!gruppeForm.name.trim()) return;
-                  const payload={name:gruppeForm.name.trim(),beschreibung:gruppeForm.beschreibung||"",module:gruppeForm.module||[],farbe:gruppeForm.farbe||"#8B5CF6",aktiv:true};
+                  const payload={name:gruppeForm.name.trim(),beschreibung:gruppeForm.beschreibung||"",module:gruppeForm.module||[],farbe:gruppeForm.farbe||"#8B5CF6",modul_stufen:gruppeForm.modul_stufen||{},aktiv:true};
                   if(supabase){
                     if(editGruppe?.id){
                       const{error}=await supabase.from("portal_gruppen").update(payload).eq("id",editGruppe.id);
@@ -7486,32 +7535,42 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   placeholder="Was macht diese Funktion?"
                   style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
-              {/* Module einschränken */}
+              {/* Module einschränken + Stufe überschreiben */}
               <div>
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>
-                  Module einschränken
-                  <span style={{fontWeight:400,marginLeft:6,fontSize:11}}>
-                    {(funktionForm.module_override||[]).length===0?"alle Module der Gruppe":` ${(funktionForm.module_override||[]).length} ausgewählt`}
+                  Module & Stufen-Override
+                  <span style={{fontWeight:400,marginLeft:6,fontSize:11,color:"var(--sub)"}}>
+                    Gruppen-Stufe überschreiben (nur höher)
                   </span>
                 </label>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+                <InfoBox text="Leer lassen = alle Module der Gruppe mit Gruppen-Stufe. Override = nur für ausgewählte Module die Stufe erhöhen." color={BL}/>
+                <div style={{display:"flex",flexDirection:"column",gap:4,marginTop:8}}>
                   {(selectedGruppe?.module||ALLE_MODULE.filter(m=>m.key!=="dashboard").map(m=>m.key)).map(mk=>{
                     const m=ALLE_MODULE.find(x=>x.key===mk)||{key:mk,label:mk,icon:"circle"};
-                    const sel=(funktionForm.module_override||[]).includes(mk);
+                    const gruppeStufe=(selectedGruppe?.modul_stufen||{})[mk]||"lesen";
+                    const override=(funktionForm.stufe_override||{})[mk];
+                    const STUFEN=["lesen","schreiben","verwalten"];
+                    const STUFE_RANG={lesen:1,schreiben:2,verwalten:3};
                     return(
-                      <button key={mk} onClick={()=>setFunktionForm(p=>{
-                        const cur=p.module_override||[];
-                        return{...p,module_override:sel?cur.filter(x=>x!==mk):[...cur,mk]};
-                      })} style={{
-                        display:"flex",alignItems:"center",gap:7,padding:"7px 10px",
-                        borderRadius:8,textAlign:"left",
-                        border:`1px solid ${sel?"#3B82F6":"var(--border)"}`,
-                        background:sel?"#3B82F610":"transparent",
-                        cursor:"pointer",fontFamily:FONT,transition:"all 0.12s"
-                      }}>
-                        <TI n={m.icon||"circle"} size={13} style={{color:sel?"#3B82F6":"var(--sub)",flexShrink:0}}/>
-                        <span style={{fontSize:12,color:sel?"#3B82F6":"var(--sub)",fontWeight:sel?600:400}}>{m.label}</span>
-                      </button>
+                      <div key={mk} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:8,border:"0.5px solid var(--border)"}}>
+                        <TI n={m.icon||"circle"} size={13} style={{color:"var(--sub)",flexShrink:0}}/>
+                        <span style={{flex:1,fontSize:12,color:"var(--text)"}}>{m.label}</span>
+                        {/* Gruppen-Default als Referenz */}
+                        <span style={{fontSize:10,color:"var(--sub)",padding:"2px 6px",borderRadius:4,background:"var(--surface2)"}}>Gruppe: {gruppeStufe}</span>
+                        {/* Override Buttons (nur höhere Stufen) */}
+                        <div style={{display:"flex",gap:2}}>
+                          <button onClick={()=>setFunktionForm(p=>{const ns={...p.stufe_override};delete ns[mk];return{...p,stufe_override:ns};})}
+                            style={{padding:"2px 6px",borderRadius:4,border:`1px solid ${!override?"#000":"var(--border)"}`,background:!override?"#00000010":"transparent",color:!override?"var(--text)":"var(--sub)",fontSize:9,cursor:"pointer",fontFamily:FONT}}>
+                            Standard
+                          </button>
+                          {STUFEN.filter(s=>STUFE_RANG[s]>STUFE_RANG[gruppeStufe]).map(s=>(
+                            <button key={s} onClick={()=>setFunktionForm(p=>({...p,stufe_override:{...p.stufe_override,[mk]:s}}))}
+                              style={{padding:"2px 7px",borderRadius:4,border:`1px solid ${override===s?ZUGRIFF_COLORS[s]:"var(--border)"}`,background:override===s?ZUGRIFF_COLORS[s]+"20":"transparent",color:override===s?ZUGRIFF_COLORS[s]:"var(--sub)",fontSize:10,fontWeight:override===s?700:400,cursor:"pointer",fontFamily:FONT}}>
+                              {ZUGRIFF_LABELS[s]}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
@@ -7525,6 +7584,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     beschreibung:funktionForm.beschreibung||"",
                     gruppe_id:funktionForm.gruppe_id||selectedGruppe?.id,
                     module_override:funktionForm.module_override||[],
+                    stufe_override:funktionForm.stufe_override||{},
                     teams:funktionForm.teams||[],
                     filter:funktionForm.filter||{},
                     aktiv:true
@@ -11367,6 +11427,10 @@ export default function Portal({supabaseClient}){
   };
 
   function getZugriff(modulKey){
+    /* Funktionäre: Stufe via Gruppen & Funktionen */
+    if(role==="funktionaer"){
+      return getEffektiveStufeForFunktionaer(dbFunktionen, modulKey);
+    }
     const effR=moduleRechte||{};
     const hatZugriff=effR[role]?effR[role].includes(modulKey):(APP_ZUGRIFF_DEFAULT[role]?.[modulKey]||APP_ZUGRIFF_DEFAULT[role]?._all||"lesen")!=="none";
     if(!hatZugriff) return null;
