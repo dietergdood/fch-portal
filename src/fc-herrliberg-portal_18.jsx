@@ -6929,11 +6929,16 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const [themeDirty,setThemeDirty]=useState(false);
 
   function updateTheme(key,val){
-    setAppTheme(t=>{
-      const updated={...t,[key]:val};
-      applyThemeCss(updated);
-      return updated;
-    });
+    setAppTheme(t=>({...t,[key]:val}));
+    /* CSS Vorschau sofort anwenden */
+    const r=document.documentElement.style;
+    if(key==="vereinsfarbe1"){r.setProperty("--cc-accent",val);}
+    else if(key==="navBg"){r.setProperty("--nav",val);}
+    else if(key==="navText"){r.setProperty("--nav-t",val);}
+    else if(key==="navAccent"){r.setProperty("--nav-a",val);}
+    else if(key==="btnPrimary"){r.setProperty("--btn-primary",val);}
+    else if(key==="btnHover"){r.setProperty("--btn-hover",val);}
+    else if(key==="navHover"){r.setProperty("--nav-hover",val);}
     setThemeDirty(true);
   }
   function saveTheme(){
