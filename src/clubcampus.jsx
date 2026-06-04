@@ -1849,7 +1849,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
         <div style={{display:"flex",flexDirection:"column",gap:20}}>
           <div>
             <div style={{fontSize:14,fontWeight:700,marginBottom:10}}>Spielplan</div>
-            <ScheduleTab role={role} team={activeTeam} initialSelected={selectedSpiel}/>
+            <SpielplanModul role={role} team={activeTeam} initialSelected={selectedSpiel}/>
           </div>
           <div>
             <div style={{fontSize:14,fontWeight:700,marginBottom:10}}>Tabelle</div>
