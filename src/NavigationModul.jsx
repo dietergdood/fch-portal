@@ -478,8 +478,8 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
           </div>
         ):(
           <div style={{display:"flex",alignItems:"center",gap:4,flexShrink:0,minWidth:0}}>
-            <Btn variant="ghost" onClick={()=>onBack?onBack():setActive("dashboard")} style={{ width:36,height:36 }}><TI n="chevron-left" size={22}/></Btn>
-            <span style={{fontWeight:700,fontSize:16,color:"var(--text)",letterSpacing:-0.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{pageLabel}</span>
+            <Btn variant="ghost" onClick={()=>onBack?onBack():setActive("dashboard")} style={{width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="chevron-left" size={22}/></Btn>
+            <span style={{fontWeight:700,fontSize:16,color:"var(--text)",letterSpacing:-0.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",lineHeight:1}}>{pageLabel}</span>
           </div>
         )
       ):(
