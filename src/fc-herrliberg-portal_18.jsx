@@ -6956,10 +6956,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       setAppTheme(themeToSave);
       if(applyTheme) applyTheme(themeToSave);
       try{localStorage.setItem("cc-theme",JSON.stringify(themeToSave));}catch{}
-      /* Supabase */
+      /* Supabase → vereine.theme */
       if(supabase){
-        supabase.from("portal_einstellungen")
-          .upsert({schluessel:"theme",wert:themeToSave},{onConflict:"schluessel"})
+        supabase.from("vereine")
+          .update({theme:themeToSave})
           .then(({error:e})=>{
             if(e) setSaveMsg("Fehler: "+e.message);
             else setSaveMsg("Theme gespeichert ✓");
@@ -8273,7 +8273,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               background:BTN,color:BTN_TXT,transition:"background 0.15s",
               fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT
             }}>Speichern & anwenden</button>
-            <button onClick={()=>{setAppTheme(THEME_DEFAULT_STATIC);setThemeDirty(false);if(supabase){supabase.from("portal_einstellungen").upsert({schluessel:"theme",wert:THEME_DEFAULT_STATIC},{onConflict:"schluessel"}).then(({error:e})=>{setSaveMsg(e?"Fehler: "+e.message:"Standard gespeichert ✓");setTimeout(()=>setSaveMsg(""),2500);});}}} style={{
+            <button onClick={()=>{setAppTheme(THEME_DEFAULT_STATIC);setThemeDirty(false);if(supabase){supabase.from("vereine").update({theme:THEME_DEFAULT_STATIC}).then(({error:e})=>{setSaveMsg(e?"Fehler: "+e.message:"Standard gespeichert ✓");setTimeout(()=>setSaveMsg(""),2500);});}}} style={{
               padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",
               background:"transparent",color:"var(--sub)",fontSize:13,cursor:"pointer",fontFamily:FONT
             }}>Standard wiederherstellen</button>
@@ -11821,23 +11821,11 @@ export default function Portal({supabaseClient}){
   /* ── Tenant State ── */
   const [tenant,setTenant]=useState(null); // {slug, name, theme}
 
-  /* Slug aus Hostname lesen: fch.clubcampus.app → "fch" */
-  function getSlug(){
-    try{
-      const h=window.location.hostname;
-      if(h==="localhost"||h==="127.0.0.1") return "fch"; // Dev-Fallback
-      const parts=h.split(".");
-      if(parts.length>=3) return parts[0]; // subdomain
-      return null;
-    }catch{return null;}
-  }
-
   /* Tenant aus Supabase laden */
   async function loadTenant(){
-    const slug=getSlug();
-    if(!slug||!sb) return;
+    if(!sb) return;
     try{
-      const{data,error}=await sb.from("vereine").select("*").eq("slug",slug).eq("aktiv",true).single();
+      const{data,error}=await sb.from("vereine").select("*").single();
       if(error||!data) return;
       setTenant(data);
       const t={...THEME_DEFAULT_STATIC,...(data.theme||{})};
@@ -11909,9 +11897,9 @@ export default function Portal({supabaseClient}){
     let themeSub=null;
     try{
       themeSub=sb.channel("theme-changes")
-        .on("postgres_changes",{event:"UPDATE",schema:"public",table:"portal_einstellungen",filter:"schluessel=eq.theme"},
+        .on("postgres_changes",{event:"UPDATE",schema:"public",table:"vereine"},
           payload=>{
-            const t={...THEME_DEFAULT_STATIC,...(payload.new?.wert||{})};
+            const t={...THEME_DEFAULT_STATIC,...(payload.new?.theme||{})};
             setAppTheme(t);
             applyThemeCss(t);
             try{localStorage.setItem("cc-theme",JSON.stringify(t));}catch{}
@@ -11952,15 +11940,15 @@ export default function Portal({supabaseClient}){
   async function loadTheme(){
     if(!sb) return;
     try{
-      const{data,error}=await sb.from("portal_einstellungen").select("wert").eq("schluessel","theme").single();
-      const saved=(error||!data)?{}:(data.wert||{});
+      const{data,error}=await sb.from("vereine").select("theme").single();
+      if(error||!data) return;
+      const saved=data.theme||{};
       const t={...THEME_DEFAULT_STATIC,...saved};
       setAppTheme(t);
       applyThemeCss(t);
       try{localStorage.setItem("cc-theme",JSON.stringify(t));}catch{}
     }catch(e){
       console.warn("[CC] loadTheme:",e.message);
-      applyThemeCss(THEME_DEFAULT_STATIC);
     }
   }
 
