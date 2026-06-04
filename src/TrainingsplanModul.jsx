@@ -7,6 +7,7 @@ import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, 
 import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet } from "./theme.jsx";
 import { GANTT, INITIAL_PLAENE, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
+import { SlotModal } from "./TermineModul.jsx";
 
 /* Mutable reference — wird von PlaetzeView befüllt */
 const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.map(p=>({...p}));
