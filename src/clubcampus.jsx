@@ -204,7 +204,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
         onChange={e=>{ setQ(e.target.value); onChange(e.target.value); setOpen(true); }}
         onFocus={()=>setOpen(true)}
         placeholder={placeholder}
-        style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,
+        style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,
           fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",
           boxSizing:"border-box",outline:"none"}}
       />
@@ -1042,7 +1042,7 @@ function Stat({label,value,sub,color=BK,icon}){
     <div className="cc-card" style={{borderRadius:12,padding:"18px 20px",flex:1,minWidth:0,border:"0.5px solid"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
         <div style={{fontSize:13,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>{label}</div>
-        {icon&&<div style={{width:28,height:28,borderRadius:7,background:color+"15",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n={icon} size={14} style={{color}}/></div>}
+        {icon&&<div style={{width:28,height:28,borderRadius:6,background:color+"15",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n={icon} size={14} style={{color}}/></div>}
       </div>
       <div style={{fontSize:28,fontWeight:800,color,lineHeight:1,marginBottom:5}}>{value}</div>
       {sub&&<div style={{fontSize:13,color:"var(--sub)",fontWeight:400}}>{sub}</div>}
@@ -1071,7 +1071,7 @@ function Tabs({tabs,active,setActive}){
     <div style={{display:"flex",gap:1,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
       {tabs.map(t=>(
         <button key={t.key} onClick={()=>setActive(t.key)} style={{
-          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:7,
+          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:6,
           background:active===t.key?"var(--surface)":"transparent",
           color:active===t.key?"var(--text)":"var(--sub)",
           fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:12,
@@ -1247,7 +1247,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
         {nav.map(n=>(
           <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined} style={{
             width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
-            padding:collapsed?"10px 0":"10px 12px",borderRadius:9,border:"none",
+            padding:collapsed?"10px 0":"10px 12px",borderRadius:8,border:"none",
             background:active===n.key?"var(--nav-a)":"transparent",
             color:active===n.key?"var(--nav-accent-text)":"var(--nav-t)",
             cursor:"pointer",fontSize:13.5,fontWeight:active===n.key?600:400,
@@ -1332,7 +1332,7 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
         ):(
           <div style={{display:"flex",alignItems:"center",gap:4,flexShrink:0,minWidth:0}}>
             <button onClick={()=>onBack?onBack():setActive("dashboard")} style={{
-              width:36,height:36,borderRadius:9,background:"none",border:"none",
+              width:36,height:36,borderRadius:8,background:"none",border:"none",
               display:"flex",alignItems:"center",justifyContent:"center",
               cursor:"pointer",color:"var(--text)",flexShrink:0,
               WebkitTapHighlightColor:"transparent"
@@ -1677,8 +1677,8 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
                   <span style={{fontWeight:500}}>{e.name} <span style={{color:"var(--sub)"}}>{e.time+" Uhr"}</span></span>
                   <span style={{color:filled<max?R:GN,fontWeight:700}}>{filled}/{max}</span>
                 </div>
-                <div style={{height:5,background:GB,borderRadius:3}}>
-                  <div style={{height:"100%",width:`${filled/max*100}%`,background:filled<max?R:GN,borderRadius:3}}/>
+                <div style={{height:5,background:GB,borderRadius:4}}>
+                  <div style={{height:"100%",width:`${filled/max*100}%`,background:filled<max?R:GN,borderRadius:4}}/>
                 </div>
               </div>
             );
@@ -1830,7 +1830,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
               <div style={{fontWeight:600,fontSize:13,marginBottom:5}}>{p.title}</div>
               <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
                 {p.options.map((opt,j)=>(
-                  <button key={j} style={{padding:"4px 10px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,cursor:"pointer",background:"var(--surface2)"}}>{opt}</button>
+                  <button key={j} style={{padding:"4px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,cursor:"pointer",background:"var(--surface2)"}}>{opt}</button>
                 ))}
               </div>
             </div>
@@ -1854,7 +1854,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
           })()}
           {meineSchichtenMitDatum.length===0&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:8}}>Keine Helfereinsätze zugeteilt.</div>}
           {meineSchichtenMitDatum.filter(s=>parseDate2(s.einsatzDate)>=today).map((s,i)=>(
-            <div key={i} style={{padding:"9px 11px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",marginBottom:8}}>
+            <div key={i} style={{padding:"9px 11px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",marginBottom:8}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
                 <div>
                   <div style={{fontWeight:600,fontSize:13,color:"var(--text)",marginBottom:2}}>{s.label}</div>
@@ -1926,7 +1926,7 @@ function DashboardEltern({account,meineTeams,setActive}){
           <div key={ki} style={{marginBottom:24}}>
             {/* Kind-Header */}
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
-              <div style={{width:6,height:28,borderRadius:3,background:ACCENT,flexShrink:0}}/>
+              <div style={{width:6,height:28,borderRadius:4,background:ACCENT,flexShrink:0}}/>
               <h2 style={{margin:0,fontSize:16,fontWeight:800}}>{vorname} <span style={{fontSize:13,color:"var(--sub)",fontWeight:500}}>· {team}</span></h2>
             </div>
 
@@ -2175,7 +2175,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
     <div>
       {/* Team-Header */}
       <div style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:hasMultiTeams?10:isMobile?14:18}}>
-        <div style={{width:6,height:isMobile?36:44,borderRadius:3,background:ACCENT,flexShrink:0,marginTop:2}}/>
+        <div style={{width:6,height:isMobile?36:44,borderRadius:4,background:ACCENT,flexShrink:0,marginTop:2}}/>
         <div style={{flex:1,minWidth:0}}>
           <h1 style={{fontSize:isMobile?17:21,fontWeight:800,margin:0,letterSpacing:-0.3,whiteSpace:isMobile?"nowrap":"normal",overflow:"hidden",textOverflow:"ellipsis"}}>
             {isEltern?`${kinderNames}${activeKind?.team?" · "+activeKind.team:""}`:`${activeTeam}`}
@@ -2275,7 +2275,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
                     <button key={t.key} onClick={()=>{setTab(t.key);setShowMehrTab(false);}}
                       style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
                         background:tab===t.key?ACCENT12:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
-                      <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
+                      <div style={{width:40,height:40,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
                         background:tab===t.key?ACCENT:"var(--surface2)",flexShrink:0}}>
                         <TI n={t.icon||"circle"} size={19} style={{color:tab===t.key?"#111":"var(--sub)"}}/>
                       </div>
@@ -2426,7 +2426,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                     {trainer.map((t,i)=>(
                     <div key={i} onClick={setTab&&setRosterInitial?()=>{setRosterInitial(t.id);setTab("roster");}:undefined}
-                      style={{display:"flex",alignItems:"center",gap:7,padding:"6px 10px",background:"var(--surface2)",borderRadius:9,cursor:setTab?"pointer":"default",transition:"background 0.1s"}}
+                      style={{display:"flex",alignItems:"center",gap:7,padding:"6px 10px",background:"var(--surface2)",borderRadius:8,cursor:setTab?"pointer":"default",transition:"background 0.1s"}}
                       onMouseEnter={e=>setTab&&(e.currentTarget.style.background=GB)}
                       onMouseLeave={e=>setTab&&(e.currentTarget.style.background=GR)}>
                       <Av name={`${t.firstName} ${t.lastName}`} size={26} bg={R}/>
@@ -3878,12 +3878,12 @@ function TrainingGantt({team: teamProp, role, kannSchreiben, kannVerwalten, sb:s
                           </button>
                         )}
                         <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);setShowPlanVerwaltung(false);}} title="Bearbeiten"
-                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
+                          style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
                         <button onClick={function(){handlePlanDuplizieren(p);}} title="Duplizieren"
-                          style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
+                          style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
                         {plaene.length>1&&!isAktiv&&(
                           <button onClick={function(){if(window.confirm("Plan \""+p.name+"\" loeschen?")){handlePlanLoeschen(p.id);}}} title="Loeschen"
-                            style={{width:28,height:28,borderRadius:7,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
+                            style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
                         )}
                       </div>
                     </div>
@@ -4115,7 +4115,7 @@ function TrainingGantt({team: teamProp, role, kannSchreiben, kannVerwalten, sb:s
         {alleTeams.filter(function(t){return teamFilter==="alle"||t===teamFilter;}).map(function(t){
           return (
             <div key={t} style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:"var(--sub)"}}>
-              <div style={{width:10,height:10,borderRadius:3,background:TEAM_COLORS[t]||BL}}/>
+              <div style={{width:10,height:10,borderRadius:4,background:TEAM_COLORS[t]||BL}}/>
               {t}
             </div>
           );
@@ -4901,7 +4901,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
             <div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                 <div style={{fontSize:13,color:"var(--sub)"}}>Manuell erfasst · nicht von FVRZ</div>
-                {canEdit&&<button onClick={()=>setEditMode(v=>!v)} style={{padding:"4px 11px",borderRadius:7,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${editMode?GN:GB}`,background:editMode?"#F0FDF4":"#fff",color:editMode?GN:BL}}>{editMode?"Fertig ✓":"Bearbeiten"}</button>}
+                {canEdit&&<button onClick={()=>setEditMode(v=>!v)} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${editMode?GN:GB}`,background:editMode?"#F0FDF4":"#fff",color:editMode?GN:BL}}>{editMode?"Fertig ✓":"Bearbeiten"}</button>}
               </div>
 
               <ST>Kader ({stats.kader.length} Spieler · {stats.kader.length-(stats.ersatz||[]).length} Start · {(stats.ersatz||[]).filter(id=>stats.kader.includes(id)).length} Ersatz)</ST>
@@ -4918,7 +4918,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                     return String(a.lastName||'').localeCompare(String(b.lastName||''));
                   })
                   .map(p=>(
-                    <div key={p.id} style={{display:"flex",alignItems:"center",gap:8,background:"var(--surface2)",borderRadius:7,padding:"5px 10px"}}>
+                    <div key={p.id} style={{display:"flex",alignItems:"center",gap:8,background:"var(--surface2)",borderRadius:6,padding:"5px 10px"}}>
                       <span style={{fontSize:13,fontWeight:700,color:getNr(p.id)?R:"#ccc",minWidth:22,textAlign:"right"}}>{getNr(p.id)||"-"}</span>
                       <Av name={p.name} size={20} bg={(stats.ersatz||[]).includes(p.id)?"#9CA3AF":"#16A34A"}/>
                       <span style={{fontSize:13,fontWeight:500,flex:1}}>{p.firstName} {p.lastName}</span>
@@ -4966,7 +4966,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {stats.karten.length===0&&!editMode&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Keine Karten erfasst.</div>}
               {stats.karten.map((k,i)=>{
                 const ks=KARTEN_STYLE[k.type]||KARTEN_STYLE["gelb"];
-                const karteBadge=<span style={{background:ks.bg,color:ks.color,fontSize:13,fontWeight:700,padding:"1px 5px",borderRadius:3}}>{ks.label}</span>;
+                const karteBadge=<span style={{background:ks.bg,color:ks.color,fontSize:13,fontWeight:700,padding:"1px 5px",borderRadius:4}}>{ks.label}</span>;
                 return <EZ key={i} icon={karteBadge} text={k.spieler} min={k.min} onDelete={()=>setStats(s=>({...s,karten:s.karten.filter((_,j)=>j!==i)}))}/>;
               })}
               {editMode&&<AR onAdd={()=>{if(!newKarte.spieler)return;setStats(s=>({...s,karten:[...s.karten,{spieler:newKarte.spieler,min:newKarte.min||"",type:newKarte.type}]}));setNewKarte({spieler:"",min:"",type:"gelb"});}}><SS value={newKarte.spieler} onChange={v=>setNewKarte(k=>({...k,spieler:v}))} options={spielerNamen} placeholder="Spieler"/><SS value={newKarte.type} onChange={v=>setNewKarte(k=>({...k,type:v}))} options={[{value:"gelb",label:"Gelb"},{value:"gelb-rot",label:"Gelb-Rot"},{value:"rot",label:"Rot"}]}/><MI value={newKarte.min} onChange={v=>setNewKarte(k=>({...k,min:v}))}/></AR>}
@@ -5631,7 +5631,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   {getResp(selEv.id,myId).status==="ab"&&(
                     <textarea value={getResp(selEv.id,myId).note||""} onChange={e=>setResp(selEv.id,myId,"ab",e.target.value)}
                       placeholder="Begründung (optional)…" rows={2}
-                      style={{width:"100%",marginTop:8,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,resize:"vertical",boxSizing:"border-box",fontFamily:FONT}}/>
+                      style={{width:"100%",marginTop:8,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,resize:"vertical",boxSizing:"border-box",fontFamily:FONT}}/>
                   )}
                 </div>
               )}
@@ -5803,7 +5803,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                   <div style={{borderTop:"0.5px solid var(--border)",padding:"8px 12px"}} onClick={e=>e.stopPropagation()}>
                     <textarea value={resp.note} onChange={e=>setResp(ev.id,myId,"ab",e.target.value)}
                       placeholder="Begründung (optional)…" rows={2}
-                      style={{width:"100%",padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,resize:"vertical",boxSizing:"border-box",fontFamily:FONT}}/>
+                      style={{width:"100%",padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,resize:"vertical",boxSizing:"border-box",fontFamily:FONT}}/>
                   </div>
                 )}
                 {canCancel&&(
@@ -5947,20 +5947,20 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                         <div style={{fontSize:13,color:"var(--sub)",marginBottom:2}}>Datum</div>
                         <input type="date" value={(()=>{const d=besammlungen[selEv.id]?.date||selEv.date||"";const c=d.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim();const p=c.split(".");return p.length>=2?`2026-${p[1]?.padStart(2,"0")}-${p[0]?.padStart(2,"0")}`:"";})()}
                           onChange={e=>{const v=e.target.value;if(v){const[y,m,d]=v.split("-");const days=["So","Mo","Di","Mi","Do","Fr","Sa"];const wd=days[new Date(v).getDay()];saveBesammlung(selEv.id,"date",`${wd} ${d}.${m}.`);}}}
-                          style={{width:"100%",padding:"7px 8px",border:"1px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
+                          style={{width:"100%",padding:"7px 8px",border:"1px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
                       </div>
                       <div>
                         <div style={{fontSize:13,color:"var(--sub)",marginBottom:2}}>Uhrzeit</div>
                         <input type="time" value={besammlungen[selEv.id]?.time||""}
                           onChange={e=>saveBesammlung(selEv.id,"time",e.target.value)}
-                          style={{width:"100%",padding:"7px 8px",border:"1px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
+                          style={{width:"100%",padding:"7px 8px",border:"1px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
                       </div>
                     </div>
                     <div>
                       <div style={{fontSize:13,color:"var(--sub)",marginBottom:2}}>Ort</div>
                       <input value={besammlungen[selEv.id]?.location||""} onChange={e=>saveBesammlung(selEv.id,"location",e.target.value)}
                         placeholder="z.B. Sportanlage Aabach, Parkplatz Bahnhof…"
-                        style={{width:"100%",padding:"7px 8px",border:"1px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
+                        style={{width:"100%",padding:"7px 8px",border:"1px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
                     </div>
                   </div>
                 ):(()=>{
@@ -6280,8 +6280,8 @@ function PollsTab({role}){
                     <span style={{fontWeight:my?700:400}}>{opt}{my?" ✓":""}</span>
                     <span style={{color:"var(--sub)",fontWeight:600}}>{pct}%</span>
                   </div>
-                  <div style={{height:6,background:GB,borderRadius:3}}>
-                    <div style={{height:"100%",width:`${pct}%`,background:my?R:BL,borderRadius:3}}/>
+                  <div style={{height:6,background:GB,borderRadius:4}}>
+                    <div style={{height:"100%",width:`${pct}%`,background:my?R:BL,borderRadius:4}}/>
                   </div>
                 </div>
               );
@@ -6487,7 +6487,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 </div>
               ))}
               {m.hat_portal_zugang&&(
-                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:9,border:"1px solid "+GN,fontSize:13,color:GN,fontWeight:600}}>
+                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:13,color:GN,fontWeight:600}}>
                   ✓ Hat Portal-Zugang
                 </div>
               )}
@@ -6899,7 +6899,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                         </div>
                         <div onClick={()=>TEAM_MODS.forEach(m=>toggleTeamModul(t.id,m.key,!allAktiv))}
                           title={allAktiv?"Alle deaktivieren":"Alle aktivieren"}
-                          style={{width:30,height:18,borderRadius:9,cursor:"pointer",
+                          style={{width:30,height:18,borderRadius:8,cursor:"pointer",
                             background:allAktiv?GN:"var(--border)",
                             position:"relative",transition:"background 0.15s",flexShrink:0}}>
                           <div style={{position:"absolute",top:2,left:allAktiv?14:2,width:14,height:14,borderRadius:"50%",background:"#fff",transition:"left 0.15s",boxShadow:"0 1px 3px rgba(0,0,0,0.2)"}}/>
@@ -6912,7 +6912,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                         <td key={m.key} style={{textAlign:"center",padding:"6px 4px"}}>
                           <div onClick={()=>toggleTeamModul(t.id,m.key)}
                             title={`${t.name}: ${m.label} ${isOn?"deaktivieren":"aktivieren"}`}
-                            style={{width:30,height:18,borderRadius:9,margin:"0 auto",cursor:"pointer",
+                            style={{width:30,height:18,borderRadius:8,margin:"0 auto",cursor:"pointer",
                               background:isOn?GN:"var(--border)",
                               position:"relative",transition:"background 0.15s",flexShrink:0}}>
                             <div style={{position:"absolute",top:2,left:isOn?14:2,width:14,height:14,borderRadius:"50%",background:"#fff",transition:"left 0.15s",boxShadow:"0 1px 3px rgba(0,0,0,0.2)"}}/>
@@ -7595,7 +7595,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                                   </div>
                                   <TI n={m.icon} size={13} style={{color:isPflicht?"#B45309":"var(--sub)",flexShrink:0}}/>
                                   <span style={{fontWeight:500,color:isPflicht?"#B45309":isExpanded?"var(--text)":"var(--text)",fontSize:13}}>{m.name||m.label}</span>
-                                  {isPflicht&&<span style={{fontSize:9,padding:"1px 5px",borderRadius:5,background:"#FEF3C7",color:"#B45309",fontWeight:600}}>Pflicht</span>}
+                                  {isPflicht&&<span style={{fontSize:9,padding:"1px 5px",borderRadius:4,background:"#FEF3C7",color:"#B45309",fontWeight:600}}>Pflicht</span>}
                                   <TI n={isExpanded?"chevron-up":"chevron-down"} size={11} style={{color:"var(--sub)",marginLeft:"auto"}}/>
                                 </div>
                               </td>
@@ -7655,7 +7655,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                                         {a.spez&&<div style={{fontSize:10,color:"var(--sub)",marginTop:2,fontStyle:"italic"}}>{a.spez}</div>}
                                         {a.note&&<div style={{fontSize:10,color:"var(--sub)",marginTop:2}}>ℹ {a.note}</div>}
                                       </div>
-                                      <span style={{fontSize:10,padding:"2px 8px",borderRadius:5,background:ZUGRIFF_COLORS[a.min]+"20",color:ZUGRIFF_COLORS[a.min],fontWeight:600,flexShrink:0}}>{ZUGRIFF_LABELS[a.min]}</span>
+                                      <span style={{fontSize:10,padding:"2px 8px",borderRadius:4,background:ZUGRIFF_COLORS[a.min]+"20",color:ZUGRIFF_COLORS[a.min],fontWeight:600,flexShrink:0}}>{ZUGRIFF_LABELS[a.min]}</span>
                                     </div>
                                   ))}
                                   {!MODUL_AKTIONEN[m.key]&&<span style={{fontSize:12,color:"var(--sub)"}}>Keine Detail-Aktionen definiert.</span>}
@@ -7747,7 +7747,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                         <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                           {(g.module||[]).map(mk=>{
                             const mod=ALLE_MODULE.find(m=>m.key===mk);
-                            return mod?<span key={mk} style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:g.farbe+"15",color:g.farbe}}>{mod.name||mod.label}</span>:null;
+                            return mod?<span key={mk} style={{fontSize:10,padding:"2px 7px",borderRadius:4,background:g.farbe+"15",color:g.farbe}}>{mod.name||mod.label}</span>:null;
                           })}
                         </div>
                       </div>
@@ -7833,7 +7833,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                         Funktionen
                       </div>
                       <button onClick={()=>{setEditFunktion(null);setFunktionForm({name:"",beschreibung:"",gruppe_id:g.id,module_override:[],teams:[],filter:{}});setShowFunktionForm(true);}}
-                        style={{padding:"4px 12px",borderRadius:7,border:`1px solid ${g.farbe}`,background:g.farbe+"15",color:g.farbe,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                        style={{padding:"4px 12px",borderRadius:6,border:`1px solid ${g.farbe}`,background:g.farbe+"15",color:g.farbe,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
                         + Funktion hinzufügen
                       </button>
                     </div>
@@ -7853,7 +7853,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
                             <span style={{fontWeight:600,fontSize:13,color:"var(--text)"}}>{f.name}</span>
                             <button onClick={()=>{setEditFunktion(f);setFunktionForm({name:f.name,beschreibung:f.beschreibung||"",gruppe_id:f.gruppe_id||g.id,module_override:f.module_override||[],teams:f.teams||[],filter:f.filter||{}});setShowFunktionForm(true);}}
-                              style={{width:26,height:26,borderRadius:7,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
+                              style={{width:26,height:26,borderRadius:6,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
                               <TI n="edit" size={12}/>
                             </button>
                           </div>
@@ -7904,7 +7904,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Gruppenname *</label>
                   <input value={gruppeForm.name} onChange={e=>setGruppeForm(p=>({...p,name:e.target.value}))}
                     placeholder="z.B. Vereinsleben & Events" autoFocus
-                    style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                    style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
                 </div>
                 <div>
                   <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Farbe</label>
@@ -7923,7 +7923,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Beschreibung</label>
                 <input value={gruppeForm.beschreibung||""} onChange={e=>setGruppeForm(p=>({...p,beschreibung:e.target.value}))}
                   placeholder="Wofür ist diese Gruppe?"
-                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
               {/* Module */}
               <div>
@@ -8022,14 +8022,14 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Name *</label>
                 <input value={funktionForm.name} onChange={e=>setFunktionForm(p=>({...p,name:e.target.value}))}
                   placeholder="z.B. Chef Anlässe" autoFocus
-                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
               {/* Beschreibung */}
               <div>
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Beschreibung</label>
                 <input value={funktionForm.beschreibung||""} onChange={e=>setFunktionForm(p=>({...p,beschreibung:e.target.value}))}
                   placeholder="Was macht diese Funktion?"
-                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
               {/* Module einschränken + Stufe überschreiben */}
               <div>
@@ -8201,7 +8201,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                             setBenutzerListe(prev=>prev.map(u=>u.id===b.id?{...u,funktionen:[...(u.funktionen||[]),fn]}:u));
                             setSaveMsg("Funktion zugewiesen");setTimeout(()=>setSaveMsg(""),2000);
                           }}
-                          style={{padding:"3px 6px",border:"1px dashed var(--border)",borderRadius:7,fontSize:11,background:"transparent",color:"var(--sub)",cursor:"pointer",fontFamily:FONT}}>
+                          style={{padding:"3px 6px",border:"1px dashed var(--border)",borderRadius:6,fontSize:11,background:"transparent",color:"var(--sub)",cursor:"pointer",fontFamily:FONT}}>
                           <option value="">+ Funktion</option>
                           {funktionen.filter(f=>!(b.funktionen||[]).find(x=>x.id===f.id)).map(f=>(
                             <option key={f.id} value={f.id}>{f.portal_gruppen?.name?`${f.portal_gruppen.name} · `:""}{f.name}</option>
@@ -8388,7 +8388,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{item.label}</div>
                   <div style={{fontSize:11,color:"var(--sub)",marginTop:1}}>{item.hint}</div>
                 </div>
-                <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:5}}>{theme[item.key]||(["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?"auto":"")}</code>
+                <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:4}}>{theme[item.key]||(["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?"auto":"")}</code>
                 <button onClick={()=>updateTheme(item.key,["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?null:THEME_DEFAULT_STATIC[item.key])} title="Zurücksetzen"
                   style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:4}}>
                   <TI n="refresh" size={14}/>
@@ -8603,29 +8603,29 @@ function EventsList({teamOnly,role}){
             <div>
               <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Titel</div>
               <input value={newEvent.title} onChange={e=>setNewEvent(p=>({...p,title:e.target.value}))}
-                placeholder="Titel des Anlasses" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box"}}/>
+                placeholder="Titel des Anlasses" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box"}}/>
             </div>
             <div>
               <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Typ</div>
               <select value={newEvent.type} onChange={e=>setNewEvent(p=>({...p,type:e.target.value}))}
-                style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}>
+                style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}>
                 {typeOptions.map(t=><option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
               <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Datum</div>
               <input type="date" value={newEvent.date} onChange={e=>setNewEvent(p=>({...p,date:e.target.value}))}
-                style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/>
+                style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}/>
             </div>
             <div>
               <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Uhrzeit</div>
               <input type="time" value={newEvent.time} onChange={e=>setNewEvent(p=>({...p,time:e.target.value}))}
-                style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/>
+                style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}/>
             </div>
             <div style={{gridColumn:"1/-1"}}>
               <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Ort</div>
               <input value={newEvent.loc} onChange={e=>setNewEvent(p=>({...p,loc:e.target.value}))}
-                placeholder="Vereinslokal, Mehrzweckhalle…" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box"}}/>
+                placeholder="Vereinslokal, Mehrzweckhalle…" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box"}}/>
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
@@ -8802,8 +8802,8 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         </div>
 
         {/* Fortschrittsbalken */}
-        <div style={{height:6,background:"var(--surface2)",borderRadius:3,marginBottom:10}}>
-          <div style={{height:"100%",width:`${pct}%`,background:voll?GN:filled>0?AM:R,borderRadius:3}}/>
+        <div style={{height:6,background:"var(--surface2)",borderRadius:4,marginBottom:10}}>
+          <div style={{height:"100%",width:`${pct}%`,background:voll?GN:filled>0?AM:R,borderRadius:4}}/>
         </div>
 
         {/* Plätze Zähler */}
@@ -8819,14 +8819,14 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         {showHelfer&&(
           <div style={{marginBottom:10,display:"flex",flexDirection:"column",gap:3}}>
             {helfer.map((h,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:6,background:h===meinName?"#DCFCE7":"#F3F4F6",borderRadius:7,padding:"4px 8px"}}>
+              <div key={i} style={{display:"flex",alignItems:"center",gap:6,background:h===meinName?"#DCFCE7":"#F3F4F6",borderRadius:6,padding:"4px 8px"}}>
                 <Av name={h} size={16} bg={h===meinName?GN:"#9CA3AF"}/>
                 <span style={{fontSize:13,fontWeight:h===meinName?700:500,color:h===meinName?GN:"#374151",flex:1}}>{h}</span>
                 {h===meinName&&<span style={{fontSize:13,color:GN}}>Du</span>}
               </div>
             ))}
             {Array.from({length:max-filled},(_,i)=>(
-              <div key={`f${i}`} style={{display:"flex",alignItems:"center",gap:6,background:"var(--surface)",border:"1px dashed #D1D5DB",borderRadius:7,padding:"4px 8px"}}>
+              <div key={`f${i}`} style={{display:"flex",alignItems:"center",gap:6,background:"var(--surface)",border:"1px dashed #D1D5DB",borderRadius:6,padding:"4px 8px"}}>
                 <div style={{width:16,height:16,borderRadius:"50%",background:"#E5E7EB",flexShrink:0}}/>
                 <span style={{fontSize:13,color:"var(--sub)"}}>Freier Platz</span>
               </div>
@@ -8840,10 +8840,10 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
           {/* Haupt-Buttons (solange kein Formular offen und keine Anfrage pending) */}
           {!showTransfer&&!showAnfrageForm&&!anfragePending&&(
             <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-              <button onClick={()=>setShowTransfer(true)} style={{padding:"4px 10px",borderRadius:7,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid #0891B2`,background:"var(--surface)",color:"#0891B2"}}>
+              <button onClick={()=>setShowTransfer(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid #0891B2`,background:"var(--surface)",color:"#0891B2"}}>
                 ⇄ Übertragen
               </button>
-              <button onClick={()=>setShowAnfrageForm(true)} style={{padding:"4px 10px",borderRadius:7,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${AM}`,background:"var(--surface)",color:AM}}>
+              <button onClick={()=>setShowAnfrageForm(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${AM}`,background:"var(--surface)",color:AM}}>
                 ↩ Freigabe anfragen
               </button>
             </div>
@@ -8856,7 +8856,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
 
           {/* Ausstehende Anfrage */}
           {anfragePending&&!showAnfrageOk&&(
-            <div style={{background:AM+"12",border:`0.5px solid ${AM}`,borderRadius:7,padding:"8px 10px"}}>
+            <div style={{background:AM+"12",border:`0.5px solid ${AM}`,borderRadius:6,padding:"8px 10px"}}>
               <div style={{fontSize:13,color:AM,fontWeight:700,marginBottom:3}}>⏳ Freigabe ausstehend</div>
               <div style={{fontSize:13,color:"var(--sub)"}}>Begründung: <em>{"\"" + (anfrageData?.begruendung||"") + "\""}</em></div>
             </div>
@@ -8937,13 +8937,13 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         <div>
           {/* Trainer: Zuteilungs-Dropdown */}
           {canZuteilen&&!showZuteilen&&(
-            <button onClick={()=>setShowZuteilen(true)} style={{padding:"4px 11px",borderRadius:7,fontSize:13,fontWeight:600,cursor:"pointer",border:"none",background:"var(--surface2)",color:"var(--text)"}}>
+            <button onClick={()=>setShowZuteilen(true)} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:"none",background:"var(--surface2)",color:"var(--text)"}}>
               + Zuteilen
             </button>
           )}
           {/* Standard Eintragen für alle anderen */}
           {!canZuteilen&&(
-            <button onClick={()=>onEintragen(schicht.id,meinName)} style={{padding:"4px 11px",borderRadius:7,fontSize:13,fontWeight:600,cursor:"pointer",border:"none",background:"var(--surface2)",color:"var(--text)"}}>
+            <button onClick={()=>onEintragen(schicht.id,meinName)} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:"none",background:"var(--surface2)",color:"var(--text)"}}>
               ✓ Eintragen
             </button>
           )}
@@ -8996,7 +8996,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         </div>
       ):(
         <div style={{marginTop:10}}>
-          <button disabled style={{padding:"4px 11px",borderRadius:7,fontSize:13,fontWeight:600,cursor:"default",border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--sub)"}}>Besetzt</button>
+          <button disabled style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"default",border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--sub)"}}>Besetzt</button>
         </div>
       )}
 
@@ -9674,7 +9674,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
       {/* -- TAB: MEINEM TEAM ZUGEWIESEN -- */}
       {helperTab==="team"&&meinGruppe&&(
         <div>
-          <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"var(--surface2)",border:"0.5px solid var(--border)",borderRadius:9,marginBottom:16,fontSize:13}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"var(--surface2)",border:"0.5px solid var(--border)",borderRadius:8,marginBottom:16,fontSize:13}}>
             <span style={{fontSize:15}}><TI n="users"/></span>
             <span>Einsätze für deine Teams: {meineGruppen.map((g,i)=><strong key={i}>{i>0?" · ":""}{g}</strong>)}</span>
           </div>
@@ -9797,7 +9797,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
         <div>
           {/* Team-Filter Hinweis für Trainer */}
           {isTrainer&&(
-            <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"var(--surface2)",border:"0.5px solid var(--border)",borderRadius:9,marginBottom:14,fontSize:13}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",background:"var(--surface2)",border:"0.5px solid var(--border)",borderRadius:8,marginBottom:14,fontSize:13}}>
               <span style={{fontSize:15}}><TI n="eye"/></span>
               <span>Du siehst nur Mitglieder deines Teams: <strong>Cc-Junioren</strong></span>
             </div>
@@ -9984,8 +9984,8 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
             <div style={{fontWeight:600,fontSize:13,marginBottom:8}}>Schichten</div>
             {[1,2,3].map(n=>(
               <div key={n} style={{display:"flex",gap:8,marginBottom:7,alignItems:"center"}}>
-                <input placeholder={`Schicht ${n}: z.B. Grill 10:00-14:00`} style={{flex:1,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/>
-                <input type="number" placeholder="Max" style={{width:55,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/>
+                <input placeholder={`Schicht ${n}: z.B. Grill 10:00-14:00`} style={{flex:1,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}/>
+                <input type="number" placeholder="Max" style={{width:55,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}/>
                 <span style={{fontSize:13,color:"var(--sub)"}}>Plätze</span>
               </div>
             ))}
@@ -10015,11 +10015,11 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
         <Card style={{marginTop:14,background:"var(--surface)",border:`0.5px solid ${AM}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Reservation</h3>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Bus</label><br/><select style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}><option>Bus A (9-Plätzer)</option><option>Bus B (15-Plätzer)</option></select></div>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Datum</label><br/><input type="date" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/></div>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Zeit</label><br/><input type="text" placeholder="09:00-14:00" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/></div>
+            <div><label style={{fontSize:13,color:"var(--sub)"}}>Bus</label><br/><select style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}><option>Bus A (9-Plätzer)</option><option>Bus B (15-Plätzer)</option></select></div>
+            <div><label style={{fontSize:13,color:"var(--sub)"}}>Datum</label><br/><input type="date" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}/></div>
+            <div><label style={{fontSize:13,color:"var(--sub)"}}>Zeit</label><br/><input type="text" placeholder="09:00-14:00" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}/></div>
           </div>
-          <div style={{marginTop:10}}><label style={{fontSize:13,color:"var(--sub)"}}>Zweck</label><br/><input type="text" placeholder="z.B. Auswärtsspiel vs. FC Küsnacht" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box"}}/></div>
+          <div style={{marginTop:10}}><label style={{fontSize:13,color:"var(--sub)"}}>Zweck</label><br/><input type="text" placeholder="z.B. Auswärtsspiel vs. FC Küsnacht" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box"}}/></div>
           <div style={{marginTop:10,display:"flex",gap:8}}><Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(false)}>Reservieren</Btn><Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn></div>
         </Card>
       )}
@@ -10057,10 +10057,10 @@ function MaterialView(){
         <Card style={{marginBottom:16,background:"var(--surface)",border:`0.5px solid ${BL}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Materialanfrage</h3>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Art</label><br/><select style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}>{["Bestellung","Ersatzmaterial","Tenüs","Mangel","Defekt","Verlust","Neue Anforderung"].map(t=><option key={t}>{t}</option>)}</select></div>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Team</label><br/><select style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}><option>Cc-Junioren</option><option>D-Junioren</option></select></div>
+            <div><label style={{fontSize:13,color:"var(--sub)"}}>Art</label><br/><select style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}>{["Bestellung","Ersatzmaterial","Tenüs","Mangel","Defekt","Verlust","Neue Anforderung"].map(t=><option key={t}>{t}</option>)}</select></div>
+            <div><label style={{fontSize:13,color:"var(--sub)"}}>Team</label><br/><select style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13}}><option>Cc-Junioren</option><option>D-Junioren</option></select></div>
           </div>
-          <div style={{marginTop:10}}><label style={{fontSize:13,color:"var(--sub)"}}>Beschreibung</label><br/><input type="text" placeholder="z.B. Neue Bälle Grösse 4" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box"}}/></div>
+          <div style={{marginTop:10}}><label style={{fontSize:13,color:"var(--sub)"}}>Beschreibung</label><br/><input type="text" placeholder="z.B. Neue Bälle Grösse 4" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box"}}/></div>
           <div style={{marginTop:10,display:"flex",gap:8}}><Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(false)}>Einreichen</Btn><Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn></div>
         </Card>
       )}
@@ -10367,7 +10367,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
         },{})
       ).sort(([a],[b])=>String(a||'').localeCompare(String(b||''))).map(([key,items])=>({key,items}));
 
-  const inputStyle={width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"};
+  const inputStyle={width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"};
   const labelStyle={fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:5,display:"block",textTransform:"uppercase",letterSpacing:0.5};
 
   const KAT_COLORS={"Aktivfussball":BL,"Juniorenfussball":R,"Kinderfussball Junioren":"#F97316","Juniorinnenfussball":"#EC4899","Kinderfussball Juniorinnen":"#DB2777","Seniorenfussball":AM};
@@ -10382,7 +10382,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {/* View Toggle */}
-          <div style={{display:"flex",border:"1px solid var(--border)",borderRadius:9,overflow:"hidden"}}>
+          <div style={{display:"flex",border:"1px solid var(--border)",borderRadius:8,overflow:"hidden"}}>
             {["list","grid"].map(m=>(
               <button key={m} onClick={()=>setViewMode(m)} style={{
                 padding:"7px 11px",border:"none",cursor:"pointer",fontFamily:FONT,
@@ -10396,7 +10396,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           {/* Dreipunkt-Menü */}
           <div style={{position:"relative"}}>
             <button onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} style={{
-              width:36,height:36,borderRadius:9,border:"1px solid var(--border)",
+              width:36,height:36,borderRadius:8,border:"1px solid var(--border)",
               background:"var(--surface2)",cursor:"pointer",display:"flex",
               alignItems:"center",justifyContent:"center",color:"var(--sub)"
             }}>
@@ -10437,7 +10437,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             <label style={{fontSize:12,fontWeight:600,color:"var(--sub)",marginBottom:6,display:"block",textTransform:"uppercase",letterSpacing:0.5}}>Neue Saison</label>
             <input value={saisonDraft} onChange={e=>setSaisonDraft(e.target.value)}
               placeholder="z.B. 2025/26" autoFocus
-              style={{width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+              style={{width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
           </div>
           <div style={{display:"flex",gap:10}}>
             <button onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()}
@@ -10471,7 +10471,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             {SORT_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
           </select>
           <button onClick={()=>setSortDir(d=>d==="asc"?"desc":"asc")}
-            style={{padding:"9px 11px",borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
+            style={{padding:"9px 11px",borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
             {sortDir==="asc"?"↑":"↓"}
           </button>
         </div>
@@ -10558,7 +10558,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                       </div>
                       {/* 3-Dot Menu */}
                       <div style={{position:"relative"}}>
-                        <button onClick={openMenu} style={{width:28,height:28,borderRadius:7,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
+                        <button onClick={openMenu} style={{width:28,height:28,borderRadius:6,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
                           <TI n="dots-vertical" size={13}/>
                         </button>
                         {menuOpen&&(
@@ -10590,7 +10590,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                 ):(
                   /* ── LISTEN-LAYOUT ── */
                   <div style={{display:"flex",alignItems:"center",gap:12}}>
-                    <div style={{width:42,height:42,borderRadius:11,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                    <div style={{width:42,height:42,borderRadius:10,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                       <TI n="ball-football" size={18} style={{color:katColor}}/>
                     </div>
                     <div style={{flex:1,minWidth:0}}>
@@ -10780,11 +10780,11 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                       placeholder={placeholder}
                       style={{flex:1}}/>
                     <button onClick={()=>setForm(p=>({...p,[key]:p[key].filter((_,j)=>j!==i)}))}
-                      style={{width:36,height:38,borderRadius:9,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",color:R,flexShrink:0,fontSize:16}}>×</button>
+                      style={{width:36,height:38,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",color:R,flexShrink:0,fontSize:16}}>×</button>
                   </div>
                 ))}
                 <button onClick={()=>setForm(p=>({...p,[key]:[...(p[key]||[]),""]}))}
-                  style={{padding:"7px 14px",borderRadius:9,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
+                  style={{padding:"7px 14px",borderRadius:8,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
                   + {label} hinzufügen
                 </button>
               </div>
@@ -10799,7 +10799,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           </div>
           {/* Status-Meldung */}
           {msg&&(
-            <div style={{padding:"10px 14px",borderRadius:9,fontSize:13,fontWeight:600,
+            <div style={{padding:"10px 14px",borderRadius:8,fontSize:13,fontWeight:600,
               background:msg.type==="ok"?"#ECFDF5":RL,
               color:msg.type==="ok"?GN:R,
               border:"1px solid "+(msg.type==="ok"?GN:R)}}>
@@ -10834,7 +10834,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                     return{...p,module_aktiv:isActive?cur.filter(m=>m!==mod.key):[...cur,mod.key]};
                   })} style={{
                     display:"flex",alignItems:"center",justifyContent:"space-between",
-                    padding:"9px 12px",borderRadius:9,marginBottom:6,cursor:"pointer",
+                    padding:"9px 12px",borderRadius:8,marginBottom:6,cursor:"pointer",
                     background:isActive?"var(--surface2)":"transparent",
                     border:"1px solid "+(isActive?"var(--border)":"transparent")
                   }}>
@@ -10918,7 +10918,7 @@ function LockersView(){
                 {lr.assignments.map((a,j)=>{
                   const left=(a.start-START)/(END-START)*100, width=(a.end-a.start)/(END-START)*100;
                   return(
-                    <div key={j} title={`${a.team} · ${fmt(a.start)}-${fmt(a.end)}`} style={{position:"absolute",left:`${left}%`,width:`${width}%`,top:j*(H+4)+4,height:H,background:a.color,borderRadius:5,padding:"3px 7px",overflow:"hidden",cursor:"help"}}>
+                    <div key={j} title={`${a.team} · ${fmt(a.start)}-${fmt(a.end)}`} style={{position:"absolute",left:`${left}%`,width:`${width}%`,top:j*(H+4)+4,height:H,background:a.color,borderRadius:4,padding:"3px 7px",overflow:"hidden",cursor:"help"}}>
                       <div style={{color:"#fff",fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{a.team} ({a.type})</div>
                       <div style={{color:"rgba(255,255,255,0.8)",fontSize:13}}>{fmt(a.start)}-{fmt(a.end)}</div>
                     </div>
@@ -11209,9 +11209,9 @@ function PlaetzeView(){
                 <div style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px"}}>
                   <div style={{display:"flex",flexDirection:"column",gap:2,flexShrink:0}}>
                     <button onClick={function(){moveUp(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===0}
-                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:3,background:"var(--surface)",cursor:"pointer",fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
+                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
                     <button onClick={function(){moveDown(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===plaetze.filter(function(x){return x.active;}).length-1}
-                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:3,background:"var(--surface)",cursor:"pointer",fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
+                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
                   </div>
                   <div style={{width:10,height:10,borderRadius:"50%",background:GN,flexShrink:0}}/>
                   <div style={{flex:1,minWidth:0}}>
@@ -11357,7 +11357,7 @@ function DarkModeRow(){
         <div style={{fontSize:12,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
       </div>
       <button onClick={toggle} style={{
-        position:"relative",width:48,height:26,borderRadius:13,border:"none",
+        position:"relative",width:48,height:26,borderRadius:12,border:"none",
         background:dark?ACCENT:"var(--border)",cursor:"pointer",
         transition:"background 0.25s",flexShrink:0,padding:0,
         WebkitTapHighlightColor:"transparent"
@@ -11432,14 +11432,14 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
     }
   }
 
-  const inputStyle={width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:9,
+  const inputStyle={width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:8,
     fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",
     boxSizing:"border-box",outline:"none"};
 
   const StatusBox=({status,msg})=>status==="ok"?(
-    <div style={{padding:"10px 14px",background:"var(--surface)",border:"1px solid "+GN,borderRadius:9,fontSize:13,color:GN,fontWeight:600,marginTop:4}}>{msg}</div>
+    <div style={{padding:"10px 14px",background:"var(--surface)",border:"1px solid "+GN,borderRadius:8,fontSize:13,color:GN,fontWeight:600,marginTop:4}}>{msg}</div>
   ):status==="error"?(
-    <div style={{padding:"10px 14px",background:RL,border:"1px solid "+R,borderRadius:9,fontSize:13,color:R,fontWeight:600,marginTop:4}}>{msg}</div>
+    <div style={{padding:"10px 14px",background:RL,border:"1px solid "+R,borderRadius:8,fontSize:13,color:R,fontWeight:600,marginTop:4}}>{msg}</div>
   ):null;
 
   return(
@@ -11487,13 +11487,13 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                     <button onClick={handleSaveName} disabled={nameStatus==="loading"}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
-                      style={{flex:1,padding:"9px",borderRadius:9,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
+                      style={{flex:1,padding:"9px",borderRadius:8,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
                         fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT,
                         opacity:nameStatus==="loading"?0.6:1}}>
                       {nameStatus==="loading"?"Speichern…":"Speichern"}
                     </button>
                     <button onClick={()=>{setEditName(false);setNameStatus(null);}}
-                      style={{padding:"9px 16px",borderRadius:9,background:"var(--surface2)",
+                      style={{padding:"9px 16px",borderRadius:8,background:"var(--surface2)",
                         color:"var(--sub)",border:"1px solid var(--border)",fontSize:13,cursor:"pointer",fontFamily:FONT}}>
                       Abbrechen
                     </button>
@@ -11694,7 +11694,7 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
                 style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
                   background:active===m.key?ACCENT20:"none",border:"none",cursor:"pointer",
                   fontFamily:"inherit",textAlign:"left"}}>
-                <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
+                <div style={{width:40,height:40,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
                   background:active===m.key?ACCENT:"var(--surface2)",flexShrink:0}}>
                   <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/>
                 </div>
@@ -12094,7 +12094,7 @@ function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,
         <div style={{padding:"10px 18px",borderTop:"0.5px solid var(--border)",display:"flex",gap:8,alignItems:"center",flexShrink:0}}>
           <input value={antwortText} onChange={e=>setAntwortText(e.target.value)}
             onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendAntwort();}}}
-            placeholder="Antworten..." style={{flex:1,padding:"8px 12px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}/>
+            placeholder="Antworten..." style={{flex:1,padding:"8px 12px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}/>
           <button onClick={sendAntwort} disabled={!antwortText.trim()||sending}
             style={{padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,cursor:"pointer",fontFamily:FONT,fontSize:13,fontWeight:600,opacity:antwortText.trim()?1:0.5}}>
             <TI n="send" size={14}/>
@@ -12210,21 +12210,21 @@ function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,
             </div>
             {neuForm.empfaenger_typ==="rolle"&&(
               <select value={neuForm.empfaenger_rolle} onChange={e=>setNeuForm(f=>({...f,empfaenger_rolle:e.target.value}))}
-                style={{width:"100%",padding:"8px 10px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
+                style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
                 <option value="">Empfänger wählen...</option>
                 {ROLLEN_OPTS.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}
               </select>
             )}
             {neuForm.empfaenger_typ==="gruppe"&&(
               <select value={neuForm.empfaenger_gruppe_id||""} onChange={e=>setNeuForm(f=>({...f,empfaenger_gruppe_id:e.target.value?parseInt(e.target.value):null}))}
-                style={{width:"100%",padding:"8px 10px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
+                style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
                 <option value="">Gruppe wählen...</option>
                 {gruppen.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
               </select>
             )}
             {neuForm.empfaenger_typ==="team"&&(
               <select value={neuForm.empfaenger_team} onChange={e=>setNeuForm(f=>({...f,empfaenger_team:e.target.value}))}
-                style={{width:"100%",padding:"8px 10px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
+                style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
                 <option value="">Team wählen...</option>
                 {dbTeams.map(t=><option key={t.id||t.name} value={t.name}>{t.name}</option>)}
               </select>
@@ -12233,13 +12233,13 @@ function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,
           <div style={{marginBottom:14}}>
             <label style={{fontSize:12,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6}}>Betreff</label>
             <input value={neuForm.titel} onChange={e=>setNeuForm(f=>({...f,titel:e.target.value}))}
-              placeholder="z.B. Neuer Trainingsplan" style={{width:"100%",padding:"8px 10px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none"}}/>
+              placeholder="z.B. Neuer Trainingsplan" style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none"}}/>
           </div>
           <div style={{marginBottom:18}}>
             <label style={{fontSize:12,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6}}>Nachricht</label>
             <textarea value={neuForm.inhalt} onChange={e=>setNeuForm(f=>({...f,inhalt:e.target.value}))}
               placeholder="Deine Nachricht..." rows={5}
-              style={{width:"100%",padding:"8px 10px",borderRadius:9,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none",resize:"vertical"}}/>
+              style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none",resize:"vertical"}}/>
           </div>
           <button onClick={sendNachricht} disabled={!neuForm.titel.trim()||!neuForm.inhalt.trim()||sending}
             style={{width:"100%",padding:"12px 20px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,cursor:"pointer",fontSize:14,fontWeight:700,fontFamily:FONT,opacity:neuForm.titel.trim()&&neuForm.inhalt.trim()?1:0.5}}>
