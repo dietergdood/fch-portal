@@ -1131,11 +1131,31 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
             <div style={{width:40,height:4,borderRadius:2,background:"var(--border)",margin:"4px auto 12px"}}/>
             <div style={{padding:"0 8px 4px",fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5}}>Weitere Module</div>
             {mehr.map(m=>(
-              <Btn onClick={()=>{setActive(m.key);setShowMehr(false);}}><div style={{width:40,height:40,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center", background:active===m.key?ACCENT:"var(--surface2)",flexShrink:0}}> <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/> </div> <span style={{fontSize:14,fontWeight:active===m.key?600:400,color:active===m.key?"var(--text)":"var(--sub)"}}>{m.label}</span> {active===m.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}</Btn>
+              <button key={m.key} onClick={()=>{setActive(m.key);setShowMehr(false);}}
+                style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
+                  background:active===m.key?ACCENT20:"none",border:"none",cursor:"pointer",
+                  fontFamily:"inherit",textAlign:"left"}}>
+                <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
+                  background:active===m.key?ACCENT:"var(--surface2)",flexShrink:0}}>
+                  <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/>
+                </div>
+                <span style={{fontSize:15,fontWeight:active===m.key?600:400,color:active===m.key?"var(--text)":"var(--sub)"}}>{m.label}</span>
+                {active===m.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}
+              </button>
             ))}
             {/* Profil */}
             <div style={{margin:"8px 16px 0",paddingTop:12,borderTop:"0.5px solid var(--border)"}}>
-              <Btn variant="ghost" onClick={()=>{setShowProfile(true);setShowMehr(false);}}><div style={{width:40,height:40,borderRadius:"50%",background:rc,display:"flex",alignItems:"center", justifyContent:"center",color:rc===ACCENT?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}> {initials} </div> <div style={{textAlign:"left"}}> <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{userName}</div> <div style={{fontSize:13,color:"var(--sub)"}}>{getRole(role)?.label||role}</div> </div></Btn>
+              <button onClick={()=>{setShowProfile(true);setShowMehr(false);}}
+                style={{display:"flex",alignItems:"center",gap:14,width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
+                <div style={{width:40,height:40,borderRadius:"50%",background:rc,display:"flex",alignItems:"center",
+                  justifyContent:"center",color:rc===ACCENT?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}>
+                  {initials}
+                </div>
+                <div style={{textAlign:"left"}}>
+                  <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{userName}</div>
+                  <div style={{fontSize:12,color:"var(--sub)"}}>{getRole(role)?.label||role}</div>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -1144,15 +1164,34 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
       {/* Bottom Nav Bar */}
       <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"var(--nav)",borderTop:"1px solid var(--nav-b)",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)",boxShadow:"0 -2px 16px rgba(0,0,0,0.25)"}}>
         <div style={{display:"flex"}}>
-          {tabs.map(n=>{
-            const isActive=active===n.key&&!mehrActive;
-            return(
-              <Btn variant="ghost" onClick={()=>{setActive(n.key);setShowMehr(false);}}><TI n={n.icon||"circle"} size={22} style={{color:isActive?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/> <span style={{fontSize:11,color:isActive?"var(--nav-a)":"var(--nav-t)",fontWeight:isActive?600:400,transition:"color 0.15s"}}>{n.label}</span></Btn>
-            );
-          })}
-          {/* Mehr-Button */}
+          {tabs.map(n=>(
+            <button key={n.key} onClick={()=>{setActive(n.key);setShowMehr(false);}} style={{
+              flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+              padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
+              minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
+            }}>
+              {active===n.key&&!mehrActive&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
+              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
+                background:active===n.key&&!mehrActive?"var(--nav-a)":"transparent",transition:"background 0.15s"}}>
+                <TI n={n.icon||"circle"} size={19} style={{color:active===n.key&&!mehrActive?ACCENT2:"var(--nav-t)"}}/>
+              </div>
+              <span style={{fontSize:10,color:active===n.key&&!mehrActive?"var(--nav-accent-text)":"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
+            </button>
+          ))}
+          {/* Mehr-Button (nur wenn mehr-Einträge vorhanden) */}
           {mehr.length>0&&(
-            <Btn variant="ghost" onClick={()=>setShowMehr(v=>!v)}><TI n="dots" size={22} style={{color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/> <span style={{fontSize:11,color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400,transition:"color 0.15s"}}>Mehr</span></Btn>
+            <button onClick={()=>setShowMehr(v=>!v)} style={{
+              flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+              padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
+              minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
+            }}>
+              {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
+              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
+                background:mehrActive||showMehr?ACCENT:"transparent",transition:"background 0.15s"}}>
+                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"#111":"var(--nav-t)"}}/>
+              </div>
+              <span style={{fontSize:10,color:mehrActive||showMehr?ACCENT:"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
+            </button>
           )}
         </div>
       </nav>
@@ -1161,6 +1200,3 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
   );
 }
 
-/* ── LOGIN SCREEN ─────────────────────────────────────── */
-
-export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole };
