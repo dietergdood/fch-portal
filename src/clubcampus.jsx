@@ -1404,6 +1404,7 @@ function Dashboard({role,setActive,account,meineTeams,myRosterId}){
 }
 
 function DashboardAdmin({setActive,account}){
+  const isMobile=useIsMobile();
   const vorname=(account?.name||"Administrator").split(" ")[0];
   return(
     <div>
@@ -1477,6 +1478,7 @@ function DashboardAdmin({setActive,account}){
 }
 
 function DashboardAdministration({setActive,account}){
+  const isMobile=useIsMobile();
   return(
     <div>
       <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
@@ -1541,6 +1543,7 @@ function DashboardAdministration({setActive,account}){
 }
 
 function DashboardFunktionaer({setActive,account}){
+  const isMobile=useIsMobile();
   return(
     <div>
       <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
@@ -1703,6 +1706,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
 }
 
 function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
+  const isMobile=useIsMobile();
   const player=ROSTER.find(p=>p.id===(myRosterId||1))||ROSTER.find(p=>p.id===1);
   const firstName=player?.firstName||account?.name?.split(" ")[0]||"Spieler";
   const team=meineTeams?.[0]||player?.teams?.[0]||"Cc-Junioren";
@@ -1872,6 +1876,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
 }
 
 function DashboardEltern({account,meineTeams,setActive}){
+  const isMobile=useIsMobile();
   const parentName=account?.name?.split(" ")[0]||"Elternteil";
   /* Stufen-Checks */
   const darfAnmelden=kannSchreiben?kannSchreiben("events"):true;
@@ -2352,6 +2357,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
 }
 
 function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRosterInitial}){
+  const isMobile=useIsMobile();
   const isEltern=role==="eltern";
   const today="2026-05-23";
   const parseEvDate=(d)=>{
@@ -9944,6 +9950,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
 }
 
 function BusesView({role,kannSchreiben,kannVerwalten}){
+  const isMobile=useIsMobile();
   const [showForm,setShowForm]=useState(false);
   return(
     <div>
@@ -11697,6 +11704,7 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
 
 /* ── LOGIN SCREEN ─────────────────────────────────────── */
 function LoginScreen({onLogin, sb, appTheme}){
+  const isMobile=useIsMobile();
   const [email,setEmail]=useState("");
   const [pw,setPw]=useState("");
   const [showPw,setShowPw]=useState(false);
