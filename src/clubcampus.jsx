@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI, TI_PATHS } from "./icons.jsx";
 import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC } from "./theme.jsx";
+import { useBreakpoint, useIsMobile } from "./hooks.js";
 import NachrichtenModul from "./NachrichtenModul.jsx";
 import { TeamModuleMatrix, PortalverwaltungView } from "./PortalverwaltungModul.jsx";
 
@@ -60,8 +61,7 @@ if(typeof window!=="undefined"&&!window.storage){
 
 /* Icons via ./icons.js */
 
-function useBreakpoint(){const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);return{isMobile:w<BP_MOBILE,isTablet:w>=BP_MOBILE&&w<BP_TABLET,isDesktop:w>=BP_TABLET,width:w};}
-function useIsMobile(){return useBreakpoint().isMobile;}
+/* useBreakpoint, useIsMobile via ./hooks.js */
 
 /* ── SPLASH SCREEN ── */
 
