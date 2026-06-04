@@ -12623,7 +12623,9 @@ function Portal({supabaseClient}){
   const isModuleVisible=(key)=>{
     if(key==="dashboard") return true;
     if(moduleAktiv[key]===false) return false; // global deaktiviert
-    if(moduleRechte&&moduleRechte[role]!==undefined&&!moduleRechte[role].includes(key)) return false; // für diese Rolle deaktiviert
+    /* Nur blocken wenn Rolle explizit konfiguriert UND mehr als 3 Module hat
+       (verhindert dass neue Module geblockt werden weil localStorage alt ist) */
+    if(moduleRechte&&moduleRechte[role]!==undefined&&moduleRechte[role].length>3&&!moduleRechte[role].includes(key)) return false;
     return true;
   };
 
