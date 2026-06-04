@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet } from "./theme.jsx";
+import { useIsMobile, ModalOrSheet , Col, Row} from "./theme.jsx";
 import { ATT_EVENTS, GANTT, INITIAL_PLAENE, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 import { SlotModal } from "./TermineModul.jsx";
 
@@ -1005,7 +1005,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
 
       {/* === Tab: Plane === */}
       {trainingsTab==="plaene"&&(
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        <Col gap={12}>
           <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Aktiviere einen Plan um ihn im GANTT anzuzeigen. Dupliziere ihn als Vorlage fur eine neue Version.</div>
           {plaene.map(function(p){
             const isAktiv = p.id===aktiverPlan;
@@ -1044,7 +1044,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
               </div>
             );
           })}
-        </div>
+        </Col>
       )}
 
       {/* === Tab: Platze === */}
@@ -1103,7 +1103,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
         </div>
 
         <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <Row>
             <button onClick={function(){
               if(ansicht==="tag"){ setSelectedDay(function(d){return d===0?6:d-1;}); }
               else { setKwOffset(function(o){return o-1;}); }
@@ -1126,7 +1126,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
               else { setKwOffset(function(o){return o+1;}); }
             }} style={{width:28,height:28,borderRadius:"50%",border:"1px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14}}>&#8250;</button>
             {kwOffset!==0 && <button onClick={function(){setKwOffset(0);setSelectedDay(0);}} style={{padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer"}}>Heute</button>}
-          </div>
+          </Row>
           {ansicht==="tag" && (
             <div style={{display:"flex",gap:4,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
               {DAYS.map(function(d,i){

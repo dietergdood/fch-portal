@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Btn, Card, Chip, Stat, Av , Tabs} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Btn, Card, Chip, Stat, Av , Tabs, Row, Col} from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
@@ -331,7 +331,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     return(
       <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
         <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
-          <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <Row gap={12}>
             <Av name={m.name} size={44} bg={R}/>
             <div>
               <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{m.name}</div>
@@ -341,7 +341,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
               </div>
             </div>
-          </div>
+          </Row>
           <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)"}}>×</button>
         </div>
         <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px"}}>
@@ -362,7 +362,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             </div>
           )}
           {(selectedMember?._tab||"info")==="eltern"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <Col gap={12}>
               {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:13,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
               {eltern.map((e,i)=>(
                 <div key={i} className="cc-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px"}}>
@@ -371,7 +371,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                   {e.telefon&&<div style={{fontSize:13,color:"var(--sub)"}}>📞 {e.telefon}</div>}
                 </div>
               ))}
-            </div>
+            </Col>
           )}
         </div>
       </ModalOrSheet>
@@ -384,7 +384,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
       {/* Header */}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18,flexWrap:"wrap",gap:12}}>
         <h1 style={{fontSize:21,fontWeight:800,margin:0,color:"var(--text)"}}>Mitglieder</h1>
-        {canExport&&<div style={{display:"flex",gap:8}}><Btn>Export CSV</Btn><Btn>Export Excel</Btn></div>}
+        {canExport&&<Row align="flex-start"><Btn>Export CSV</Btn><Btn>Export Excel</Btn></Row>}
       </div>
       {/* Stats */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -478,10 +478,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                     onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                     onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                     <td style={{padding:"9px 13px"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <Row>
                         <Av name={m.name} size={28} bg={R}/>
                         <span style={{fontWeight:600,color:"var(--text)"}}>{m.name}</span>
-                      </div>
+                      </Row>
                     </td>
                     <td style={{padding:"9px 13px"}}><RolleChip rolle={m.role}/></td>
                     <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.team}</td>

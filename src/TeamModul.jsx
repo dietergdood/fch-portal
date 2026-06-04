@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs, STitle } from "./theme.jsx";
+import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs, STitle , Between, Col, H1, Row} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, EVENTS, NEWS, POLLS, ROSTER, TABLES } from "./demoData.js";
 import KaderModul from "./KaderModul.jsx";
 import { TermineModul, SpielplanModul, TableTab } from "./TermineModul.jsx";
@@ -649,7 +649,7 @@ function StatsTab({team="Cc-Junioren"}){
           {stats.map((p,i)=>(
             <tr key={i} style={{borderTop:"0.5px solid var(--border)"}}>
               <td style={{padding:"9px 13px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:8}}><Av name={p.name} size={26} bg={R}/><span style={{fontWeight:600}}>{p.name}</span></div>
+                <Row><Av name={p.name} size={26} bg={R}/><span style={{fontWeight:600}}>{p.name}</span></Row>
               </td>
               <td style={{padding:"9px 13px",textAlign:"center"}}>{p.sp}</td>
               <td style={{padding:"9px 13px",textAlign:"center",fontWeight:p.tore>=5?700:400,color:p.tore>=5?R:BK}}>{p.tore}</td>
@@ -735,8 +735,8 @@ function ProfileView({role,myRosterId,account}){
   const kinder=account?.kinder||[];
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>{isEltern?"Profil / Daten prüfen":"Mein Profil"}</h1>
-      <div style={{display:"flex",flexDirection:"column",gap:16}}>
+      <H1 mb={18}>{isEltern?"Profil / Daten prüfen":"Mein Profil"}</H1>
+      <Col gap={16}>
         <Card>
           <STitle>Persönliche Daten</STitle>
           {[
@@ -796,7 +796,7 @@ function ProfileView({role,myRosterId,account}){
             </Card>
           );
         })}
-      </div>
+      </Col>
     </div>
   );
 }
@@ -817,10 +817,10 @@ function EventsList({teamOnly,role}){
   return(
     <div>
       {!teamOnly&&(
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-          <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Termine</h1>
+        <Between style={{marginBottom:18}}>
+          <H1>Termine</H1>
           {canCreate&&<Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(v=>!v)}>{"+ "+( isTrainer?"Team-Event erstellen":"Anlass erstellen")}</Btn>}
-        </div>
+        </Between>
       )}
       {isTrainer&&!teamOnly&&(
         <InfoBox text="Als Trainer kannst du Team-Events erstellen. Vereinsanlässe werden durch Administration oder Vorstand eröffnet." color={BL}/>
@@ -863,10 +863,10 @@ function EventsList({teamOnly,role}){
             <input type="checkbox" id="rsvp-chk" checked={newEvent.rsvp} onChange={e=>setNewEvent(p=>({...p,rsvp:e.target.checked}))} style={{cursor:"pointer"}}/>
             <label htmlFor="rsvp-chk" style={{fontSize:13,cursor:"pointer"}}>Rückmeldung erforderlich</label>
           </div>
-          <div style={{display:"flex",gap:8}}>
+          <Row align="flex-start">
             <Btn variant="primary" color="#F3F4F6">Erstellen</Btn>
             <Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn>
-          </div>
+          </Row>
         </div>
       )}
       <div style={{display:"flex",flexDirection:"column",gap:12,marginTop:teamOnly?0:14}}>

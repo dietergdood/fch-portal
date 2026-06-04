@@ -197,4 +197,50 @@ function STitle({children,action}){
   );
 }
 
-export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle };
+
+/* ── Layout-Komponenten ── */
+function Row({children, gap=8, wrap=false, justify="flex-start", align="center", style={}, ...props}){
+  return(
+    <div style={{display:"flex",alignItems:align,justifyContent:justify,gap,flexWrap:wrap?"wrap":"nowrap",...style}} {...props}>
+      {children}
+    </div>
+  );
+}
+function Col({children, gap=8, style={}, ...props}){
+  return(
+    <div style={{display:"flex",flexDirection:"column",gap,...style}} {...props}>
+      {children}
+    </div>
+  );
+}
+function Between({children, gap=8, style={}, ...props}){
+  return(
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap,...style}} {...props}>
+      {children}
+    </div>
+  );
+}
+
+/* ── Typografie-Komponenten ── */
+function Sub({children, style={}, mb=0}){
+  return <div style={{fontSize:13,color:"var(--sub)",marginBottom:mb||undefined,...style}}>{children}</div>;
+}
+function Label({children, style={}}){
+  return <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",...style}}>{children}</div>;
+}
+function H1({children, style={}, mb=0}){
+  return <h1 style={{fontSize:21,fontWeight:800,margin:mb?`0 0 ${mb}px`:"0",...style}}>{children}</h1>;
+}
+function H2({children, style={}}){
+  return <h2 style={{margin:0,fontSize:16,fontWeight:700,color:"var(--text)",...style}}>{children}</h2>;
+}
+function PageHeader({children, action=null, mb=18}){
+  return(
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:mb}}>
+      <H1>{children}</H1>
+      {action}
+    </div>
+  );
+}
+
+export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader };

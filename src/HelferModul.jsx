@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Btn, Card, Chip , Stat, Av} from "./theme.jsx";
+import { useIsMobile, InfoBox, Btn, Card, Chip , Stat, Av, Between, Col, H1, Row} from "./theme.jsx";
 import { HELPER_GRUPPEN, HELPER_EVENTS, HELPERS } from "./demoData.js";
 
 /* ── Hilfsfunktionen ── */
@@ -203,7 +203,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                 rows={3}
                 style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,resize:"vertical",boxSizing:"border-box",marginBottom:7,fontFamily:FONT}}
               />
-              <div style={{display:"flex",gap:8}}>
+              <Row align="flex-start">
                 <button
                   onClick={handleAnfrageSenden}
                   disabled={!anfrageBegruendung.trim()}
@@ -211,7 +211,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                   Anfrage senden
                 </button>
                 <button onClick={()=>{setShowAnfrageForm(false);setAnfrageBegruendung("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
-              </div>
+              </Row>
             </div>
           )}
 
@@ -256,10 +256,10 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                   </div>
                 );
               })()}
-              <div style={{display:"flex",gap:8}}>
+              <Row align="flex-start">
                 <button onClick={handleÜbertragen} disabled={!transferTarget} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:transferTarget?"pointer":"default",border:"none",background:transferTarget?"#0891B2":"#ccc",color:"#fff"}}>Übertragen</button>
                 <button onClick={()=>{setShowTransfer(false);setTransferTarget("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
-              </div>
+              </Row>
             </div>
           )}
         </div>
@@ -317,10 +317,10 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                   </div>
                 );
               })()}
-              <div style={{display:"flex",gap:8}}>
+              <Row align="flex-start">
                 <button onClick={handleZuteilen} disabled={!zuteilTarget} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:zuteilTarget?"pointer":"default",border:"none",background:zuteilTarget?GN:"#ccc",color:"#fff"}}>Zuteilen</button>
                 <button onClick={()=>{setShowZuteilen(false);setZuteilTarget("");setZuteilSearch("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
-              </div>
+              </Row>
             </div>
           )}
         </div>
@@ -423,14 +423,14 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
       {!anfragePending&&!sent&&(
         <div>
           {!showAnfrageForm&&!showTransfer&&(
-            <div style={{display:"flex",gap:8}}>
+            <Row align="flex-start">
               <button onClick={()=>setShowTransfer(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid #0891B2`,background:"var(--surface)",color:"#0891B2"}}>
                 ⇄ Übertragen
               </button>
               <button onClick={()=>setShowAnfrageForm(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${AM}`,background:"var(--surface)",color:AM}}>
                 ↩ Freigabe anfragen
               </button>
-            </div>
+            </Row>
           )}
 
           {/* Freigabe-Formular */}
@@ -444,12 +444,12 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
                 rows={3}
                 style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,resize:"vertical",boxSizing:"border-box",marginBottom:7,fontFamily:FONT}}
               />
-              <div style={{display:"flex",gap:8}}>
+              <Row align="flex-start">
                 <button onClick={handleSenden} disabled={!begruendung.trim()} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:begruendung.trim()?"pointer":"default",border:"none",background:begruendung.trim()?AM:"#ccc",color:"#fff"}}>
                   Anfrage senden
                 </button>
                 <button onClick={()=>{setShowAnfrageForm(false);setBegruendung("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
-              </div>
+              </Row>
             </div>
           )}
 
@@ -463,10 +463,10 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
                   <option key={n} value={n}>{n}</option>
                 ))}
               </select>
-              <div style={{display:"flex",gap:8}}>
+              <Row align="flex-start">
                 <button onClick={handleÜbertragen} disabled={!transferTarget} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:transferTarget?"pointer":"default",border:"none",background:transferTarget?"#0891B2":"#ccc",color:"#fff"}}>Übertragen</button>
                 <button onClick={()=>{setShowTransfer(false);setTransferTarget("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
-              </div>
+              </Row>
             </div>
           )}
         </div>
@@ -670,10 +670,10 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
     <div>
       {/* Seitentitel */}
       {!teamOnly&&(
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-          <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Helfereinsätze</h1>
+        <Between style={{marginBottom:18}}>
+          <H1>Helfereinsätze</H1>
           {canErstellen&&<Btn variant="primary" color="#F3F4F6" onClick={()=>{setHelperTab("erstellen");setShowNewForm(true);}}>+ Event erstellen</Btn>}
-        </div>
+        </Between>
       )}
 
       {/* KPI-Leiste - nur für Admin/Administration/Funktionär */}
@@ -786,7 +786,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                         <span>{""+ev.loc}</span>
                       </div>
                     </div>
-                    <div style={{display:"flex",gap:8}}>
+                    <Row align="flex-start">
                       {(()=>{
                         const totalPlätze=evSchichten.reduce((s,sc)=>s+sc.max,0);
                         const belegtPlätze=evSchichten.reduce((s,sc)=>s+(schichtenState[sc.id]??sc.helfer).length,0);
@@ -801,7 +801,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                           </div>
                         ));
                       })()}
-                    </div>
+                    </Row>
                   </div>
 
                   {/* Einsätze */}
@@ -817,7 +817,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                         <div key={einsatz.id} style={{borderTop:ei>0?`0.5px solid ${GB}`:"none"}}>
                           {/* Einsatz-Zeile */}
                           <div onClick={()=>toggleEinsatz(einsatz.id)} style={{padding:"10px 18px",display:"flex",justifyContent:"space-between",alignItems:"center",background:"var(--surface)",borderBottom:"0.5px solid var(--border)",cursor:"pointer",userSelect:"none"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:12}}>
+                            <Row gap={12}>
                               <div style={{width:3,height:32,borderRadius:2,background:eBarColor,flexShrink:0}}/>
                               <div>
                                 <div style={{fontWeight:700,fontSize:13,color:"var(--text)",display:"flex",alignItems:"center",gap:8}}>
@@ -835,7 +835,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                                   </div>
                                 )}
                               </div>
-                            </div>
+                            </Row>
                             <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",justifyContent:"flex-end"}}>
                               {/* Gruppen - editierbar für Admin/Funktionär */}
                               {editingGruppen===einsatz.id?(
@@ -955,13 +955,13 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                       <span style={{background:"var(--surface)",color:AM,fontSize:13,fontWeight:700,padding:"3px 10px",borderRadius:20,border:`0.5px solid #FDE68A`}}>⏳ Geplant</span>
                       <span style={{color:"var(--sub)",fontSize:13}}>{geplant.length+" Schicht"+(geplant.length!==1?"en":"")}</span>
                     </div>
-                    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                    <Col>
                       {geplant.map((s,i)=>{
                         const anfrageData=(freigabeAnfragen||{})[s.id];
                         const anfragePending=anfrageData?.name===meinName;
                         return <MeinSchichtEintrag key={i} schicht={s} anfragePending={anfragePending} anfrageData={anfrageData} meinName={aktiverName} onÜbertragen={onÜbertragen} onFreigeben={onFreigeben}/>;
                       })}
-                    </div>
+                    </Col>
                   </div>
                 )}
                 {geleistet.length>0&&(
@@ -970,7 +970,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                       <span style={{background:"var(--surface)",color:GN,fontSize:13,fontWeight:700,padding:"3px 10px",borderRadius:20,border:`0.5px solid #BBF7D0`}}>✓ Geleistet</span>
                       <span style={{color:"var(--sub)",fontSize:13}}>{geleistet.length+" Schicht"+(geleistet.length!==1?"en":"")}</span>
                     </div>
-                    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                    <Col>
                       {geleistet.map((s,i)=>(
                         <div key={i} style={{background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:10,overflow:"hidden",borderTop:`4px solid ${s.eventColor||"#64748B"}`,opacity:0.85}}>
                           <div style={{padding:"14px 18px",background:"var(--surface)",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -990,7 +990,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                           </div>
                         </div>
                       ))}
-                    </div>
+                    </Col>
                   </div>
                 )}
                 {meineSchichten.length===0&&<InfoBox text="Noch keine Schichten eingetragen." color="#aaa"/>}
@@ -1047,7 +1047,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                           <span>{""+ev.loc}</span>
                         </div>
                       </div>
-                      <div style={{display:"flex",gap:8}}>
+                      <Row align="flex-start">
                         {(()=>{
                           const totalPlätze=evSchichten.reduce((s,sc)=>s+sc.max,0);
                           const belegtPlätze=evSchichten.reduce((s,sc)=>s+(schichtenState[sc.id]??sc.helfer).length,0);
@@ -1062,7 +1062,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                             </div>
                           ));
                         })()}
-                      </div>
+                      </Row>
                     </div>
 
                     {/* Einsätze */}
@@ -1075,7 +1075,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                         return(
                           <div key={einsatz.id} style={{borderTop:ei>0?`0.5px solid ${GB}`:"none"}}>
                             <div onClick={()=>toggleEinsatz(einsatz.id)} style={{padding:"10px 18px",display:"flex",justifyContent:"space-between",alignItems:"center",background:"var(--surface)",borderBottom:"0.5px solid var(--border)",cursor:"pointer",userSelect:"none"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:12}}>
+                              <Row gap={12}>
                                 <div style={{width:3,height:32,borderRadius:2,background:eBarColor,flexShrink:0}}/>
                                 <div>
                                   <div style={{fontWeight:700,fontSize:13,color:"var(--text)",display:"flex",alignItems:"center",gap:8}}>
@@ -1088,7 +1088,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                                     <span>{""+einsatz.location}</span>
                                   </div>
                                 </div>
-                              </div>
+                              </Row>
                               <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",justifyContent:"flex-end"}}>
                                 {einsatz.gruppen.map((g,gi)=>(
                                   <Chip key={gi} text={g} color={g===meinGruppe?ev.color:"var(--sub)"} bg={g===meinGruppe?ev.color+"18":"#F3F4F6"}/>
@@ -1193,10 +1193,10 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                       style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"var(--cc-hover)":"#fff",cursor:"pointer"}}
                       className="hov-row">
                       <td style={{padding:"9px 12px"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                        <Row>
                           <Av name={m.name} size={22} bg={SC[m.status]?.c||"#6B7280"}/>
                           <span style={{fontWeight:600}}>{m.name}</span>
-                        </div>
+                        </Row>
                       </td>
                       <td style={{padding:"9px 12px"}}><Chip text={m.gruppe} color="#6B7280" bg="#F3F4F6"/></td>
                       <td style={{padding:"9px 12px",textAlign:"center",fontWeight:700}}>{m.soll}</td>
@@ -1256,11 +1256,11 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                           )}
                           {/* Trainer: nur Schichten ansehen, keine Admin-Aktionen */}
                           {!isTrainer&&(
-                            <div style={{display:"flex",gap:8}}>
+                            <Row align="flex-start">
                               <Btn small variant="primary" color="#F3F4F6">Erinnerung senden</Btn>
                               <Btn small>Sollwert anpassen</Btn>
                               <Btn small>Als befreit markieren</Btn>
-                            </div>
+                            </Row>
                           )}
                         </td>
                       </tr>

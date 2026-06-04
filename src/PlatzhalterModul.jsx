@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, useTheme, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av } from "./theme.jsx";
+import { useIsMobile, useTheme, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av , Tabs, STitle, Between, Col, H1, Row} from "./theme.jsx";
 import { BUSES, MATERIAL, LOCKERS, MEDIA, WIKI, NEWS, MEMBERS } from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
@@ -13,10 +13,10 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
   const [showForm,setShowForm]=useState(false);
   return(
     <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-        <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Vereinsbusse</h1>
+      <Between style={{marginBottom:18}}>
+        <H1>Vereinsbusse</H1>
         <Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(!showForm)}>+ Reservation</Btn>
-      </div>
+      </Between>
       <InfoBox text="First-come-First-served · Keine Freigabe nötig · Alle Reservationen sichtbar · Nur eigene bearbeitbar" color={BL}/>
       {showForm&&(
         <Card style={{marginTop:14,background:"var(--surface)",border:`0.5px solid ${AM}`}}>
@@ -56,10 +56,10 @@ function MaterialView(){
   const TC={Bestellung:BL,Defekt:R,Tenüs:GN,Mangel:AM};
   return(
     <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-        <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Material</h1>
+      <Between style={{marginBottom:18}}>
+        <H1>Material</H1>
         <Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(!showForm)}>+ Anfrage stellen</Btn>
-      </div>
+      </Between>
       {showForm&&(
         <Card style={{marginBottom:16,background:"var(--surface)",border:`0.5px solid ${BL}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Materialanfrage</h3>
@@ -145,10 +145,10 @@ function MediaView(){
   const SC={Eingereicht:AM,"In Prüfung":BL,Freigegeben:GN,Veröffentlicht:"#7C3AED",Archiviert:"#888"};
   return(
     <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-        <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Medien &amp; Berichte</h1>
+      <Between style={{marginBottom:18}}>
+        <H1>Medien &amp; Berichte</H1>
         <Btn variant="primary" color="#F3F4F6">+ Beitrag einreichen</Btn>
-      </div>
+      </Between>
       {MEDIA.map((m,i)=>(
         <Card key={i} style={{marginBottom:12}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
@@ -172,7 +172,7 @@ function WikiView(){
   const CC={Trainer:R,Vereinsbus:BL,Spieltag:GN,"J+S":AM,Helfereinsatz:"#7C3AED",Kommunikation:"#888"};
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>Wiki</h1>
+      <H1 mb={18}>Wiki</H1>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:12}}>
         {WIKI.map((a,i)=>(
           <Card key={i} style={{cursor:"pointer"}}>
@@ -197,7 +197,7 @@ function DocsView(){
   const TC={PDF:R,DOCX:BL,XLSX:GN};
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>Dokumente</h1>
+      <H1 mb={18}>Dokumente</H1>
       <Card style={{padding:0}}>
         {docs.map((d,i)=>(
           <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",borderBottom:i<docs.length-1?`0.5px solid ${GB}`:"none"}}>
@@ -240,10 +240,10 @@ function NewsView({role,meineTeams,kannVerwalten}){
   const visible=NEWS.filter(isVisible);
   return(
     <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-        <h1 style={{fontSize:21,fontWeight:800,margin:0}}>News &amp; Kommunikation</h1>
+      <Between style={{marginBottom:18}}>
+        <H1>News &amp; Kommunikation</H1>
         {canCreate&&<Btn variant="primary" color="#F3F4F6">+ Beitrag</Btn>}
-      </div>
+      </Between>
       {visible.map((n,i)=>(
         <Card key={i} style={{marginBottom:12}}>
           <div style={{display:"flex",gap:7,marginBottom:6,flexWrap:"wrap",alignItems:"center"}}>
@@ -262,7 +262,7 @@ function NewsView({role,meineTeams,kannVerwalten}){
 function AttendanceCentral(){
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>Zentrale Anwesenheitsstatistik</h1>
+      <H1 mb={18}>Zentrale Anwesenheitsstatistik</H1>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Ø Alle Teams" value="75%" color={GN}/>
         <Stat label="Ø Trainings" value="72%" color={BL}/>
@@ -409,11 +409,11 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                 )}
               </div>
               {editName&&(
-                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                <Col>
                   <input value={nameDraft} onChange={e=>setNameDraft(e.target.value)}
                     onKeyDown={e=>{if(e.key==="Enter")handleSaveName();if(e.key==="Escape")setEditName(false);}}
                     style={{...inputStyle}} autoFocus placeholder="Vor- und Nachname"/>
-                  <div style={{display:"flex",gap:8}}>
+                  <Row align="flex-start">
                     <button onClick={handleSaveName} disabled={nameStatus==="loading"}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
@@ -427,9 +427,9 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                         color:"var(--sub)",border:"1px solid var(--border)",fontSize:13,cursor:"pointer",fontFamily:FONT}}>
                       Abbrechen
                     </button>
-                  </div>
+                  </Row>
                   <StatusBox status={nameStatus} msg={nameMsg}/>
-                </div>
+                </Col>
               )}
             </div>
 
@@ -538,7 +538,7 @@ function ProfileView({role,myRosterId,account}){
   const kinder=account?.kinder||[];
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 18px"}}>{isEltern?"Profil / Daten prüfen":"Mein Profil"}</h1>
+      <H1 mb={18}>{isEltern?"Profil / Daten prüfen":"Mein Profil"}</H1>
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
         <Card>
           <STitle>Persönliche Daten</STitle>
@@ -609,7 +609,7 @@ function ProfileView({role,myRosterId,account}){
 function DarkModeRow(){
   const {dark,toggle}=useTheme();
   return(
-    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+    <Between>
       <div>
         <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
         <div style={{fontSize:12,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
@@ -627,7 +627,7 @@ function DarkModeRow(){
           transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)"
         }}/>
       </button>
-    </div>
+    </Between>
   );
 }
 

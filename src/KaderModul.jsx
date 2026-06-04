@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT20, GN, R, BL, BK, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Card, Chip, Stat, Av } from "./theme.jsx";
+import { useIsMobile, InfoBox, Card, Chip, Stat, Av , Row} from "./theme.jsx";
 import { ROSTER } from "./demoData.js";
 
 /* ── Hilfskonstanten ── */
@@ -172,7 +172,7 @@ function KaderModul({role,team,initialSelected=null,teamRosterData=null}){
                 </label>
               ))}
             </div>
-            <div style={{display:"flex",gap:8}}>
+            <Row align="flex-start">
               <button onClick={()=>{
                 const fields=COL_DEF_ALL.filter(c=>exportFields.includes(c.key));
                 const header=fields.map(c=>c.label).join(";");
@@ -197,13 +197,13 @@ function KaderModul({role,team,initialSelected=null,teamRosterData=null}){
               <button onClick={()=>setShowExport(false)} style={{padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",background:"transparent",fontSize:13,cursor:"pointer",fontFamily:FONT,color:"var(--sub)"}}>
                 Abbrechen
               </button>
-            </div>
+            </Row>
           </div>
         </div>
       )}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12,flexWrap:"wrap",gap:8}}>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Spieler suchen…" style={{padding:"7px 12px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",width:200}}/>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
+        <Row>
           {canExport&&(
               <button onClick={()=>setShowExport(true)} style={{
                 display:"flex",alignItems:"center",gap:8,padding:"6px 12px",borderRadius:8,
@@ -223,7 +223,7 @@ function KaderModul({role,team,initialSelected=null,teamRosterData=null}){
             <TI n="layout-list" size={13}/>Gruppieren
           </button>
           <InfoBox text={`${f.length} Mitglieder`} color={BL}/>
-        </div>
+        </Row>
       </div>
       {isMobile?(
         <Card style={{padding:0}}>
@@ -335,7 +335,7 @@ function KaderModul({role,team,initialSelected=null,teamRosterData=null}){
                   );
                   if(c.key==="name") return(
                     <td key={j} style={{padding:"9px 13px"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <Row>
                         <Av name={p.name} size={26} bg={ACCENT20}/>
                         <div>
                           <div style={{fontWeight:600,whiteSpace:"nowrap",color:"var(--sub)"}}>{p.lastName} {p.firstName}</div>
@@ -346,7 +346,7 @@ function KaderModul({role,team,initialSelected=null,teamRosterData=null}){
                             </div>
                           )}
                         </div>
-                      </div>
+                      </Row>
                     </td>
                   );
                   if(c.key==="pos") return(

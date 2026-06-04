@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Card, Chip, Stat, STitle } from "./theme.jsx";
+import { useIsMobile, InfoBox, Card, Chip, Stat, STitle , Row} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, ATT_LOG, BUSES, EVENTS, HELPERS, HELPER_EVENTS, POLLS, ROSTER, TABLES } from "./demoData.js";
 
 function Dashboard({role,setActive,account,meineTeams,myRosterId}){
@@ -42,10 +42,10 @@ function DashboardAdmin({setActive,account}){
           ].map((s,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
               <span style={{fontSize:13,fontWeight:600}}>{s.label}</span>
-              <div style={{display:"flex",alignItems:"center",gap:8}}>
+              <Row>
                 <span style={{fontSize:13,color:"var(--sub)"}}>{s.last}</span>
                 <Chip text={s.status} color={s.ok?GN:R} bg={s.ok?"#ECFDF5":RL}/>
-              </div>
+              </Row>
             </div>
           ))}
         </Card>

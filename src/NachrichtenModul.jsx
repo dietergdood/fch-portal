@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet } from "./theme.jsx";
+import { useIsMobile, ModalOrSheet , Row} from "./theme.jsx";
 
 /* ── Style-Konstanten ── */
 const S_LABEL={fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6};
@@ -244,7 +244,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
       <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
         <div style={{padding:"12px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
           <span style={{fontSize:14,fontWeight:700,color:"var(--text)"}}>Nachrichten</span>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <Row>
             {nachrichten.filter(n=>!ungelesen[n.id]).length>0&&(
               <span style={{background:"#E24B4A",color:"#fff",fontSize:11,fontWeight:600,padding:"2px 7px",borderRadius:10}}>
                 {nachrichten.filter(n=>!ungelesen[n.id]).length}
@@ -256,7 +256,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
                 + Neu
               </button>
             )}
-          </div>
+          </Row>
         </div>
         <div style={{display:"flex",padding:"0 14px",borderBottom:"0.5px solid var(--border)",overflowX:"auto",scrollbarWidth:"none",flexShrink:0}}>
           {["alle","gesendet","ungelesen"].map(t=>(
@@ -322,14 +322,14 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
         <div style={{padding:"0 20px 20px",overflowY:"auto"}}>
           <div style={{marginBottom:14}}>
             <label style={S_LABEL}>Typ</label>
-            <div style={{display:"flex",gap:8}}>
+            <Row align="flex-start">
               {["broadcast","diskussion"].map(t=>(
                 <button key={t} onClick={()=>setNeuForm(f=>({...f,typ:t}))}
                   style={{flex:1,padding:"8px 14px",borderRadius:8,border:`1.5px solid ${neuForm.typ===t?BTN:"var(--border)"}`,background:neuForm.typ===t?BTN+"15":"transparent",color:"var(--text)",cursor:"pointer",fontSize:13,fontFamily:FONT,fontWeight:neuForm.typ===t?600:400}}>
                   {t==="broadcast"?"📢 Broadcast":"💬 Diskussion"}
                 </button>
               ))}
-            </div>
+            </Row>
             <div style={{fontSize:11,color:"var(--sub)",marginTop:5}}>{neuForm.typ==="broadcast"?"Nur Absender sieht Antworten der anderen":"Alle sehen alle Antworten"}</div>
           </div>
           <div style={{marginBottom:14}}>

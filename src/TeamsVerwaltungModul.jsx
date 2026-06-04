@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Btn, Chip , Av, Stat} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Btn, Chip , Av, Stat, Col, Row} from "./theme.jsx";
 import { MEMBERS, ROSTER } from "./demoData.js";
 
 /* ── Hilfsfunktionen & Konstanten ── */
@@ -452,7 +452,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
               placeholder="z.B. 2025/26" autoFocus
               style={{width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
           </div>
-          <div style={{display:"flex",gap:12}}>
+          <Row gap={12} align="flex-start">
             <button onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN} style={{
@@ -463,7 +463,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
               {saving?"Wird gesetzt…":"Für alle übernehmen"}
             </button>
             <Btn onClick={()=>setShowSaison(false)}>Abbrechen</Btn>
-          </div>
+          </Row>
           {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
         </div>
       </ModalOrSheet>
@@ -478,7 +478,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           {GROUP_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
         </select>
         {/* Sortieren nach */}
-        <div style={{display:"flex",gap:4}}>
+        <Row gap={4} align="flex-start">
           <select value={sortCol} onChange={e=>setSortCol(e.target.value)}
             style={{...inputStyle,width:"auto",minWidth:130,flex:"0 0 auto"}}>
             {SORT_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
@@ -487,7 +487,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             style={{padding:"9px 11px",borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
             {sortDir==="asc"?"↑":"↓"}
           </button>
-        </div>
+        </Row>
       </div>
       {/* Filter-Chips */}
       {filterOptions.length>0&&(
@@ -526,9 +526,9 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
 
       {/* Teams Liste */}
       {loading?(
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        <Col gap={12}>
           {[1,2,3].map(i=><SkelCard key={i}/>)}
-        </div>
+        </Col>
       ):(
         <div style={{display:"flex",flexDirection:"column",gap:0}}>
           {groupedTeams.map(({key,items})=>(
@@ -558,9 +558,9 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           setCustomBack&&setCustomBack(()=>()=>{setSelectedTeam(null);setCustomBack&&setCustomBack(null);try{window.history.back();}catch{}});}:undefined}>
                 {viewMode==="grid"?(
                   /* ── KACHEL-LAYOUT ── */
-                  <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                  <Col gap={12}>
                     <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
-                      <div style={{display:"flex",alignItems:"center",gap:12}}>
+                      <Row gap={12}>
                         <div style={{width:40,height:40,borderRadius:10,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                           <TI n="ball-football" size={18} style={{color:katColor}}/>
                         </div>
@@ -568,7 +568,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                           <div style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</div>
                           {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor}}>{team.kurzname}</span>}
                         </div>
-                      </div>
+                      </Row>
                       {/* 3-Dot Menu */}
                       <div style={{position:"relative"}}>
                         <button onClick={openMenu} style={{width:28,height:28,borderRadius:6,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
@@ -599,10 +599,10 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                         {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
                       </div>
                     </div>
-                  </div>
+                  </Col>
                 ):(
                   /* ── LISTEN-LAYOUT ── */
-                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                  <Row gap={12}>
                     <div style={{width:42,height:42,borderRadius:10,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                       <TI n="ball-football" size={18} style={{color:katColor}}/>
                     </div>
@@ -655,7 +655,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                         </button>
                       </div>
                     )}
-                  </div>
+                  </Row>
                 )}
               </div>
             );
@@ -784,7 +784,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           ].map(({key,label,placeholder})=>(
             <div key={key}>
               <label style={labelStyle}>{label}</label>
-              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              <Col>
                 {(form[key]||[]).map((val,i)=>(
                   <div key={i} style={{display:"flex",gap:8}}>
                     <PersonPicker
@@ -800,7 +800,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                   style={{padding:"7px 14px",borderRadius:8,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
                   + {label} hinzufügen
                 </button>
-              </div>
+              </Col>
             </div>
           ))}
           {/* Beschreibung */}
@@ -868,7 +868,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             </div>
           )}
           {/* Buttons */}
-          <div style={{display:"flex",gap:12}}>
+          <Row gap={12} align="flex-start">
             <button onClick={handleSave} disabled={saving}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN} style={{
@@ -879,7 +879,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
               {saving?"Speichern…":editTeam?"Änderungen speichern":"Team erstellen"}
             </button>
             <Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn>
-          </div>
+          </Row>
           {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
         </div>
       </ModalOrSheet>
@@ -894,13 +894,13 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           <div style={{fontSize:13,color:"var(--sub)",marginBottom:20}}>
             <strong style={{color:"var(--text)"}}>{deleteConfirm?.name}</strong> wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.
           </div>
-          <div style={{display:"flex",gap:12}}>
+          <Row gap={12} align="flex-start">
             <button onClick={()=>handleDelete(deleteConfirm)} disabled={saving}
               style={{flex:1,padding:"8px 14px",borderRadius:10,background:R,color:"#fff",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,opacity:saving?0.6:1}}>
               {saving?"Löschen…":"Ja, löschen"}
             </button>
             <Btn onClick={()=>setDeleteConfirm(null)}>Abbrechen</Btn>
-          </div>
+          </Row>
         </div>
       </ModalOrSheet>
     </div>

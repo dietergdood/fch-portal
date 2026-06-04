@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av, Col, Row} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, GANTT, ROSTER, SCHEDULE, TABLES, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 
 
@@ -216,7 +216,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
                     {/* Wechsel-Zeitpunkt */}
                     {form.location&&(
-                      <div style={{display:"flex",alignItems:"center",gap:12}}>
+                      <Row gap={12}>
                         <div style={{fontSize:13,color:"var(--sub)",flexShrink:0}}>Wechsel um:</div>
                         <select value={form.wechsel_zeit} onChange={e=>setForm(f=>({...f,wechsel_zeit:e.target.value?parseFloat(e.target.value):"",end_ort:"",end_half:""}))}
                           style={{flex:1,padding:"7px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
@@ -225,7 +225,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                             <option key={t} value={t}>{Math.floor(t).toString().padStart(2,"0")}:{Math.round((t%1)*60).toString().padStart(2,"0")} Uhr</option>
                           ))}
                         </select>
-                      </div>
+                      </Row>
                     )}
 
                     {/* Phase 2 */}
@@ -291,12 +291,12 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               {/* Farbe */}
               <div>
                 <div style={S_FIELD_LABEL}>Farbe</div>
-                <div style={{display:"flex",gap:8}}>
+                <Row align="flex-start">
                   {COLORS.map(c=>(
                     <button key={c} onClick={()=>setForm(f=>({...f,color:c}))}
                       style={{width:24,height:24,borderRadius:"50%",background:c,border:form.color===c?"3px solid #1A1A1A":"2px solid transparent",cursor:"pointer"}}/>
                   ))}
-                </div>
+                </Row>
               </div>
 
               {/* Aktionen */}
@@ -330,7 +330,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               )}
 
               {isEdit&&!isZusatz&&(
-                <div style={{display:"flex",gap:8}}>
+                <Row align="flex-start">
                   <button onClick={()=>setAusnahmeMode(true)}
                     style={{flex:1,padding:"9px",borderRadius:10,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer"}}>
                     <TI n="bolt"/> Ausnahme diese Woche
@@ -339,7 +339,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     style={{padding:"8px 14px",borderRadius:10,border:`1px solid ${R}`,background:RL,color:R,fontSize:13,cursor:"pointer"}}>
                     Löschen
                   </button>
-                </div>
+                </Row>
               )}
             </>
           ):(
@@ -417,7 +417,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 </label>
               </div>
 
-              <div style={{display:"flex",gap:8}}>
+              <Row align="flex-start">
                 <button onClick={()=>onAusnahme({
                   type:ausnahmeTyp,
                   slot_id:slot.id,
@@ -434,7 +434,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                   style={{padding:"10px 18px",borderRadius:10,border:"1px solid var(--border)",background:"var(--surface)",fontSize:13,cursor:"pointer"}}>
                   Zurück
                 </button>
-              </div>
+              </Row>
             </>
           )}
         </div>
@@ -622,7 +622,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
         <div style={{padding:"18px 22px"}}>
           {/* -- Spielinfo -- */}
           {activeTab==="info"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <Col gap={12}>
 
               {/* Ergebnis-Banner für gespielte Spiele */}
               {played&&(
@@ -699,7 +699,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
 
               {spiel.notes&&<div style={{background:"var(--surface)",borderRadius:10,padding:"10px 14px",fontSize:13,color:"#92400E",border:"0.5px solid #FDE68A",display:"flex",gap:8,alignItems:"flex-start"}}><span>⚠</span><span>{spiel.notes}</span></div>}
               <div style={{padding:"8px 12px",background:"#F0F9FF",borderRadius:8,fontSize:13,color:BL,display:"flex",gap:8,alignItems:"center"}}><span><TI n="refresh"/></span><span>Synchronisiert mit <strong>fvrz.ch</strong> · {spiel.spielNr}</span></div>
-            </div>
+            </Col>
           )}
 
           {/* -- Statistik -- */}
@@ -1524,7 +1524,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
           </button>
         </div>
 
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        <Col gap={12}>
           {(showMoreEvents?filteredEvents:filteredEvents.slice(0,5)).map(ev=>{
             const resp=getResp(ev.id,myId);
             const past=isPast(ev);
@@ -1629,7 +1629,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
               {showMoreEvents?`↑ Weniger anzeigen`:`+ ${filteredEvents.length-5} weitere anzeigen`}
             </button>
           )}
-        </div>
+        </Col>
       </div>
     );
   }
@@ -1849,14 +1849,14 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                 const statusColor=resp.status==="zu"?GN:resp.status==="ab"?R:resp.status==="unentschuldigt"?AM:resp.status==="fraglich"?AM:"#F3F4F6";
                 return(
                   <div key={p.id} style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.type==="Spiel"?" auto":""}`,alignItems:"center",gap:"0 16px",padding:"8px 20px",borderBottom:"0.5px solid var(--border)",background:resp.status==="zu"?"#F9FFFB":resp.status==="ab"?"#FFF9F9":resp.status==="unentschuldigt"?"#FFF7ED":"#fff"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <Row>
                       <div style={{width:4,height:28,borderRadius:2,background:statusColor,flexShrink:0}}/>
                       <Av name={p.name} size={28} bg={resp.status==="zu"?GN:resp.status==="ab"?R:resp.status==="unentschuldigt"?AM:resp.status==="fraglich"?AM:"#D1D5DB"}/>
                       <div>
                         <div style={{fontWeight:600,fontSize:13}}>{p.firstName} {p.lastName}</div>
                         {getNr(p.id)&&<div style={S_SUB}>{"#"+getNr(p.id)}</div>}
                       </div>
-                    </div>
+                    </Row>
                     <div style={{display:"flex",gap:4,justifyContent:"center"}}>
                       {(canEditEvent(selEv)?(selEv.type==="Spiel"?["zu","ab","unentschuldigt"]:selEv.type==="Veranstaltung"?["zu","ab"]:["zu","ab","unentschuldigt"]):[]).map(s=>{
                         const cfg=STATUS_CFG[s];

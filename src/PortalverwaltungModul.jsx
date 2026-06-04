@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { hexToRgba, darkenHex, THEME_DEFAULT_STATIC, LOGO_B64, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip } from "./theme.jsx";
+import { hexToRgba, darkenHex, THEME_DEFAULT_STATIC, LOGO_B64, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip , Col, H1, Row} from "./theme.jsx";
 import { FUNKTIONEN } from "./demoData.js";
 
 /* ── Geteilte Konstanten ── */
@@ -198,7 +198,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                     onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                     onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                     <td style={{padding:"8px 16px",fontWeight:500,color:"var(--text)",position:"sticky",left:0,background:"var(--surface)",fontSize:13,zIndex:1}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <Row>
                         <div style={{width:3,height:20,borderRadius:2,background:HB_COLORS[t.hauptbereich]||"var(--border)",flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.name}</div>
@@ -209,7 +209,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                           style={{width:20,height:20,borderRadius:5,border:`1.5px solid ${allAktiv?GN:"var(--border)"}`,background:allAktiv?GN+"20":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                           {allAktiv&&<TI n="check" size={11} style={{color:GN}}/>}
                         </div>
-                      </div>
+                      </Row>
                     </td>
                     {TEAM_MODS.map(m=>{
                       const isOn=aktive.includes(m.key);
@@ -697,7 +697,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
     <div>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
         <div>
-          <h1 style={{fontSize:21,fontWeight:800,margin:0}}>Portalverwaltung</h1>
+          <H1>Portalverwaltung</H1>
           <div style={{fontSize:13,color:"var(--sub)",marginTop:3}}>Module, Benutzer, API-Verbindungen und Einstellungen</div>
         </div>
         {saveMsg&&<Chip text={saveMsg} color={saveMsg==="Ungespeichert"?R:GN} bg={saveMsg==="Ungespeichert"?RL:"#ECFDF5"}/>}
@@ -1154,7 +1154,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,display:"block"}}>
                   Module & Zugriffstufen <span style={{fontWeight:400,fontSize:11}}>— {(gruppeForm.module||[]).length} ausgewählt</span>
                 </label>
-                <div style={{display:"flex",flexDirection:"column",gap:4}}>
+                <Col gap={4}>
                   {ALLE_MODULE.filter(m=>m.key!=="dashboard"&&m.key!=="portal").map(m=>{
                     const sel=(gruppeForm.module||[]).includes(m.key);
                     const stufe=(gruppeForm.modul_stufen||{})[m.key]||"lesen";
@@ -1186,7 +1186,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       </div>
                     );
                   })}
-                </div>
+                </Col>
               </div>
               {/* Buttons */}
               <div style={{display:"flex",gap:10,paddingTop:4,borderTop:"1px solid var(--border)"}}>
@@ -1546,7 +1546,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               <div style={{flex:1}}>
                 <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:6}}>Logo hochladen</div>
                 <div style={{fontSize:11,color:"var(--sub)",marginBottom:10}}>SVG oder PNG, empfohlen mind. 200×200px</div>
-                <div style={{display:"flex",gap:8}}>
+                <Row align="flex-start">
                   <label style={{
                     display:"inline-flex",alignItems:"center",gap:6,padding:"7px 14px",
                     borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",
@@ -1569,7 +1569,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       <TI n="trash" size={13}/> Entfernen
                     </button>
                   )}
-                </div>
+                </Row>
               </div>
             </div>
           </Card>
@@ -1637,10 +1637,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               return(
                 <Card key={api.key}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <Row>
                       <TI n="plug" style={{fontSize:18,color:api.active?BK:"#ccc"}}/>
                       <span style={{fontWeight:700,fontSize:14}}>{api.label||api.key}</span>
-                    </div>
+                    </Row>
                     <Chip text={api.sync_status||"deaktiviert"} color={statusColor} bg={statusBg}/>
                   </div>
                   <p style={{fontSize:13,color:"var(--sub)",margin:"0 0 10px",lineHeight:1.5}}>{info.description||"Externe API-Verbindung"}</p>
@@ -1659,10 +1659,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       Letzter Sync: {new Date(api.letzter_sync).toLocaleString("de-CH")}
                     </div>
                   )}
-                  <div style={{display:"flex",gap:8}}>
+                  <Row align="flex-start">
                     {api.active&&<Btn sm variant="primary" color={BL} onClick={()=>{}}>Sync starten</Btn>}
                     <Btn sm variant="outline" color="#888" onClick={()=>{}}>Konfigurieren</Btn>
-                  </div>
+                  </Row>
                 </Card>
               );
             })}
