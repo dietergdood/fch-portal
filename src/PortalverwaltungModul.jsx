@@ -3,9 +3,9 @@
    Portalverwaltung: Module, Berechtigungen, Benutzer, Aussehen
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useRef } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
+import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants";
 import { TI } from "./icons.jsx";
-import { hexToRgba, darkenHex, THEME_DEFAULT_STATIC, LOGO_B64, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip , Col, H1, Row} from "./theme.jsx";
+import { Btn, Card, Chip, Col, H1, InfoBox, LOGO_B64, ModalOrSheet, ModalTitle, Row, SectionLabel, THEME_DEFAULT_STATIC, darkenHex, hexToRgba, useIsMobile } from "./theme.jsx";
 import { FUNKTIONEN } from "./demoData.js";
 
 /* ── Geteilte Konstanten ── */
@@ -821,7 +821,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                                   </div>
                                   <TI n={m.icon} size={13} style={{color:isPflicht?"#B45309":"var(--sub)",flexShrink:0}}/>
                                   <span style={{fontWeight:500,color:isPflicht?"#B45309":isExpanded?"var(--text)":"var(--text)",fontSize:13}}>{m.name||m.label}</span>
-                                  {isPflicht&&<span style={{fontSize:9,padding:"1px 5px",borderRadius:5,background:"#FEF3C7",color:"#B45309",fontWeight:600}}>Pflicht</span>}
+                                  {isPflicht&&<span style={{fontSize:9,padding:"1px 5px",borderRadius:5,background:STATUS_BG.warn,color:"#B45309",fontWeight:600}}>Pflicht</span>}
                                   <TI n={isExpanded?"chevron-up":"chevron-down"} size={11} style={{color:"var(--sub)",marginLeft:"auto"}}/>
                                 </div>
                               </td>
@@ -1054,9 +1054,9 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   <div style={{borderTop:`1px solid ${g.farbe}30`,background:"var(--surface2)"}}>
                     {/* Funktionen-Header */}
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 16px 6px"}}>
-                      <div style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6}}>
+                      <SectionLabel style={{marginBottom:0}}>
                         Funktionen
-                      </div>
+                      </SectionLabel>
                       <button onClick={()=>{setEditFunktion(null);setFunktionForm({name:"",beschreibung:"",gruppe_id:g.id,module_override:[],teams:[],filter:{}});setShowFunktionForm(true);}}
                         style={{padding:"4px 12px",borderRadius:7,border:`1px solid ${g.farbe}`,background:g.farbe+"15",color:g.farbe,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
                         + Funktion hinzufügen
@@ -1113,7 +1113,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{width:12,height:12,borderRadius:"50%",background:gruppeForm.farbe}}/>
-                  <h2 style={{margin:0,fontSize:16,fontWeight:700,color:"var(--text)"}}>{editGruppe?"Gruppe bearbeiten":"Neue Gruppe"}</h2>
+                  <ModalTitle>{editGruppe?"Gruppe bearbeiten":"Neue Gruppe"}</ModalTitle>
                 </div>
                 <button onClick={()=>{setShowGruppeForm(false);setEditGruppe(null);}} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
               </div>
@@ -1231,7 +1231,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             <div style={{padding:"20px 20px 0",flexShrink:0}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
                 <div>
-                  <h2 style={{margin:0,fontSize:16,fontWeight:700,color:"var(--text)"}}>{editFunktion?"Funktion bearbeiten":"Neue Funktion"}</h2>
+                  <ModalTitle>{editFunktion?"Funktion bearbeiten":"Neue Funktion"}</ModalTitle>
                   {selectedGruppe&&<div style={{fontSize:12,color:selectedGruppe.farbe,fontWeight:600,marginTop:2}}>in {selectedGruppe.name}</div>}
                 </div>
                 <button onClick={()=>{setShowFunktionForm(false);setEditFunktion(null);}} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
@@ -1562,12 +1562,9 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     }}/>
                   </label>
                   {theme.logo&&(
-                    <button onClick={()=>updateTheme("logo",null)} style={{
-                      padding:"7px 14px",borderRadius:8,border:"1px solid var(--border)",
-                      background:"transparent",color:"var(--sub)",fontSize:12,cursor:"pointer",fontFamily:FONT
-                    }}>
-                      <TI n="trash" size={13}/> Entfernen
-                    </button>
+                    <Btn onClick={()=>updateTheme("logo",null)}>
+                      <Row gap={6}><TI n="trash" size={13}/>Entfernen</Row>
+                    </Btn>
                   )}
                 </Row>
               </div>
@@ -1600,27 +1597,24 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   <div style={{fontSize:11,color:"var(--sub)",marginTop:1}}>{item.hint}</div>
                 </div>
                 <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:5}}>{theme[item.key]||(["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?"auto":"")}</code>
-                <button onClick={()=>updateTheme(item.key,["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?null:THEME_DEFAULT_STATIC[item.key])} title="Zurücksetzen"
-                  style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:4}}>
+                <Btn variant="ghost" onClick={()=>{
+                  const autoKeys=["navAccent","navAccentText","avatarBg","avatarText"];
+                  updateTheme(item.key, autoKeys.includes(item.key)?null:(THEME_DEFAULT_STATIC[item.key]??null));
+                }} title="Zurücksetzen" style={{padding:4}}>
                   <TI n="refresh" size={14}/>
-                </button>
+                </Btn>
               </div>
             ))}
           </Card>
 
           {/* Speichern */}
           <div style={{display:"flex",gap:10,marginTop:16}}>
-            <button onClick={saveTheme}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN} style={{
-              padding:"9px 24px",borderRadius:10,border:"none",
-              background:BTN,color:BTN_TXT,transition:"background 0.15s",
-              fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT
-            }}>Speichern & anwenden</button>
-            <button onClick={()=>{setAppTheme(THEME_DEFAULT_STATIC);setThemeDirty(false);if(supabase){supabase.from("vereine").update({theme:THEME_DEFAULT_STATIC}).then(({error:e})=>{setSaveMsg(e?"Fehler: "+e.message:"Standard gespeichert ✓");setTimeout(()=>setSaveMsg(""),2500);});}}} style={{
-              padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",
-              background:"transparent",color:"var(--sub)",fontSize:13,cursor:"pointer",fontFamily:FONT
-            }}>Standard wiederherstellen</button>
+            <Btn variant="primary" onClick={saveTheme} style={{padding:"9px 24px",fontSize:13,fontWeight:700}}>
+              Speichern & anwenden
+            </Btn>
+            <Btn onClick={()=>{setAppTheme(THEME_DEFAULT_STATIC);setThemeDirty(false);if(supabase){supabase.from("vereine").update({theme:THEME_DEFAULT_STATIC}).then(({error:e})=>{setSaveMsg(e?"Fehler: "+e.message:"Standard gespeichert ✓");setTimeout(()=>setSaveMsg(""),2500);});}}}>
+              Standard wiederherstellen
+            </Btn>
           </div>
         </div>
       )}
