@@ -33,6 +33,8 @@ const PWA_CSS=`
 .cc-main{background:var(--bg)!important}
 .hov-row:hover{background:var(--cc-hover)!important;cursor:pointer}
 .cc-nav-item:not(.cc-nav-active):hover{background:var(--nav-hover,#1A1A1A)!important}
+.cc-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s,border-color 0.15s,color 0.15s;color:var(--sub);padding:0}
+.cc-icon-btn:hover{background:var(--surface)!important;border-color:var(--text)!important;color:var(--text)!important}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 html{scroll-behavior:smooth}
 button:active:not([disabled]){transform:scale(0.96)}

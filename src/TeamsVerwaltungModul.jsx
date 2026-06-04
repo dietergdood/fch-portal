@@ -395,7 +395,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           </div>
           {/* Dreipunkt-Menü */}
           <div style={{position:"relative"}}>
-            <Btn onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} style={{ width:36,height:36 }}><TI n="dots-vertical" size={15}/></Btn>
+            <button onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} className="cc-icon-btn"><TI n="dots-vertical" size={15}/></button>
             {openMenuId==="header"&&(
               <div style={{position:"absolute",right:0,top:40,zIndex:200,
                 background:"var(--surface)",border:"1px solid var(--border)",
@@ -511,7 +511,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                       </Row>
                       {/* 3-Dot Menu */}
                       <div style={{position:"relative"}}>
-                        <Btn onClick={openMenu} style={{ width:28,height:28 }}><TI n="dots-vertical" size={13}/></Btn>
+                        <button onClick={openMenu} className="cc-icon-btn"><TI n="dots-vertical" size={14}/></button>
                         {menuOpen&&(
                           <div style={{position:"absolute",right:0,top:32,zIndex:100,background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,boxShadow:"0 4px 16px rgba(0,0,0,0.12)",minWidth:140,overflow:"hidden"}}>
                             {[
@@ -558,7 +558,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                     {/* Aktionen: 3-Dot auf Mobile, Buttons auf Desktop */}
                     {isMobile?(
                       <div style={{position:"relative",flexShrink:0}}>
-                        <Btn onClick={openMenu} style={{ width:34,height:34 }}><TI n="dots-vertical" size={14}/></Btn>
+                        <button onClick={openMenu} className="cc-icon-btn"><TI n="dots-vertical" size={14}/></button>
                         {menuOpen&&(
                           <div style={{position:"absolute",right:0,top:38,zIndex:100,background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,boxShadow:"0 4px 16px rgba(0,0,0,0.15)",minWidth:150,overflow:"hidden"}}>
                             {[
@@ -1104,13 +1104,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           </div>
           {/* Dreipunkt-Menü */}
           <div style={{position:"relative"}}>
-            <button onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} style={{
-              width:36,height:36,borderRadius:8,border:"1px solid var(--border)",
-              background:"var(--surface2)",cursor:"pointer",display:"flex",
-              alignItems:"center",justifyContent:"center",color:"var(--sub)"
-            }}>
-              <TI n="dots-vertical" size={15}/>
-            </button>
+            <button onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} className="cc-icon-btn"><TI n="dots-vertical" size={15}/></button>
             {openMenuId==="header"&&(
               <div style={{position:"absolute",right:0,top:40,zIndex:200,
                 background:"var(--surface)",border:"1px solid var(--border)",
