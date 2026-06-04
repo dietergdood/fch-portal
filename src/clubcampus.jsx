@@ -3,7 +3,7 @@ import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT,
 import { TI, TI_PATHS } from "./icons.jsx";
 import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC } from "./theme.jsx";
 import {ROSTER, USER_ACCOUNTS, SCHEDULE} from "./demoData.js";
-import { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole } from "./NavigationModul.jsx";
+import { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole, NAV_BY_ROLE } from "./NavigationModul.jsx";
 import NachrichtenModul from "./NachrichtenModul.jsx";
 
 /* -- SUPABASE wird als Prop von App.jsx übergeben (kein Import hier) -- */
@@ -63,6 +63,24 @@ if(typeof window!=="undefined"&&!window.storage){
 
 /* ── Shared navigation target (cross-module) ── */
 const NAV_TARGET={tab:null,filter:null,kindTeam:null,openEvId:null,selectedSpiel:null};
+const FIELD_VIS = {
+  administrator: ["dob","nat","heimatort","ahv","pass","street","plz","city","canton","country","email","tel","pass","parent1","parent2","js","fairgate"],
+  administration:["dob","nat","heimatort","ahv","pass","street","plz","city","canton","country","email","tel","parent1","parent2","js","fairgate"],
+  funktionaer:   ["dob","pass","street","plz","city","email","tel"],
+  trainer:       ["dob","nat","heimatort","pass","street","plz","city","email","tel","parent1","parent2"],
+  spieler:       ["dob","pass","street","plz","city","email","tel"],
+  eltern:        ["dob","pass","street","plz","city","email","tel"],
+};
+
+/* -- DATA -- */
+const NR_CACHE={data:Object.fromEntries(ROSTER.map(p=>[p.id,p.rueckennr||""]))};
+(async()=>{
+  try{
+    const res=await window.storage.get("rueckennrn");
+    if(res){const d=JSON.parse(res.value);Object.assign(NR_CACHE.data,d);}
+  }catch(e){}
+})();
+
 
 function useBreakpoint(){const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);return{isMobile:w<BP_MOBILE,isTablet:w>=BP_MOBILE&&w<BP_TABLET,isDesktop:w>=BP_TABLET,width:w};}
 function useIsMobile(){return useBreakpoint().isMobile;}
