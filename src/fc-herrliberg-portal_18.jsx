@@ -165,8 +165,8 @@ function SplashScreen({onDone}){
       <div style={{width:110,height:110,borderRadius:28,background:"transparent",display:"flex",alignItems:"center",justifyContent:"center",animation:"fch-pop 0.55s 0.1s cubic-bezier(0.34,1.56,0.64,1) both"}}>
         <img src={LOGO_B64} style={{width:110,height:110,objectFit:"cover",display:"block"}} alt="Logo"/>
       </div>
-      <div style={{color:"#f0f0f0",fontWeight:800,fontSize:24,marginTop:24,letterSpacing:-0.4,fontFamily:FONT,animation:"fch-in 0.4s 0.45s ease-out both"}}>{(()=>{try{const s=localStorage.getItem("cc-theme");return s?JSON.parse(s).vereinsname||"ClubCampus":"ClubCampus";}catch{return "ClubCampus";}})()}</div>
-      <div style={{color:"#555",fontSize:12,marginTop:5,letterSpacing:2,textTransform:"uppercase",fontFamily:FONT,animation:"fch-in 0.4s 0.6s ease-out both"}}>ClubCampus</div>
+      <div style={{color:"var(--text)",fontWeight:800,fontSize:24,marginTop:24,letterSpacing:-0.4,fontFamily:FONT,animation:"fch-in 0.4s 0.45s ease-out both"}}>{(()=>{try{const s=localStorage.getItem("cc-theme");return s?JSON.parse(s).vereinsname||"ClubCampus":"ClubCampus";}catch{return "ClubCampus";}})()}</div>
+      <div style={{color:"var(--sub)",fontSize:12,marginTop:5,letterSpacing:2,textTransform:"uppercase",fontFamily:FONT,animation:"fch-in 0.4s 0.6s ease-out both"}}>ClubCampus</div>
       <div style={{display:"flex",gap:7,marginTop:40,animation:"fch-in 0.4s 0.75s ease-out both"}}>
         {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:ACCENT,animation:`fch-dot 1.2s ${i*0.18}s ease-in-out infinite`}}/>)}
       </div>
@@ -267,7 +267,7 @@ function ModalOrSheet({open,onClose,children,maxWidth=660}){
       <div style={{position:"relative",background:"var(--surface)",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)"}}>
         {/* Handle */}
         <div style={{display:"flex",justifyContent:"center",padding:"12px 0 4px"}}>
-          <div style={{width:40,height:4,borderRadius:2,background:"#D1D5DB"}}/>
+          <div style={{width:40,height:4,borderRadius:2,background:"var(--border)"}}/>
         </div>
         <div style={{overflowY:"auto",flex:1,WebkitOverflowScrolling:"touch"}}>
           {children}
@@ -312,37 +312,37 @@ const THEME_DEFAULT_STATIC={
 
 const ROLES = {
   administrator: {
-    label:"Administrator", color:"#1A1A1A", bg:"#F5F5F5", icon:"settings",
+    label:"Administrator", color:"var(--text)", bg:"#F5F5F5", icon:"settings",
     desc:"Vollzugriff: alle Module, Systemeinstellungen, Benutzerverwaltung",
     level:7
   },
   vorstand: {
-    label:"Vorstand", color:"#1A1A1A", bg:"#F5F5F5", icon:"scale",
+    label:"Vorstand", color:"var(--text)", bg:"#F5F5F5", icon:"scale",
     desc:"Strategische Übersicht: alle Teams, Mitglieder lesen, Auswertungen — kein System, kein AHV",
     level:6
   },
   administration: {
-    label:"Administration", color:"#1A1A1A", bg:"#F5F5F5", icon:"briefcase",
+    label:"Administration", color:"var(--text)", bg:"#F5F5F5", icon:"briefcase",
     desc:"Vereinsbüro: Stammdaten, Mitglieder, alle Teams, Exporte — kein System",
     level:5
   },
   funktionaer: {
-    label:"Funktionär", color:"#1A1A1A", bg:"#F5F5F5", icon:"heart-handshake",
+    label:"Funktionär", color:"var(--text)", bg:"#F5F5F5", icon:"heart-handshake",
     desc:"Module + Teams gemäss zugewiesener Gruppe/Funktion",
     level:4
   },
   trainer: {
-    label:"Trainer", color:"#1A1A1A", bg:"#F5F5F5", icon:"ball-football",
+    label:"Trainer", color:"var(--text)", bg:"#F5F5F5", icon:"ball-football",
     desc:"Eigene Teams: Kader, Trainings, Anwesenheiten",
     level:3
   },
   spieler: {
-    label:"Spieler", color:"#1A1A1A", bg:"#F5F5F5", icon:"target",
+    label:"Spieler", color:"var(--text)", bg:"#F5F5F5", icon:"target",
     desc:"Eigenes Team lesen: Spielplan, Termine, Helfereinsätze",
     level:2
   },
   eltern: {
-    label:"Eltern", color:"#1A1A1A", bg:"#F5F5F5", icon:"user",
+    label:"Eltern", color:"var(--text)", bg:"#F5F5F5", icon:"user",
     desc:"Nur eigene Kinder: Termine, Anwesenheit, Abstimmungen",
     level:1
   },
@@ -1256,7 +1256,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
             width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
             padding:collapsed?"10px 0":"10px 12px",borderRadius:9,border:"none",
             background:active===n.key?ACCENT:"transparent",
-            color:active===n.key?"#111":"var(--nav-t)",
+            color:active===n.key?ACCENT2:"var(--nav-t)",
             cursor:"pointer",fontSize:13.5,fontWeight:active===n.key?600:400,
             textAlign:"left",marginBottom:2,letterSpacing:0.1,
             transition:"background 0.15s,color 0.15s",
@@ -1378,9 +1378,9 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
         {/* Profil-Avatar – nur Mobile */}
         {isMobile&&(
           <button onClick={onOpenProfile} style={{
-            width:34,height:34,borderRadius:"50%",background:"#f5f5f3",border:"none",
+            width:34,height:34,borderRadius:"50%",background:"var(--surface)",border:"none",
             display:"flex",alignItems:"center",justifyContent:"center",
-            color:"#9a9a9a",fontWeight:700,fontSize:13,
+            color:"var(--sub)",fontWeight:700,fontSize:13,
             cursor:"pointer",flexShrink:0,WebkitTapHighlightColor:"transparent",
             fontFamily:FONT,boxShadow:"0 1px 4px rgba(0,0,0,0.08)"
           }}>
@@ -1409,7 +1409,7 @@ function DashboardAdmin({setActive,account}){
   const vorname=(account?.name||"Administrator").split(" ")[0];
   return(
     <div>
-      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"#111"}}>Hallo, {vorname}</h1>
+      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {vorname}</h1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>ClubCampus – Systemübersicht</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:12,marginBottom:24}}>
         <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" color="#7C3AED" icon="users"/>
@@ -1481,7 +1481,7 @@ function DashboardAdmin({setActive,account}){
 function DashboardAdministration({setActive,account}){
   return(
     <div>
-      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"#111"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
+      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -1545,7 +1545,7 @@ function DashboardAdministration({setActive,account}){
 function DashboardFunktionaer({setActive,account}){
   return(
     <div>
-      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"#111"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
+      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -1782,14 +1782,14 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
       {/* Aufgebot-Banner */}
       {nextAufgebot&&(
         <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.openEvId=nextAufgebot.id;setActive("team");}:undefined}
-          style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:18,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
+          style={{background:"var(--surface)",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:18,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
           <span style={{fontSize:24}}><TI n="ball-football"/></span>
           <div style={{flex:1}}>
-            <div style={{fontWeight:800,fontSize:14,color:"#4F46E5"}}>Du bist im Aufgebot!</div>
-            <div style={{fontSize:13,color:"#6366F1",marginTop:2}}>
+            <div style={{fontWeight:800,fontSize:14,color:"var(--cc-accent)"}}>Du bist im Aufgebot!</div>
+            <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>
               {`vs. ${nextAufgebot.opponent} · ${nextAufgebot.date} · ${nextAufgebot.time} Uhr`}
             </div>
-            {nextAufgebot.treffpunkt&&<div style={{fontSize:13,color:"#818CF8",marginTop:3}}><TI n="target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebot.treffpunkt}</div>}
+            {nextAufgebot.treffpunkt&&<div style={{fontSize:13,color:"var(--sub)",marginTop:3}}><TI n="target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebot.treffpunkt}</div>}
           </div>
           <Chip text="Aufgebot" color="#4F46E5" bg="#EEF2FF"/>
         </div>
@@ -1945,7 +1945,7 @@ function DashboardEltern({account,meineTeams,setActive}){
                         <div style={{fontSize:13,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>Nächstes Spiel</div>
                         <div style={{fontSize:26,fontWeight:800,color:BL,lineHeight:1}}>{nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"}</div>
                         <div style={{fontSize:13,color:"var(--sub)",fontWeight:500}}>{nextSpiel?`${nextSpiel.time.slice(0,5)} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel geplant"}</div>
-                        {imAufgebot&&<span style={{position:"absolute",bottom:10,right:12,fontSize:13,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",border:"0.5px solid #818CF840"}}><TI n="ball-football" style={{marginRight:4}}/> Im Aufgebot</span>}
+                        {imAufgebot&&<span style={{position:"absolute",bottom:10,right:12,fontSize:13,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"var(--surface)",color:"var(--cc-accent)",border:"0.5px solid #818CF840"}}><TI n="ball-football" style={{marginRight:4}}/> Im Aufgebot</span>}
                       </div>
                     );
                   })()}
@@ -1956,14 +1956,14 @@ function DashboardEltern({account,meineTeams,setActive}){
             {/* Aufgebot-Banner */}
             {nextAufgebotSpiel&&(
               <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;NAV_TARGET.openEvId=nextAufgebotSpiel.id;setActive("team");}:undefined}
-                style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:14,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
+                style={{background:"var(--surface)",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:14,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
                 <span style={{fontSize:24}}><TI n="ball-football"/></span>
                 <div style={{flex:1}}>
-                  <div style={{fontWeight:800,fontSize:13,color:"#4F46E5"}}>{vorname} ist im Aufgebot!</div>
-                  <div style={{fontSize:13,color:"#6366F1",marginTop:2}}>
+                  <div style={{fontWeight:800,fontSize:13,color:"var(--cc-accent)"}}>{vorname} ist im Aufgebot!</div>
+                  <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>
                     {`vs. ${nextAufgebotSpiel.opponent} · ${nextAufgebotSpiel.date} · ${nextAufgebotSpiel.time} Uhr`}
                   </div>
-                  {nextAufgebotSpiel.treffpunkt&&<div style={{fontSize:13,color:"#818CF8",marginTop:3}}><TI n="target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebotSpiel.treffpunkt}</div>}
+                  {nextAufgebotSpiel.treffpunkt&&<div style={{fontSize:13,color:"var(--sub)",marginTop:3}}><TI n="target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebotSpiel.treffpunkt}</div>}
                 </div>
                 <div style={{background:"#4F46E5",color:"#fff",fontSize:13,fontWeight:700,padding:"3px 9px",borderRadius:20}}>Aufgebot</div>
               </div>
@@ -2317,7 +2317,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
       )}
       {tab==="overview"&&<TeamOverview role={role} team={activeTeam} setTab={setTab} setAttFilter={setAttFilter} responses={responses} setRosterInitial={setRosterInitial}/>}
       {tab==="roster"&&<RosterTab role={role} team={activeTeam} initialSelected={rosterInitial} teamRosterData={getMitgliederForTeam(activeTeam)}/>}
-      {tab==="training"&&!limited&&<TrainingGantt team={activeTeam}/>}
+      {tab==="training"&&!limited&&<TrainingGantt team={activeTeam} sb={sb}/>}
       {tab==="spielplan"&&(
         <div style={{display:"flex",flexDirection:"column",gap:20}}>
           <div>
@@ -2505,9 +2505,9 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                   </div>
                   <div style={{fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:6}}>
                     <span>{e.date}{e.endDate?" - "+e.endDate:""}</span>
-                    <span style={{color:"#ddd"}}>·</span>
+                    <span style={{color:"var(--border)"}}>·</span>
                     <span>{e.time+" Uhr"}</span>
-                    <span style={{color:"#ddd"}}>·</span>
+                    <span style={{color:"var(--border)"}}>·</span>
                     <span>{e.location}</span>
                   </div>
                 </div>
@@ -2527,9 +2527,9 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
               <div style={{fontWeight:600,fontSize:13,color:"var(--text)",overflow:"hidden",textOverflow:"ellipsis"}}>{e.title||e.type}</div>
               <div style={{fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:6}}>
                 <span>{e.date}{e.endDate?" - "+e.endDate:""}</span>
-                <span style={{color:"#ddd"}}>·</span>
+                <span style={{color:"var(--border)"}}>·</span>
                 <span>{e.time+" Uhr"}</span>
-                <span style={{color:"#ddd"}}>·</span>
+                <span style={{color:"var(--border)"}}>·</span>
                 <span>{e.location}</span>
               </div>
             </div>
@@ -3203,7 +3203,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
 
         {/* Headers */}
         <div style={{display:"flex", background:"var(--surface)", borderBottom:"1.5px solid #D1CFC8", height:44, boxSizing:"border-box", alignItems:"center"}}>
-          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid var(--border)", height:"100%"}}/>
           {DAYS.map(function(day,di){
             const d = dayDates[idxMap[di]];
             const isToday = d.toDateString()===today.toDateString();
@@ -3218,8 +3218,8 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
         </div>
 
         {/* Platz-Namen */}
-        <div style={{display:"flex", background:"#F7F6F2", borderBottom:"0.5px solid #DDD9CF", height:22, boxSizing:"border-box", alignItems:"center"}}>
-          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
+        <div style={{display:"flex", background:"var(--surface2)", borderBottom:"0.5px solid var(--border)", height:22, boxSizing:"border-box", alignItems:"center"}}>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid var(--border)", height:"100%"}}/>
           {DAYS.map(function(_,di){
             const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
             return aktivePlaetze.map(function(p,pi){
@@ -3235,15 +3235,15 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
         </div>
 
         {/* Hälften */}
-        <div style={{display:"flex", background:"#F2F1ED", borderBottom:"1.5px solid #C8C5BC", height:18, boxSizing:"border-box", alignItems:"center"}}>
-          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", height:"100%"}}/>
+        <div style={{display:"flex", background:"var(--surface2)", borderBottom:"1.5px solid var(--border)", height:18, boxSizing:"border-box", alignItems:"center"}}>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid var(--border)", height:"100%"}}/>
           {DAYS.map(function(_,di){
             const isToday = dayDates[idxMap[di]].toDateString()===today.toDateString();
             return alleCols.map(function(col,ci){
               const isLast = ci===alleCols.length-1;
               return (
                 <div key={di+"_"+col.key} style={{width:colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"0.5px solid #DDD9CF", background:isToday?"#DDE1F8":"transparent", textAlign:"center", padding:"1px 2px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
-                  <div style={{fontSize:13, fontWeight:500, color:"#6B7280", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.half||""}</div>
+                  <div style={{fontSize:13, fontWeight:500, color:"var(--sub)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.half||""}</div>
                 </div>
               );
             });
@@ -3254,7 +3254,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
         <div style={{display:"flex"}}>
 
           {/* Zeitachse */}
-          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid #E5E3DC", background:"#FAFAF8"}}>
+          <div style={{width:timeW, flexShrink:0, borderRight:"1px solid var(--border)", background:"var(--surface2)"}}>
             {slots15.map(function(t,i){
               const isHour = t%1===0;
               const isHalf = Math.round((t%1)*60)===30;
@@ -3401,7 +3401,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
     </div>
   );
 }
-function TrainingGantt({team: teamProp, role, kannSchreiben, kannVerwalten}){
+function TrainingGantt({team: teamProp, role, kannSchreiben, kannVerwalten, sb:supabase}){
   const START = 7, END = 22, H = 52;
   const isMobile = useIsMobile();
   const canEdit = role==="administrator"||role==="administration";
@@ -3970,7 +3970,7 @@ function TrainingGantt({team: teamProp, role, kannSchreiben, kannVerwalten}){
 
       {/* Ausserhalb Gültigkeitsspanne */}
       {!planGueltigDieseWoche&&(
-        <div style={{padding:"10px 14px",background:"#F3F4F6",border:"1px solid #D1D5DB",borderRadius:10,marginBottom:12,fontSize:13,color:"#6B7280",display:"flex",alignItems:"center",gap:8}}>
+        <div style={{padding:"10px 14px",background:"#F3F4F6",border:"1px solid #D1D5DB",borderRadius:10,marginBottom:12,fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:8}}>
           <span style={{fontSize:14}}>&#128197;</span>
           <span>
             Diese Woche liegt ausserhalb der Gültigkeitsspanne des Plans
@@ -4463,7 +4463,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
                     {/* Zusammenfassung */}
                     {form.location&&(
-                      <div style={{fontSize:13,color:"var(--sub)",padding:"8px 10px",background:"#EEF2FF",borderRadius:6,lineHeight:1.7}}>
+                      <div style={{fontSize:13,color:"var(--sub)",padding:"8px 10px",background:"var(--surface)",borderRadius:6,lineHeight:1.7}}>
                         <div>
                           <strong>{fmtT(form.start)}–{form.wechsel_zeit?fmtT(form.wechsel_zeit):fmtT(form.end)}</strong>
                           {" "}{form.location}{form.half?" / "+form.half:" / Ganzer Platz"}
@@ -5397,7 +5397,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
     "ab":             {label:"Absage",         color:R,     bg:RL,        icon:"✕"},
     "unentschuldigt": {label:"Unentschuldigt", color:AM, bg:"#FFF7ED", icon:"!"},
     "fraglich":       {label:"Fraglich",       color:AM,    bg:"#FFFBEB", icon:"?"},
-    "aufgebot":       {label:"Aufgebot",     color:"#4F46E5",bg:"#EEF2FF",icon:"ball-football"},
+    "aufgebot":       {label:"Aufgebot",     color:"var(--cc-accent)",bg:"#EEF2FF",icon:"ball-football"},
     null:             {label:"Ausstehend",     color:"var(--sub)",bg:"#f5f5f5", icon:"-"},
   };
 
@@ -5578,11 +5578,11 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                 <div style={{padding:"14px 20px"}}>
                   {/* Aufgebot-Banner für Spieler/Eltern */}
                   {!isTrainer&&!isAdmin&&isInAufgebot(selEv.id,myId)&&(
-                    <div style={{background:"#EEF2FF",border:"1.5px solid #818CF8",borderRadius:10,padding:"10px 14px",marginBottom:12,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                    <div style={{background:"var(--surface)",border:"1.5px solid #818CF8",borderRadius:10,padding:"10px 14px",marginBottom:12,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                       <span style={{fontSize:18}}><TI n="ball-football"/></span>
                       <div>
-                        <div style={{fontWeight:700,fontSize:13,color:"#4F46E5"}}>Du bist im Aufgebot!</div>
-                        <div style={{fontSize:13,color:"#6366F1",marginTop:2}}>
+                        <div style={{fontWeight:700,fontSize:13,color:"var(--cc-accent)"}}>Du bist im Aufgebot!</div>
+                        <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>
                           {selEv.treffpunkt?`Treffpunkt: ${selEv.treffpunkt}`:"Treffpunkt folgt"}
                         </div>
                       </div>
@@ -5708,7 +5708,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           </div>
           {/* Zeit-Toggle - eigene Zeile auf Mobile durch flex-basis 100% */}
           <button onClick={()=>setTimeFilter(p=>p==="kommend"?"vergangen":"kommend")}
-            style={{display:"flex",alignItems:"center",gap:4,padding:"7px 12px",borderRadius:20,border:"1px solid var(--border)",background:"#F5F5F3",color:"var(--sub)",fontSize:13,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,flexBasis:"100%",transition:"all 0.15s"}}>
+            style={{display:"flex",alignItems:"center",gap:4,padding:"7px 12px",borderRadius:20,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,flexBasis:"100%",transition:"all 0.15s"}}>
             <span style={{fontSize:13,opacity:0.6}}>{"▾"}</span>
             <span>{timeFilter==="kommend"?"Vergangene Termine":"Kommende Termine"}</span>
           </button>
@@ -5764,13 +5764,13 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                         {ev.subtype||ev.type}
                       </span>
                       {isCancelled&&<span style={{fontSize:13,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R,flexShrink:0}}>⚠ Abgesagt</span>}
-                      {inAufgebot&&<span style={{fontSize:13,fontWeight:600,padding:"2px 8px",borderRadius:20,background:"#EEF2FF",color:"#4F46E5",flexShrink:0}}><TI n="ball-football" style={{marginRight:3}}/> Aufgebot</span>}
+                      {inAufgebot&&<span style={{fontSize:13,fontWeight:600,padding:"2px 8px",borderRadius:20,background:"var(--surface)",color:"var(--cc-accent)",flexShrink:0}}><TI n="ball-football" style={{marginRight:3}}/> Aufgebot</span>}
                       {past&&<span style={{fontSize:13,fontWeight:600,padding:"2px 8px",borderRadius:20,background:isZu?"#ECFDF5":isAb?RL:"#F3F4F6",color:isZu?GN:isAb?R:"#aaa",flexShrink:0}}>{isZu?"✓ Anwesend":isAb?"✕ Abwesend":"-"}</span>}
                     </div>
                     <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:"2px 6px",fontSize:13,color:"var(--sub)"}}>
                       <span><TI n="clock" style={{marginRight:3}}/> {ev.time} Uhr</span>
                       {ev.type==="Spiel"&&ev.treffpunkt&&(<>
-                        <span style={{color:"#ddd"}}>·</span>
+                        <span style={{color:"var(--border)"}}>·</span>
                         <span><TI n="target" style={{marginRight:3}}/> <span style={{fontWeight:600,color:"var(--sub)"}}>Treffpunkt: </span>{ev.treffpunkt}</span>
                       </>)}
                     </div>
@@ -6018,9 +6018,9 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     </div>
                   ))}
                   {c.aufgebot>0&&(
-                    <div style={{flex:1,background:"#EEF2FF",borderRadius:10,padding:"10px 8px",textAlign:"center",border:"0.5px solid #818CF820"}}>
-                      <div style={{fontSize:26,fontWeight:800,color:"#6366F1",lineHeight:1}}>{c.aufgebot}</div>
-                      <div style={{fontSize:13,color:"#6366F1",fontWeight:600,marginTop:3,opacity:0.8}}>Aufgebot</div>
+                    <div style={{flex:1,background:"var(--surface)",borderRadius:10,padding:"10px 8px",textAlign:"center",border:"0.5px solid #818CF820"}}>
+                      <div style={{fontSize:26,fontWeight:800,color:"var(--sub)",lineHeight:1}}>{c.aufgebot}</div>
+                      <div style={{fontSize:13,color:"var(--sub)",fontWeight:600,marginTop:3,opacity:0.8}}>Aufgebot</div>
                     </div>
                   )}
                 </div>
@@ -6030,7 +6030,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
             <div style={{padding:"0 0 4px"}}>
               <div style={{padding:"8px 20px 4px",background:"var(--surface2)",borderBottom:"0.5px solid var(--border)"}}>
                 <div style={{display:"grid",gridTemplateColumns:`1fr auto auto${selEv.type==="Spiel"?" auto":""}`,fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,gap:"0 16px"}}>
-                  <span>Spieler</span><span style={{textAlign:"center"}}>Status</span><span style={{minWidth:80,textAlign:"left"}}>Begründung</span>{selEv.type==="Spiel"&&<span style={{textAlign:"center",color:"#4F46E5"}}><TI n="ball-football"/></span>}
+                  <span>Spieler</span><span style={{textAlign:"center"}}>Status</span><span style={{minWidth:80,textAlign:"left"}}>Begründung</span>{selEv.type==="Spiel"&&<span style={{textAlign:"center",color:"var(--cc-accent)"}}><TI n="ball-football"/></span>}
                 </div>
               </div>
               {teamRoster.map((p,i)=>{
@@ -6102,7 +6102,7 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
           })}
         </div>
         <button onClick={()=>setTimeFilter(p=>p==="kommend"?"vergangen":"kommend")}
-          style={{display:"flex",alignItems:"center",gap:4,padding:"7px 12px",borderRadius:20,border:"1px solid var(--border)",background:"#F5F5F3",color:"var(--sub)",fontSize:13,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,flexBasis:"100%",transition:"all 0.15s"}}>
+          style={{display:"flex",alignItems:"center",gap:4,padding:"7px 12px",borderRadius:20,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,flexBasis:"100%",transition:"all 0.15s"}}>
           <span style={{fontSize:13,opacity:0.6}}>{"▾"}</span>
           <span>{timeFilter==="kommend"?"Vergangene Termine":"Kommende Termine"}</span>
         </button>
@@ -6196,10 +6196,10 @@ function AttendanceTab({role,team,setActive,onNavigateToSpiel,myRosterId:myRoste
                     {label:"Absagen",  value:c.ab,    color:R},
                     {label:"Unentsch.",value:c.unent, color:"#D97706"},
                     {label:"Offen",    value:c.offen, color:"var(--sub)"},
-                    ...(isSpiel?[{label:"Aufgebot",value:c.aufgebot,color:"#4F46E5"}]:[]),
+                    ...(isSpiel?[{label:"Aufgebot",value:c.aufgebot,color:"var(--cc-accent)"}]:[]),
                   ].map((s,i,arr)=>(
                     <div key={i} style={{flex:1,padding:"9px 2px",borderRight:i<arr.length-1?`0.5px solid ${GB}`:"none",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-                      <div style={{fontSize:15,fontWeight:700,color:s.value>0?s.color:"#ddd",lineHeight:1}}>{s.value}</div>
+                      <div style={{fontSize:15,fontWeight:700,color:s.value>0?s.color:"var(--border)",lineHeight:1}}>{s.value}</div>
                       <div style={{fontSize:13,color:s.value>0?s.color:"var(--sub)",marginTop:3,textTransform:"uppercase",letterSpacing:0.3,fontWeight:600,opacity:0.8}}>{s.label}</div>
                     </div>
                   ))}
@@ -8534,11 +8534,11 @@ function EventsList({teamOnly,role}){
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
                     <span><TI n="calendar"/></span>{e.date}{e.endDate?" - "+e.endDate:""}
                   </span>
-                  <span style={{color:"#ddd",margin:"0 8px"}}>{"|"}</span>
+                  <span style={{color:"var(--border)",margin:"0 8px"}}>{"|"}</span>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
                     <span><TI n="clock"/></span>{e.time+" Uhr"}
                   </span>
-                  <span style={{color:"#ddd",margin:"0 8px"}}>{"|"}</span>
+                  <span style={{color:"var(--border)",margin:"0 8px"}}>{"|"}</span>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
                     <span><TI n="map-pin"/></span>{e.loc}
                   </span>
@@ -8662,7 +8662,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         {/* Plätze Zähler */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:ichDrin||!voll?10:0}}>
           <button onClick={()=>setShowHelfer(v=>!v)}
-            style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",padding:0,fontSize:13,color:"#6B7280"}}>
+            style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",padding:0,fontSize:13,color:"var(--sub)"}}>
             <span style={{fontSize:13,display:"inline-block",transform:showHelfer?"rotate(90deg)":"none"}}>▶</span>
             <span><strong style={{color:"var(--text)"}}>{filled}</strong> / {max} belegt</span>
           </button>
@@ -9349,7 +9349,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                                 </div>
                                 <div style={{fontSize:13,color:"var(--sub)",marginTop:1,display:"flex",alignItems:"center",gap:6}}>
                                   <span>{""+einsatz.time+" Uhr"}</span>
-                                  <span style={{color:"#ddd"}}>{"|"}</span>
+                                  <span style={{color:"var(--border)"}}>{"|"}</span>
                                   <span>{""+einsatz.location}</span>
                                 </div>
                                 {bemerkungState[`e${einsatz.id}`]&&(
@@ -9607,14 +9607,14 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                                   </div>
                                   <div style={{fontSize:13,color:"var(--sub)",marginTop:1,display:"flex",alignItems:"center",gap:6}}>
                                     <span>{""+einsatz.time+" Uhr"}</span>
-                                    <span style={{color:"#ddd"}}>{"|"}</span>
+                                    <span style={{color:"var(--border)"}}>{"|"}</span>
                                     <span>{""+einsatz.location}</span>
                                   </div>
                                 </div>
                               </div>
                               <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap",justifyContent:"flex-end"}}>
                                 {einsatz.gruppen.map((g,gi)=>(
-                                  <Chip key={gi} text={g} color={g===meinGruppe?ev.color:"#6B7280"} bg={g===meinGruppe?ev.color+"18":"#F3F4F6"}/>
+                                  <Chip key={gi} text={g} color={g===meinGruppe?ev.color:"var(--sub)"} bg={g===meinGruppe?ev.color+"18":"#F3F4F6"}/>
                                 ))}
                                 {(()=>{
                                   const totalPlätze=einsatz.schichten.reduce((s,sc)=>s+sc.max,0);
@@ -11290,7 +11290,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
       <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:13}}>
           <div style={{width:46,height:46,borderRadius:"50%",background:ACCENT,display:"flex",alignItems:"center",
-            justifyContent:"center",color:"#111",fontWeight:800,fontSize:17,flexShrink:0}}>
+            justifyContent:"center",color:"var(--text)",fontWeight:800,fontSize:17,flexShrink:0}}>
             {initials}
           </div>
           <div>
@@ -12117,7 +12117,7 @@ export default function Portal({supabaseClient}){
       case "users":             return <PortalverwaltungView initialTab="users" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss}/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss}/>;
       case "portal":            return <PortalverwaltungView initialTab="module" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss}/>;
-      case "training":          return <TrainingGantt role={role} team={role==="trainer"?meineTeams?.[0]:undefined} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
+      case "training":          return <TrainingGantt role={role} team={role==="trainer"?meineTeams?.[0]:undefined} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} sb={sb}/>;
       case "schedule":          return <ScheduleTab role={role}/>;
       case "attendance_central":return <AttendanceCentral/>;
       case "events":            return <div style={{maxWidth:900}}><h1 style={{fontSize:22,fontWeight:800,margin:"0 0 6px"}}>Termine</h1><p style={{fontSize:13,color:"var(--sub)",margin:"0 0 18px"}}>Bitte alle notwendigen Termine zu- oder absagen.</p><AttendanceTab role={role} team={meineTeams?.[0]||"Cc-Junioren"} allTeams={meineTeams} myRosterId={myRosterId} account={account} setActive={setActive} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} onNavigateToSpiel={(spiel)=>{NAV_TARGET.tab="spielplan";NAV_TARGET.selectedSpiel=spiel;setActive("team");}}/></div>;
