@@ -2155,4 +2155,10 @@ function RolleChip({rolle}){
 
 
 /* Alle möglichen Übergabe-Empfänger (alle Helfer ausser dem aktuellen) */
-export { HelferModul, HelpersList };
+function kannHelferEinsatzErstellen(role, typ, team, meineTeams=[]){
+  if(role==="administrator"||role==="administration"||role==="funktionaer") return true;
+  if(role==="trainer") return typ==="team"&&(meineTeams||[]).includes(team);
+  return false;
+}
+
+export { HelferModul, HelpersList , kannHelferEinsatzErstellen};

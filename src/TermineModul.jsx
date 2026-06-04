@@ -2062,4 +2062,15 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
   );
 }
 
-export { SlotModal, SpielDetail, TermineModul, SpielplanModul, TableTab };
+function kannTerminLesen(role){ return true; }
+
+function kannTerminAnmelden(role){
+  return ["spieler","eltern","trainer","administrator","administration","vorstand","funktionaer"].includes(role);
+}
+
+function getTerminTypLabel(typ){
+  const map={training:"Training",spiel:"Spiel",vereinsanlass:"Vereinsanlass","team-event":"Team-Event",aufgebot:"Aufgebot"};
+  return map[typ]||typ||"Termin";
+}
+
+export { SlotModal, SpielDetail, TermineModul, SpielplanModul, TableTab , kannTerminLesen, kannTerminAnmelden, getTerminTypLabel};

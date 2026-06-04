@@ -849,4 +849,35 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
    Bestimmt welche Felder in der Mitgliederliste sichtbar sind.
 ──────────────────────────────────────────────────────────── */
 
-export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole, NAV_BY_ROLE, ProfileModal };
+const STUFE_RANG={lesen:1,schreiben:2,verwalten:3};
+
+function maxStufe(a, b){
+  if(!a) return b; if(!b) return a;
+  return STUFE_RANG[a]>=STUFE_RANG[b]?a:b;
+}
+
+function getEffektiveStufeForFunktionaer(dbFunktionen, modulKey){
+  if(!dbFunktionen||dbFunktionen.length===0) return null;
+  let best=null;
+  dbFunktionen.forEach(f=>{
+    const override=f.stufe_override?.[modulKey];
+    const gruppenStufe=f.portal_gruppen?.modul_stufen?.[modulKey]||f.modul_stufen?.[modulKey];
+    const module=f.module_override?.length>0?f.module_override:(f.portal_gruppen?.module||[]);
+    if(module.includes(modulKey)){
+      const stufe=override||gruppenStufe||f.portal_gruppen?.default_stufe||"lesen";
+      best=maxStufe(best,stufe);
+    }
+  });
+  return best;
+}
+
+function getModuleForFunktionaer(dbFunktionen){
+  const all=new Set();
+  (dbFunktionen||[]).forEach(f=>{
+    const mods=f.module_override?.length>0?f.module_override:(f.portal_gruppen?.module||[]);
+    mods.forEach(m=>all.add(m));
+  });
+  return [...all];
+}
+
+export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole, NAV_BY_ROLE, ProfileModal , maxStufe, getEffektiveStufeForFunktionaer, getModuleForFunktionaer};
