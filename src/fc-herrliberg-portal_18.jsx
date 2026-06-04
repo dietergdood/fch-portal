@@ -1270,7 +1270,9 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
             transition:"background 0.15s,color 0.15s",
             fontFamily:FONT,WebkitTapHighlightColor:"transparent",minHeight:44,
             justifyContent:collapsed?"center":"flex-start"
-          }}>
+          }}
+            onMouseEnter={e=>{if(active!==n.key)e.currentTarget.style.background="var(--nav-hover)";}}
+            onMouseLeave={e=>{if(active!==n.key)e.currentTarget.style.background="transparent";}}>
             <TI n={n.icon||"circle"} size={collapsed?18:15} style={{flexShrink:0,opacity:active===n.key?1:0.65}}/>
             {!collapsed&&n.label}
           </button>
@@ -1288,8 +1290,8 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
         WebkitTapHighlightColor:"transparent",
         display:"flex",flexDirection:collapsed?"column":"column",alignItems:collapsed?"center":"stretch"
       }}
-        onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.04)"}
-        onMouseLeave={e=>e.currentTarget.style.background="none"}>
+        onMouseEnter={e=>{if(e.currentTarget.dataset.active!=="1")e.currentTarget.style.background="var(--nav-hover)"}}
+        onMouseLeave={e=>{if(e.currentTarget.dataset.active!=="1")e.currentTarget.style.background="none"}}>
         {!collapsed&&<div style={{fontSize:10,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>}
         <div style={{display:"flex",alignItems:"center",gap:9,justifyContent:collapsed?"center":"flex-start"}}>
           <Av size={32} bg={ACCENT} name={userName}/>
@@ -1314,7 +1316,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
         color:"var(--nav-t)",transition:"background 0.15s, color 0.15s",
         WebkitTapHighlightColor:"transparent",width:"100%"
       }}
-        onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.color="var(--nav-a)";}}
+        onMouseEnter={e=>{e.currentTarget.style.background="var(--nav-hover)";e.currentTarget.style.color="var(--nav-a)";}}
         onMouseLeave={e=>{e.currentTarget.style.background="none";e.currentTarget.style.color="var(--nav-t)";}}>
         <TI n={collapsed?"chevrons-right":"chevrons-left"} size={16}/>
       </button>
