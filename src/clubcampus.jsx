@@ -11585,33 +11585,28 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
       {/* Bottom Nav Bar */}
       <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"var(--nav)",borderTop:"1px solid var(--nav-b)",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)",boxShadow:"0 -2px 16px rgba(0,0,0,0.25)"}}>
         <div style={{display:"flex"}}>
-          {tabs.map(n=>(
-            <button key={n.key} onClick={()=>{setActive(n.key);setShowMehr(false);}} style={{
-              flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-              padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
-              minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
-            }}>
-              {active===n.key&&!mehrActive&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
-              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:active===n.key&&!mehrActive?"var(--nav-a)":"transparent",transition:"background 0.15s"}}>
-                <TI n={n.icon||"circle"} size={19} style={{color:active===n.key&&!mehrActive?ACCENT2:"var(--nav-t)"}}/>
-              </div>
-              <span style={{fontSize:10,color:active===n.key&&!mehrActive?"var(--nav-accent-text)":"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
-            </button>
-          ))}
-          {/* Mehr-Button (nur wenn mehr-Einträge vorhanden) */}
+          {tabs.map(n=>{
+            const isActive=active===n.key&&!mehrActive;
+            return(
+              <button key={n.key} onClick={()=>{setActive(n.key);setShowMehr(false);}} style={{
+                flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+                padding:"8px 0 5px",background:"none",border:"none",cursor:"pointer",
+                minHeight:56,WebkitTapHighlightColor:"transparent",gap:4
+              }}>
+                <TI n={n.icon||"circle"} size={22} style={{color:isActive?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/>
+                <span style={{fontSize:10,color:isActive?"var(--nav-a)":"var(--nav-t)",fontWeight:isActive?600:400,transition:"color 0.15s"}}>{n.label}</span>
+              </button>
+            );
+          })}
+          {/* Mehr-Button */}
           {mehr.length>0&&(
             <button onClick={()=>setShowMehr(v=>!v)} style={{
               flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-              padding:"6px 0 4px",background:"none",border:"none",cursor:"pointer",
-              minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
+              padding:"8px 0 5px",background:"none",border:"none",cursor:"pointer",
+              minHeight:56,WebkitTapHighlightColor:"transparent",gap:4
             }}>
-              {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
-              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:mehrActive||showMehr?"var(--nav-a)":"transparent",transition:"background 0.15s"}}>
-                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"var(--nav-accent-text)":"var(--nav-t)"}}/>
-              </div>
-              <span style={{fontSize:10,color:mehrActive||showMehr?"var(--nav-accent-text)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
+              <TI n="dots" size={22} style={{color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/>
+              <span style={{fontSize:10,color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400,transition:"color 0.15s"}}>Mehr</span>
             </button>
           )}
         </div>
