@@ -6877,7 +6877,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
 }
 
 function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv,moduleRechte,setModuleRechte,sb:supabase,appTheme,setAppTheme,applyThemeCss:applyTheme,vereinId}){
-  const [tab,setTab]=useState(initialTab);
+  const [tab,setTab]=useState(isMobile?"overview":(initialTab||"module"));
   const [module,setModule]=useState([]);
   const [moduleConfig,setModuleConfig]=useState({});
   const [moduleBerechtigungen,setModuleBerechtigungen]=useState({});
@@ -6971,12 +6971,20 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
   const TABS=[
     {key:"module",      label:"Module & Rechte",      icon:"layout-grid"},
     {key:"gruppen",     label:"Gruppen & Funktionen",  icon:"sitemap"},
-    {key:"teammodule",  label:"Team-Module",           icon:"ball-football"},
+    {key:"teammodule",  label:"Team-Module",           icon:"wappen"},
     {key:"users",       label:"Benutzer & Rollen",     icon:"users"},
     {key:"aussehen",    label:"Aussehen",               icon:"palette"},
     {key:"feldvis",     label:"Feldsichtbarkeit",       icon:"eye"},
     {key:"api",         label:"API-Verbindungen",       icon:"plug"},
     {key:"audit",       label:"Audit-Logs",             icon:"clipboard-list"},
+  ];
+
+  /* Mobile: 4 Kacheln die Tabs zusammenfassen */
+  const MOBILE_KACHELN=[
+    {key:"berechtigungen", label:"Berechtigungen", icon:"shield-lock",    color:"#3B82F6", tabs:["module","gruppen","teammodule","feldvis"]},
+    {key:"benutzer",       label:"Benutzer",        icon:"users",          color:"#10B981", tabs:["users"]},
+    {key:"aussehen",       label:"Erscheinungsbild",icon:"palette",        color:"#F59E0B", tabs:["aussehen"]},
+    {key:"system",         label:"System",          icon:"settings",       color:"#6366F1", tabs:["api","audit"]},
   ];
 
   const ROLLEN=["administrator","vorstand","administration","funktionaer","trainer","spieler","eltern"];
@@ -7345,20 +7353,59 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
         {saveMsg&&<Chip text={saveMsg} color={saveMsg==="Ungespeichert"?R:GN} bg={saveMsg==="Ungespeichert"?RL:"#ECFDF5"}/>}
       </div>
 
-      {/* Tabs */}
-      <div style={{display:"flex",gap:4,marginBottom:20,borderBottom:"1px solid var(--border)",paddingBottom:0}}>
-        {TABS.map(t=>(
-          <button key={t.key} onClick={()=>setTab(t.key)} style={{
-            display:"flex",alignItems:"center",gap:6,padding:"8px 14px",
-            background:"none",border:"none",borderBottom:tab===t.key?`2px solid #1A1A1A`:"2px solid transparent",
-            cursor:"pointer",fontSize:13,fontWeight:tab===t.key?700:400,
-            color:tab===t.key?BK:"#888",borderRadius:0,marginBottom:-1,
-          }}>
-            <TI n={t.icon}/>
-            {t.label}
-          </button>
-        ))}
-      </div>
+      {/* Mobile: Kacheln — Desktop: Tabs */}
+      {isMobile?(
+        tab==="overview"?(
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
+            {MOBILE_KACHELN.map(k=>(
+              <button key={k.key} onClick={()=>setTab(k.tabs[0])} style={{
+                padding:"20px 16px",borderRadius:14,border:"1px solid var(--border)",
+                background:"var(--surface)",cursor:"pointer",textAlign:"left",
+                display:"flex",flexDirection:"column",gap:10,fontFamily:FONT
+              }}>
+                <div style={{width:40,height:40,borderRadius:10,background:k.color+"22",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <TI n={k.icon} size={20} style={{color:k.color}}/>
+                </div>
+                <div style={{fontSize:14,fontWeight:700,color:"var(--text)"}}>{k.label}</div>
+                <div style={{fontSize:11,color:"var(--sub)"}}>{k.tabs.length} {k.tabs.length===1?"Bereich":"Bereiche"}</div>
+              </button>
+            ))}
+          </div>
+        ):(
+          <div style={{marginBottom:16}}>
+            <button onClick={()=>setTab("overview")} style={{display:"flex",alignItems:"center",gap:6,padding:"6px 0",background:"none",border:"none",cursor:"pointer",color:"var(--sub)",fontSize:13,fontFamily:FONT}}>
+              <TI n="arrow-left" size={14}/> Übersicht
+            </button>
+            <div style={{display:"flex",gap:4,marginTop:8,overflowX:"auto",borderBottom:"1px solid var(--border)",paddingBottom:0,scrollbarWidth:"none"}}>
+              {TABS.filter(t=>MOBILE_KACHELN.find(k=>k.tabs.includes(t.key)&&k.tabs.includes(tab))).map(t=>(
+                <button key={t.key} onClick={()=>setTab(t.key)} style={{
+                  display:"flex",alignItems:"center",gap:5,padding:"7px 12px",whiteSpace:"nowrap",
+                  background:"none",border:"none",borderBottom:tab===t.key?`2px solid ${BK}`:"2px solid transparent",
+                  cursor:"pointer",fontSize:12,fontWeight:tab===t.key?700:400,
+                  color:tab===t.key?BK:"var(--sub)",borderRadius:0,marginBottom:-1,fontFamily:FONT
+                }}>
+                  <TI n={t.icon} size={13}/>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      ):(
+        <div style={{display:"flex",gap:4,marginBottom:20,borderBottom:"1px solid var(--border)",paddingBottom:0,overflowX:"auto",scrollbarWidth:"none"}}>
+          {TABS.map(t=>(
+            <button key={t.key} onClick={()=>setTab(t.key)} style={{
+              display:"flex",alignItems:"center",gap:6,padding:"8px 14px",whiteSpace:"nowrap",
+              background:"none",border:"none",borderBottom:tab===t.key?`2px solid ${BK}`:"2px solid transparent",
+              cursor:"pointer",fontSize:13,fontWeight:tab===t.key?700:400,
+              color:tab===t.key?BK:"var(--sub)",borderRadius:0,marginBottom:-1,fontFamily:FONT
+            }}>
+              <TI n={t.icon}/>
+              {t.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading&&<div style={{padding:40,textAlign:"center",color:"var(--sub)",fontSize:13}}>Wird geladen…</div>}
 
