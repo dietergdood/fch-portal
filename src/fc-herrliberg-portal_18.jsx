@@ -8174,19 +8174,20 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           {/* Farb-Einstellungen */}
           <Card style={{marginTop:12,padding:0,overflow:"hidden"}}>
             {[
-              {key:"vereinsfarbe1", label:"Vereinsfarbe (Akzent)",    hint:"Hauptfarbe des Vereins — für Badges, Highlights, aktive Elemente"},
-              {key:"vereinsfarbe2", label:"Text auf Vereinsfarbe",    hint:"Muss auf der Vereinsfarbe gut lesbar sein"},
-              {key:"navBg",         label:"Menü-Hintergrund",          hint:"Hintergrundfarbe der Navigationsleiste"},
-              {key:"navText",       label:"Menü-Text",                 hint:"Farbe der inaktiven Menüpunkte"},
-              {key:"navAccent",     label:"Aktiver Menüpunkt",         hint:"Standard: Vereinsfarbe — bei Bedarf anpassen"},
-              {key:"navAccentText",  label:"Aktiver Menüpunkt Text",    hint:"Standard: Text auf Vereinsfarbe — bei Bedarf anpassen"},
-              {key:"avatarBg",       label:"Avatar Hintergrund",         hint:"Standard: Vereinsfarbe"},
-              {key:"avatarText",     label:"Avatar Text",                hint:"Standard: Text auf Vereinsfarbe"},
+              {key:"vereinsfarbe1",  label:"Vereinsfarbe",              hint:"Hauptfarbe des Vereins — für Badges, Highlights, aktive Elemente"},
+              {key:"vereinsfarbe2",  label:"Text auf Vereinsfarbe",    hint:"Muss auf der Vereinsfarbe gut lesbar sein"},
 
-              {key:"btnPrimary",    label:"Primary Button",            hint:"Hintergrundfarbe für Haupt-Buttons"},
-              {key:"btnPrimaryText",label:"Primary Button Text",       hint:"Textfarbe für Haupt-Buttons"},
+              {key:"navBg",          label:"Menü Hintergrund",          hint:"Hintergrundfarbe der Navigationsleiste"},
+              {key:"navText",        label:"Menü Text",                 hint:"Farbe der inaktiven Menüpunkte"},
+              {key:"navHover",       label:"Menü Hover",                hint:"Farbe beim Überfahren eines Menüpunkts"},
+              {key:"navAccent",      label:"Menü Aktiv Hintergrund",    hint:"Standard: Vereinsfarbe — bei Bedarf anpassen"},
+              {key:"navAccentText",  label:"Menü Aktiv Text",           hint:"Standard: Text auf Vereinsfarbe — bei Bedarf anpassen"},
 
-              {key:"navHover",      label:"Menü Hover",                hint:"Farbe beim Überfahren eines Menüpunkts"},
+              {key:"avatarBg",       label:"Avatar Hintergrund",        hint:"Standard: Vereinsfarbe"},
+              {key:"avatarText",     label:"Avatar Text",               hint:"Standard: Text auf Vereinsfarbe"},
+
+              {key:"btnPrimary",     label:"Button Hintergrund",        hint:"Hintergrundfarbe für Haupt-Buttons"},
+              {key:"btnPrimaryText", label:"Button Text",               hint:"Textfarbe für Haupt-Buttons"},
             ].map((item,i)=>(
               <div key={item.key} style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderTop:i>0?"0.5px solid var(--border)":"none"}}>
                 <input type="color" value={theme[item.key]||(item.key==="navAccent"||item.key==="avatarBg"?theme.vereinsfarbe1:item.key==="navAccentText"||item.key==="avatarText"?theme.vereinsfarbe2||"#000000":"#000000")||"#000000"} onChange={e=>updateTheme(item.key,e.target.value)}
