@@ -1,10 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
-   ClubCampus Icons — icons.js
+   ClubCampus Icons — icons.jsx
    Tabler Icons als SVG-Komponente
    ═══════════════════════════════════════════════════════════════ */
-import { useState } from "react";
 
-/* ── Tabler Icons als SVG-Komponente ── */
 const TI_PATHS={
     "ball-football":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 3c0 0 2 4 2 9s-2 9-2 9\"/><path d=\"M3 12c0 0 4-2 9-2s9 2 9 2\"/><path d=\"M5.6 5.6c0 0 3.4 1.4 6.4 6.4s1.4 6.4 1.4 6.4\"/>",
     "jersey":"<path d=\"M15 3l3 3l-2 2l4 4l-4 1v8H8v-8l-4-1l4-4l-2-2l3-3c0 0 1 2 4 2s4-2 4-2z\"/>",
@@ -52,6 +50,24 @@ const TI_PATHS={
     "chevrons-right":"<polyline points=\"13 17 18 12 13 7\"/><polyline points=\"6 17 11 12 6 7\"/>",
     "dots-vertical":"<circle cx=\"12\" cy=\"5\" r=\"1\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"12\" cy=\"19\" r=\"1\"/>",
 };
-function TI({n,size=16,style}
+function TI({n, size=16, style={}}){
+  const p = TI_PATHS[n];
+  if(!p) return <span style={{display:"inline-block",width:size,height:size,...style}}/>;
+  return(
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={style}
+      dangerouslySetInnerHTML={{__html:p}}
+    />
+  );
+}
 
 export { TI_PATHS, TI };
