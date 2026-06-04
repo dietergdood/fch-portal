@@ -7,6 +7,7 @@ import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./consta
 import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet, Btn, Card, Chip, Stat, Av , Tabs} from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
+import { getRole } from "./NavigationModul.jsx";
 
 const ROLES = {
   administrator: {

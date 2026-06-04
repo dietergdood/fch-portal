@@ -7,6 +7,7 @@ import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, 
 import { TI } from "./icons.jsx";
 import { useIsMobile, useTheme, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av } from "./theme.jsx";
 import { BUSES, MATERIAL, LOCKERS, MEDIA, WIKI, NEWS, MEMBERS } from "./demoData.js";
+import { getRole } from "./NavigationModul.jsx";
 
 function BusesView({role,kannSchreiben,kannVerwalten}){
   const [showForm,setShowForm]=useState(false);
