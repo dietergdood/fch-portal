@@ -121,10 +121,40 @@ function InfoBox({text,color=BL}){
    ROLLEN-SWITCHER MODAL
 ========================================== */
 
-function Btn({children,onClick,variant="outline",color=BK,small,style={}}){
+function Btn({children,onClick,variant="outline",color=BK,small,disabled=false,type="button",style={}}){
   const p=small?"4px 11px":"7px 15px";
-  if(variant==="primary"){const lightBg=color==="#F3F4F6"||color===ACCENT;return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:lightBg?"1px solid var(--border)":"none",background:color,color:lightBg?"#374151":"#fff",transition:"opacity 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>;}
-  return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:"1px solid var(--border)",background:"var(--surface)",color:"var(--text)",transition:"background 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"} onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>{children}</button>;
+  const base={padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:disabled?"not-allowed":"pointer",
+    fontFamily:FONT,minHeight:small?32:38,opacity:disabled?0.5:1,border:"none",...style};
+  if(variant==="primary"){
+    const lightBg=color==="#F3F4F6"||color===ACCENT||color==="#E5E7EB"||color==="#F9FAFB";
+    return <button type={type} onClick={onClick} disabled={disabled}
+      style={{...base,border:lightBg?"1px solid var(--border)":"none",background:color,
+        color:lightBg?"#374151":"#fff",transition:"opacity 0.15s"}}
+      onMouseEnter={e=>{if(!disabled)e.currentTarget.style.opacity="0.85";}}
+      onMouseLeave={e=>{e.currentTarget.style.opacity=disabled?"0.5":"1";}}
+    >{children}</button>;
+  }
+  if(variant==="ghost"){
+    return <button type={type} onClick={onClick} disabled={disabled}
+      style={{...base,background:"none",border:"none",color:color==="BK"?"var(--text)":color,
+        padding:small?"4px 8px":"6px 10px"}}
+      onMouseEnter={e=>{if(!disabled)e.currentTarget.style.background="var(--surface2)";}}
+      onMouseLeave={e=>{e.currentTarget.style.background="none";}}
+    >{children}</button>;
+  }
+  if(variant==="danger"){
+    return <button type={type} onClick={onClick} disabled={disabled}
+      style={{...base,background:"#FEF2F2",border:"1px solid #FECACA",color:"#C8102E"}}
+      onMouseEnter={e=>{if(!disabled)e.currentTarget.style.background="#FEE2E2";}}
+      onMouseLeave={e=>{e.currentTarget.style.background="#FEF2F2";}}
+    >{children}</button>;
+  }
+  return <button type={type} onClick={onClick} disabled={disabled}
+    style={{...base,border:"1px solid var(--border)",background:"var(--surface)",
+      color:"var(--text)",transition:"background 0.15s"}}
+    onMouseEnter={e=>{if(!disabled)e.currentTarget.style.background="var(--surface2)";}}
+    onMouseLeave={e=>{e.currentTarget.style.background="var(--surface)";}}
+  >{children}</button>;
 }
 
 function Card({children,style={},onClick}){
@@ -243,4 +273,38 @@ function PageHeader({children, action=null, mb=18}){
   );
 }
 
-export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader };
+/* ── Form-Komponenten ── */
+function Input({style={}, ...props}){
+  return <input style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",...style}} {...props}/>;
+}
+function Select({children, style={}, ...props}){
+  return <select style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",...style}} {...props}>{children}</select>;
+}
+function Textarea({style={}, ...props}){
+  return <textarea style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",resize:"vertical",...style}} {...props}/>;
+}
+
+/* ── Feedback-Komponenten ── */
+function SectionLabel({children, style={}}){
+  return <div style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,marginBottom:8,...style}}>{children}</div>;
+}
+function Empty({icon="inbox", text="Keine Einträge", sub=null, style={}}){
+  return(
+    <div style={{textAlign:"center",padding:"32px 16px",color:"var(--sub)",...style}}>
+      <TI n={icon} size={32} style={{opacity:0.3,marginBottom:8,display:"block"}}/>
+      <div style={{fontSize:14,fontWeight:600,color:"var(--sub)"}}>{text}</div>
+      {sub&&<div style={{fontSize:13,color:"var(--sub)",marginTop:4,opacity:0.7}}>{sub}</div>}
+    </div>
+  );
+}
+function ModalTitle({children, style={}}){
+  return <h2 style={{margin:"0 0 16px",fontSize:16,fontWeight:700,color:"var(--text)",...style}}>{children}</h2>;
+}
+function Truncate({children, lines=1, style={}}){
+  const s = lines===1
+    ? {overflow:"hidden",whiteSpace:"nowrap",textOverflow:"ellipsis"}
+    : {overflow:"hidden",display:"-webkit-box",WebkitLineClamp:lines,WebkitBoxOrient:"vertical"};
+  return <div style={{...s,...style}}>{children}</div>;
+}
+
+export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate };

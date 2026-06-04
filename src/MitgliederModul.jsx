@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Btn, Card, Chip, Stat, Av , Tabs, Row, Col} from "./theme.jsx";
+import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile } from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
@@ -144,7 +144,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
 
           {/* PERSONALIEN */}
           <div>
-            <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,marginBottom:8}}>Personalien</div>
+            <SectionLabel>Personalien</SectionLabel>
             <div style={{background:"var(--surface2)",borderRadius:10,overflow:"hidden"}}>
               <Row label="Name"          value={person.lastName}/>
               <Row label="Vorname"       value={person.firstName}/>
@@ -162,7 +162,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           {/* ADRESSE */}
           {(can("street")||can("plz")||can("city")||can("canton")||can("country"))&&(
             <div>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,marginBottom:8}}>Adresse</div>
+              <SectionLabel>Adresse</SectionLabel>
               <div style={{background:"var(--surface2)",borderRadius:10,overflow:"hidden"}}>
                 {can("street") &&<Row label="Strasse"  value={person.street}/>}
                 {can("plz")    &&<Row label="PLZ"      value={person.plz}/>}
@@ -176,7 +176,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           {/* KOMMUNIKATION PERSÖNLICH */}
           {(can("email")||can("tel"))&&(
             <div>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,marginBottom:8}}>Kommunikation Persönlich</div>
+              <SectionLabel>Kommunikation Persönlich</SectionLabel>
               <div style={{background:"var(--surface2)",borderRadius:10,overflow:"hidden"}}>
                 {can("email")&&<Row label="E-Mail"  value={person.email} blue/>}
                 {can("tel")  &&<Row label="Telefon" value={person.tel}/>}
@@ -187,7 +187,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           {/* ERZIEHUNGSBERECHTIGTE PERSON 1 */}
           {can("parent1")&&(
             <div>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,marginBottom:8}}>Erziehungsberechtigte Person 1</div>
+              <SectionLabel>Erziehungsberechtigte Person 1</SectionLabel>
               <div style={{background:"var(--surface2)",borderRadius:10,overflow:"hidden"}}>
                 <Row label="Name"    value={person.p1Last}/>
                 <Row label="Vorname" value={person.p1First}/>
@@ -200,7 +200,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           {/* ERZIEHUNGSBERECHTIGTE PERSON 2 */}
           {can("parent2")&&(
             <div>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,marginBottom:8}}>Erziehungsberechtigte Person 2</div>
+              <SectionLabel>Erziehungsberechtigte Person 2</SectionLabel>
               <div style={{background:"var(--surface2)",borderRadius:10,overflow:"hidden"}}>
                 <Row label="Name"    value={person.p2Last}/>
                 <Row label="Vorname" value={person.p2First}/>
@@ -342,7 +342,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
               </div>
             </div>
           </Row>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)"}}>×</button>
+          <Btn variant="ghost" onClick={onClose} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
         </div>
         <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px"}}>
           <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>

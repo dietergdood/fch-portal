@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Btn, Chip , Av, Stat, Col, Row} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Btn, Chip , Av, Stat, Col, Row, ModalTitle} from "./theme.jsx";
 import { MEMBERS, ROSTER } from "./demoData.js";
 
 /* ── Hilfsfunktionen & Konstanten ── */
@@ -674,8 +674,8 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
       {/* Team erstellen / bearbeiten Modal */}
       <ModalOrSheet open={showForm} onClose={()=>setShowForm(false)} maxWidth={520}>
         <div style={{padding:"20px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
-          <h2 style={{margin:0,fontSize:16,fontWeight:700,color:"var(--text)"}}>{editTeam?"Team bearbeiten":"Neues Team"}</h2>
-          <button onClick={()=>setShowForm(false)} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
+          <ModalTitle>{editTeam?"Team bearbeiten":"Neues Team"}</ModalTitle>
+          <Btn variant="ghost" onClick={()=>setShowForm(false)} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
         </div>
         <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px",display:"flex",flexDirection:"column",gap:16}}>
           {editTeam&&(

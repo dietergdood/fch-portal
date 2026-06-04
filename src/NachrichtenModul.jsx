@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet , Row} from "./theme.jsx";
+import { ModalOrSheet, ModalTitle, Row, useIsMobile , Btn} from "./theme.jsx";
 
 /* ── Style-Konstanten ── */
 const S_LABEL={fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6};
@@ -315,8 +315,8 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
       <ModalOrSheet open={showNeu} onClose={()=>setShowNeu(false)} maxWidth={520}>
         <div style={{padding:"20px 20px 0",flexShrink:0}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-            <h2 style={{margin:0,fontSize:16,fontWeight:700,color:"var(--text)"}}>Neue Nachricht</h2>
-            <button onClick={()=>setShowNeu(false)} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
+            <ModalTitle>Neue Nachricht</ModalTitle>
+            <Btn variant="ghost" onClick={()=>setShowNeu(false)} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
           </div>
         </div>
         <div style={{padding:"0 20px 20px",overflowY:"auto"}}>

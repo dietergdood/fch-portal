@@ -171,3 +171,19 @@ export const TRANSITION = {
   normal: "0.15s ease",
   slow:   "0.25s ease",
 };
+
+/* ── Avatar-Grössen ────────────────────────────────────────── */
+export const AV = { SM: 24, MD: 32, LG: 44 };
+
+/* ── Icon-Grössen ──────────────────────────────────────────── */
+export const ICON = { SM: 14, MD: 16, LG: 20 };
+
+/* ── Status-Hintergründe ───────────────────────────────────── */
+export const STATUS_BG  = { warn:"#FEF3C7", danger:"#FEF2F2", info:"#EFF6FF", success:"#ECFDF5" };
+export const STATUS_CLR = { warn:"#92400E", danger:"#991B1B", info:"#1E40AF", success:"#065F46" };
+
+/* ── Hardcoded Werte als Konstanten ───────────────────────── */
+export const WHITE   = "#fff";
+export const AM_DARK = "#92400E";
+export const VIOLET  = "#7C3AED";
+export const CYAN    = "#0891B2";

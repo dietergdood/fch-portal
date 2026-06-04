@@ -3,9 +3,9 @@
    An-/Abmeldung für Trainings, Spiele und Vereinsanlässe
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useRef } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
+import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av, Col, Row} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av, Col, Row, SectionLabel, Btn} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, GANTT, ROSTER, SCHEDULE, TABLES, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 
 
@@ -109,7 +109,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
         {/* Header */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px 12px",borderBottom:"0.5px solid var(--border)"}}>
           <div style={{fontWeight:700,fontSize:14}}>{isEdit?(isZusatz?"Zusatztraining":"Training bearbeiten"):"Training hinzufügen"}</div>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>×</button>
+          <Btn variant="ghost" onClick={onClose} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
         </div>
 
         <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:16}}>
@@ -345,7 +345,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
           ):(
             /* Ausnahme-Modus */
             <>
-              <div style={{padding:"10px 12px",background:"var(--surface)",borderRadius:8,border:"1px solid #FED7AA",fontSize:13,color:"#92400E"}}>
+              <div style={{padding:"10px 12px",background:"var(--surface)",borderRadius:8,border:"1px solid #FED7AA",fontSize:13,color:STATUS_CLR.warn}}>
                 <strong>{slot?.team} · {slot?.weekday}</strong> - Ausnahme für diese Woche (oder als neuer Standard).
               </div>
 
@@ -457,7 +457,7 @@ function PlanEditorModal({plan, plaene, onSave, onClose}){
       <div style={{padding:"0 0 8px"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px 12px",borderBottom:"0.5px solid var(--border)"}}>
           <div style={{fontWeight:700,fontSize:14}}>{plan?.id?"Plan bearbeiten":"Neuer Plan"}</div>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)"}}>×</button>
+          <Btn variant="ghost" onClick={onClose} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
         </div>
         <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:16}}>
           <div>
@@ -567,14 +567,14 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
     "rot":      {bg:"#C8102E",color:"#fff",  label:"Rot"},
   };
 
-  const ST=({children})=>(<div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,margin:"12px 0 6px"}}>{children}</div>);
+  const ST=({children})=>(<SectionLabel>{children}</SectionLabel>);
   const IR=({label,value})=>(<div style={{display:"flex",justifyContent:"space-between",padding:"8px 14px",borderBottom:"0.5px solid var(--border)",gap:12}}><span style={{fontSize:13,color:"var(--sub)",flexShrink:0,minWidth:130}}>{label}</span><span style={{fontSize:13,fontWeight:600,textAlign:"right"}}>{value||"-"}</span></div>);
   const EZ=({icon,text,min,onDelete})=>(
     <div style={{display:"flex",alignItems:"center",gap:8,padding:"6px 0",borderBottom:"0.5px solid var(--border)"}}>
       <span style={{fontSize:13,color:"var(--sub)",minWidth:28,fontWeight:600,flexShrink:0}}>{icon}</span>
       <span style={{flex:1,fontSize:13}}>{text}</span>
       {min&&<span style={{fontSize:13,color:"var(--sub)",flexShrink:0}}>{min}{"'"}</span>}
-      {editMode&&onDelete&&<button onClick={onDelete} style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",fontSize:14,padding:"0 2px"}}>{"x"}</button>}
+      {editMode&&onDelete&&<Btn variant="ghost" onClick={onDelete} style={{color:"var(--sub)"}}>{"x"}</Btn>}
     </div>
   );
   const AR=({children,onAdd})=>(<div style={{display:"flex",gap:8,marginTop:7,flexWrap:"wrap",alignItems:"center"}}>{children}<button onClick={onAdd} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:700,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",cursor:"pointer"}}>+ Add</button></div>);
@@ -697,7 +697,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                 </div>
               </div>
 
-              {spiel.notes&&<div style={{background:"var(--surface)",borderRadius:10,padding:"10px 14px",fontSize:13,color:"#92400E",border:"0.5px solid #FDE68A",display:"flex",gap:8,alignItems:"flex-start"}}><span>⚠</span><span>{spiel.notes}</span></div>}
+              {spiel.notes&&<div style={{background:"var(--surface)",borderRadius:10,padding:"10px 14px",fontSize:13,color:STATUS_CLR.warn,border:"0.5px solid #FDE68A",display:"flex",gap:8,alignItems:"flex-start"}}><span>⚠</span><span>{spiel.notes}</span></div>}
               <div style={{padding:"8px 12px",background:"#F0F9FF",borderRadius:8,fontSize:13,color:BL,display:"flex",gap:8,alignItems:"center"}}><span><TI n="refresh"/></span><span>Synchronisiert mit <strong>fvrz.ch</strong> · {spiel.spielNr}</span></div>
             </Col>
           )}
@@ -1807,7 +1807,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
             )}
             {/* Readonly banner for trainer on Vereinsanlass with RSVP */}
             {(isTrainer||isAdmin)&&!canEditEvent(selEv)&&selEv.rsvp!==false&&(
-              <div style={{padding:"8px 16px",background:"var(--surface)",borderBottom:`0.5px solid #FED7AA`,fontSize:13,color:"#92400E",display:"flex",alignItems:"center",gap:8}}>
+              <div style={{padding:"8px 16px",background:"var(--surface)",borderBottom:`0.5px solid #FED7AA`,fontSize:13,color:STATUS_CLR.warn,display:"flex",alignItems:"center",gap:8}}>
                 <span>{"ℹ️"}</span>
                 <span>Vereinsanlass - nur Administratoren können Anwesenheiten bearbeiten. Du siehst die Übersicht als Lesezugriff.</span>
               </div>
@@ -1969,7 +1969,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                       {label:"Ende",   time:ev.endTime||"-"},
                     ].map((t,i,arr)=>(
                       <div key={i} style={{flex:1,padding:"12px 8px",borderRight:i<arr.length-1?`0.5px solid ${GB}`:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-                        <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.8}}>{t.label}</div>
+                        <SectionLabel>{t.label}</SectionLabel>
                         <div style={{fontSize:18,fontWeight:700,color:"var(--text)",lineHeight:1}}>{t.time}</div>
                       </div>
                     ))}
