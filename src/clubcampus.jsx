@@ -14,6 +14,7 @@ import KaderModul from "./KaderModul.jsx";
 import { TeamView, TeamOverview, EventsList } from "./TeamModul.jsx";
 import { Dashboard, DashboardAdmin, DashboardAdministration, DashboardFunktionaer, DashboardTrainer, DashboardSpieler, DashboardEltern } from "./DashboardModul.jsx";
 import { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole } from "./NavigationModul.jsx";
+import { BusesView, MaterialView, LockersView, MediaView, WikiView, DocsView, NewsView, AttendanceCentral, ProfileModal, ProfileView, DarkModeRow } from "./PlatzhalterModul.jsx";
 
 /* -- SUPABASE wird als Prop von App.jsx übergeben (kein Import hier) -- */
 
