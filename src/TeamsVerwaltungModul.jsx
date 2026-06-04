@@ -917,7 +917,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           <span style={{fontWeight:800,fontSize:18,color:"var(--text)",letterSpacing:-0.3}}>{selectedTeam.name}</span>
           {selectedTeam.kategorie&&<Chip text={selectedTeam.kategorie} color={BL}/>}
         </div>
-        <TeamView role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} dbTeams={dbTeams}/>
+        {TeamViewComponent && <TeamViewComponent role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} dbTeams={dbTeams}/>}
       </div>
     );
   }
