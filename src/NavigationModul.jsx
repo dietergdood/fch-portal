@@ -880,4 +880,4 @@ function getModuleForFunktionaer(dbFunktionen){
   return [...all];
 }
 
-export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole, NAV_BY_ROLE, ProfileModal , maxStufe, getEffektiveStufeForFunktionaer, getModuleForFunktionaer};
+export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole, NAV_BY_ROLE, ProfileModal, getVereinsnameStatic, maxStufe, getEffektiveStufeForFunktionaer, getModuleForFunktionaer };
