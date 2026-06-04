@@ -1102,7 +1102,8 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             </button>
           </div>
 
-          {/* Gruppen als Cards + expandierbare Funktionen */}
+          {/* Gruppen als Grid */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(320px,1fr))",gap:12}}>
           {(gruppen.length>0?gruppen:[
             {id:1,name:"Vereinsleben & Events",farbe:"#8B5CF6",beschreibung:"Anlässe, Helfereinsätze, Mitgliederliste",module:["events","helpers","members","news","docs"]},
             {id:2,name:"Betrieb & Infrastruktur",farbe:"#3B82F6",beschreibung:"Material, Busse, Garderoben",module:["material","buses","lockers","docs"]},
@@ -1116,7 +1117,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             return(
               <div key={g.id} style={{
                 borderRadius:14,border:`1.5px solid ${isOpen?g.farbe:"var(--border)"}`,
-                marginBottom:10,overflow:"hidden",
+                overflow:"hidden",
                 background:isOpen?g.farbe+"08":"var(--surface)",
                 transition:"all 0.15s"
               }}>
@@ -1208,6 +1209,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               </div>
             );
           })}
+          </div>
 
           {/* Gruppe bearbeiten Modal */}
           <ModalOrSheet open={showGruppeForm} onClose={()=>{setShowGruppeForm(false);setEditGruppe(null);}} maxWidth={500}>
