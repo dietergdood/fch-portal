@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs } from "./theme.jsx";
+import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs, STitle } from "./theme.jsx";
 import { ROSTER, EVENTS, ATT_INITIAL, POLLS, ATT_EVENTS, TABLES } from "./demoData.js";
 import KaderModul from "./KaderModul.jsx";
 import { TermineModul, SpielplanModul, TableTab } from "./TermineModul.jsx";
@@ -14,14 +14,7 @@ import NachrichtenModul from "./NachrichtenModul.jsx";
 import HelferModul from "./HelferModul.jsx";
 
 /* ── Hilfsfunktionen ── */
-function STitle({children,action}){
-  return(
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-      <h2 style={{margin:0,fontSize:14,fontWeight:700,letterSpacing:-0.2,color:"var(--text)"}}>{children}</h2>
-      {action}
-    </div>
-  );
-}
+/* STitle via ./theme.jsx */
 
 function kannHelferEinsatzErstellen(role, typ, team, meineTeams=[]){
   if(role==="administrator"||role==="administration"||role==="funktionaer") return true;
