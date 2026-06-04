@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
-import { TI, TI_PATHS } from "./icons";
+import { TI, TI_PATHS } from "./icons.jsx";
 
 /* -- SUPABASE wird als Prop von App.jsx übergeben (kein Import hier) -- */
 
@@ -10808,9 +10808,9 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             <button onClick={handleSave} disabled={saving}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN} style={{
-              flex:1,padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
+              flex:1,padding:"12px 20px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
               fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-              opacity:saving?0.6:1,transition:"opacity 0.2s"
+              opacity:saving?0.6:1,transition:"background 0.15s, opacity 0.2s"
             }}>
               {saving?"Speichern…":editTeam?"Änderungen speichern":"Team erstellen"}
             </button>
@@ -11533,9 +11533,9 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             <button type="submit" disabled={pwStatus==="loading"}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
-              style={{padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
+              style={{padding:"12px 20px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
                 fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-                opacity:pwStatus==="loading"?0.6:1,transition:"opacity 0.2s"}}>
+                opacity:pwStatus==="loading"?0.6:1,transition:"background 0.15s, opacity 0.2s"}}>
               {pwStatus==="loading"?"Wird gespeichert…":"Passwort ändern"}
             </button>
             {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",marginTop:4}}>Demo-Modus: Änderungen werden nicht gespeichert.</div>}
