@@ -1857,7 +1857,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
           </div>
         </div>
       )}
-      {tab==="attendance"&&<AttendanceTab role={role} team={activeTeam} setActive={setActive} myRosterId={isEltern&&activeKind?.rosterId?activeKind.rosterId:myRosterId} onNavigateToSpiel={(spiel)=>{setSelectedSpiel(spiel);setTab("spielplan");}} initialFilter={attFilter} responses={responses} allTeams={trainerTeams.length>1?trainerTeams:undefined} onResponseChange={(r)=>{
+      {tab==="attendance"&&<TermineModul role={role} team={activeTeam} setActive={setActive} myRosterId={isEltern&&activeKind?.rosterId?activeKind.rosterId:myRosterId} onNavigateToSpiel={(spiel)=>{setSelectedSpiel(spiel);setTab("spielplan");}} initialFilter={attFilter} responses={responses} allTeams={trainerTeams.length>1?trainerTeams:undefined} onResponseChange={(r)=>{
         const merged={...responses};
         Object.keys(r).forEach(evId=>{merged[evId]={...responses[evId],...r[evId]};});
         setResponses(merged);
