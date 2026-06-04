@@ -11,7 +11,7 @@ import KaderModul from "./KaderModul.jsx";
 import { TermineModul, SpielplanModul, TableTab } from "./TermineModul.jsx";
 import { TrainingsplanModul } from "./TrainingsplanModul.jsx";
 import NachrichtenModul from "./NachrichtenModul.jsx";
-import HelferModul from "./HelferModul.jsx";
+import { HelferModul } from "./HelferModul.jsx";
 
 /* ── Hilfsfunktionen ── */
 /* STitle via ./theme.jsx */
