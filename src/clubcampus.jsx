@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI, TI_PATHS } from "./icons.jsx";
 import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC } from "./theme.jsx";
-import { useBreakpoint, useIsMobile } from "./hooks.js";
+import { useBreakpoint, useIsMobile, ModalOrSheet } from "./hooks.jsx";
 import NachrichtenModul from "./NachrichtenModul.jsx";
 import { TeamModuleMatrix, PortalverwaltungView } from "./PortalverwaltungModul.jsx";
 
@@ -147,41 +147,8 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
   );
 }
 
-function ModalOrSheet({open,onClose,children,maxWidth=660}){
-  const isMobile=useIsMobile();
-  if(!open) return null;
-  if(isMobile) return(
-    <div style={{position:"fixed",inset:0,zIndex:2000,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-      {/* Backdrop */}
-      <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)"}}/>
-      {/* Sheet */}
-      <div style={{position:"relative",background:"var(--surface)",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)"}}>
-        {/* Handle */}
-        <div style={{display:"flex",justifyContent:"center",padding:"12px 0 4px"}}>
-          <div style={{width:40,height:4,borderRadius:2,background:"var(--border)"}}/>
-        </div>
-        <div style={{overflowY:"auto",flex:1,WebkitOverflowScrolling:"touch"}}>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-  return(
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",backdropFilter:"blur(6px)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:"var(--surface)",borderRadius:20,width:"100%",maxWidth,maxHeight:"90vh",overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:"0 8px 40px rgba(0,0,0,0.18)"}}>
-        {children}
-      </div>
-    </div>
-  );
-}
+/* ModalOrSheet via ./hooks.jsx */
 
-/* -- ROLLEN-DEFINITIONEN -- */
-/* ── PORTAL-ROLLEN (Zugriffsrechte) ────────────────────────────
-   Steuern Navigation + Sichtbarkeit im Portal.
-   Unabhängig von der Vereinsfunktion (FUNKTIONEN).
-───────────────────────────────────────────────────────────── */
-/* ── ClubCampus-Farben (Standard-Branding) ── */
-/* Vereinsname global lesbar (aus localStorage wenn kein appTheme prop) */
 function getVereinsnameStatic(){
   try{const t=localStorage.getItem("cc-theme");return t?(JSON.parse(t).vereinsname||"ClubCampus"):"ClubCampus";}catch{return "ClubCampus";}
 }
