@@ -416,7 +416,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                     <button onClick={handleSaveName} disabled={nameStatus==="loading"}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
-                      style={{flex:1,padding:"9px",borderRadius:9,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
+                      style={{flex:1,padding:"9px",borderRadius:9,background:BTN,color:BTN_TXT,border:"none",
                         fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT,
                         opacity:nameStatus==="loading"?0.6:1}}>
                       {nameStatus==="loading"?"Speichern…":"Speichern"}
