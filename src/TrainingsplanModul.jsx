@@ -34,15 +34,15 @@ function PlaetzeView(){
   useEffect(function(){
     (async function(){
       try{
-        const r=await window.storage.get("trainingsplaetze_custom");
-        if(r) setPlaetze(JSON.parse(r.value));
+        const r=localStorage.getItem("trainingsplaetze_custom");
+        if(r) setPlaetze(JSON.parse(r));
       }catch(e){}
     })();
   },[]);
 
   function save(p){
     setPlaetze(p);
-    window.storage.set("trainingsplaetze_custom", JSON.stringify(p));
+    try{localStorage.setItem("trainingsplaetze_custom", JSON.stringify(p));}catch(e){}
     TRAININGSPLAETZE.length=0;
     p.forEach(function(x){ TRAININGSPLAETZE.push(x); });
   }
