@@ -470,6 +470,7 @@ const NAV_BY_ROLE = {
     {key:"schedule",           icon:"flag",             label:"Spielplan/FVRZ"},
     {key:"attendance_central", icon:"chart-bar",        label:"Anwesenheitsstatistik"},
     {key:"news",               icon:"news",             label:"News"},
+    {key:"nachrichten",        icon:"message",          label:"Nachrichten"},
     {key:"events",             icon:"calendar-event",   label:"Termine"},
     {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
     {key:"buses",              icon:"bus",              label:"Vereinsbusse"},
@@ -492,6 +493,7 @@ const NAV_BY_ROLE = {
     {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
     {key:"buses",              icon:"bus",              label:"Vereinsbusse"},
     {key:"material",           icon:"package",          label:"Material"},
+    {key:"nachrichten",        icon:"message",          label:"Nachrichten"},
     {key:"media",              icon:"speakerphone",     label:"Medien & Berichte"},
     {key:"wiki",               icon:"book",             label:"Wiki"},
     {key:"docs",               icon:"file-text",        label:"Dokumente"},
@@ -509,6 +511,7 @@ const NAV_BY_ROLE = {
     {key:"buses",              icon:"bus",              label:"Vereinsbusse"},
     {key:"material",           icon:"package",          label:"Material"},
     {key:"lockers",            icon:"door-exit",        label:"Garderoben"},
+    {key:"nachrichten",        icon:"message",          label:"Nachrichten"},
     {key:"media",              icon:"speakerphone",     label:"Medien & Berichte"},
     {key:"wiki",               icon:"book",             label:"Wiki"},
     {key:"docs",               icon:"file-text",        label:"Dokumente"},
@@ -516,7 +519,8 @@ const NAV_BY_ROLE = {
   ],
   funktionaer: [
     /* Basis-Navigation — wird durch dbGruppen erweitert (siehe getNavForRole) */
-    {key:"dashboard", icon:"layout-dashboard", label:"Home"},
+    {key:"dashboard",    icon:"layout-dashboard", label:"Home"},
+    {key:"nachrichten",  icon:"message",          label:"Nachrichten"},
   ],
   trainer: [
     {key:"dashboard",          icon:"layout-dashboard", label:"Home"},
@@ -529,6 +533,7 @@ const NAV_BY_ROLE = {
     {key:"lockers",            icon:"door-exit",        label:"Garderoben"},
     {key:"media",              icon:"speakerphone",     label:"Medien & Berichte"},
     {key:"news",               icon:"news",             label:"News"},
+    {key:"nachrichten",        icon:"message",          label:"Nachrichten"},
     {key:"wiki",               icon:"book",             label:"Wiki"},
     {key:"docs",               icon:"file-text",        label:"Dokumente"},
   ],
@@ -538,6 +543,7 @@ const NAV_BY_ROLE = {
     {key:"team",               icon:"wappen",           label:"Mein Team"},
     {key:"events",             icon:"calendar-event",   label:"Termine"},
     {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+    {key:"nachrichten",        icon:"message",          label:"Nachrichten"},
     {key:"docs",               icon:"file-text",        label:"Dokumente"},
     {key:"profile",            icon:"user",             label:"Mein Profil"},
   ],
@@ -547,6 +553,7 @@ const NAV_BY_ROLE = {
     {key:"team",               icon:"wappen",           label:"Mein Kind"},
     {key:"events",             icon:"calendar-event",   label:"Termine"},
     {key:"helpers",            icon:"heart-handshake",  label:"Helfereinsätze"},
+    {key:"nachrichten",        icon:"message",          label:"Nachrichten"},
     {key:"docs",               icon:"file-text",        label:"Dokumente"},
     {key:"profile",            icon:"user",             label:"Profil / Daten prüfen"},
   ],
@@ -2357,7 +2364,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
       {tab==="polls"&&<PollsTab role={role}/>}
       {tab==="helpers"&&<HelpersList teamOnly role={role} account={account} meineTeams={[activeTeam]}/>}
       {tab==="stats"&&!limited&&<StatsTab team={activeTeam}/>}
-      {tab==="nachrichten"&&<NachrichtenView sb={sb} role={role} account={account} dbTeams={dbTeams} gruppen={[]} teamFilter={activeTeam}/>}
+      {tab==="nachrichten"&&<NachrichtenView sb={sb} role={role} account={account} dbTeams={dbTeams} gruppen={[]} teamFilter={activeTeam} kannSchreiben={moduleOk("nachrichten")} kannVerwalten={false}/>}
     </div>
   );
 }
@@ -6725,6 +6732,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
     {key:"news",              label:"News",        icon:"news"},
     {key:"wiki",              label:"Wiki",        icon:"book"},
     {key:"docs",              label:"Dokumente",   icon:"file-text"},
+    {key:"nachrichten",       label:"Nachrichten", icon:"message"},
   ];
 
   useEffect(()=>{
@@ -11882,7 +11890,7 @@ function LoginScreen({onLogin, sb, appTheme}){
 /* ══════════════════════════════════════════════════════════════════
    NachrichtenView — Broadcast & Diskussions-Modul
    ══════════════════════════════════════════════════════════════════ */
-function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null}){
+function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,kannSchreiben=false,kannVerwalten=false}){
   const isMobile=useIsMobile();
   const [nachrichten,setNachrichten]=useState([]);
   const [selected,setSelected]=useState(null);
@@ -11908,7 +11916,7 @@ function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null}
     {value:"funktionaer",label:"Alle Funktionäre"},
   ];
 
-  const kannSenden=["administrator","vorstand","administration","trainer"].includes(role);
+  const kannSenden=kannSchreiben||kannVerwalten;
 
   async function loadNachrichten(){
     if(!sb){setLoading(false);return;}
@@ -12039,6 +12047,15 @@ function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null}
           <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8,marginBottom:6}}>
             <h2 style={{margin:0,fontSize:15,fontWeight:700,color:"var(--text)"}}>{selected.titel}</h2>
             <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,background:selected.typ==="broadcast"?"#E6F1FB":"#E1F5EE",color:selected.typ==="broadcast"?"#0C447C":"#085041",fontWeight:500,flexShrink:0}}>{selected.typ==="broadcast"?"Broadcast":"Diskussion"}</span>
+                  {kannVerwalten&&(
+                    <button onClick={async()=>{
+                      if(!window.confirm("Nachricht löschen?")) return;
+                      await sb.from("nachrichten").delete().eq("id",selected.id);
+                      setSelected(null);setAntworten([]);loadNachrichten();
+                    }} style={{background:"none",border:"none",cursor:"pointer",color:"#E24B4A",padding:4,display:"flex",alignItems:"center",marginLeft:"auto"}}>
+                      <TI n="trash" size={14}/>
+                    </button>
+                  )}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
             <span style={{fontSize:12,color:"var(--sub)"}}>{selected.autor_name}</span>
@@ -12073,6 +12090,14 @@ function NachrichtenView({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null}
                       <span style={{fontSize:11,color:"var(--sub)"}}>{fmtTime(a.erstellt_am)}</span>
                     </div>
                     <p style={{fontSize:13,color:"var(--text)",margin:0,lineHeight:1.5}}>{a.inhalt}</p>
+                    {kannVerwalten&&(
+                      <button onClick={async()=>{
+                        await sb.from("nachrichten_antworten").delete().eq("id",a.id);
+                        loadAntworten(selected.id);
+                      }} style={{background:"none",border:"none",cursor:"pointer",color:"#E24B4A",padding:"2px 0",fontSize:11,fontFamily:FONT,display:"flex",alignItems:"center",gap:3}}>
+                        <TI n="trash" size={11}/>Löschen
+                      </button>
+                    )}
                   </div>
                 );
               })}
@@ -12656,7 +12681,7 @@ function Portal({supabaseClient}){
       case "material":          return <MaterialView/>;
       case "lockers":           return <LockersView/>;
       case "media":             return <MediaView/>;
-      case "nachrichten":       return <NachrichtenView sb={sb} role={role} account={account} dbTeams={dbTeams} gruppen={dbFunktionen.map(f=>f.portal_gruppen).filter(Boolean)}/>;
+      case "nachrichten":       return <NachrichtenView sb={sb} role={role} account={account} dbTeams={dbTeams} gruppen={dbFunktionen.map(f=>f.portal_gruppen).filter(Boolean)} kannSchreiben={kannSchreiben("nachrichten")} kannVerwalten={kannVerwalten("nachrichten")}/>;
       case "news":              return <NewsView role={role} meineTeams={meineTeams}/>;
       case "wiki":              return <WikiView/>;
       case "docs":              return <DocsView/>;
