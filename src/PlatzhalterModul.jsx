@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
 import { useIsMobile, useTheme, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av , Tabs, STitle, Between, Col, H1, Row} from "./theme.jsx";
-import { BUSES, MATERIAL, LOCKERS, MEDIA, WIKI, NEWS, MEMBERS , USER_ACCOUNTS} from "./demoData.js";
+import { BUSES, MATERIAL, LOCKERS, MEDIA, WIKI, NEWS, MEMBERS , USER_ACCOUNTS, ROSTER} from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
 function BusesView({role,kannSchreiben,kannVerwalten}){
@@ -590,4 +590,64 @@ function DarkModeRow(){
   );
 }
 
-export { BusesView, MaterialView, LockersView, MediaView, WikiView, DocsView, NewsView, AttendanceCentral, ProfileModal, ProfileView, DarkModeRow };
+
+function DataCheckView(){
+  return(
+    <div>
+      <H1 mb={18}>Datenprüfung</H1>
+      <InfoBox text="12 Mitglieder haben ihre Stammdaten seit über 6 Monaten nicht geprüft. Erinnerungen wurden versendet." color={AM}/>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:12,margin:"16px 0"}}>
+        <Stat label="Prüfung fällig" value="12" color={AM}/>
+        <Stat label="Unvollständig"  value="8"  color={R}/>
+        <Stat label="Sync-Fehler"    value="5"  color="#888"/>
+      </div>
+      <Card style={{padding:0,overflowX:"auto"}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+          <thead>
+            <tr style={{background:"var(--surface2)"}}>
+              {["Mitglied","Problem","Zuletzt geprüft","Aktion"].map((h,i)=>(
+                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              {n:"Anna Meier",   p:"Prüfung fällig",  d:"Nov 2024"},
+              {n:"Sara Huber",   p:"Adresse unvollst.",d:"Jan 2026"},
+              {n:"Sabine Koch",  p:"Sync-Fehler",      d:"Dez 2024"},
+              {n:"Beat Keller",  p:"Prüfung fällig",   d:"Okt 2024"},
+            ].map((r,i)=>(
+              <tr key={i} style={{borderTop:"0.5px solid var(--border)"}}>
+                <td style={{padding:"9px 13px",fontWeight:600}}>{r.n}</td>
+                <td style={{padding:"9px 13px"}}><Chip text={r.p} color={r.p.includes("Sync")?R:AM} bg={r.p.includes("Sync")?RL:"#FFFBEB"}/></td>
+                <td style={{padding:"9px 13px",color:"var(--sub)"}}>{r.d}</td>
+                <td style={{padding:"9px 13px"}}><Btn small>Erinnerung</Btn></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+    </div>
+  );
+}
+
+
+/* ==========================================
+   PROFIL MODAL
+========================================== */
+/* ── DARK MODE ROW (für ProfileModal) ── */
+
+function getTeamsFromFunktionen(funktionen=[]){
+  const all=new Set();
+  funktionen.filter(f=>f?.aktiv!==false).forEach(f=>(f.teams||[]).forEach(t=>all.add(t)));
+  return [...all];
+}
+
+/* Rückwärtskompatibilität */
+
+function getTeamsFromGruppen(gruppen=[]){ return getTeamsFromFunktionen(gruppen); }
+
+/* ==========================================
+   APP ROOT
+========================================== */
+export { AttendanceCentral, BusesView, DarkModeRow, DataCheckView, DocsView, LockersView, MaterialView, MediaView, NewsView, ProfileModal, ProfileView, WikiView, getTeamsFromFunktionen, getTeamsFromGruppen };

@@ -49,6 +49,17 @@ const ROLES = {
 
 
 /* ── Hilfsfunktionen ── */
+const FIELD_VIS = {
+  administrator: ["dob","nat","heimatort","ahv","pass","street","plz","city","canton","country","email","tel","pass","parent1","parent2","js","fairgate"],
+  administration:["dob","nat","heimatort","ahv","pass","street","plz","city","canton","country","email","tel","parent1","parent2","js","fairgate"],
+  funktionaer:   ["dob","pass","street","plz","city","email","tel"],
+  trainer:       ["dob","nat","heimatort","pass","street","plz","city","email","tel","parent1","parent2"],
+  spieler:       ["dob","pass","street","plz","city","email","tel"],
+  eltern:        ["dob","pass","street","plz","city","email","tel"],
+};
+
+/* -- DATA -- */
+
 function RolleChip({rolle}){
   const colors={
     "Spieler":     {c:"#22C55E",bg:"#F0FDF4"},
@@ -482,4 +493,288 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
   );
 }
 
+function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
+  const [search,setSearch]=useState("");
+  const [sortCol,setSortCol]=useState("name");
+  const [sortDir,setSortDir]=useState("asc");
+  const [groupBy,setGroupBy]=useState("none");
+  const [filterVals,setFilterVals]=useState([]);
+  const [selectedMember,setSelectedMember]=useState(null);
+  const canExport=role==="administrator"||role==="administration";
+
+  /* Mitglieder: aus Supabase wenn geladen, sonst MEMBERS Fallback */
+  const allMembers=dbMitglieder.length>0
+    ?dbMitglieder.map(m=>({
+        id:m.id,
+        name:`${m.vorname} ${m.nachname}`,
+        vorname:m.vorname, nachname:m.nachname,
+        role:m.rolle||"-",
+        team:(m.teams||[]).join(", ")||"-",
+        type:m.mitgliedtyp||"-",
+        location:m.ort||"-",
+        status:m.datenstatus||"Vollständig",
+        email:m.email, telefon:m.telefon,
+        geburtsdatum:m.geburtsdatum, position:m.position,
+        fairgate_id:m.fairgate_id,
+        hat_portal_zugang:m.hat_portal_zugang,
+      }))
+    :MEMBERS;
+
+  const COLS=[
+    {key:"name",   label:"Mitglied"},
+    {key:"role",   label:"Rolle"},
+    {key:"team",   label:"Team"},
+    {key:"type",   label:"Mitgliedtyp"},
+    {key:"location",label:"Wohnort"},
+    {key:"status", label:"Datenstatus"},
+  ];
+  const GROUP_OPTIONS=[
+    {val:"none",  label:"Keine Gruppierung"},
+    {val:"role",  label:"Nach Rolle"},
+    {val:"team",  label:"Nach Team"},
+    {val:"type",  label:"Nach Mitgliedtyp"},
+    {val:"status",label:"Nach Datenstatus"},
+  ];
+
+  function handleSort(key){
+    if(sortCol===key) setSortDir(d=>d==="asc"?"desc":"asc");
+    else{ setSortCol(key); setSortDir("asc"); }
+  }
+
+  const filtered=allMembers.filter(m=>
+    (!search||m.name.toLowerCase().includes(search.toLowerCase())||
+    m.role.toLowerCase().includes(search.toLowerCase())||
+    m.team.toLowerCase().includes(search.toLowerCase()))
+    &&(filterVals.length===0||filterVals.includes(m[groupBy]||"-"))
+  );
+
+  const sorted=[...filtered].sort((a,b)=>{
+    const av=String(a[sortCol]??""); const bv=String(b[sortCol]??"");
+    return sortDir==="asc"?String(av||'').localeCompare(String(bv||'')):String(bv||'').localeCompare(String(av||''));
+  });
+
+  /* Gruppierung */
+  let groups=[];
+  if(groupBy==="none"){
+    groups=[{key:"",members:sorted}];
+  }else{
+    const map={};
+    sorted.forEach(m=>{
+      const k=m[groupBy]||"-";
+      if(!map[k]) map[k]=[];
+      map[k].push(m);
+    });
+    groups=Object.entries(map).sort(([a],[b])=>String(a||'').localeCompare(String(b||''))).map(([k,members])=>({key:k,members}));
+  }
+
+  const statusColor=s=>s==="Vollständig"?GN:s==="Prüfung fällig"?AM:R;
+  const statusBg=s=>s==="Vollständig"?"#ECFDF5":s==="Prüfung fällig"?"#FFFBEB":RL;
+  const SortIcon=({col})=>sortCol===col
+    ?<span style={{marginLeft:4,fontSize:11}}>{sortDir==="asc"?"▲":"▼"}</span>
+    :<span style={{marginLeft:4,fontSize:11,opacity:0.25}}>↕</span>;
+
+  const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
+
+  /* ── Detail-Modal ── */
+  const MemberDetail=({m,onClose})=>{
+    const raw=dbMitglieder.find(d=>d.id===m.id)||{};
+    const eltern=raw.eltern||[];
+    const fv=getFieldVisibility(role);
+    const rows=[
+      {l:"Vorname",     v:raw.vorname||m.name.split(" ")[0]},
+      {l:"Nachname",    v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
+      ...(fv.showGebdat ?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"}]:[]),
+      {l:"Nationalität",v:raw.nationalitaet||"-"},
+      ...(fv.showAdresse?[{l:"Adresse",v:raw.strasse?`${raw.strasse}, ${raw.plz} ${raw.ort}`:m.location||"-"}]:[]),
+      ...(fv.showEmail  ?[{l:"E-Mail",  v:raw.email||"-"}]:[]),
+      ...(fv.showTelefon?[{l:"Telefon", v:raw.telefon||"-"}]:[]),
+      {l:"Rolle",       v:m.role},
+      {l:"Team(s)",     v:m.team},
+      {l:"Mitgliedtyp", v:m.type},
+      {l:"Position",    v:raw.position||"-"},
+      ...(fv.showPass   ?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
+      ...(fv.showAhv    ?[{l:"AHV-Nr.",    v:raw.ahv_nr||"-"}]:[]),
+      ...(fv.showPass   ?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
+      ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
+      ...(fv.showNotizen?[{l:"Notizen",    v:raw.notizen||"-"}]:[]),
+    ];
+    return(
+      <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
+        <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <Av name={m.name} size={44} bg={R}/>
+            <div>
+              <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{m.name}</div>
+              <div style={{display:"flex",gap:8,marginTop:4,flexWrap:"wrap"}}>
+                <Chip text={m.role} color={R}/>
+                <Chip text={m.type} color={BL} bg="#EFF6FF"/>
+                <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+              </div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)"}}>×</button>
+        </div>
+        <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px"}}>
+          <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
+          {(selectedMember?._tab||"info")==="info"&&(
+            <div>
+              {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
+                <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
+                  <span style={{fontSize:13,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
+                  <span style={{fontSize:13,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
+                </div>
+              ))}
+              {m.hat_portal_zugang&&(
+                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:13,color:GN,fontWeight:600}}>
+                  ✓ Hat Portal-Zugang
+                </div>
+              )}
+            </div>
+          )}
+          {(selectedMember?._tab||"info")==="eltern"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:12}}>
+              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:13,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
+              {eltern.map((e,i)=>(
+                <div key={i} className="cc-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px"}}>
+                  <div style={{fontWeight:600,fontSize:14,color:"var(--text)",marginBottom:8}}>{e.vorname} {e.nachname}</div>
+                  {e.email&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
+                  {e.telefon&&<div style={{fontSize:13,color:"var(--sub)"}}>📞 {e.telefon}</div>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </ModalOrSheet>
+    );
+  };
+
+  return(
+    <div>
+      {selectedMember&&<MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>}
+      {/* Header */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18,flexWrap:"wrap",gap:12}}>
+        <h1 style={{fontSize:21,fontWeight:800,margin:0,color:"var(--text)"}}>Mitglieder</h1>
+        {canExport&&<div style={{display:"flex",gap:8}}><Btn>Export CSV</Btn><Btn>Export Excel</Btn></div>}
+      </div>
+      {/* Stats */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+        <Stat label="Total" value={allMembers.length} color={BL}/>
+        <Stat label="Trainer" value={allMembers.filter(m=>m.role==="Trainer").length} color={R}/>
+        <Stat label="Aktivmitglieder" value={allMembers.filter(m=>m.type==="Aktivmitglied").length} color={GN}/>
+        <Stat label="Datenprüfung fällig" value={allMembers.filter(m=>m.status!=="Vollständig").length} color={AM}/>
+      </div>
+      {/* Filter-Zeile */}
+      <div style={{display:"flex",gap:12,marginBottom:groupBy!=="none"?8:14,flexWrap:"wrap"}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)}
+          placeholder="Suchen nach Name, Rolle, Team…"
+          style={{...inputStyle,flex:1,minWidth:180}}/>
+        <select value={groupBy} onChange={e=>{setGroupBy(e.target.value);setFilterVals([]);}}
+          style={{...inputStyle,minWidth:170}}>
+          {GROUP_OPTIONS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
+        </select>
+      </div>
+      {/* Gruppen-Filter Chips */}
+      {groupBy!=="none"&&(()=>{
+        const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
+        return(
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:14,alignItems:"center"}}>
+            <button onClick={()=>setFilterVals([])}
+              style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
+                background:filterVals.length===0?BK:"var(--surface)",
+                color:filterVals.length===0?"#fff":"var(--sub)",
+                fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
+              Alle
+            </button>
+            {vals.map(v=>{
+              const active=filterVals.includes(v);
+              return(
+                <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
+                  style={{padding:"4px 12px",borderRadius:20,
+                    border:"1px solid "+(active?BK:"var(--border)"),
+                    background:active?BK:"var(--surface)",
+                    color:active?"#fff":"var(--sub)",
+                    fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s",
+                    display:"flex",alignItems:"center",gap:8}}>
+                  {active&&<span style={{fontSize:11}}>✓</span>}
+                  {v}
+                  <span style={{opacity:0.55,fontWeight:400}}>
+                    {allMembers.filter(m=>(m[groupBy]||"-")===v).length}
+                  </span>
+                </button>
+              );
+            })}
+            {filterVals.length>0&&(
+              <button onClick={()=>setFilterVals([])}
+                style={{padding:"4px 10px",borderRadius:20,border:"1px solid var(--border)",
+                  background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
+                × zurücksetzen
+              </button>
+            )}
+          </div>
+        );
+      })()}
+      {/* Tabelle */}
+      <Card style={{padding:0,overflowX:"auto"}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+          <thead>
+            <tr style={{background:"var(--surface2)"}}>
+              {COLS.map(c=>(
+                <th key={c.key} onClick={()=>handleSort(c.key)}
+                  style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",
+                    fontSize:13,textTransform:"uppercase",letterSpacing:0.4,cursor:"pointer",
+                    userSelect:"none",whiteSpace:"nowrap"}}
+                  onMouseEnter={e=>e.currentTarget.style.color="var(--text)"}
+                  onMouseLeave={e=>e.currentTarget.style.color="var(--sub)"}>
+                  {c.label}<SortIcon col={c.key}/>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {groups.map(({key,members})=>(
+              <>
+                {groupBy!=="none"&&(
+                  <tr key={"g-"+key}>
+                    <td colSpan={6} style={{padding:"10px 13px 6px",background:"var(--surface2)",
+                      fontWeight:700,fontSize:13,color:"var(--sub)",textTransform:"uppercase",
+                      letterSpacing:0.6,borderTop:"1px solid var(--border)"}}>
+                      {key} <span style={{fontWeight:400,opacity:0.6}}>({members.length})</span>
+                    </td>
+                  </tr>
+                )}
+                {members.map((m,i)=>(
+                  <tr key={m.id} onClick={()=>setSelectedMember({...m,_tab:"info"})}
+                    style={{borderTop:"0.5px solid var(--border)",cursor:"pointer"}}
+                    onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
+                    onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                    <td style={{padding:"9px 13px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                        <Av name={m.name} size={28} bg={R}/>
+                        <span style={{fontWeight:600,color:"var(--text)"}}>{m.name}</span>
+                      </div>
+                    </td>
+                    <td style={{padding:"9px 13px"}}><RolleChip rolle={m.role}/></td>
+                    <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.team}</td>
+                    <td style={{padding:"9px 13px"}}><Chip text={m.type} color={BL} bg="#EFF6FF"/></td>
+                    <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.location}</td>
+                    <td style={{padding:"9px 13px"}}>
+                      <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ))}
+          </tbody>
+        </table>
+        {filtered.length===0&&(
+          <div style={{padding:"32px",textAlign:"center",color:"var(--sub)",fontSize:13}}>
+            Keine Mitglieder gefunden.
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+export { MembersView };
 export default MitgliederModul;

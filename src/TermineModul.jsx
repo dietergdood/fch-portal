@@ -24,6 +24,14 @@ const NAV_TARGET={tab:null,filter:null,kindTeam:null,openEvId:null,selectedSpiel
 
 const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.slice();
 
+const NR_CACHE={data:Object.fromEntries(ROSTER.map(p=>[p.id,p.rueckennr||""]))};
+(async()=>{
+  try{
+    const res=await window.storage.get("rueckennrn");
+    if(res){const d=JSON.parse(res.value);Object.assign(NR_CACHE.data,d);}
+  }catch(e){}
+})();
+
 function getNr(id){return NR_CACHE.data[id]||"";}
 
 function getVereinsnameStatic(){
