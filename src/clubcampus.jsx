@@ -1246,7 +1246,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
   const toggleCollapse=()=>setCollapsed(c=>{const n=!c;try{localStorage.setItem("cc-nav-collapsed",n?"1":"0");}catch{}return n;});
   const W=collapsed?64:216;
   return(
-    <nav style={{width:W,minWidth:W,background:"var(--nav)",minHeight:"100vh",display:"flex",flexDirection:"column",flexShrink:0,borderRight:"1px solid var(--nav-b)",transition:"width 0.22s cubic-bezier(0.4,0,0.2,1),min-width 0.22s cubic-bezier(0.4,0,0.2,1)",overflow:"hidden"}}>
+    <nav style={{width:W,minWidth:W,background:"var(--nav)",minHeight:"100dvh",display:"flex",flexDirection:"column",flexShrink:0,borderRight:"1px solid var(--nav-b)",transition:"width 0.22s cubic-bezier(0.4,0,0.2,1),min-width 0.22s cubic-bezier(0.4,0,0.2,1)",overflow:"hidden"}}>
       {/* Logo Header */}
       <div style={{padding:"18px 10px 15px",borderBottom:"1px solid var(--nav-b)",display:"flex",alignItems:"center",gap:collapsed?0:11,justifyContent:collapsed?"center":"flex-start",overflow:"hidden"}}>
         <div style={{width:44,height:44,minWidth:44,borderRadius:12,background:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden"}}>
@@ -11679,7 +11679,7 @@ function LoginScreen({onLogin, sb, appTheme}){
   }
 
   return(
-    <div style={{minHeight:"100vh",background:"var(--bg)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT,WebkitFontSmoothing:"antialiased",color:"var(--text)"}}>
+    <div style={{minHeight:"100dvh",background:"var(--bg)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT,WebkitFontSmoothing:"antialiased",color:"var(--text)"}}>
       <div style={{width:"100%",maxWidth:400,padding:"0 20px"}}>
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
@@ -12065,7 +12065,7 @@ export default function Portal({supabaseClient}){
   // Lade-Screen (initial oder während dbUser lädt nach Login)
   if(session===undefined){
     return(
-      <div style={{minHeight:"100vh",background:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{minHeight:"100dvh",background:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{textAlign:"center"}}>
           <div style={{width:48,height:48,background:ACCENT,borderRadius:12,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:12}}><TI n="ball-football"/></div>
           <div style={{fontSize:13,color:"var(--sub)"}}>Wird geladen…</div>
@@ -12180,7 +12180,7 @@ export default function Portal({supabaseClient}){
   return(
     <ThemeCtx.Provider value={{dark,toggle:toggleDark}}>
       {splash&&<SplashScreen onDone={doneSplash}/>}
-      <div data-theme={dark?"dark":"light"} style={{display:"flex",minHeight:"100vh",background:"var(--bg)",fontFamily:FONT,WebkitFontSmoothing:"antialiased",MozOsxFontSmoothing:"grayscale",color:"var(--text)",transition:"background 0.25s,color 0.25s"}}>
+      <div data-theme={dark?"dark":"light"} style={{display:"flex",minHeight:"100dvh",background:"var(--bg)",fontFamily:FONT,WebkitFontSmoothing:"antialiased",MozOsxFontSmoothing:"grayscale",color:"var(--text)",transition:"background 0.25s,color 0.25s"}}>
         {!isMobile&&<SideNav role={role} active={active} setActive={setActivePersist} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined} appTheme={appTheme}/>}
         <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}}>
           {isMobile&&<TopBar role={role} active={active} setActive={setActivePersist}
@@ -12189,7 +12189,7 @@ export default function Portal({supabaseClient}){
             onLogout={sb&&session ? handleLogout : undefined}
             onOpenProfile={()=>setMobileProfileOpen(true)}
             onBack={customBack} appTheme={appTheme}/>}
-          <main key={active} className="cc-page" style={{flex:1,padding:isMobile?"16px 14px 90px":isTablet?"20px 24px 28px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
+          <main key={active} className="cc-page" style={{flex:1,padding:isMobile?"16px 14px calc(90px + env(safe-area-inset-bottom, 0px))":isTablet?"20px 24px 28px":"32px 36px 32px",overflowY:"auto",overflowX:"hidden",maxWidth:isMobile?"100%":1200,margin:"0 auto",width:"100%"}}>{getView()}</main>
           {isMobile&&<MobileNav role={role} active={active} setActive={setActivePersist} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined} effectiveNav={effectiveNav}/>}
         </div>
       </div>
