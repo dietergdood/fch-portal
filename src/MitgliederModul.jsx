@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Btn, Card, Chip } from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Btn, Card, Chip, Stat, Av } from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
 
 /* ── Hilfsfunktionen ── */
