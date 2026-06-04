@@ -315,7 +315,7 @@ const THEME_DEFAULT_STATIC={
   vereinsfarbe1:"#FFBF00", vereinsfarbe2:"#000000",
   navBg:"#000000", navText:"#FFFFFF", navAccent:null, navAccentText:null, navHover:"#1A1A1A", avatarBg:null, avatarText:null,
   btnPrimary:"#FFBF00", btnPrimaryText:"#000000",
-  vereinsname:"Mein Verein", portalname:"ClubCampus", logo:null,
+  vereinsname:"Mein Verein", logo:null,
 };
 
 const ROLES = {
@@ -1254,7 +1254,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
         {!collapsed&&(
           <div style={{minWidth:0,overflow:"hidden"}}>
             <div style={{color:"var(--nav-t)",fontWeight:800,fontSize:13,lineHeight:1.25,letterSpacing:-0.2,wordBreak:"break-word",overflowWrap:"break-word"}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
-            <div style={{color:"var(--nav-a)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>{appTheme?.portalname||"ClubCampus"}</div>
+            <div style={{color:"var(--nav-a)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:500}}>{"ClubCampus"}</div>
           </div>
         )}
       </div>
@@ -8157,7 +8157,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 </div>
                 <div style={{minWidth:0}}>
                   <div style={{fontSize:12,fontWeight:800,color:theme.navText,lineHeight:1.2,letterSpacing:-0.2}}>{theme.vereinsname||"Mein Verein"}</div>
-                  <div style={{fontSize:9,color:theme.navAccent||theme.vereinsfarbe1,letterSpacing:0.5,textTransform:"uppercase",fontWeight:600,marginTop:1}}>{theme.portalname||"ClubCampus"}</div>
+                  <div style={{fontSize:9,color:theme.navAccent||theme.vereinsfarbe1,letterSpacing:0.5,textTransform:"uppercase",fontWeight:600,marginTop:1}}>{"ClubCampus"}</div>
                 </div>
               </div>
               {/* Buttons */}
@@ -8171,38 +8171,17 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             </div>
           </Card>
 
-          {/* Farb-Einstellungen */}
-          <Card style={{marginTop:12,padding:0,overflow:"hidden"}}>
-            {[
-              {key:"vereinsfarbe1",  label:"Vereinsfarbe",              hint:"Hauptfarbe des Vereins — für Badges, Highlights, aktive Elemente"},
-              {key:"vereinsfarbe2",  label:"Text auf Vereinsfarbe",    hint:"Muss auf der Vereinsfarbe gut lesbar sein"},
-
-              {key:"navBg",          label:"Menü Hintergrund",          hint:"Hintergrundfarbe der Navigationsleiste"},
-              {key:"navText",        label:"Menü Text",                 hint:"Farbe der inaktiven Menüpunkte"},
-              {key:"navHover",       label:"Menü Hover",                hint:"Farbe beim Überfahren eines Menüpunkts"},
-              {key:"navAccent",      label:"Menü Aktiv Hintergrund",    hint:"Standard: Vereinsfarbe — bei Bedarf anpassen"},
-              {key:"navAccentText",  label:"Menü Aktiv Text",           hint:"Standard: Text auf Vereinsfarbe — bei Bedarf anpassen"},
-
-              {key:"avatarBg",       label:"Avatar Hintergrund",        hint:"Standard: Vereinsfarbe"},
-              {key:"avatarText",     label:"Avatar Text",               hint:"Standard: Text auf Vereinsfarbe"},
-
-              {key:"btnPrimary",     label:"Button Hintergrund",        hint:"Hintergrundfarbe für Haupt-Buttons"},
-              {key:"btnPrimaryText", label:"Button Text",               hint:"Textfarbe für Haupt-Buttons"},
-            ].map((item,i)=>(
-              <div key={item.key} style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderTop:i>0?"0.5px solid var(--border)":"none"}}>
-                <input type="color" value={theme[item.key]||(item.key==="navAccent"||item.key==="avatarBg"?theme.vereinsfarbe1:item.key==="navAccentText"||item.key==="avatarText"?theme.vereinsfarbe2||"#000000":"#000000")||"#000000"} onChange={e=>updateTheme(item.key,e.target.value)}
-                  style={{width:36,height:36,borderRadius:8,border:"0.5px solid var(--border)",padding:2,cursor:"pointer",background:"none"}}/>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{item.label}</div>
-                  <div style={{fontSize:11,color:"var(--sub)",marginTop:1}}>{item.hint}</div>
-                </div>
-                <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:5}}>{theme[item.key]||(["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?"auto":"")}</code>
-                <button onClick={()=>updateTheme(item.key,["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?null:THEME_DEFAULT_STATIC[item.key])} title="Zurücksetzen"
-                  style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:4}}>
-                  <TI n="refresh" size={14}/>
-                </button>
+          {/* Vereinsname */}
+          <Card style={{marginTop:12,padding:16}}>
+            <div style={{display:"flex",alignItems:"center",gap:14}}>
+              <TI n="building-community" size={18} style={{color:"var(--sub)",flexShrink:0}}/>
+              <div style={{flex:1}}>
+                <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:4}}>Vereinsname</div>
+                <input value={theme.vereinsname||""} onChange={e=>updateTheme("vereinsname",e.target.value)}
+                  style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",outline:"none",fontFamily:FONT}}/>
+                <div style={{fontSize:11,color:"var(--sub)",marginTop:3}}>Wird unter dem Portal-Logo angezeigt</div>
               </div>
-            ))}
+            </div>
           </Card>
 
           {/* Vereinslogo */}
@@ -8247,20 +8226,36 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             </div>
           </Card>
 
-          {/* Vereinsname / Portalname */}
+          {/* Farb-Einstellungen */}
           <Card style={{marginTop:12,padding:0,overflow:"hidden"}}>
             {[
-              {key:"vereinsname", label:"Vereinsname",  hint:"Wird unter dem Portal-Logo angezeigt"},
-              {key:"portalname",  label:"Portal-Name",  hint:"Produktname (ClubCampus)"},
+              {key:"vereinsfarbe1",  label:"Vereinsfarbe",              hint:"Hauptfarbe des Vereins — für Badges, Highlights, aktive Elemente"},
+              {key:"vereinsfarbe2",  label:"Text auf Vereinsfarbe",    hint:"Muss auf der Vereinsfarbe gut lesbar sein"},
+
+              {key:"navBg",          label:"Menü Hintergrund",          hint:"Hintergrundfarbe der Navigationsleiste"},
+              {key:"navText",        label:"Menü Text",                 hint:"Farbe der inaktiven Menüpunkte"},
+              {key:"navHover",       label:"Menü Hover",                hint:"Farbe beim Überfahren eines Menüpunkts"},
+              {key:"navAccent",      label:"Menü Aktiv Hintergrund",    hint:"Standard: Vereinsfarbe — bei Bedarf anpassen"},
+              {key:"navAccentText",  label:"Menü Aktiv Text",           hint:"Standard: Text auf Vereinsfarbe — bei Bedarf anpassen"},
+
+              {key:"avatarBg",       label:"Avatar Hintergrund",        hint:"Standard: Vereinsfarbe"},
+              {key:"avatarText",     label:"Avatar Text",               hint:"Standard: Text auf Vereinsfarbe"},
+
+              {key:"btnPrimary",     label:"Button Hintergrund",        hint:"Hintergrundfarbe für Haupt-Buttons"},
+              {key:"btnPrimaryText", label:"Button Text",               hint:"Textfarbe für Haupt-Buttons"},
             ].map((item,i)=>(
               <div key={item.key} style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderTop:i>0?"0.5px solid var(--border)":"none"}}>
-                <TI n={i===0?"building-community":"layout-dashboard"} size={18} style={{color:"var(--sub)",flexShrink:0}}/>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:4}}>{item.label}</div>
-                  <input value={theme[item.key]} onChange={e=>updateTheme(item.key,e.target.value)}
-                    style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",outline:"none",fontFamily:FONT}}/>
-                  <div style={{fontSize:11,color:"var(--sub)",marginTop:3}}>{item.hint}</div>
+                <input type="color" value={theme[item.key]||(item.key==="navAccent"||item.key==="avatarBg"?theme.vereinsfarbe1:item.key==="navAccentText"||item.key==="avatarText"?theme.vereinsfarbe2||"#000000":"#000000")||"#000000"} onChange={e=>updateTheme(item.key,e.target.value)}
+                  style={{width:36,height:36,borderRadius:8,border:"0.5px solid var(--border)",padding:2,cursor:"pointer",background:"none"}}/>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{item.label}</div>
+                  <div style={{fontSize:11,color:"var(--sub)",marginTop:1}}>{item.hint}</div>
                 </div>
+                <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:5}}>{theme[item.key]||(["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?"auto":"")}</code>
+                <button onClick={()=>updateTheme(item.key,["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?null:THEME_DEFAULT_STATIC[item.key])} title="Zurücksetzen"
+                  style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:4}}>
+                  <TI n="refresh" size={14}/>
+                </button>
               </div>
             ))}
           </Card>
@@ -11672,7 +11667,7 @@ function LoginScreen({onLogin, sb, appTheme}){
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
           <div style={{width:64,height:64,background:"transparent",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",marginBottom:12,overflow:"hidden"}}><img src={LOGO_B64} style={{width:64,height:64,objectFit:"cover",display:"block"}} alt="Logo"/></div>
-          <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>{appTheme?.portalname||"ClubCampus"}</div>
+          <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>{"ClubCampus"}</div>
           <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>{getVereinsnameStatic()}</div>
         </div>
 
