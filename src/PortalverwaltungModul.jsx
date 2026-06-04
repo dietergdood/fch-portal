@@ -2039,8 +2039,16 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     {name:"--text",desc:"Primärer Text"},
                     {name:"--sub",desc:"Sekundärer Text"},
                     {name:"--btn-primary",desc:"Primär-Button Farbe"},
-                    {name:"--cc-accent",desc:"Vereinsfarbe 1"},
-                    {name:"--cc-accent2",desc:"Vereinsfarbe 2"},
+                    {name:"--cc-accent",desc:"Vereinsfarbe 1 (aus Portalverwaltung)"},
+                    {name:"--cc-accent2",desc:"Vereinsfarbe 2 (Kontrastfarbe)"},
+                    {name:"--btn-hover",desc:"Vereinsfarbe 1 −12% (darkenHex) → Hover-State Primär-Button"},
+                    {name:"--cc-hover",desc:"Vereinsfarbe 1 × 19% Opacity → Hover-Hintergründe"},
+                    {name:"--cc-accent-20",desc:"Vereinsfarbe 1 × 12% → leichte Tönungen"},
+                    {name:"--cc-accent-15",desc:"Vereinsfarbe 1 × 9% → sehr helle Tönungen"},
+                    {name:"--cc-accent-12",desc:"Vereinsfarbe 1 × 7% → minimale Tönungen"},
+                    {name:"--nav",desc:"Nav-Hintergrundfarbe"},
+                    {name:"--nav-hover",desc:"Nav-Item Hover-Farbe"},
+                    {name:"--avatar-bg",desc:"Avatar-Hintergrund"},
                   ].map(v=>(
                     <div key={v.name} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:"0.5px solid var(--border)"}}>
                       <div style={{width:32,height:32,borderRadius:8,background:`var(${v.name})`,border:"0.5px solid var(--border)",flexShrink:0}}/>
