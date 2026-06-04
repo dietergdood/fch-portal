@@ -8,6 +8,9 @@ import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet } from "./theme.jsx";
 import { GANTT, INITIAL_PLAENE, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 
+/* Mutable reference — wird von PlaetzeView befüllt */
+const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.map(p=>({...p}));
+
 /* ── Style-Konstanten ── */
 const S_SUB={fontSize:13,color:"var(--sub)"};
 const S_FLEX8={display:"flex",gap:8};
