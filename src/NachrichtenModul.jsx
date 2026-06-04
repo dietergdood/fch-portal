@@ -7,6 +7,10 @@ import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants";
 import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet } from "./theme.jsx";
 
+/* ── Style-Konstanten ── */
+const S_LABEL={fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6};
+
+
 function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,kannSchreiben=false,kannVerwalten=false}){
   const isMobile=useIsMobile();
   const [nachrichten,setNachrichten]=useState([]);
@@ -45,7 +49,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
       if(data) setNachrichten(data);
       const{data:gel}=await sb.from("nachrichten_gelesen").select("nachricht_id").eq("user_id",account?.id||"");
       if(gel){const m={};gel.forEach(g=>{m[g.nachricht_id]=true;});setUngelesen(m);}
-    }catch(e){console.warn("[CC] loadNachrichten:",e.message);}
+    }catch(e){}
     setLoading(false);
   }
 
@@ -317,7 +321,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
         </div>
         <div style={{padding:"0 20px 20px",overflowY:"auto"}}>
           <div style={{marginBottom:14}}>
-            <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6}}>Typ</label>
+            <label style={S_LABEL}>Typ</label>
             <div style={{display:"flex",gap:8}}>
               {["broadcast","diskussion"].map(t=>(
                 <button key={t} onClick={()=>setNeuForm(f=>({...f,typ:t}))}
@@ -329,7 +333,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
             <div style={{fontSize:11,color:"var(--sub)",marginTop:5}}>{neuForm.typ==="broadcast"?"Nur Absender sieht Antworten der anderen":"Alle sehen alle Antworten"}</div>
           </div>
           <div style={{marginBottom:14}}>
-            <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6}}>Empfänger</label>
+            <label style={S_LABEL}>Empfänger</label>
             <div style={{display:"flex",gap:8,marginBottom:8,flexWrap:"wrap"}}>
               {["rolle","gruppe","team"].map(t=>(
                 <button key={t} onClick={()=>setNeuForm(f=>({...f,empfaenger_typ:t}))}
@@ -361,12 +365,12 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
             )}
           </div>
           <div style={{marginBottom:14}}>
-            <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6}}>Betreff</label>
+            <label style={S_LABEL}>Betreff</label>
             <input value={neuForm.titel} onChange={e=>setNeuForm(f=>({...f,titel:e.target.value}))}
               placeholder="z.B. Neuer Trainingsplan" style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none"}}/>
           </div>
           <div style={{marginBottom:18}}>
-            <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6}}>Nachricht</label>
+            <label style={S_LABEL}>Nachricht</label>
             <textarea value={neuForm.inhalt} onChange={e=>setNeuForm(f=>({...f,inhalt:e.target.value}))}
               placeholder="Deine Nachricht..." rows={5}
               style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none",resize:"vertical"}}/>

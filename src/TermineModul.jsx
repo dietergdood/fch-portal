@@ -8,6 +8,17 @@ import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet, Card, Chip } from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, GANTT, ROSTER, SCHEDULE, TABLES, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 
+
+/* ── Style-Konstanten ── */
+const S_FIELD_LABEL={fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5};
+const S_SUB={fontSize:13,color:"var(--sub)",marginBottom:4};
+const S_INPUT={width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"};
+const S_LIST_ITEM={padding:"10px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"};
+const S_06={fontSize:13,fontWeight:600,color:"var(--text)"};
+const S_07={display:"flex",gap:8,flexWrap:"wrap"};
+const S_08={display:"flex",gap:12};
+const S_10={display:"flex",flexDirection:"column",gap:8};
+
 /* ── Hilfsfunktionen ── */
 const NAV_TARGET={tab:null,filter:null,kindTeam:null,openEvId:null,selectedSpiel:null};
 
@@ -141,7 +152,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               {/* Kalenderwoche - nur bei neuen Trainings */}
               {!isEdit&&(
                 <div>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Kalenderwoche</div>
+                  <div style={S_FIELD_LABEL}>Kalenderwoche</div>
                   <select value={selectedKwOffset} onChange={e=>setSelectedKwOffset(parseInt(e.target.value))}
                     style={{width:"100%",padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:13,outline:"none"}}>
                     {kwOptions.map(function(o){
@@ -153,8 +164,8 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
               {/* Wochentag */}
               <div>
-                <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Wochentag</div>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                <div style={S_FIELD_LABEL}>Wochentag</div>
+                <div style={S_07}>
                   {DAYS.map(d=>(
                     <button key={d} onClick={()=>setForm(f=>({...f,weekday:d}))}
                       style={{padding:"5px 11px",borderRadius:20,border:`1.5px solid ${form.weekday===d?BK:GB}`,background:form.weekday===d?BK:"#fff",color:form.weekday===d?"#fff":"#555",fontSize:13,cursor:"pointer"}}>
@@ -166,26 +177,26 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
               {/* Team */}
               <div>
-                <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Team</div>
+                <div style={S_FIELD_LABEL}>Team</div>
                 <select value={form.team} onChange={e=>setForm(f=>({...f,team:e.target.value,color:TEAM_COLORS_MAP[e.target.value]||f.color}))}
-                  style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
+                  style={S_INPUT}>
                   {teams.map(t=><option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
 
               {/* Zeit */}
-              <div style={{display:"flex",gap:12}}>
+              <div style={S_08}>
                 <div style={{flex:1}}>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Von</div>
+                  <div style={S_FIELD_LABEL}>Von</div>
                   <select value={form.start} onChange={e=>setForm(f=>({...f,start:parseFloat(e.target.value)}))}
-                    style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
+                    style={S_INPUT}>
                     {TIMES.map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
                   </select>
                 </div>
                 <div style={{flex:1}}>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Bis</div>
+                  <div style={S_FIELD_LABEL}>Bis</div>
                   <select value={form.end} onChange={e=>setForm(f=>({...f,end:parseFloat(e.target.value)}))}
-                    style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
+                    style={S_INPUT}>
                     {TIMES.filter(t=>t>form.start).map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
                   </select>
                 </div>
@@ -207,7 +218,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
                       {/* Platz Phase 1 */}
                       <div style={{marginBottom:8}}>
-                        <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Platz</div>
+                        <div style={S_SUB}>Platz</div>
                         <select value={form.location} onChange={e=>setForm(f=>({...f,ort:e.target.value,half:""}))}
                           style={{width:"100%",padding:"7px 10px",border:`1.5px solid ${form.location?GB:R+"80"}`,borderRadius:8,fontSize:13,outline:"none"}}>
                           <option value="" disabled>– Platz wählen –</option>
@@ -220,8 +231,8 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                       {/* Seite Phase 1 */}
                       {form.location&&(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).length>0&&(
                         <div>
-                          <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Seite</div>
-                          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                          <div style={S_SUB}>Seite</div>
+                          <div style={S_07}>
                             <button onClick={()=>setForm(f=>({...f,half:""}))}
                               style={{padding:"5px 12px",borderRadius:20,border:`1.5px solid ${!form.half?BK:GB}`,background:!form.half?BK:"#fff",color:!form.half?"#fff":"#555",fontSize:13,cursor:"pointer"}}>
                               Ganzer Platz
@@ -263,7 +274,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
                         {/* Platz Phase 2 */}
                         <div style={{marginBottom:8}}>
-                          <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Platz</div>
+                          <div style={S_SUB}>Platz</div>
                           <select value={form.end_ort} onChange={e=>setForm(f=>({...f,end_ort:e.target.value,end_half:""}))}
                             style={{width:"100%",padding:"7px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
                             <option value="">– gleich wie Phase 1 ({form.location}) –</option>
@@ -276,8 +287,8 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                         {/* Seite Phase 2 */}
                         {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).length>0&&(
                           <div>
-                            <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Seite</div>
-                            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                            <div style={S_SUB}>Seite</div>
+                            <div style={S_07}>
                               <button onClick={()=>setForm(f=>({...f,end_half:""}))}
                                 style={{padding:"5px 12px",borderRadius:20,border:`1.5px solid ${!form.end_half?BK:GB}`,background:!form.end_half?BK:"#fff",color:!form.end_half?"#fff":"#555",fontSize:13,cursor:"pointer"}}>
                                 Ganzer Platz
@@ -313,7 +324,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
               {/* Farbe */}
               <div>
-                <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Farbe</div>
+                <div style={S_FIELD_LABEL}>Farbe</div>
                 <div style={{display:"flex",gap:8}}>
                   {COLORS.map(c=>(
                     <button key={c} onClick={()=>setForm(f=>({...f,color:c}))}
@@ -375,7 +386,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               {/* Typ-Auswahl */}
               <div>
                 <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:8,textTransform:"uppercase",letterSpacing:0.5}}>Typ</div>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                <div style={S_07}>
                   {[{v:"absage",l:"Absagen",icon:"✕"},{v:"verschiebung",l:"Verschieben",icon:"⏰"},{v:"location",l:"Ort ändern",icon:"map-pin"}].map(t=>(
                     <button key={t.v} onClick={()=>setAusnahmeTyp(t.v)}
                       style={{flex:1,padding:"8px 14px",borderRadius:8,border:`1.5px solid ${ausnahmeTyp===t.v?(t.v==="absage"?R:BL):GB}`,background:ausnahmeTyp===t.v?(t.v==="absage"?RL:"#EFF6FF"):"#fff",color:ausnahmeTyp===t.v?(t.v==="absage"?R:BL):"#555",fontSize:13,cursor:"pointer",minWidth:80}}>
@@ -387,20 +398,20 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
               {/* Verschiebung: neue Zeit */}
               {ausnahmeTyp==="verschiebung"&&(
-                <div style={{display:"flex",gap:12}}>
+                <div style={S_08}>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Neue Zeit von</div>
+                    <div style={S_FIELD_LABEL}>Neue Zeit von</div>
                     <select value={verschiebungStart} onChange={e=>setVerschiebungStart(parseFloat(e.target.value))}
-                      style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
+                      style={S_INPUT}>
                       {Array.from({length:(22-7)*2+1},(_,i)=>7+i*0.5).map(t=>(
                         <option key={t} value={t}>{Math.floor(t).toString().padStart(2,"0")}:{t%1===0?"00":"30"}</option>
                       ))}
                     </select>
                   </div>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Bis</div>
+                    <div style={S_FIELD_LABEL}>Bis</div>
                     <select value={verschiebungEnd} onChange={e=>setVerschiebungEnd(parseFloat(e.target.value))}
-                      style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
+                      style={S_INPUT}>
                       {Array.from({length:(22-7)*2+1},(_,i)=>7+i*0.5).filter(t=>t>verschiebungStart).map(t=>(
                         <option key={t} value={t}>{Math.floor(t).toString().padStart(2,"0")}:{t%1===0?"00":"30"}</option>
                       ))}
@@ -412,9 +423,9 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               {/* Ort ändern */}
               {ausnahmeTyp==="location"&&(
                 <div>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Neuer Platz</div>
+                  <div style={S_FIELD_LABEL}>Neuer Platz</div>
                   <select value={verschiebungOrt} onChange={e=>setVerschiebungOrt(e.target.value)}
-                    style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none"}}>
+                    style={S_INPUT}>
                     <option value="" disabled>- Platz wählen (Pflichtfeld) -</option>
                     {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
                       <option key={p.id} value={p.name}>{p.name}</option>
@@ -425,10 +436,10 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
 
               {/* Begründung */}
               <div>
-                <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Begründung <span style={{fontWeight:400,textTransform:"none"}}>(optional)</span></div>
+                <div style={S_FIELD_LABEL}>Begründung <span style={{fontWeight:400,textTransform:"none"}}>(optional)</span></div>
                 <input value={verschiebungGrund} onChange={e=>setVerschiebungGrund(e.target.value)}
                   placeholder="z.B. Platz für Spiel benötigt"
-                  style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+                  style={S_INPUT}/>
               </div>
 
               {/* Als Standard */}
@@ -484,20 +495,20 @@ function PlanEditorModal({plan, plaene, onSave, onClose}){
         </div>
         <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:16}}>
           <div>
-            <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Name</div>
+            <div style={S_FIELD_LABEL}>Name</div>
             <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))}
-              style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+              style={S_INPUT}/>
           </div>
-          <div style={{display:"flex",gap:12}}>
+          <div style={S_08}>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Gültig ab</div>
+              <div style={S_FIELD_LABEL}>Gültig ab</div>
               <input type="date" value={form.valid_from} onChange={e=>setForm(f=>({...f,valid_from:e.target.value}))}
-                style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+                style={S_INPUT}/>
             </div>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>Gültig bis</div>
+              <div style={S_FIELD_LABEL}>Gültig bis</div>
               <input type="date" value={form.valid_until} onChange={e=>setForm(f=>({...f,valid_until:e.target.value}))}
-                style={{width:"100%",padding:"8px 10px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+                style={S_INPUT}/>
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:"var(--surface2)",borderRadius:8}}>
@@ -670,7 +681,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                   <div>
                     <div style={{fontSize:13,color:"var(--sub)",fontWeight:600,textTransform:"uppercase",letterSpacing:0.4,marginBottom:2}}>Spielort</div>
                     <div style={{fontWeight:700,fontSize:13,color:"var(--text)"}}>{spiel.venue}</div>
-                    <div style={{fontSize:13,color:"var(--sub)"}}>{spiel.venueAddr}</div>
+                    <div style={S_SUB}>{spiel.venueAddr}</div>
                   </div>
                 </div>
                 {spiel.treffpunkt&&(
@@ -686,37 +697,37 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
 
               {/* Spielinfos kompakt */}
               <div style={{background:"var(--surface2)",borderRadius:12,overflow:"hidden"}}>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}>Wettbewerb</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{spiel.comp}</span>
+                <div style={S_LIST_ITEM}>
+                  <span style={S_SUB}>Wettbewerb</span>
+                  <span style={S_06}>{spiel.comp}</span>
                 </div>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}>Spielnummer</span>
+                <div style={S_LIST_ITEM}>
+                  <span style={S_SUB}>Spielnummer</span>
                   <span style={{fontSize:13,fontWeight:600,color:"var(--text)",fontFamily:"monospace"}}>{spiel.spielNr}</span>
                 </div>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}>Datum &amp; Zeit</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{spiel.date} · {spiel.time} Uhr</span>
+                <div style={S_LIST_ITEM}>
+                  <span style={S_SUB}>Datum &amp; Zeit</span>
+                  <span style={S_06}>{spiel.date} · {spiel.time} Uhr</span>
                 </div>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}>Heim / Gast</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{spiel.home?getVereinsnameStatic():getVereinsnameStatic()} <span style={{color:"var(--sub)",fontWeight:400}}>vs.</span> {spiel.opponent}</span>
+                <div style={S_LIST_ITEM}>
+                  <span style={S_SUB}>Heim / Gast</span>
+                  <span style={S_06}>{spiel.home?getVereinsnameStatic():getVereinsnameStatic()} <span style={{color:"var(--sub)",fontWeight:400}}>vs.</span> {spiel.opponent}</span>
                 </div>
                 <div style={{padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}>Status</span>
+                  <span style={S_SUB}>Status</span>
                   <span style={{background:"var(--surface)",color:"#065F46",fontSize:13,fontWeight:700,padding:"2px 9px",borderRadius:20}}>{spiel.status}</span>
                 </div>
               </div>
 
               {/* Offizielle */}
               <div style={{background:"var(--surface2)",borderRadius:12,overflow:"hidden"}}>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}><TI n="scale"/> Schiedsrichter</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{spiel.schiedsrichter||"-"}</span>
+                <div style={S_LIST_ITEM}>
+                  <span style={S_SUB}><TI n="scale"/> Schiedsrichter</span>
+                  <span style={S_06}>{spiel.schiedsrichter||"-"}</span>
                 </div>
                 <div style={{padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontSize:13,color:"var(--sub)"}}>≡ Delegierter</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{spiel.delegierter||"-"}</span>
+                  <span style={S_SUB}>≡ Delegierter</span>
+                  <span style={S_06}>{spiel.delegierter||"-"}</span>
                 </div>
               </div>
 
@@ -729,7 +740,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
           {activeTab==="stats"&&(
             <div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-                <div style={{fontSize:13,color:"var(--sub)"}}>Manuell erfasst · nicht von FVRZ</div>
+                <div style={S_SUB}>Manuell erfasst · nicht von FVRZ</div>
                 {canEdit&&<button onClick={()=>setEditMode(v=>!v)} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${editMode?GN:GB}`,background:editMode?"#F0FDF4":"#fff",color:editMode?GN:BL}}>{editMode?"Fertig ✓":"Bearbeiten"}</button>}
               </div>
 
@@ -778,21 +789,21 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {!played&&<div style={{padding:"10px 12px",background:"var(--surface)",borderRadius:8,fontSize:13,color:BL,marginTop:8}}>≡ Startaufstellung - Tore, Assists und Karten können nach dem Spiel erfasst werden.</div>}
 
               {played&&<><ST>Tore ({stats.tore.length})</ST>
-              {stats.tore.length===0&&!editMode&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Keine Tore erfasst.</div>}
+              {stats.tore.length===0&&!editMode&&<div style={S_SUB}>Keine Tore erfasst.</div>}
               {stats.tore.map((t,i)=>(
                 <EZ key={i} icon="Tor" text={t.eigentor?t.spieler+" (Eigentor)":t.spieler} min={t.min} onDelete={()=>setStats(s=>({...s,tore:s.tore.filter((_,j)=>j!==i)}))}/>
               ))}
               {editMode&&<AR onAdd={()=>{if(!newTor.spieler)return;setStats(s=>({...s,tore:[...s.tore,{spieler:newTor.spieler,min:newTor.min||"",eigentor:false}]}));setNewTor(t=>({...t,spieler:"",min:""}));}}><SS value={newTor.spieler} onChange={v=>setNewTor(t=>({...t,spieler:v}))} options={spielerNamen} placeholder="Torschütze"/><MI value={newTor.min} onChange={v=>setNewTor(t=>({...t,min:v}))}/></AR>}
 
               <ST>Assists ({stats.assists.length})</ST>
-              {stats.assists.length===0&&!editMode&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Keine Assists erfasst.</div>}
+              {stats.assists.length===0&&!editMode&&<div style={S_SUB}>Keine Assists erfasst.</div>}
               {stats.assists.map((a,i)=>(
                 <EZ key={i} icon="Ass" text={a.spieler} min={a.min} onDelete={()=>setStats(s=>({...s,assists:s.assists.filter((_,j)=>j!==i)}))}/>
               ))}
               {editMode&&<AR onAdd={()=>{if(!newAssist.spieler)return;setStats(s=>({...s,assists:[...s.assists,{spieler:newAssist.spieler,min:newAssist.min||""}]}));setNewAssist({spieler:"",min:""});}}><SS value={newAssist.spieler} onChange={v=>setNewAssist(a=>({...a,spieler:v}))} options={spielerNamen} placeholder="Spieler"/><MI value={newAssist.min} onChange={v=>setNewAssist(a=>({...a,min:v}))}/></AR>}
 
               <ST>Karten ({stats.karten.length})</ST>
-              {stats.karten.length===0&&!editMode&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Keine Karten erfasst.</div>}
+              {stats.karten.length===0&&!editMode&&<div style={S_SUB}>Keine Karten erfasst.</div>}
               {stats.karten.map((k,i)=>{
                 const ks=KARTEN_STYLE[k.type]||KARTEN_STYLE["gelb"];
                 const karteBadge=<span style={{background:ks.bg,color:ks.color,fontSize:13,fontWeight:700,padding:"1px 5px",borderRadius:4}}>{ks.label}</span>;
@@ -801,7 +812,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {editMode&&<AR onAdd={()=>{if(!newKarte.spieler)return;setStats(s=>({...s,karten:[...s.karten,{spieler:newKarte.spieler,min:newKarte.min||"",type:newKarte.type}]}));setNewKarte({spieler:"",min:"",type:"gelb"});}}><SS value={newKarte.spieler} onChange={v=>setNewKarte(k=>({...k,spieler:v}))} options={spielerNamen} placeholder="Spieler"/><SS value={newKarte.type} onChange={v=>setNewKarte(k=>({...k,type:v}))} options={[{value:"gelb",label:"Gelb"},{value:"gelb-rot",label:"Gelb-Rot"},{value:"rot",label:"Rot"}]}/><MI value={newKarte.min} onChange={v=>setNewKarte(k=>({...k,min:v}))}/></AR>}
 
               <ST>Ein-/Auswechslungen ({stats.wechsel.length})</ST>
-              {stats.wechsel.length===0&&!editMode&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Keine Wechsel erfasst.</div>}
+              {stats.wechsel.length===0&&!editMode&&<div style={S_SUB}>Keine Wechsel erfasst.</div>}
               {stats.wechsel.map((w,i)=>{
                 const wText=(
                   <span style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -866,7 +877,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
 
                 {/* Voting list */}
                 <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Abstimmen</div>
-                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                <div style={S_10}>
                   {roster.map(pl=>{
                     const vv=counts[pl.id]||0;
                     const isVoted=isVotedFor(pl.id);
@@ -1430,7 +1441,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                     return(
                       <div style={{marginBottom:12}}>
                         <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Aufgebot ({alleAufgebotene.length})</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                        <div style={S_10}>
                           {alleAufgebotene.map(p=>(
                             <div key={p.id} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",background:p.ich?"#4F46E5":"#EEF2FF",borderRadius:8}}>
                               <Av name={p.name} size={26} bg={p.ich?"rgba(255,255,255,0.3)":"#6366F1"}/>
@@ -1445,7 +1456,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                     );
                   })()}
                   <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:10}}>Meine Rückmeldung</div>
-                  <div style={{display:"flex",gap:12}}>
+                  <div style={S_08}>
                     {["zu","ab"].map(s=>{
                       const resp=getResp(selEv.id,myId);
                       const active=resp.status===s;
@@ -1770,7 +1781,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
               <div style={{marginBottom:10}}>
                 <div style={{fontSize:13,color:"var(--sub)",fontWeight:600,marginBottom:6}}><TI n="target" style={{marginRight:3}}/> Treffpunkt</div>
                 {editingNote&&canEditEvent(selEv)?(
-                  <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  <div style={S_10}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                       <div>
                         <div style={{fontSize:13,color:"var(--sub)",marginBottom:2}}>Datum</div>
@@ -1877,7 +1888,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                       <Av name={p.name} size={28} bg={resp.status==="zu"?GN:resp.status==="ab"?R:resp.status==="unentschuldigt"?AM:resp.status==="fraglich"?AM:"#D1D5DB"}/>
                       <div>
                         <div style={{fontWeight:600,fontSize:13}}>{p.firstName} {p.lastName}</div>
-                        {getNr(p.id)&&<div style={{fontSize:13,color:"var(--sub)"}}>{"#"+getNr(p.id)}</div>}
+                        {getNr(p.id)&&<div style={S_SUB}>{"#"+getNr(p.id)}</div>}
                       </div>
                     </div>
                     <div style={{display:"flex",gap:4,justifyContent:"center"}}>
@@ -1940,7 +1951,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
           <span>{timeFilter==="kommend"?"Vergangene Termine":"Kommende Termine"}</span>
         </button>
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={S_10}>
         {(showMoreEvents?filteredEvents:filteredEvents.slice(0,5)).map(ev=>{
           const c=evCounts(ev);
           const noRsvp=ev.subtype==="Vereinsanlass"&&ev.rsvp===false;
@@ -2016,7 +2027,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                       </span>
                       {isCancelled&&<span style={{fontSize:13,fontWeight:600,padding:"2px 8px",borderRadius:20,background:RL,color:R}}>⚠ Abgesagt</span>}
                     </div>
-                    <div style={{fontSize:13,color:"var(--sub)"}}><TI n="clock" style={{marginRight:3}}/> {ev.time} Uhr</div>
+                    <div style={S_SUB}><TI n="clock" style={{marginRight:3}}/> {ev.time} Uhr</div>
                   </div>
                 </div>
               )}
