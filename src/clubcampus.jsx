@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI, TI_PATHS } from "./icons.jsx";
-import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC } from "./theme.jsx";
-import { useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip } from "./theme.jsx";
+import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip } from "./theme.jsx";
 import NachrichtenModul from "./NachrichtenModul.jsx";
 import { TeamModuleMatrix, PortalverwaltungView } from "./PortalverwaltungModul.jsx";
 
