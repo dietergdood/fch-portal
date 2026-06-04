@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI, TI_PATHS } from "./icons.jsx";
 import { ROSTER, USER_ACCOUNTS, SCHEDULE, TABLES, ATT_EVENTS, ATT_INITIAL, ATT_LOG, GANTT, TRAININGSPLAETZE_DEFAULT, EVENTS, POLLS, HELPER_GRUPPEN, HELPER_EVENTS, HELPERS, BUSES, MATERIAL, LOCKERS, MEDIA, MEMBERS, WIKI, NEWS, PSTATS, INITIAL_PLAENE, FUNKTIONEN, MITGLIEDTYPEN } from "./demoData.js";
-import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av } from "./theme.jsx";
+import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs } from "./theme.jsx";
 import NachrichtenModul from "./NachrichtenModul.jsx";
 import { TeamModuleMatrix, PortalverwaltungView } from "./PortalverwaltungModul.jsx";
 import { SlotModal, SpielDetail, TermineModul, SpielplanModul, TableTab } from "./TermineModul.jsx";
@@ -474,28 +474,7 @@ function STitle({children,action}){
 }
 /* Btn via ./hooks.jsx */
 
-function Tabs({tabs,active,setActive}){
-  const isMobile=useIsMobile();
-  return(
-    <div style={{display:"flex",gap:4,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-      {tabs.map(t=>(
-        <button key={t.key} onClick={()=>setActive(t.key)} style={{
-          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:6,
-          background:active===t.key?"var(--surface)":"transparent",
-          color:active===t.key?"var(--text)":"var(--sub)",
-          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:13,
-          boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
-          whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
-          display:"flex",alignItems:"center",gap:8,WebkitTapHighlightColor:"transparent"
-        }}>
-          {isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>}
-          {isMobile&&t.short?t.short:t.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-/* InfoBox via ./hooks.jsx */
+/* Tabs via ./theme.jsx */
 
 function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
   const isMobile=useIsMobile();

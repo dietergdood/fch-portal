@@ -161,4 +161,29 @@ function Av({name="",init,size=34,bg="var(--surface2)",useTheme=false}){
   </div>;
 }
 
-export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av };
+
+
+function Tabs({tabs,active,setActive}){
+  const isMobile=useIsMobile();
+  return(
+    <div style={{display:"flex",gap:4,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
+      {tabs.map(t=>(
+        <button key={t.key} onClick={()=>setActive(t.key)} style={{
+          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:6,
+          background:active===t.key?"var(--surface)":"transparent",
+          color:active===t.key?"var(--text)":"var(--sub)",
+          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:13,
+          boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
+          whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
+          display:"flex",alignItems:"center",gap:8,WebkitTapHighlightColor:"transparent"
+        }}>
+          {isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>}
+          {isMobile&&t.short?t.short:t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+/* InfoBox via ./hooks.jsx */
+
+export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs };
