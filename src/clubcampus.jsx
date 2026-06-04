@@ -6960,6 +6960,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       if(supabase){
         supabase.from("vereine")
           .update({theme:themeToSave})
+          .gt("id","00000000-0000-0000-0000-000000000000")
           .then(({error:e})=>{
             if(e) setSaveMsg("Fehler: "+e.message);
             else setSaveMsg("Theme gespeichert ✓");
@@ -8269,7 +8270,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               background:BTN,color:BTN_TXT,transition:"background 0.15s",
               fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT
             }}>Speichern & anwenden</button>
-            <button onClick={()=>{setAppTheme(THEME_DEFAULT_STATIC);setThemeDirty(false);if(supabase){supabase.from("vereine").update({theme:THEME_DEFAULT_STATIC}).then(({error:e})=>{setSaveMsg(e?"Fehler: "+e.message:"Standard gespeichert ✓");setTimeout(()=>setSaveMsg(""),2500);});}}} style={{
+            <button onClick={()=>{setAppTheme(THEME_DEFAULT_STATIC);setThemeDirty(false);if(supabase){supabase.from("vereine").update({theme:THEME_DEFAULT_STATIC}).gt("id","00000000-0000-0000-0000-000000000000").then(({error:e})=>{setSaveMsg(e?"Fehler: "+e.message:"Standard gespeichert ✓");setTimeout(()=>setSaveMsg(""),2500);});}}} style={{
               padding:"9px 16px",borderRadius:10,border:"1px solid var(--border)",
               background:"transparent",color:"var(--sub)",fontSize:13,cursor:"pointer",fontFamily:FONT
             }}>Standard wiederherstellen</button>
