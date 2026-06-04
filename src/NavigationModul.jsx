@@ -1304,4 +1304,4 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
 
 /* ── LOGIN SCREEN ─────────────────────────────────────── */
 
-export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole };
+export { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole };
