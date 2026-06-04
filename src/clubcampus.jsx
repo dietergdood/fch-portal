@@ -11879,7 +11879,6 @@ function LoginScreen({onLogin, sb, appTheme}){
   );
 }
 
-export default 
 /* ══════════════════════════════════════════════════════════════════
    NachrichtenView — Broadcast & Diskussions-Modul
    ══════════════════════════════════════════════════════════════════ */
@@ -12689,3 +12688,5 @@ function Portal({supabaseClient}){
     </ThemeCtx.Provider>
   );
 }
+
+export default Portal;
