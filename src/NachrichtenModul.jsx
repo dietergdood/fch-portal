@@ -161,21 +161,13 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
       <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
         <div style={{padding:"12px 18px",borderBottom:"0.5px solid var(--border)",flexShrink:0}}>
           {isMobile&&(
-            <button onClick={()=>{setShowThread(false);setSelected(null);}} style={{background:"none",border:"none",cursor:"pointer",color:"var(--sub)",padding:"0 0 8px",display:"flex",alignItems:"center",gap:4,fontSize:13,fontFamily:FONT}}>
-              <TI n="arrow-left" size={14}/> Zurück
-            </button>
+            <Btn variant="ghost" onClick={()=>{setShowThread(false);setSelected(null);}}><TI n="arrow-left" size={14}/> Zurück</Btn>
           )}
           <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8,marginBottom:6}}>
             <h2 style={{margin:0,fontSize:14,fontWeight:700,color:"var(--text)"}}>{selected.titel}</h2>
             <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,background:selected.typ==="broadcast"?"#E6F1FB":"#E1F5EE",color:selected.typ==="broadcast"?"#0C447C":"#085041",fontWeight:600,flexShrink:0}}>{selected.typ==="broadcast"?"Broadcast":"Diskussion"}</span>
                   {kannVerwalten&&(
-                    <button onClick={async()=>{
-                      if(!window.confirm("Nachricht löschen?")) return;
-                      await sb.from("nachrichten").delete().eq("id",selected.id);
-                      setSelected(null);setAntworten([]);loadNachrichten();
-                    }} style={{background:"none",border:"none",cursor:"pointer",color:"#E24B4A",padding:4,display:"flex",alignItems:"center",marginLeft:"auto"}}>
-                      <TI n="trash" size={14}/>
-                    </button>
+                    <Btn variant="ghost" onClick={async()=>{ if(!window.confirm("Nachricht löschen?")) return; await sb.from("nachrichten").delete().eq("id",selected.id); setSelected(null);setAntworten([]);loadNachrichten(); }}><TI n="trash" size={14}/></Btn>
                   )}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
@@ -212,12 +204,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
                     </div>
                     <p style={{fontSize:13,color:"var(--text)",margin:0,lineHeight:1.5}}>{a.inhalt}</p>
                     {kannVerwalten&&(
-                      <button onClick={async()=>{
-                        await sb.from("nachrichten_antworten").delete().eq("id",a.id);
-                        loadAntworten(selected.id);
-                      }} style={{background:"none",border:"none",cursor:"pointer",color:"#E24B4A",padding:"2px 0",fontSize:11,fontFamily:FONT,display:"flex",alignItems:"center",gap:4}}>
-                        <TI n="trash" size={11}/>Löschen
-                      </button>
+                      <Btn variant="ghost" onClick={async()=>{ await sb.from("nachrichten_antworten").delete().eq("id",a.id); loadAntworten(selected.id); }}><TI n="trash" size={11}/>Löschen</Btn>
                     )}
                   </div>
                 );
@@ -229,10 +216,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
           <input value={antwortText} onChange={e=>setAntwortText(e.target.value)}
             onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendAntwort();}}}
             placeholder="Antworten..." style={{flex:1,padding:"8px 12px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}/>
-          <button onClick={sendAntwort} disabled={!antwortText.trim()||sending}
-            style={{padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,cursor:"pointer",fontFamily:FONT,fontSize:13,fontWeight:600,opacity:antwortText.trim()?1:0.5}}>
-            <TI n="send" size={14}/>
-          </button>
+          <Btn variant="primary" color={BTN} onClick={sendAntwort} disabled={!antwortText.trim()||sending}><TI n="send" size={14}/></Btn>
         </div>
       </div>
     );
@@ -251,27 +235,18 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
               </span>
             )}
             {kannSenden&&(
-              <button onClick={()=>setShowNeu(true)}
-                style={{padding:"7px 14px",fontSize:13,background:BTN,color:BTN_TXT,border:"none",borderRadius:8,cursor:"pointer",fontFamily:FONT,fontWeight:600}}>
-                + Neu
-              </button>
+              <Btn variant="primary" color={BTN} onClick={()=>setShowNeu(true)}>+ Neu</Btn>
             )}
           </Row>
         </div>
         <div style={{display:"flex",padding:"0 14px",borderBottom:"0.5px solid var(--border)",overflowX:"auto",scrollbarWidth:"none",flexShrink:0}}>
           {["alle","gesendet","ungelesen"].map(t=>(
-            <button key={t} onClick={()=>setTab(t)}
-              style={{padding:"8px 12px",fontSize:13,border:"none",background:"none",cursor:"pointer",color:tab===t?"var(--text)":"var(--sub)",borderBottom:tab===t?"2px solid var(--text)":"2px solid transparent",fontFamily:FONT,fontWeight:tab===t?600:400,whiteSpace:"nowrap"}}>
-              {t==="alle"?"Alle":t==="gesendet"?"Gesendet":"Ungelesen"}
-            </button>
+            <Btn variant="ghost" onClick={()=>setTab(t)}>{t==="alle"?"Alle":t==="gesendet"?"Gesendet":"Ungelesen"}</Btn>
           ))}
         </div>
         <div style={{padding:"8px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",gap:8,overflowX:"auto",scrollbarWidth:"none",flexShrink:0}}>
           {[null,"broadcast","diskussion","trainer","eltern"].map(f=>(
-            <button key={f||"alle"} onClick={()=>setFilter(filter===f?null:f)}
-              style={{padding:"5px 12px",fontSize:11,borderRadius:20,border:`0.5px solid ${filter===f?"transparent":"var(--border)"}`,background:filter===f?ACCENT:"transparent",color:filter===f?ACCENT2:"var(--sub)",cursor:"pointer",fontFamily:FONT,whiteSpace:"nowrap"}}>
-              {f===null?"Alle":f==="broadcast"?"Broadcast":f==="diskussion"?"Diskussion":f==="trainer"?"Trainer":"Eltern"}
-            </button>
+            <Btn onClick={()=>setFilter(filter===f?null:f)}>{f===null?"Alle":f==="broadcast"?"Broadcast":f==="diskussion"?"Diskussion":f==="trainer"?"Trainer":"Eltern"}</Btn>
           ))}
         </div>
         <div style={{flex:1,overflowY:"auto"}}>
@@ -324,10 +299,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
             <label style={S_LABEL}>Typ</label>
             <Row align="flex-start">
               {["broadcast","diskussion"].map(t=>(
-                <button key={t} onClick={()=>setNeuForm(f=>({...f,typ:t}))}
-                  style={{flex:1,padding:"8px 14px",borderRadius:8,border:`1.5px solid ${neuForm.typ===t?BTN:"var(--border)"}`,background:neuForm.typ===t?BTN+"15":"transparent",color:"var(--text)",cursor:"pointer",fontSize:13,fontFamily:FONT,fontWeight:neuForm.typ===t?600:400}}>
-                  {t==="broadcast"?"📢 Broadcast":"💬 Diskussion"}
-                </button>
+                <Btn onClick={()=>setNeuForm(f=>({...f,typ:t}))}>{t==="broadcast"?"📢 Broadcast":"💬 Diskussion"}</Btn>
               ))}
             </Row>
             <div style={{fontSize:11,color:"var(--sub)",marginTop:5}}>{neuForm.typ==="broadcast"?"Nur Absender sieht Antworten der anderen":"Alle sehen alle Antworten"}</div>
@@ -336,10 +308,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
             <label style={S_LABEL}>Empfänger</label>
             <div style={{display:"flex",gap:8,marginBottom:8,flexWrap:"wrap"}}>
               {["rolle","gruppe","team"].map(t=>(
-                <button key={t} onClick={()=>setNeuForm(f=>({...f,empfaenger_typ:t}))}
-                  style={{padding:"5px 12px",borderRadius:20,border:`1px solid ${neuForm.empfaenger_typ===t?BTN:"var(--border)"}`,background:neuForm.empfaenger_typ===t?BTN+"15":"transparent",color:"var(--text)",cursor:"pointer",fontSize:13,fontFamily:FONT}}>
-                  {t==="rolle"?"Nach Rolle":t==="gruppe"?"Nach Gruppe":"Team"}
-                </button>
+                <Btn onClick={()=>setNeuForm(f=>({...f,empfaenger_typ:t}))}>{t==="rolle"?"Nach Rolle":t==="gruppe"?"Nach Gruppe":"Team"}</Btn>
               ))}
             </div>
             {neuForm.empfaenger_typ==="rolle"&&(
@@ -375,10 +344,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
               placeholder="Deine Nachricht..." rows={5}
               style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none",resize:"vertical"}}/>
           </div>
-          <button onClick={sendNachricht} disabled={!neuForm.titel.trim()||!neuForm.inhalt.trim()||sending}
-            style={{width:"100%",padding:"12px 20px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,cursor:"pointer",fontSize:14,fontWeight:700,fontFamily:FONT,opacity:neuForm.titel.trim()&&neuForm.inhalt.trim()?1:0.5}}>
-            {sending?"Wird gesendet…":"Senden"}
-          </button>
+          <Btn variant="primary" color={BTN} onClick={sendNachricht} disabled={!neuForm.titel.trim()||!neuForm.inhalt.trim()||sending}>{sending?"Wird gesendet…":"Senden"}</Btn>
         </div>
       </ModalOrSheet>
       {isMobile?(

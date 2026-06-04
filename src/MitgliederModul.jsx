@@ -137,7 +137,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
               <span style={{color:"rgba(255,255,255,0.6)",fontSize:13}}>Saison 2024/25</span>
             </div>
           </div>
-          <button onClick={onClose} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",color:"#fff",fontSize:21,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,lineHeight:1}}>×</button>
+          <Btn onClick={onClose} style={{ width:32,height:32 }}>×</Btn>
         </div>
 
         <div style={{padding:"18px 22px",display:"flex",flexDirection:"column",gap:16}}>
@@ -408,37 +408,15 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
         return(
           <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:14,alignItems:"center"}}>
-            <button onClick={()=>setFilterVals([])}
-              style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
-                background:filterVals.length===0?BK:"var(--surface)",
-                color:filterVals.length===0?"#fff":"var(--sub)",
-                fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
-              Alle
-            </button>
+            <Btn small onClick={()=>setFilterVals([])}>Alle</Btn>
             {vals.map(v=>{
               const active=filterVals.includes(v);
               return(
-                <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
-                  style={{padding:"4px 12px",borderRadius:20,
-                    border:"1px solid "+(active?BK:"var(--border)"),
-                    background:active?BK:"var(--surface)",
-                    color:active?"#fff":"var(--sub)",
-                    fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s",
-                    display:"flex",alignItems:"center",gap:8}}>
-                  {active&&<span style={{fontSize:11}}>✓</span>}
-                  {v}
-                  <span style={{opacity:0.55,fontWeight:400}}>
-                    {allMembers.filter(m=>(m[groupBy]||"-")===v).length}
-                  </span>
-                </button>
+                <Btn small onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}>{active&&<span style={{fontSize:11}}>✓</span>} {v} <span style={{opacity:0.55,fontWeight:400}}> {allMembers.filter(m=>(m[groupBy]||"-")===v).length} </span></Btn>
               );
             })}
             {filterVals.length>0&&(
-              <button onClick={()=>setFilterVals([])}
-                style={{padding:"4px 10px",borderRadius:20,border:"1px solid var(--border)",
-                  background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
-                × zurücksetzen
-              </button>
+              <Btn variant="ghost" small onClick={()=>setFilterVals([])}>× zurücksetzen</Btn>
             )}
           </div>
         );
@@ -474,9 +452,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 )}
                 {members.map((m,i)=>(
                   <tr key={m.id} onClick={()=>setSelectedMember({...m,_tab:"info"})}
-                    style={{borderTop:"0.5px solid var(--border)",cursor:"pointer"}}
-                    onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-                    onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                    style={{borderTop:"0.5px solid var(--border)",cursor:"pointer"}}>
                     <td style={{padding:"9px 13px"}}>
                       <Row>
                         <Av name={m.name} size={28} bg={R}/>

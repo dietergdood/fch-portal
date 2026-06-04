@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Btn, Card, Chip , Stat, Av, Between, Col, H1, Row} from "./theme.jsx";
+import { Av, Between, Btn, Card, Chip, Col, H1, InfoBox, Input, Row, Stat, useIsMobile } from "./theme.jsx";
 import { HELPER_GRUPPEN, HELPER_EVENTS, HELPERS } from "./demoData.js";
 
 /* ── Hilfsfunktionen ── */
@@ -14,18 +14,7 @@ function Tabs({tabs,active,setActive}){
   return(
     <div style={{display:"flex",gap:4,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
       {tabs.map(t=>(
-        <button key={t.key} onClick={()=>setActive(t.key)} style={{
-          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:6,
-          background:active===t.key?"var(--surface)":"transparent",
-          color:active===t.key?"var(--text)":"var(--sub)",
-          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:13,
-          boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
-          whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
-          display:"flex",alignItems:"center",gap:8,WebkitTapHighlightColor:"transparent"
-        }}>
-          {isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>}
-          {isMobile&&t.short?t.short:t.label}
-        </button>
+        <Btn onClick={()=>setActive(t.key)}>{isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>} {isMobile&&t.short?t.short:t.label}</Btn>
       ))}
     </div>
   );
@@ -50,11 +39,11 @@ function BemerkungEdit({notes,onSave}){
       <input autoFocus value={draft} onChange={e=>setDraft(e.target.value)} placeholder="Bemerkung…"
         style={{padding:"2px 7px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,outline:"none",width:130}}
         onKeyDown={e=>{if(e.key==="Enter"){onSave(draft);setEditing(false);}if(e.key==="Escape")setEditing(false);}}/>
-      <button onClick={()=>{onSave(draft);setEditing(false);}} style={{padding:"1px 6px",borderRadius:6,fontSize:13,fontWeight:600,border:`0.5px solid ${GN}`,background:"var(--surface)",color:GN,cursor:"pointer"}}>✓</button>
-      <button onClick={()=>setEditing(false)} style={{padding:"1px 6px",borderRadius:6,fontSize:13,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",cursor:"pointer"}}>✕</button>
+      <Btn onClick={()=>{onSave(draft);setEditing(false);}}>✓</Btn>
+      <Btn onClick={()=>setEditing(false)}>✕</Btn>
     </div>
   );
-  return <button onClick={e=>{e.stopPropagation();setEditing(true);setDraft(notes||"");}} style={{marginTop:3,fontSize:13,color:"var(--sub)",background:"none",border:"none",cursor:"pointer",padding:0}}><TI n="edit" style={{marginRight:3}}/> Bemerkung</button>;
+  return <Btn variant="ghost" onClick={e=>{e.stopPropagation();setEditing(true);setDraft(notes||"");}}><TI n="edit" style={{marginRight:3}}/> Bemerkung</Btn>;
 }
 
 function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen,teamMitglieder,schichtenState,onEintragen,onFreigeben,onÜbertragen,freigabeAnfragen,notes,onSaveBemerkung}){
@@ -138,11 +127,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
 
         {/* Plätze Zähler */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:ichDrin||!voll?10:0}}>
-          <button onClick={()=>setShowHelfer(v=>!v)}
-            style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",padding:0,fontSize:13,color:"var(--sub)"}}>
-            <span style={{fontSize:13,display:"inline-block",transform:showHelfer?"rotate(90deg)":"none"}}>▶</span>
-            <span><strong style={{color:"var(--text)"}}>{filled}</strong> / {max} belegt</span>
-          </button>
+          <Btn variant="ghost" onClick={()=>setShowHelfer(v=>!v)}><span style={{fontSize:13,display:"inline-block",transform:showHelfer?"rotate(90deg)":"none"}}>▶</span> <span><strong style={{color:"var(--text)"}}>{filled}</strong> / {max} belegt</span></Btn>
           {ichDrin&&<span style={{fontSize:13,color:GN,fontWeight:700}}>Du dabei ✓</span>}
         </div>
 
@@ -170,12 +155,8 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
           {/* Haupt-Buttons (solange kein Formular offen und keine Anfrage pending) */}
           {!showTransfer&&!showAnfrageForm&&!anfragePending&&(
             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              <button onClick={()=>setShowTransfer(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid #0891B2`,background:"var(--surface)",color:"#0891B2"}}>
-                ⇄ Übertragen
-              </button>
-              <button onClick={()=>setShowAnfrageForm(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${AM}`,background:"var(--surface)",color:AM}}>
-                ↩ Freigabe anfragen
-              </button>
+              <Btn small onClick={()=>setShowTransfer(true)}>⇄ Übertragen</Btn>
+              <Btn small onClick={()=>setShowAnfrageForm(true)}>↩ Freigabe anfragen</Btn>
             </div>
           )}
 
@@ -204,13 +185,8 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                 style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,resize:"vertical",boxSizing:"border-box",marginBottom:7,fontFamily:FONT}}
               />
               <Row align="flex-start">
-                <button
-                  onClick={handleAnfrageSenden}
-                  disabled={!anfrageBegruendung.trim()}
-                  style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:anfrageBegruendung.trim()?"pointer":"default",border:"none",background:anfrageBegruendung.trim()?AM:"#ccc",color:"#fff"}}>
-                  Anfrage senden
-                </button>
-                <button onClick={()=>{setShowAnfrageForm(false);setAnfrageBegruendung("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
+                <Btn small onClick={handleAnfrageSenden} disabled={!anfrageBegruendung.trim()}>Anfrage senden</Btn>
+                <Btn small onClick={()=>{setShowAnfrageForm(false);setAnfrageBegruendung("");}}>Abbrechen</Btn>
               </Row>
             </div>
           )}
@@ -228,7 +204,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                   placeholder="Person suchen…"
                   style={{width:"100%",padding:"5px 8px 5px 26px",border:`0.5px solid ${zuteilSearch?"#0891B2":GB}`,borderRadius:6,fontSize:13,outline:"none",boxSizing:"border-box"}}
                 />
-                {zuteilSearch&&<button onClick={()=>{setZuteilSearch("");setTransferTarget("");}} style={{position:"absolute",right:7,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",lineHeight:1}}>×</button>}
+                {zuteilSearch&&<Btn variant="ghost" onClick={()=>{setZuteilSearch("");setTransferTarget("");}}>×</Btn>}
               </div>
               {/* Gefilterte Liste */}
               {(()=>{
@@ -242,23 +218,15 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                       const info=h?.gruppe||h?.role||"";
                       const selected=transferTarget===n;
                       return(
-                        <button key={n} onClick={()=>setTransferTarget(selected?"":n)}
-                          style={{display:"flex",alignItems:"center",gap:8,padding:"5px 8px",borderRadius:6,border:`0.5px solid ${selected?"#0891B2":GB}`,background:selected?"#ECFEFF":"#fff",cursor:"pointer",textAlign:"left"}}>
-                          <Av name={n} size={20} bg={selected?"#0891B2":"#9CA3AF"}/>
-                          <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontSize:13,fontWeight:selected?700:400,color:selected?"#0891B2":"#374151"}}>{n}</div>
-                            {info&&<div style={{fontSize:13,color:"var(--sub)"}}>{info}</div>}
-                          </div>
-                          {selected&&<span style={{fontSize:13,color:"#0891B2",flexShrink:0}}>✓</span>}
-                        </button>
+                        <Btn onClick={()=>setTransferTarget(selected?"":n)}><Av name={n} size={20} bg={selected?"#0891B2":"#9CA3AF"}/> <div style={{flex:1,minWidth:0}}> <div style={{fontSize:13,fontWeight:selected?700:400,color:selected?"#0891B2":"#374151"}}>{n}</div> {info&&<div style={{fontSize:13,color:"var(--sub)"}}>{info}</div>} </div> {selected&&<span style={{fontSize:13,color:"#0891B2",flexShrink:0}}>✓</span>}</Btn>
                       );
                     })}
                   </div>
                 );
               })()}
               <Row align="flex-start">
-                <button onClick={handleÜbertragen} disabled={!transferTarget} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:transferTarget?"pointer":"default",border:"none",background:transferTarget?"#0891B2":"#ccc",color:"#fff"}}>Übertragen</button>
-                <button onClick={()=>{setShowTransfer(false);setTransferTarget("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
+                <Btn small onClick={handleÜbertragen} disabled={!transferTarget}>Übertragen</Btn>
+                <Btn small onClick={()=>{setShowTransfer(false);setTransferTarget("");}}>Abbrechen</Btn>
               </Row>
             </div>
           )}
@@ -267,15 +235,11 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
         <div>
           {/* Trainer: Zuteilungs-Dropdown */}
           {canZuteilen&&!showZuteilen&&(
-            <button onClick={()=>setShowZuteilen(true)} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:"none",background:"var(--surface2)",color:"var(--text)"}}>
-              + Zuteilen
-            </button>
+            <Btn small onClick={()=>setShowZuteilen(true)}>+ Zuteilen</Btn>
           )}
           {/* Standard Eintragen für alle anderen */}
           {!canZuteilen&&(
-            <button onClick={()=>onEintragen(schicht.id,meinName)} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:"none",background:"var(--surface2)",color:"var(--text)"}}>
-              ✓ Eintragen
-            </button>
+            <Btn small onClick={()=>onEintragen(schicht.id,meinName)}>✓ Eintragen</Btn>
           )}
           {/* Zuteilungs-Formular */}
           {canZuteilen&&showZuteilen&&(
@@ -290,7 +254,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                   placeholder="Name suchen…"
                   style={{width:"100%",padding:"5px 8px 5px 26px",border:`0.5px solid ${zuteilSearch?GN:GB}`,borderRadius:6,fontSize:13,outline:"none",boxSizing:"border-box"}}
                 />
-                {zuteilSearch&&<button onClick={()=>{setZuteilSearch("");setZuteilTarget("");}} style={{position:"absolute",right:7,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",lineHeight:1}}>×</button>}
+                {zuteilSearch&&<Btn variant="ghost" onClick={()=>{setZuteilSearch("");setZuteilTarget("");}}>×</Btn>}
               </div>
               {/* Gefilterte Liste */}
               {(()=>{
@@ -302,31 +266,22 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                       const gruppe=HELPERS.find(m=>m.name===n)?.gruppe||"";
                       const selected=zuteilTarget===n;
                       return(
-                        <button key={n} onClick={()=>setZuteilTarget(selected?"":n)} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 8px",borderRadius:6,border:`0.5px solid ${selected?GN:GB}`,background:selected?GN+"18":"#fff",cursor:"pointer",textAlign:"left",width:"100%"}}>
-                          <Av name={n} size={20} bg={selected?GN:"#bbb"}/>
-                          <div style={{flex:1}}>
-                            <div style={{fontSize:13,fontWeight:selected?700:400,color:selected?GN:BK}}>
-                              {n}{n===meinName&&<span style={{fontSize:13,color:GN,marginLeft:5}}>(ich)</span>}
-                            </div>
-                            {gruppe&&<div style={{fontSize:13,color:"var(--sub)",marginTop:1}}>{gruppe}</div>}
-                          </div>
-                          {selected&&<span style={{fontSize:13,color:GN,flexShrink:0}}>✓</span>}
-                        </button>
+                        <Btn onClick={()=>setZuteilTarget(selected?"":n)}><Av name={n} size={20} bg={selected?GN:"#bbb"}/> <div style={{flex:1}}> <div style={{fontSize:13,fontWeight:selected?700:400,color:selected?GN:BK}}> {n}{n===meinName&&<span style={{fontSize:13,color:GN,marginLeft:5}}>(ich)</span>} </div> {gruppe&&<div style={{fontSize:13,color:"var(--sub)",marginTop:1}}>{gruppe}</div>} </div> {selected&&<span style={{fontSize:13,color:GN,flexShrink:0}}>✓</span>}</Btn>
                       );
                     })}
                   </div>
                 );
               })()}
               <Row align="flex-start">
-                <button onClick={handleZuteilen} disabled={!zuteilTarget} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:zuteilTarget?"pointer":"default",border:"none",background:zuteilTarget?GN:"#ccc",color:"#fff"}}>Zuteilen</button>
-                <button onClick={()=>{setShowZuteilen(false);setZuteilTarget("");setZuteilSearch("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
+                <Btn small onClick={handleZuteilen} disabled={!zuteilTarget}>Zuteilen</Btn>
+                <Btn small onClick={()=>{setShowZuteilen(false);setZuteilTarget("");setZuteilSearch("");}}>Abbrechen</Btn>
               </Row>
             </div>
           )}
         </div>
       ):(
         <div style={{marginTop:10}}>
-          <button disabled style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"default",border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--sub)"}}>Besetzt</button>
+          <Btn small>Besetzt</Btn>
         </div>
       )}
 
@@ -338,7 +293,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
               <div style={{fontSize:13,color:AM,fontWeight:700,marginBottom:2}}>Freigabe-Anfrage von {anfrageData?.name}</div>
               <div style={{fontSize:13,color:"var(--sub)"}}>Begründung: <em>{"\"" + (anfrageData?.begruendung||"") + "\""}</em></div>
             </div>
-            <button onClick={()=>onFreigeben(schicht.id,null)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:700,cursor:"pointer",border:"none",background:AM,color:"#fff",flexShrink:0}}>Freigeben ✓</button>
+            <Btn variant="primary" color={AM} small onClick={()=>onFreigeben(schicht.id,null)}>Freigeben ✓</Btn>
           </div>
         </div>
       )}
@@ -346,9 +301,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
       {canFreigeben&&!ichDrin&&helfer.length>0&&(
         <div style={{marginTop:6,display:"flex",gap:4,flexWrap:"wrap"}}>
           {helfer.map((h,i)=>(
-            <button key={i} onClick={()=>onFreigeben(schicht.id,h)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:`0.5px solid ${R}`,background:"var(--surface)",color:R}}>
-              {h} ✕
-            </button>
+            <Btn small onClick={()=>onFreigeben(schicht.id,h)}>{h} ✕</Btn>
           ))}
         </div>
       )}
@@ -424,12 +377,8 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
         <div>
           {!showAnfrageForm&&!showTransfer&&(
             <Row align="flex-start">
-              <button onClick={()=>setShowTransfer(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid #0891B2`,background:"var(--surface)",color:"#0891B2"}}>
-                ⇄ Übertragen
-              </button>
-              <button onClick={()=>setShowAnfrageForm(true)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,cursor:"pointer",border:`0.5px solid ${AM}`,background:"var(--surface)",color:AM}}>
-                ↩ Freigabe anfragen
-              </button>
+              <Btn small onClick={()=>setShowTransfer(true)}>⇄ Übertragen</Btn>
+              <Btn small onClick={()=>setShowAnfrageForm(true)}>↩ Freigabe anfragen</Btn>
             </Row>
           )}
 
@@ -445,10 +394,8 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
                 style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,resize:"vertical",boxSizing:"border-box",marginBottom:7,fontFamily:FONT}}
               />
               <Row align="flex-start">
-                <button onClick={handleSenden} disabled={!begruendung.trim()} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:begruendung.trim()?"pointer":"default",border:"none",background:begruendung.trim()?AM:"#ccc",color:"#fff"}}>
-                  Anfrage senden
-                </button>
-                <button onClick={()=>{setShowAnfrageForm(false);setBegruendung("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
+                <Btn small onClick={handleSenden} disabled={!begruendung.trim()}>Anfrage senden</Btn>
+                <Btn small onClick={()=>{setShowAnfrageForm(false);setBegruendung("");}}>Abbrechen</Btn>
               </Row>
             </div>
           )}
@@ -464,8 +411,8 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
                 ))}
               </select>
               <Row align="flex-start">
-                <button onClick={handleÜbertragen} disabled={!transferTarget} style={{padding:"4px 11px",borderRadius:6,fontSize:13,fontWeight:600,cursor:transferTarget?"pointer":"default",border:"none",background:transferTarget?"#0891B2":"#ccc",color:"#fff"}}>Übertragen</button>
-                <button onClick={()=>{setShowTransfer(false);setTransferTarget("");}} style={{padding:"4px 10px",borderRadius:6,fontSize:13,cursor:"pointer",border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)"}}>Abbrechen</button>
+                <Btn small onClick={handleÜbertragen} disabled={!transferTarget}>Übertragen</Btn>
+                <Btn small onClick={()=>{setShowTransfer(false);setTransferTarget("");}}>Abbrechen</Btn>
               </Row>
             </div>
           )}
@@ -689,7 +636,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
       {/* Sub-Tabs */}
       <div style={{display:"flex",gap:4,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,width:"fit-content"}}>
         {TABS.map(t=>(
-          <button key={t.key} onClick={()=>setHelperTab(t.key)} style={{padding:"8px 14px",border:"none",borderRadius:8,background:helperTab===t.key?"#fff":"transparent",color:helperTab===t.key?BK:"#999",fontWeight:helperTab===t.key?700:400,cursor:"pointer",fontSize:13,boxShadow:helperTab===t.key?"0 1px 3px rgba(0,0,0,0.08)":"none",whiteSpace:"nowrap"}}>{t.label}</button>
+          <Btn onClick={()=>setHelperTab(t.key)}>{t.label}</Btn>
         ))}
       </div>
 
@@ -701,10 +648,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
           {elternPersonen.map((p,i)=>{
             const active=aktivePerson===p;
             return(
-              <button key={i} onClick={()=>setAktivePerson(p)}
-                style={{padding:"6px 14px",borderRadius:20,border:`0.5px solid ${active?ACCENT:GB}`,background:active?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,fontWeight:active?700:400,cursor:"pointer"}}>
-                {i===0?`${p} (Elternteil)`:p}
-              </button>
+              <Btn onClick={()=>setAktivePerson(p)}>{i===0?`${p} (Elternteil)`:p}</Btn>
             );
           })}
         </div>
@@ -723,7 +667,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                 style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${browseSearch?ACCENT:GB}`,borderRadius:20,fontSize:13,outline:"none",width:"100%",maxWidth:210,background:"var(--surface)"}}
               />
               {browseSearch&&(
-                <button onClick={()=>setBrowseSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",lineHeight:1}}>×</button>
+                <Btn variant="ghost" onClick={()=>setBrowseSearch("")}>×</Btn>
               )}
             </div>
             <div style={{width:"1px",height:22,background:GB}}/>
@@ -737,8 +681,8 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
             </select>
             <div style={{width:"1px",height:22,background:GB,margin:"0 2px"}}/>
             {/* Schichten-Filter */}
-            <button onClick={()=>setFilterOffen(false)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${!filterOffen?ACCENT:GB}`,background:!filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:!filterOffen?700:400}}>Alle Schichten</button>
-            <button onClick={()=>setFilterOffen(true)} style={{padding:"8px 16px",borderRadius:20,border:`0.5px solid ${filterOffen?ACCENT:GB}`,background:filterOffen?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterOffen?700:400}}>Nur offen</button>
+            <Btn onClick={()=>setFilterOffen(false)}>Alle Schichten</Btn>
+            <Btn onClick={()=>setFilterOffen(true)}>Nur offen</Btn>
           </div>
 
           {/* Alle Events nacheinander */}
@@ -850,12 +794,12 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                                       </label>
                                     );
                                   })}
-                                  <button onClick={e=>{e.stopPropagation();setEditingGruppen(null);}} style={{padding:"5px 12px",borderRadius:20,fontSize:13,fontWeight:600,border:`0.5px solid ${GN}`,background:"var(--surface)",color:GN,cursor:"pointer"}}>✓ Fertig</button>
+                                  <Btn onClick={e=>{e.stopPropagation();setEditingGruppen(null);}}>✓ Fertig</Btn>
                                 </div>
                               ):(
                                 <>
                                   {(gruppenState[einsatz.id]||einsatz.gruppen).map((g,gi)=><Chip key={gi} text={g} color="#6B7280" bg="#F3F4F6"/>)}
-                                  {canEdit&&<button onClick={e=>{e.stopPropagation();setEditingGruppen(einsatz.id);}} style={{padding:"5px 12px",borderRadius:20,fontSize:13,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",cursor:"pointer"}}><TI n="edit"/></button>}
+                                  {canEdit&&<Btn onClick={e=>{e.stopPropagation();setEditingGruppen(einsatz.id);}}><TI n="edit"/></Btn>}
                                 </>
                               )}
                               {/* Bemerkung Edit */}
@@ -864,12 +808,11 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                                   <input autoFocus value={bemerkungDraft} onChange={e=>setBemerkungDraft(e.target.value)}
                                     placeholder="Bemerkung…"
                                     style={{padding:"3px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,outline:"none",width:160}}/>
-                                  <button onClick={()=>saveBemerkung(`e${einsatz.id}`,bemerkungDraft)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,fontWeight:600,border:`0.5px solid ${GN}`,background:"var(--surface)",color:GN,cursor:"pointer"}}>✓</button>
-                                  <button onClick={()=>setEditingBemerkung(null)} style={{padding:"4px 10px",borderRadius:6,fontSize:13,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",cursor:"pointer"}}>✕</button>
+                                  <Btn small onClick={()=>saveBemerkung(`e${einsatz.id}`,bemerkungDraft)}>✓</Btn>
+                                  <Btn small onClick={()=>setEditingBemerkung(null)}>✕</Btn>
                                 </div>
                               ):(
-                                <button onClick={e=>{e.stopPropagation();setEditingBemerkung(`e${einsatz.id}`);setBemerkungDraft(bemerkungState[`e${einsatz.id}`]||"");}}
-                                  style={{padding:"5px 12px",borderRadius:20,fontSize:13,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",cursor:"pointer"}}><TI n="edit"/></button>
+                                <Btn onClick={e=>{e.stopPropagation();setEditingBemerkung(`e${einsatz.id}`);setBemerkungDraft(bemerkungState[`e${einsatz.id}`]||"");}}><TI n="edit"/></Btn>
                               ))}
                               {(()=>{
                                 const totalPlätze=einsatz.schichten.reduce((s,sc)=>s+sc.max,0);
@@ -908,7 +851,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
             })&&(
               <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:14,background:"var(--surface)",borderRadius:12,border:"0.5px solid var(--border)"}}>
                 Keine Einsätze oder Schichten gefunden für <strong style={{color:"var(--text)"}}>„{browseSearch}"</strong>
-                <br/><button onClick={()=>setBrowseSearch("")} style={{marginTop:10,padding:"5px 12px",borderRadius:20,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer"}}>Suche zurücksetzen</button>
+                <br/><Btn onClick={()=>setBrowseSearch("")}>Suche zurücksetzen</Btn>
               </div>
             )}
           </div>
@@ -1157,12 +1100,12 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
               <span style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:13,color:"var(--sub)",pointerEvents:"none"}}><TI n="search"/></span>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Mitglied suchen…"
                 style={{padding:"6px 10px 6px 28px",border:`0.5px solid ${search?ACCENT:GB}`,borderRadius:20,fontSize:13,outline:"none",width:"100%",maxWidth:190,background:"var(--surface)"}}/>
-              {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",lineHeight:1}}>×</button>}
+              {search&&<Btn variant="ghost" onClick={()=>setSearch("")}>×</Btn>}
             </div>
             <div style={{width:"1px",height:22,background:GB}}/>
             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
               {["alle","Offen","Geplant erfüllt","Erfüllt","Befreit"].map(f=>(
-                <button key={f} onClick={()=>setFilterStatus(f)} style={{padding:"5px 12px",border:`0.5px solid ${filterStatus===f?ACCENT:GB}`,borderRadius:20,background:filterStatus===f?"var(--cc-hover)":"#fff",color:"var(--text)",fontSize:13,cursor:"pointer",fontWeight:filterStatus===f?700:400}}>{f==="alle"?"Alle":f}</button>
+                <Btn onClick={()=>setFilterStatus(f)}>{f==="alle"?"Alle":f}</Btn>
               ))}
             </div>
             {!isTrainer&&(
@@ -1305,7 +1248,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                     {f.opts?.map(o=><option key={o}>{o}</option>)}
                   </select>
                 ):(
-                  <input type={f.type||"text"} placeholder={f.ph} style={{width:"100%",padding:"7px 9px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,boxSizing:"border-box"}}/>
+                  <Input type={f.type||"text"} placeholder={f.ph} style={{fontSize:13,boxSizing:"border-box"}}/>
                 )}
               </div>
             ))}
@@ -1319,7 +1262,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                 <span style={{fontSize:13,color:"var(--sub)"}}>Plätze</span>
               </div>
             ))}
-            <button style={{fontSize:13,color:BL,background:"none",border:"none",cursor:"pointer",fontWeight:600,padding:0}}>+ Schicht hinzufügen</button>
+            <Btn variant="ghost">+ Schicht hinzufügen</Btn>
           </div>
           <div style={{marginTop:16,display:"flex",gap:8}}>
             <Btn variant="primary" color="#F3F4F6">Einsatz erstellen</Btn>

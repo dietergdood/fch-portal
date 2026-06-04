@@ -288,12 +288,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
   const hasMultiRoles=account.rollen.length>1;
   return(
     <>
-      <button onClick={()=>setOpen(true)} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 14px",borderRadius:10,border:`1.5px solid ${cur.color}`,background:cur.color+"12",cursor:"pointer"}}>
-        <span style={{fontSize:14}}>{cur.icon}</span>
-        <span style={{fontSize:13,fontWeight:700,color:cur.color}}>{cur.label}</span>
-        {hasMultiRoles&&<span style={{fontSize:13,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rollen.length}</span>}
-        <span style={{fontSize:13,color:cur.color,opacity:0.7}}>▾</span>
-      </button>
+      <Btn onClick={()=>setOpen(true)}><span style={{fontSize:14}}>{cur.icon}</span> <span style={{fontSize:13,fontWeight:700,color:cur.color}}>{cur.label}</span> {hasMultiRoles&&<span style={{fontSize:13,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rollen.length}</span>} <span style={{fontSize:13,color:cur.color,opacity:0.7}}>▾</span></Btn>
       {open&&(
         <div onClick={()=>setOpen(false)} style={isMobile?{position:"fixed",inset:0,zIndex:1000,display:"flex",flexDirection:"column",justifyContent:"flex-end",background:"rgba(0,0,0,0.5)"}:{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}>
           <div onClick={e=>e.stopPropagation()} style={isMobile?{position:"relative",background:"var(--surface)",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)",overflowY:"auto"}:{padding:24}}>
@@ -329,11 +324,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
                             const rd=ROLES[r];
                             const isActiveSub=(isActive&&(activeSubRole||a.primaryRole)===r);
                             return(
-                              <button key={r} onClick={()=>{onRoleChange(key);setActiveSubRole(r);setOpen(false);}}
-                                style={{display:"flex",alignItems:"center",gap:8,padding:"5px 12px",borderRadius:20,border:`1.5px solid ${isActiveSub?rd.color:GB}`,background:isActiveSub?rd.color+"15":"#fff",cursor:"pointer",fontSize:13,fontWeight:isActiveSub?700:400,color:isActiveSub?rd.color:"var(--text)"}}>
-                                <span>{rd.icon}</span>{rd.label}
-                                {isActiveSub&&<span style={{fontSize:13,color:rd.color}}>✓</span>}
-                              </button>
+                              <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(r);setOpen(false);}}><span>{rd.icon}</span>{rd.label} {isActiveSub&&<span style={{fontSize:13,color:rd.color}}>✓</span>}</Btn>
                             );
                           })}
                         </div>
@@ -353,19 +344,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
                     const rd=ROLES[a.primaryRole];
                     const isActive=account===a;
                     return(
-                      <button key={key} onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}
-                        style={{padding:"10px 14px",borderRadius:10,border:`1.5px solid ${isActive?rd.color:GB}`,background:isActive?rd.color+"12":"#fafaf8",cursor:"pointer",textAlign:"left",minWidth:200}}>
-                        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-                          <span style={{fontSize:16}}>{rd.icon}</span>
-                          <span style={{fontWeight:700,fontSize:13,color:isActive?rd.color:"var(--text)"}}>{a.name}</span>
-                        </div>
-                        {a.kinder.map((k,i)=>(
-                          <div key={i} style={{fontSize:13,color:"var(--sub)",marginTop:2}}>
-                            <span style={{color:GN}}>►</span> {k.name} <span style={{color:"var(--sub)"}}>({k.team})</span>
-                          </div>
-                        ))}
-                        {isActive&&<div style={{marginTop:5,fontSize:13,color:rd.color,fontWeight:700}}>AKTIV</div>}
-                      </button>
+                      <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}> <span style={{fontSize:16}}>{rd.icon}</span> <span style={{fontWeight:700,fontSize:13,color:isActive?rd.color:"var(--text)"}}>{a.name}</span> </div> {a.kinder.map((k,i)=>( <div key={i} style={{fontSize:13,color:"var(--sub)",marginTop:2}}> <span style={{color:GN}}>►</span> {k.name} <span style={{color:"var(--sub)"}}>({k.team})</span> </div> ))} {isActive&&<div style={{marginTop:5,fontSize:13,color:rd.color,fontWeight:700}}>AKTIV</div>}</Btn>
                     );
                   })}
                 </div>
@@ -381,17 +360,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
                   const isActive=account===a&&!activeSubRole;
                   const teamLabel=a.trainerTeams?a.trainerTeams[0]:a.team||null;
                   return(
-                    <button key={key} onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}
-                      style={{padding:"12px 14px",borderRadius:10,border:`1.5px solid ${isActive?rd.color:GB}`,background:isActive?rd.color+"12":"#fafaf8",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
-                        <span style={{fontSize:18}}>{rd.icon}</span>
-                        <span style={{fontWeight:700,fontSize:13,color:isActive?rd.color:"var(--text)"}}>{a.name}</span>
-                        {isActive&&<span style={{marginLeft:"auto",fontSize:13,color:rd.color,fontWeight:700}}>AKTIV</span>}
-                      </div>
-                      <div style={{fontSize:13,color:rd.color,fontWeight:600,marginBottom:2}}>{rd.label}</div>
-                      {teamLabel&&<div style={{fontSize:13,color:"var(--sub)"}}>{teamLabel}</div>}
-                      {!teamLabel&&<p style={{margin:0,fontSize:13,color:"var(--sub)"}}>{rd.desc}</p>}
-                    </button>
+                    <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}> <span style={{fontSize:18}}>{rd.icon}</span> <span style={{fontWeight:700,fontSize:13,color:isActive?rd.color:"var(--text)"}}>{a.name}</span> {isActive&&<span style={{marginLeft:"auto",fontSize:13,color:rd.color,fontWeight:700}}>AKTIV</span>} </div> <div style={{fontSize:13,color:rd.color,fontWeight:600,marginBottom:2}}>{rd.label}</div> {teamLabel&&<div style={{fontSize:13,color:"var(--sub)"}}>{teamLabel}</div>} {!teamLabel&&<p style={{margin:0,fontSize:13,color:"var(--sub)"}}>{rd.desc}</p>}</Btn>
                   );
                 })}
               </div>
@@ -432,22 +401,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
       {/* Nav items */}
       <div style={{flex:1,padding:"10px 8px",overflowY:"auto",overflowX:"hidden"}}>
         {nav.map(n=>(
-          <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined} style={{
-            width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
-            padding:collapsed?"10px 0":"10px 12px",borderRadius:8,border:"none",
-            background:active===n.key?"var(--nav-a)":"transparent",
-            color:active===n.key?"var(--nav-accent-text)":"var(--nav-t)",
-            cursor:"pointer",fontSize:13.5,fontWeight:active===n.key?600:400,
-            textAlign:"left",marginBottom:2,letterSpacing:0.1,
-            transition:"background 0.15s,color 0.15s",
-            fontFamily:FONT,WebkitTapHighlightColor:"transparent",minHeight:44,
-            justifyContent:collapsed?"center":"flex-start"
-          }}
-            onMouseEnter={e=>{if(active!==n.key)e.currentTarget.style.background="var(--nav-hover)";}}
-            onMouseLeave={e=>{if(active!==n.key)e.currentTarget.style.background="transparent";}}>
-            <TI n={n.icon||"circle"} size={collapsed?18:15} style={{flexShrink:0,opacity:active===n.key?1:0.65}}/>
-            {!collapsed&&n.label}
-          </button>
+          <Btn onClick={()=>setActive(n.key)}><TI n={n.icon||"circle"} size={collapsed?18:15} style={{flexShrink:0,opacity:active===n.key?1:0.65}}/> {!collapsed&&n.label}</Btn>
         ))}
       </div>
 
@@ -455,43 +409,10 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
       <div style={{height:1,background:"var(--nav-b)",margin:"0 12px"}}/>
 
       {/* User footer – klickbar → Profil */}
-      <button onClick={()=>setShowProfile(true)} title={collapsed?userName:undefined} style={{
-        padding:collapsed?"12px 0":"14px 12px",
-        background:"none",border:"none",cursor:"pointer",textAlign:"left",
-        width:"100%",transition:"background 0.15s",
-        WebkitTapHighlightColor:"transparent",
-        display:"flex",flexDirection:collapsed?"column":"column",alignItems:collapsed?"center":"stretch"
-      }}
-        onMouseEnter={e=>{if(e.currentTarget.dataset.active!=="1")e.currentTarget.style.background="var(--nav-hover)"}}
-        onMouseLeave={e=>{if(e.currentTarget.dataset.active!=="1")e.currentTarget.style.background="none"}}>
-        {!collapsed&&<div style={{fontSize:11,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>}
-        <div style={{display:"flex",alignItems:"center",gap:8,justifyContent:collapsed?"center":"flex-start"}}>
-          <Av size={32} bg={ACCENT} name={userName}/>
-          {!collapsed&&(
-            <div style={{minWidth:0,flex:1}}>
-              <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
-              <div style={{marginTop:3,fontSize:11,color:"var(--sub)",fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>
-              <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:rc,flexShrink:0}}/>
-              {getRole(role).label}
-            </div>
-            </div>
-          )}
-          {!collapsed&&<TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>}
-        </div>
-      </button>
+      <Btn variant="ghost" onClick={()=>setShowProfile(true)}>{!collapsed&&<div style={{fontSize:11,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>} <div style={{display:"flex",alignItems:"center",gap:8,justifyContent:collapsed?"center":"flex-start"}}> <Av size={32} bg={ACCENT} name={userName}/> {!collapsed&&( <div style={{minWidth:0,flex:1}}> <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div> <div style={{marginTop:3,fontSize:11,color:"var(--sub)",fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}> <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:rc,flexShrink:0}}/> {getRole(role).label} </div> </div> )} {!collapsed&&<TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>} </div></Btn>
 
       {/* Einklappen-Button */}
-      <button onClick={toggleCollapse} title={collapsed?"Menü ausklappen":"Menü einklappen"} style={{
-        padding:"10px 0",background:"none",border:"none",cursor:"pointer",
-        borderTop:"1px solid var(--nav-b)",
-        display:"flex",alignItems:"center",justifyContent:"center",
-        color:"var(--nav-t)",transition:"background 0.15s, color 0.15s",
-        WebkitTapHighlightColor:"transparent",width:"100%"
-      }}
-        onMouseEnter={e=>{e.currentTarget.style.background="var(--nav-hover)";e.currentTarget.style.color="var(--nav-a)";}}
-        onMouseLeave={e=>{e.currentTarget.style.background="none";e.currentTarget.style.color="var(--nav-t)";}}>
-        <TI n={collapsed?"chevrons-right":"chevrons-left"} size={16}/>
-      </button>
+      <Btn variant="ghost" onClick={toggleCollapse}><TI n={collapsed?"chevrons-right":"chevrons-left"} size={16}/></Btn>
 
       <ProfileModal open={showProfile} onClose={()=>setShowProfile(false)} account={account} role={role} sb={sb} onNameUpdated={onNameUpdated} onLogout={onLogout}/>
     </nav>
@@ -518,14 +439,7 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
           </div>
         ):(
           <div style={{display:"flex",alignItems:"center",gap:4,flexShrink:0,minWidth:0}}>
-            <button onClick={()=>onBack?onBack():setActive("dashboard")} style={{
-              width:36,height:36,borderRadius:8,background:"none",border:"none",
-              display:"flex",alignItems:"center",justifyContent:"center",
-              cursor:"pointer",color:"var(--text)",flexShrink:0,
-              WebkitTapHighlightColor:"transparent"
-            }}>
-              <TI n="chevron-left" size={22}/>
-            </button>
+            <Btn variant="ghost" onClick={()=>onBack?onBack():setActive("dashboard")} style={{ width:36,height:36 }}><TI n="chevron-left" size={22}/></Btn>
             <span style={{fontWeight:700,fontSize:16,color:"var(--text)",letterSpacing:-0.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{pageLabel}</span>
           </div>
         )
@@ -541,33 +455,14 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
       <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
         {/* Dark Toggle – nur Desktop */}
         {!isMobile&&(
-          <button onClick={toggle} title={dark?"Hell-Modus":"Dunkel-Modus"} style={{
-            display:"flex",alignItems:"center",gap:8,
-            padding:"5px 10px 5px 7px",borderRadius:20,
-            border:"1px solid var(--border)",background:dark?ACCENT:"var(--surface2)",
-            cursor:"pointer",transition:"background 0.25s,border-color 0.25s",
-            flexShrink:0,minHeight:34
-          }}>
-            <div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}>
-              <TI n={dark?"sun":"moon"} size={12} style={{color:dark?ACCENT:"var(--sub)"}}/>
-            </div>
-            <span style={{fontSize:13,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span>
-          </button>
+          <Btn onClick={toggle}><div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}> <TI n={dark?"sun":"moon"} size={12} style={{color:dark?ACCENT:"var(--sub)"}}/> </div> <span style={{fontSize:13,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span></Btn>
         )}
         {!isMobile&&!onLogout&&<RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
         {!isMobile&&!onLogout&&<Chip text="DEMO" color="#999" bg="var(--surface2)"/>}
-        {!isMobile&&onLogout&&<button onClick={onLogout} style={{padding:"8px 14px",borderRadius:8,border:"1px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer",fontWeight:600,minHeight:36}}>Abmelden</button>}
+        {!isMobile&&onLogout&&<Btn onClick={onLogout}>Abmelden</Btn>}
         {/* Profil-Avatar – nur Mobile */}
         {isMobile&&(
-          <button onClick={onOpenProfile} style={{
-            width:34,height:34,borderRadius:"50%",background:"var(--surface)",border:"none",
-            display:"flex",alignItems:"center",justifyContent:"center",
-            color:"var(--sub)",fontWeight:700,fontSize:13,
-            cursor:"pointer",flexShrink:0,WebkitTapHighlightColor:"transparent",
-            fontFamily:FONT,boxShadow:"0 1px 4px rgba(0,0,0,0.08)"
-          }}>
-            {initials}
-          </button>
+          <Btn onClick={onOpenProfile} style={{ width:34,height:34 }}>{initials}</Btn>
         )}
       </div>
     </div>
@@ -941,19 +836,7 @@ function DarkModeRow(){
         <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
         <div style={{fontSize:13,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
       </div>
-      <button onClick={toggle} style={{
-        position:"relative",width:48,height:26,borderRadius:12,border:"none",
-        background:dark?ACCENT:"var(--border)",cursor:"pointer",
-        transition:"background 0.25s",flexShrink:0,padding:0,
-        WebkitTapHighlightColor:"transparent"
-      }}>
-        <div style={{
-          position:"absolute",top:3,left:dark?22:3,width:20,height:20,
-          borderRadius:"50%",background:dark?"#111":"#fff",
-          boxShadow:"0 1px 4px rgba(0,0,0,0.2)",
-          transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)"
-        }}/>
-      </button>
+      <Btn onClick={toggle}><div style={{ position:"absolute",top:3,left:dark?22:3,width:20,height:20, borderRadius:"50%",background:dark?"#111":"#fff", boxShadow:"0 1px 4px rgba(0,0,0,0.2)", transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)" }}/></Btn>
     </Between>
   );
 }
@@ -1041,8 +924,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>{userEmail}</div>
           </div>
         </Row>
-        <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",
-          color:"var(--sub)",lineHeight:1,padding:4,borderRadius:6}}>×</button>
+        <Btn variant="ghost" onClick={onClose}>×</Btn>
       </div>
 
       {/* Tabs */}
@@ -1069,19 +951,8 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                     onKeyDown={e=>{if(e.key==="Enter")handleSaveName();if(e.key==="Escape")setEditName(false);}}
                     style={{...inputStyle}} autoFocus placeholder="Vor- und Nachname"/>
                   <Row align="flex-start">
-                    <button onClick={handleSaveName} disabled={nameStatus==="loading"}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-                      style={{flex:1,padding:"9px",borderRadius:8,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
-                        fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-                        opacity:nameStatus==="loading"?0.6:1}}>
-                      {nameStatus==="loading"?"Speichern…":"Speichern"}
-                    </button>
-                    <button onClick={()=>{setEditName(false);setNameStatus(null);}}
-                      style={{padding:"9px 16px",borderRadius:8,background:"var(--surface2)",
-                        color:"var(--sub)",border:"1px solid var(--border)",fontSize:13,cursor:"pointer",fontFamily:FONT}}>
-                      Abbrechen
-                    </button>
+                    <Btn variant="primary" color={BTN} onClick={handleSaveName} disabled={nameStatus==="loading"}>{nameStatus==="loading"?"Speichern…":"Speichern"}</Btn>
+                    <Btn onClick={()=>{setEditName(false);setNameStatus(null);}}>Abbrechen</Btn>
                   </Row>
                   <StatusBox status={nameStatus} msg={nameMsg}/>
                 </Col>
@@ -1129,17 +1000,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             {/* Abmelden */}
             {onLogout&&(
               <div style={{marginTop:20,paddingTop:16,borderTop:"1px solid var(--border)"}}>
-                <button onClick={onLogout} style={{
-                  width:"100%",padding:"11px",borderRadius:10,
-                  background:"transparent",color:R,border:"1px solid "+R,
-                  fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,
-                  display:"flex",alignItems:"center",justifyContent:"center",gap:8,
-                  transition:"background 0.15s"
-                }}
-                  onMouseEnter={e=>e.currentTarget.style.background=RL}
-                  onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <TI n="logout" size={15}/> Abmelden
-                </button>
+                <Btn variant="ghost" onClick={onLogout}><TI n="logout" size={15}/> Abmelden</Btn>
               </div>
             )}
           </div>
@@ -1166,14 +1027,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                 style={inputStyle} autoComplete="new-password"/>
             </div>
             <StatusBox status={pwStatus} msg={pwMsg}/>
-            <button type="submit" disabled={pwStatus==="loading"}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-              style={{padding:"12px 20px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
-                fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-                opacity:pwStatus==="loading"?0.6:1,transition:"background 0.15s, opacity 0.2s"}}>
-              {pwStatus==="loading"?"Wird gespeichert…":"Passwort ändern"}
-            </button>
+            <Btn variant="primary" color={BTN} disabled={pwStatus==="loading"} type="submit">{pwStatus==="loading"?"Wird gespeichert…":"Passwort ändern"}</Btn>
             {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",marginTop:4}}>Demo-Modus: Änderungen werden nicht gespeichert.</div>}
           </form>
         )}
@@ -1238,31 +1092,11 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
             <div style={{width:40,height:4,borderRadius:2,background:"var(--border)",margin:"4px auto 12px"}}/>
             <div style={{padding:"0 8px 4px",fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5}}>Weitere Module</div>
             {mehr.map(m=>(
-              <button key={m.key} onClick={()=>{setActive(m.key);setShowMehr(false);}}
-                style={{display:"flex",alignItems:"center",gap:16,width:"100%",padding:"12px 16px",
-                  background:active===m.key?ACCENT20:"none",border:"none",cursor:"pointer",
-                  fontFamily:"inherit",textAlign:"left"}}>
-                <div style={{width:40,height:40,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                  background:active===m.key?ACCENT:"var(--surface2)",flexShrink:0}}>
-                  <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/>
-                </div>
-                <span style={{fontSize:14,fontWeight:active===m.key?600:400,color:active===m.key?"var(--text)":"var(--sub)"}}>{m.label}</span>
-                {active===m.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}
-              </button>
+              <Btn onClick={()=>{setActive(m.key);setShowMehr(false);}}><div style={{width:40,height:40,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center", background:active===m.key?ACCENT:"var(--surface2)",flexShrink:0}}> <TI n={m.icon||"circle"} size={19} style={{color:active===m.key?"#111":"var(--sub)"}}/> </div> <span style={{fontSize:14,fontWeight:active===m.key?600:400,color:active===m.key?"var(--text)":"var(--sub)"}}>{m.label}</span> {active===m.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}</Btn>
             ))}
             {/* Profil */}
             <div style={{margin:"8px 16px 0",paddingTop:12,borderTop:"0.5px solid var(--border)"}}>
-              <button onClick={()=>{setShowProfile(true);setShowMehr(false);}}
-                style={{display:"flex",alignItems:"center",gap:16,width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
-                <div style={{width:40,height:40,borderRadius:"50%",background:rc,display:"flex",alignItems:"center",
-                  justifyContent:"center",color:rc===ACCENT?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}>
-                  {initials}
-                </div>
-                <div style={{textAlign:"left"}}>
-                  <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{userName}</div>
-                  <div style={{fontSize:13,color:"var(--sub)"}}>{getRole(role)?.label||role}</div>
-                </div>
-              </button>
+              <Btn variant="ghost" onClick={()=>{setShowProfile(true);setShowMehr(false);}}><div style={{width:40,height:40,borderRadius:"50%",background:rc,display:"flex",alignItems:"center", justifyContent:"center",color:rc===ACCENT?"#111":"#fff",fontWeight:700,fontSize:14,flexShrink:0}}> {initials} </div> <div style={{textAlign:"left"}}> <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{userName}</div> <div style={{fontSize:13,color:"var(--sub)"}}>{getRole(role)?.label||role}</div> </div></Btn>
             </div>
           </div>
         </div>
@@ -1274,26 +1108,12 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
           {tabs.map(n=>{
             const isActive=active===n.key&&!mehrActive;
             return(
-              <button key={n.key} onClick={()=>{setActive(n.key);setShowMehr(false);}} style={{
-                flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-                padding:"8px 0 5px",background:"none",border:"none",cursor:"pointer",
-                minHeight:56,WebkitTapHighlightColor:"transparent",gap:4
-              }}>
-                <TI n={n.icon||"circle"} size={22} style={{color:isActive?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/>
-                <span style={{fontSize:11,color:isActive?"var(--nav-a)":"var(--nav-t)",fontWeight:isActive?600:400,transition:"color 0.15s"}}>{n.label}</span>
-              </button>
+              <Btn variant="ghost" onClick={()=>{setActive(n.key);setShowMehr(false);}}><TI n={n.icon||"circle"} size={22} style={{color:isActive?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/> <span style={{fontSize:11,color:isActive?"var(--nav-a)":"var(--nav-t)",fontWeight:isActive?600:400,transition:"color 0.15s"}}>{n.label}</span></Btn>
             );
           })}
           {/* Mehr-Button */}
           {mehr.length>0&&(
-            <button onClick={()=>setShowMehr(v=>!v)} style={{
-              flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-              padding:"8px 0 5px",background:"none",border:"none",cursor:"pointer",
-              minHeight:56,WebkitTapHighlightColor:"transparent",gap:4
-            }}>
-              <TI n="dots" size={22} style={{color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/>
-              <span style={{fontSize:11,color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400,transition:"color 0.15s"}}>Mehr</span>
-            </button>
+            <Btn variant="ghost" onClick={()=>setShowMehr(v=>!v)}><TI n="dots" size={22} style={{color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",transition:"color 0.15s"}}/> <span style={{fontSize:11,color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400,transition:"color 0.15s"}}>Mehr</span></Btn>
           )}
         </div>
       </nav>

@@ -386,8 +386,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             <div style={{fontSize:12,color:"var(--sub)",marginTop:2}}>{userEmail}</div>
           </div>
         </div>
-        <button onClick={onClose} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",
-          color:"var(--sub)",lineHeight:1,padding:4,borderRadius:6}}>×</button>
+        <Btn variant="ghost" onClick={onClose}>×</Btn>
       </div>
 
       {/* Tabs */}
@@ -414,19 +413,8 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                     onKeyDown={e=>{if(e.key==="Enter")handleSaveName();if(e.key==="Escape")setEditName(false);}}
                     style={{...inputStyle}} autoFocus placeholder="Vor- und Nachname"/>
                   <Row align="flex-start">
-                    <button onClick={handleSaveName} disabled={nameStatus==="loading"}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-                      style={{flex:1,padding:"9px",borderRadius:9,background:BTN,color:BTN_TXT,border:"none",
-                        fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-                        opacity:nameStatus==="loading"?0.6:1}}>
-                      {nameStatus==="loading"?"Speichern…":"Speichern"}
-                    </button>
-                    <button onClick={()=>{setEditName(false);setNameStatus(null);}}
-                      style={{padding:"9px 16px",borderRadius:9,background:"var(--surface2)",
-                        color:"var(--sub)",border:"1px solid var(--border)",fontSize:13,cursor:"pointer",fontFamily:FONT}}>
-                      Abbrechen
-                    </button>
+                    <Btn variant="primary" color={BTN} onClick={handleSaveName} disabled={nameStatus==="loading"}>{nameStatus==="loading"?"Speichern…":"Speichern"}</Btn>
+                    <Btn onClick={()=>{setEditName(false);setNameStatus(null);}}>Abbrechen</Btn>
                   </Row>
                   <StatusBox status={nameStatus} msg={nameMsg}/>
                 </Col>
@@ -474,17 +462,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             {/* Abmelden */}
             {onLogout&&(
               <div style={{marginTop:20,paddingTop:16,borderTop:"1px solid var(--border)"}}>
-                <button onClick={onLogout} style={{
-                  width:"100%",padding:"11px",borderRadius:10,
-                  background:"transparent",color:R,border:"1px solid "+R,
-                  fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,
-                  display:"flex",alignItems:"center",justifyContent:"center",gap:8,
-                  transition:"background 0.15s"
-                }}
-                  onMouseEnter={e=>e.currentTarget.style.background=RL}
-                  onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <TI n="logout" size={15}/> Abmelden
-                </button>
+                <Btn variant="ghost" onClick={onLogout}><TI n="logout" size={15}/> Abmelden</Btn>
               </div>
             )}
           </div>
@@ -511,14 +489,7 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
                 style={inputStyle} autoComplete="new-password"/>
             </div>
             <StatusBox status={pwStatus} msg={pwMsg}/>
-            <button type="submit" disabled={pwStatus==="loading"}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-              style={{padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
-                fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-                opacity:pwStatus==="loading"?0.6:1,transition:"opacity 0.2s"}}>
-              {pwStatus==="loading"?"Wird gespeichert…":"Passwort ändern"}
-            </button>
+            <Btn variant="primary" color={BTN} disabled={pwStatus==="loading"} type="submit">{pwStatus==="loading"?"Wird gespeichert…":"Passwort ändern"}</Btn>
             {!sb&&<div style={{fontSize:12,color:"var(--sub)",textAlign:"center",marginTop:4}}>Demo-Modus: Änderungen werden nicht gespeichert.</div>}
           </form>
         )}
@@ -614,19 +585,7 @@ function DarkModeRow(){
         <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
         <div style={{fontSize:12,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
       </div>
-      <button onClick={toggle} style={{
-        position:"relative",width:48,height:26,borderRadius:13,border:"none",
-        background:dark?ACCENT:"var(--border)",cursor:"pointer",
-        transition:"background 0.25s",flexShrink:0,padding:0,
-        WebkitTapHighlightColor:"transparent"
-      }}>
-        <div style={{
-          position:"absolute",top:3,left:dark?22:3,width:20,height:20,
-          borderRadius:"50%",background:dark?"#111":"#fff",
-          boxShadow:"0 1px 4px rgba(0,0,0,0.2)",
-          transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)"
-        }}/>
-      </button>
+      <Btn onClick={toggle}><div style={{ position:"absolute",top:3,left:dark?22:3,width:20,height:20, borderRadius:"50%",background:dark?"#111":"#fff", boxShadow:"0 1px 4px rgba(0,0,0,0.2)", transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)" }}/></Btn>
     </Between>
   );
 }

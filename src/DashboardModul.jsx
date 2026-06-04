@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Card, Chip, Stat, STitle , Row} from "./theme.jsx";
+import { Card, Chip, H1, InfoBox, Row, STitle, Stat, useIsMobile , Btn} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, ATT_LOG, BUSES, EVENTS, HELPERS, HELPER_EVENTS, POLLS, ROSTER, TABLES } from "./demoData.js";
 
 function Dashboard({role,setActive,account,meineTeams,myRosterId}){
@@ -23,7 +23,7 @@ function DashboardAdmin({setActive,account}){
   const vorname=(account?.name||"Administrator").split(" ")[0];
   return(
     <div>
-      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {vorname}</h1>
+      <H1 style={{fontSize:24}} mb={4}>Hallo, {vorname}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>ClubCampus – Systemübersicht</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:12,marginBottom:24}}>
         <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" color="#7C3AED" icon="users"/>
@@ -96,7 +96,7 @@ function DashboardAdministration({setActive,account}){
   const isMobile=useIsMobile();
   return(
     <div>
-      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
+      <H1 style={{fontSize:24}} mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -107,7 +107,7 @@ function DashboardAdministration({setActive,account}){
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
         <Card>
-          <STitle action={<button onClick={()=>setActive("members")} style={{fontSize:13,color:BL,background:"none",border:"none",cursor:"pointer",fontWeight:700}}>Alle →</button>}>Datenprüfstatus</STitle>
+          <STitle action={<Btn variant="ghost" onClick={()=>setActive("members")}>Alle →</Btn>}>Datenprüfstatus</STitle>
           {[{label:"Vollständig",n:162,c:GN},{label:"Prüfung fällig",n:12,c:AM},{label:"Unvollständig",n:8,c:R},{label:"Sync-Fehler",n:5,c:"#888"}].map((x,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
               <span style={{fontSize:13}}>{x.label}</span>
@@ -161,7 +161,7 @@ function DashboardFunktionaer({setActive,account}){
   const isMobile=useIsMobile();
   return(
     <div>
-      <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</h1>
+      <H1 style={{fontSize:24}} mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -448,7 +448,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
               <div style={{fontWeight:600,fontSize:13,marginBottom:5}}>{p.title}</div>
               <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                 {p.options.map((opt,j)=>(
-                  <button key={j} style={{padding:"4px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,cursor:"pointer",background:"var(--surface2)"}}>{opt}</button>
+                  <Btn small>{opt}</Btn>
                 ))}
               </div>
             </div>

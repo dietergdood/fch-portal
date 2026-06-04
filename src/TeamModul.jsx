@@ -3,7 +3,7 @@
    Team-Ansicht: Übersicht, Kader, Training, Spielplan etc.
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useRef } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
+import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants";
 import { TI } from "./icons.jsx";
 import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs, STitle , Between, Col, H1, Row} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, EVENTS, NEWS, POLLS, ROSTER, TABLES } from "./demoData.js";
@@ -205,18 +205,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
             const cnt=ROSTER.filter(p=>(p.teams||[]).includes(k.team)&&!p.role).length;
             const info=TEAMS_DATA[k.team]||{liga:"",season:""};
             return(
-              <button key={i} onClick={()=>handleKindSwitch(k)}
-                style={{display:"flex",alignItems:"center",gap:7,padding:"7px 14px",borderRadius:10,
-                  border:`1.5px solid ${active?ACCENT:GB}`,
-                  background:active?"var(--cc-hover)":"#fff",cursor:"pointer",transition:"all 0.12s"}}>
-                <div style={{width:22,height:22,borderRadius:"50%",background:active?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"var(--text)",flexShrink:0}}>
-                  {k.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
-                </div>
-                <div style={{textAlign:"left"}}>
-                  <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{k.name.split(" ")[0]}</div>
-                  <div style={{fontSize:13,color:"rgba(0,0,0,0.5)"}}>{k.team} · {info.liga}</div>
-                </div>
-              </button>
+              <Btn onClick={()=>handleKindSwitch(k)}><div style={{width:22,height:22,borderRadius:"50%",background:active?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"var(--text)",flexShrink:0}}> {k.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()} </div> <div style={{textAlign:"left"}}> <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{k.name.split(" ")[0]}</div> <div style={{fontSize:13,color:"rgba(0,0,0,0.5)"}}>{k.team} · {info.liga}</div> </div></Btn>
             );
           })}
         </div>
@@ -232,20 +221,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
               const isActive=activeTeam===team;
               const cnt=ROSTER.filter(p=>(p.teams||[]).includes(team)).length||info.count;
               return(
-                <button key={team} onClick={()=>handleTeamSwitch(team)}
-                  style={{display:"flex",alignItems:"center",gap:8,padding:isMobile?"8px 12px":"7px 14px",
-                    borderRadius:10,border:`1.5px solid ${isActive?ACCENT:"var(--border)"}`,
-                    background:isActive?ACCENT20:"transparent",
-                    cursor:"pointer",transition:"all 0.15s",flexShrink:0,
-                    WebkitTapHighlightColor:"transparent",minHeight:44}}>
-                  <div style={{width:28,height:28,borderRadius:"50%",background:isActive?ACCENT:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}>
-                    {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
-                  </div>
-                  <div style={{textAlign:"left",minWidth:0}}>
-                    <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{team}</div>
-                    <div style={{fontSize:11,color:"var(--sub)"}}>{cnt} · {info.liga}</div>
-                  </div>
-                </button>
+                <Btn onClick={()=>handleTeamSwitch(team)}><div style={{width:28,height:28,borderRadius:"50%",background:isActive?ACCENT:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}> {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()} </div> <div style={{textAlign:"left",minWidth:0}}> <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{team}</div> <div style={{fontSize:11,color:"var(--sub)"}}>{cnt} · {info.liga}</div> </div></Btn>
               );
             })}
           </div>
@@ -279,16 +255,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
                   <div style={{width:36,height:4,borderRadius:2,background:"var(--border)",margin:"4px auto 12px"}}/>
                   <div style={{padding:"0 8px 6px",fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5}}>Weitere Tabs</div>
                   {mehrTabs.map(t=>(
-                    <button key={t.key} onClick={()=>{setTab(t.key);setShowMehrTab(false);}}
-                      style={{display:"flex",alignItems:"center",gap:14,width:"100%",padding:"12px 16px",
-                        background:tab===t.key?ACCENT12:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
-                      <div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
-                        background:tab===t.key?ACCENT:"var(--surface2)",flexShrink:0}}>
-                        <TI n={t.icon||"circle"} size={19} style={{color:tab===t.key?"#111":"var(--sub)"}}/>
-                      </div>
-                      <span style={{fontSize:15,fontWeight:tab===t.key?600:400,color:tab===t.key?"var(--text)":"var(--sub)"}}>{t.label}</span>
-                      {tab===t.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}
-                    </button>
+                    <Btn onClick={()=>{setTab(t.key);setShowMehrTab(false);}}><div style={{width:40,height:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center", background:tab===t.key?ACCENT:"var(--surface2)",flexShrink:0}}> <TI n={t.icon||"circle"} size={19} style={{color:tab===t.key?"#111":"var(--sub)"}}/> </div> <span style={{fontSize:15,fontWeight:tab===t.key?600:400,color:tab===t.key?"var(--text)":"var(--sub)"}}>{t.label}</span> {tab===t.key&&<TI n="check" size={16} style={{color:ACCENT,marginLeft:"auto"}}/>}</Btn>
                   ))}
                 </div>
               </div>
@@ -298,25 +265,11 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
               {primTabs.map(t=>{
                 const isActive=tab===t.key;
                 return(
-                  <button key={t.key} onClick={()=>{setTab(t.key);setShowMehrTab(false);}}
-                    style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 4px 6px",
-                      gap:3,background:"none",border:"none",cursor:"pointer",
-                      borderBottom:isActive?`2.5px solid ${ACCENT}`:"2.5px solid transparent",
-                      fontFamily:"inherit",WebkitTapHighlightColor:"transparent"}}>
-                    <TI n={t.icon||"circle"} size={20} style={{color:isActive?ACCENT:"var(--sub)"}}/>
-                    <span style={{fontSize:10,color:isActive?ACCENT:"var(--sub)",fontWeight:isActive?700:400}}>{t.short||t.label}</span>
-                  </button>
+                  <Btn variant="ghost" onClick={()=>{setTab(t.key);setShowMehrTab(false);}}><TI n={t.icon||"circle"} size={20} style={{color:isActive?ACCENT:"var(--sub)"}}/> <span style={{fontSize:10,color:isActive?ACCENT:"var(--sub)",fontWeight:isActive?700:400}}>{t.short||t.label}</span></Btn>
                 );
               })}
               {mehrTabs.length>0&&(
-                <button onClick={()=>setShowMehrTab(v=>!v)}
-                  style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 4px 6px",
-                    gap:3,background:"none",border:"none",cursor:"pointer",
-                    borderBottom:mehrActive||showMehrTab?`2.5px solid ${ACCENT}`:"2.5px solid transparent",
-                    fontFamily:"inherit",WebkitTapHighlightColor:"transparent"}}>
-                  <TI n="dots" size={20} style={{color:mehrActive||showMehrTab?ACCENT:"var(--sub)"}}/>
-                  <span style={{fontSize:10,color:mehrActive||showMehrTab?ACCENT:"var(--sub)",fontWeight:mehrActive||showMehrTab?700:400}}>Mehr</span>
-                </button>
+                <Btn variant="ghost" onClick={()=>setShowMehrTab(v=>!v)}><TI n="dots" size={20} style={{color:mehrActive||showMehrTab?ACCENT:"var(--sub)"}}/> <span style={{fontSize:10,color:mehrActive||showMehrTab?ACCENT:"var(--sub)",fontWeight:mehrActive||showMehrTab?700:400}}>Mehr</span></Btn>
               )}
             </div>
           </>
@@ -899,7 +852,7 @@ function EventsList({teamOnly,role}){
                         {e.res.n}
                       </span>
                       <span style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:AM,fontWeight:700}}>
-                        <span style={{width:18,height:18,borderRadius:"50%",background:"#FEF3C7",border:`1.5px solid ${AM}`,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:13,color:AM,fontWeight:800}}>{"?"}</span>
+                        <span style={{width:18,height:18,borderRadius:"50%",background:STATUS_BG.warn,border:`1.5px solid ${AM}`,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:13,color:AM,fontWeight:800}}>{"?"}</span>
                         {e.res.o}
                       </span>
                     </div>

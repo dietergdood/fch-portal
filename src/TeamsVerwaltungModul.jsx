@@ -43,19 +43,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
           background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,
           boxShadow:"0 4px 16px rgba(0,0,0,0.12)",overflow:"hidden"}}>
           {suggestions.map(m=>(
-            <button key={m.id} onMouseDown={()=>select(m.name)} style={{
-              width:"100%",padding:"9px 14px",border:"none",background:"none",
-              cursor:"pointer",display:"flex",alignItems:"center",gap:12,
-              textAlign:"left",fontFamily:FONT
-            }}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-              onMouseLeave={e=>e.currentTarget.style.background="none"}>
-              <Av name={m.name} size={26} bg="var(--surface2)"/>
-              <div>
-                <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{m.name}</div>
-                <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div>
-              </div>
-            </button>
+            <Btn variant="ghost"><Av name={m.name} size={26} bg="var(--surface2)"/> <div> <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{m.name}</div> <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div> </div></Btn>
           ))}
         </div>
       )}
@@ -397,44 +385,20 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           {/* View Toggle */}
           <div style={{display:"flex",border:"1px solid var(--border)",borderRadius:8,overflow:"hidden"}}>
             {["list","grid"].map(m=>(
-              <button key={m} onClick={()=>setViewMode(m)} style={{
-                padding:"7px 11px",border:"none",cursor:"pointer",fontFamily:FONT,
-                background:viewMode===m?BK:"var(--surface2)",
-                color:viewMode===m?"#fff":"var(--sub)",transition:"all 0.15s"
-              }}>
-                <TI n={m==="list"?"layout-dashboard":"layout-grid"} size={14}/>
-              </button>
+              <Btn onClick={()=>setViewMode(m)}><TI n={m==="list"?"layout-dashboard":"layout-grid"} size={14}/></Btn>
             ))}
           </div>
           {/* Dreipunkt-Menü */}
           <div style={{position:"relative"}}>
-            <button onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} style={{
-              width:36,height:36,borderRadius:8,border:"1px solid var(--border)",
-              background:"var(--surface2)",cursor:"pointer",display:"flex",
-              alignItems:"center",justifyContent:"center",color:"var(--sub)"
-            }}>
-              <TI n="dots-vertical" size={15}/>
-            </button>
+            <Btn onClick={()=>setOpenMenuId(openMenuId==="header"?null:"header")} style={{ width:36,height:36 }}><TI n="dots-vertical" size={15}/></Btn>
             {openMenuId==="header"&&(
               <div style={{position:"absolute",right:0,top:40,zIndex:200,
                 background:"var(--surface)",border:"1px solid var(--border)",
                 borderRadius:12,boxShadow:"0 4px 20px rgba(0,0,0,0.12)",
                 minWidth:180,overflow:"hidden"}}>
-                <button onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);setOpenMenuId(null);}}
-                  style={{width:"100%",padding:"11px 16px",border:"none",background:"none",cursor:"pointer",
-                    display:"flex",alignItems:"center",gap:12,fontFamily:FONT,fontSize:13,color:"var(--text)",textAlign:"left"}}
-                  onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-                  onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                  <TI n="calendar" size={14} style={{color:"var(--sub)",flexShrink:0}}/>Saison wechseln
-                </button>
+                <Btn variant="ghost" onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);setOpenMenuId(null);}}><TI n="calendar" size={14} style={{color:"var(--sub)",flexShrink:0}}/>Saison wechseln</Btn>
                 <div style={{height:1,background:"var(--border)",margin:"0 12px"}}/>
-                <button onClick={()=>{openNeu();setOpenMenuId(null);}}
-                  style={{width:"100%",padding:"11px 16px",border:"none",background:"none",cursor:"pointer",
-                    display:"flex",alignItems:"center",gap:12,fontFamily:FONT,fontSize:13,color:"var(--text)",textAlign:"left",fontWeight:600}}
-                  onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-                  onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                  <TI n="edit" size={14} style={{color:"var(--sub)",flexShrink:0}}/>+ Neues Team
-                </button>
+                <Btn variant="ghost" onClick={()=>{openNeu();setOpenMenuId(null);}}><TI n="edit" size={14} style={{color:"var(--sub)",flexShrink:0}}/>+ Neues Team</Btn>
               </div>
             )}
           </div>
@@ -453,15 +417,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
               style={{width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
           </div>
           <Row gap={12} align="flex-start">
-            <button onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN} style={{
-              flex:1,padding:"11px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",
-              fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-              opacity:saving||!saisonDraft.trim()?0.5:1
-            }}>
-              {saving?"Wird gesetzt…":"Für alle übernehmen"}
-            </button>
+            <Btn variant="primary" color={BTN} onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()}>{saving?"Wird gesetzt…":"Für alle übernehmen"}</Btn>
             <Btn onClick={()=>setShowSaison(false)}>Abbrechen</Btn>
           </Row>
           {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
@@ -483,43 +439,22 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             style={{...inputStyle,width:"auto",minWidth:130,flex:"0 0 auto"}}>
             {SORT_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
           </select>
-          <button onClick={()=>setSortDir(d=>d==="asc"?"desc":"asc")}
-            style={{padding:"9px 11px",borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
-            {sortDir==="asc"?"↑":"↓"}
-          </button>
+          <Btn onClick={()=>setSortDir(d=>d==="asc"?"desc":"asc")}>{sortDir==="asc"?"↑":"↓"}</Btn>
         </Row>
       </div>
       {/* Filter-Chips */}
       {filterOptions.length>0&&(
         <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:14,alignItems:"center"}}>
-          <button onClick={()=>setFilterVals([])}
-            style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
-              background:filterVals.length===0?BK:"var(--surface)",
-              color:filterVals.length===0?"#fff":"var(--sub)",
-              fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
-            Alle
-          </button>
+          <Btn small onClick={()=>setFilterVals([])}>Alle</Btn>
           {filterOptions.map(v=>{
             const active=filterVals.includes(v);
             const c=KAT_COLORS[v]||(active?BK:"var(--sub)");
             return(
-              <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
-                style={{padding:"4px 12px",borderRadius:20,fontFamily:FONT,fontSize:13,fontWeight:600,cursor:"pointer",
-                  transition:"all 0.15s",display:"flex",alignItems:"center",gap:4,
-                  border:"1px solid "+(active?c:"var(--border)"),
-                  background:active?c+"18":"var(--surface)",
-                  color:active?c:"var(--sub)"}}>
-                {active&&<span style={{fontSize:11}}>✓</span>}{v}
-                <span style={{opacity:0.55,fontWeight:400}}>{teams.filter(t=>(t[groupBy]||"-")===v).length}</span>
-              </button>
+              <Btn small onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}>{active&&<span style={{fontSize:11}}>✓</span>}{v} <span style={{opacity:0.55,fontWeight:400}}>{teams.filter(t=>(t[groupBy]||"-")===v).length}</span></Btn>
             );
           })}
           {filterVals.length>0&&(
-            <button onClick={()=>setFilterVals([])}
-              style={{padding:"4px 10px",borderRadius:20,border:"1px solid var(--border)",
-                background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
-              × zurücksetzen
-            </button>
+            <Btn variant="ghost" small onClick={()=>setFilterVals([])}>× zurücksetzen</Btn>
           )}
         </div>
       )}
@@ -571,20 +506,14 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                       </Row>
                       {/* 3-Dot Menu */}
                       <div style={{position:"relative"}}>
-                        <button onClick={openMenu} style={{width:28,height:28,borderRadius:6,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
-                          <TI n="dots-vertical" size={13}/>
-                        </button>
+                        <Btn onClick={openMenu} style={{ width:28,height:28 }}><TI n="dots-vertical" size={13}/></Btn>
                         {menuOpen&&(
                           <div style={{position:"absolute",right:0,top:32,zIndex:100,background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,boxShadow:"0 4px 16px rgba(0,0,0,0.12)",minWidth:140,overflow:"hidden"}}>
                             {[
                               {icon:"edit", label:"Bearbeiten",color:"var(--text)", fn:()=>{openEdit(team);closeMenu();}},
                               {icon:"trash",label:"Löschen",   color:R,  fn:()=>{setDeleteConfirm(team);closeMenu();}},
                             ].map(a=>(
-                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"9px 14px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontFamily:FONT,fontSize:13,color:a.color,textAlign:"left"}}
-                                onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-                                onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                                <TI n={a.icon} size={13}/>{a.label}
-                              </button>
+                              <Btn variant="ghost" onClick={a.fn}><TI n={a.icon} size={13}/>{a.label}</Btn>
                             ))}
                           </div>
                         )}
@@ -624,20 +553,14 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                     {/* Aktionen: 3-Dot auf Mobile, Buttons auf Desktop */}
                     {isMobile?(
                       <div style={{position:"relative",flexShrink:0}}>
-                        <button onClick={openMenu} style={{width:34,height:34,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
-                          <TI n="dots-vertical" size={14}/>
-                        </button>
+                        <Btn onClick={openMenu} style={{ width:34,height:34 }}><TI n="dots-vertical" size={14}/></Btn>
                         {menuOpen&&(
                           <div style={{position:"absolute",right:0,top:38,zIndex:100,background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,boxShadow:"0 4px 16px rgba(0,0,0,0.15)",minWidth:150,overflow:"hidden"}}>
                             {[
                               {icon:"edit", label:"Bearbeiten",color:"var(--text)", fn:()=>{openEdit(team);closeMenu();}},
                               {icon:"trash",label:"Löschen",   color:R,  fn:()=>{setDeleteConfirm(team);closeMenu();}},
                             ].map(a=>(
-                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"10px 16px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontFamily:FONT,fontSize:13,color:a.color,textAlign:"left"}}
-                                onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-                                onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                                <TI n={a.icon} size={14}/>{a.label}
-                              </button>
+                              <Btn variant="ghost" onClick={a.fn}><TI n={a.icon} size={14}/>{a.label}</Btn>
                             ))}
                           </div>
                         )}
@@ -645,14 +568,8 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                     ):(
                       <div style={{display:"flex",gap:8,flexShrink:0}}>
 
-                        <button onClick={()=>openEdit(team)} title="Bearbeiten"
-                          style={{width:32,height:32,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)"}}>
-                          <TI n="edit" size={14}/>
-                        </button>
-                        <button onClick={()=>setDeleteConfirm(team)} title="Löschen"
-                          style={{width:32,height:32,borderRadius:8,border:"1px solid "+R+"40",background:RL,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:R}}>
-                          <TI n="trash" size={14}/>
-                        </button>
+                        <Btn onClick={()=>openEdit(team)} title="Bearbeiten" style={{ width:32,height:32 }}><TI n="edit" size={14}/></Btn>
+                        <Btn variant="primary" color={RL} onClick={()=>setDeleteConfirm(team)} title="Löschen" style={{ width:32,height:32 }}><TI n="trash" size={14}/></Btn>
                       </div>
                     )}
                   </Row>
@@ -681,12 +598,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           {editTeam&&(
             <div style={{display:"flex",gap:4,marginBottom:4}}>
               {["info","module"].map(t=>(
-                <button key={t} onClick={()=>setFormTab(t)} style={{
-                  padding:"8px 14px",borderRadius:8,border:"none",cursor:"pointer",fontFamily:FONT,
-                  fontSize:13,fontWeight:600,
-                  background:formTab===t?"var(--text)":"var(--surface2)",
-                  color:formTab===t?"var(--surface)":"var(--sub)"
-                }}>{t==="info"?"Team-Info":"Module"}</button>
+                <Btn onClick={()=>setFormTab(t)}>{t==="info"?"Team-Info":"Module"}</Btn>
               ))}
             </div>
           )}
@@ -765,13 +677,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             <div style={{display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
               <label style={labelStyle}>Status</label>
               <div style={{display:"flex",alignItems:"center",gap:12,height:38}}>
-                <button onClick={()=>setForm(p=>({...p,aktiv:!p.aktiv}))} style={{
-                  position:"relative",width:44,height:24,borderRadius:12,border:"none",
-                  background:form.aktiv?ACCENT:"var(--border)",cursor:"pointer",padding:0,flexShrink:0,
-                  transition:"background 0.2s"
-                }}>
-                  <div style={{position:"absolute",top:3,left:form.aktiv?21:3,width:18,height:18,borderRadius:"50%",background:form.aktiv?"#111":"#fff",boxShadow:"0 1px 3px rgba(0,0,0,0.2)",transition:"left 0.2s"}}/>
-                </button>
+                <Btn onClick={()=>setForm(p=>({...p,aktiv:!p.aktiv}))}><div style={{position:"absolute",top:3,left:form.aktiv?21:3,width:18,height:18,borderRadius:"50%",background:form.aktiv?"#111":"#fff",boxShadow:"0 1px 3px rgba(0,0,0,0.2)",transition:"left 0.2s"}}/></Btn>
                 <span style={{fontSize:13,color:"var(--text)",fontWeight:600}}>{form.aktiv?"Aktiv":"Inaktiv"}</span>
               </div>
             </div>
@@ -792,14 +698,10 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                       onChange={v=>setForm(p=>({...p,[key]:p[key].map((x,j)=>j===i?v:x)}))}
                       placeholder={placeholder}
                       style={{flex:1}}/>
-                    <button onClick={()=>setForm(p=>({...p,[key]:p[key].filter((_,j)=>j!==i)}))}
-                      style={{width:36,height:38,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",color:R,flexShrink:0,fontSize:16}}>×</button>
+                    <Btn onClick={()=>setForm(p=>({...p,[key]:p[key].filter((_,j)=>j!==i)}))} style={{ width:36,height:38 }}>×</Btn>
                   </div>
                 ))}
-                <button onClick={()=>setForm(p=>({...p,[key]:[...(p[key]||[]),""]}))}
-                  style={{padding:"7px 14px",borderRadius:8,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
-                  + {label} hinzufügen
-                </button>
+                <Btn variant="ghost" onClick={()=>setForm(p=>({...p,[key]:[...(p[key]||[]),""]}))}>+ {label} hinzufügen</Btn>
               </Col>
             </div>
           ))}
@@ -869,15 +771,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           )}
           {/* Buttons */}
           <Row gap={12} align="flex-start">
-            <button onClick={handleSave} disabled={saving}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN} style={{
-              flex:1,padding:"12px 20px",borderRadius:10,background:BTN,color:BTN_TXT,border:"none",
-              fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,
-              opacity:saving?0.6:1,transition:"background 0.15s, opacity 0.2s"
-            }}>
-              {saving?"Speichern…":editTeam?"Änderungen speichern":"Team erstellen"}
-            </button>
+            <Btn variant="primary" color={BTN} onClick={handleSave} disabled={saving}>{saving?"Speichern…":editTeam?"Änderungen speichern":"Team erstellen"}</Btn>
             <Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn>
           </Row>
           {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
@@ -895,10 +789,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             <strong style={{color:"var(--text)"}}>{deleteConfirm?.name}</strong> wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.
           </div>
           <Row gap={12} align="flex-start">
-            <button onClick={()=>handleDelete(deleteConfirm)} disabled={saving}
-              style={{flex:1,padding:"8px 14px",borderRadius:10,background:R,color:"#fff",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,opacity:saving?0.6:1}}>
-              {saving?"Löschen…":"Ja, löschen"}
-            </button>
+            <Btn variant="primary" color={R} onClick={()=>handleDelete(deleteConfirm)} disabled={saving}>{saving?"Löschen…":"Ja, löschen"}</Btn>
             <Btn onClick={()=>setDeleteConfirm(null)}>Abbrechen</Btn>
           </Row>
         </div>
