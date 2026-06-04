@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI, TI_PATHS } from "./icons.jsx";
 import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC } from "./theme.jsx";
-import { useBreakpoint, useIsMobile, ModalOrSheet } from "./hooks.jsx";
+import { useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip } from "./theme.jsx";
 import NachrichtenModul from "./NachrichtenModul.jsx";
 import { TeamModuleMatrix, PortalverwaltungView } from "./PortalverwaltungModul.jsx";
 
@@ -893,9 +893,8 @@ function Av({name="",init,size=34,bg="var(--surface2)",useTheme=false}){
     {isIcon ? <TI n={init} size={size*0.55} style={{color:textColor}}/> : l}
   </div>;
 }
-function Chip({text,color=R,bg}){
-  return <span style={{background:bg||color+"15",color,fontSize:13,fontWeight:700,padding:"3px 10px",borderRadius:20,whiteSpace:"nowrap",letterSpacing:0.2,border:`0.5px solid ${color}25`}}>{text}</span>;
-}
+/* Chip via ./hooks.jsx */
+
 function Stat({label,value,sub,color=BK,icon}){
   return(
     <div className="cc-card" style={{borderRadius:12,padding:"18px 20px",flex:1,minWidth:0,border:"0.5px solid"}}>
@@ -908,9 +907,8 @@ function Stat({label,value,sub,color=BK,icon}){
     </div>
   );
 }
-function Card({children,style={},onClick}){
-  return <div onClick={onClick} className="cc-card" style={{borderRadius:14,padding:"20px 22px",border:"0.5px solid",...style}}>{children}</div>;
-}
+/* Card via ./hooks.jsx */
+
 function STitle({children,action}){
   return(
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
@@ -919,11 +917,8 @@ function STitle({children,action}){
     </div>
   );
 }
-function Btn({children,onClick,variant="outline",color=BK,small,style={}}){
-  const p=small?"4px 11px":"7px 15px";
-  if(variant==="primary"){const lightBg=color==="#F3F4F6"||color===ACCENT;return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:lightBg?"1px solid var(--border)":"none",background:color,color:lightBg?"#374151":"#fff",transition:"opacity 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.opacity="0.88"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{children}</button>;}
-  return <button onClick={onClick} style={{padding:p,borderRadius:8,fontSize:small?12:13,fontWeight:600,cursor:"pointer",border:"1px solid var(--border)",background:"var(--surface)",color:"var(--text)",transition:"background 0.15s",fontFamily:FONT,minHeight:small?32:38,...style}} onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"} onMouseLeave={e=>e.currentTarget.style.background="var(--surface)"}>{children}</button>;
-}
+/* Btn via ./hooks.jsx */
+
 function Tabs({tabs,active,setActive}){
   const isMobile=useIsMobile();
   return(
@@ -945,13 +940,8 @@ function Tabs({tabs,active,setActive}){
     </div>
   );
 }
-function InfoBox({text,color=BL}){
-  return <div style={{padding:"10px 14px",background:color+"12",borderRadius:10,fontSize:13,color:"var(--text)",marginTop:14,borderLeft:`3px solid ${color}`,lineHeight:1.5,fontFamily:FONT}}>{text}</div>;
-}
+/* InfoBox via ./hooks.jsx */
 
-/* ==========================================
-   ROLLEN-SWITCHER MODAL
-========================================== */
 function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
   const isMobile=useIsMobile();
   const [open,setOpen]=useState(false);

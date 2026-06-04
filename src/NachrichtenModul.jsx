@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet } from "./hooks.jsx";
+import { useIsMobile, ModalOrSheet } from "./theme.jsx";
 
 function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,kannSchreiben=false,kannVerwalten=false}){
   const isMobile=useIsMobile();
