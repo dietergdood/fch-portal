@@ -11608,10 +11608,10 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
             }}>
               {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
               <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:mehrActive||showMehr?ACCENT:"transparent",transition:"background 0.15s"}}>
-                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"#111":"var(--nav-t)"}}/>
+                background:mehrActive||showMehr?"var(--nav-a)":"transparent",transition:"background 0.15s"}}>
+                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"var(--nav-accent-text)":"var(--nav-t)"}}/>
               </div>
-              <span style={{fontSize:10,color:mehrActive||showMehr?ACCENT:"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
+              <span style={{fontSize:10,color:mehrActive||showMehr?"var(--nav-accent-text)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
             </button>
           )}
         </div>
@@ -11667,8 +11667,8 @@ function LoginScreen({onLogin, sb, appTheme}){
         {/* Logo */}
         <div style={{textAlign:"center",marginBottom:32}}>
           <div style={{width:64,height:64,background:"transparent",borderRadius:16,display:"inline-flex",alignItems:"center",justifyContent:"center",marginBottom:12,overflow:"hidden"}}><img src={appTheme?.logo||LOGO_B64} style={{width:64,height:64,objectFit:"cover",display:"block"}} alt="Logo"/></div>
-          <div style={{fontWeight:800,fontSize:22,color:"var(--text)"}}>{"ClubCampus"}</div>
-          <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
+          <div style={{fontWeight:800,fontSize:22,color:"var(--text)",marginTop:4}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
+          <div style={{fontSize:15,color:"var(--sub)",marginTop:3,fontWeight:500}}>{"ClubCampus"}</div>
         </div>
 
         <div style={{background:"var(--surface)",borderRadius:16,padding:28,boxShadow:"var(--card-shadow)",border:"1px solid var(--border)"}}>
