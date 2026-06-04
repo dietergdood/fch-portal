@@ -7392,17 +7392,43 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           </div>
         )
       ):(
-        <div style={{display:"flex",gap:4,marginBottom:20,borderBottom:"1px solid var(--border)",paddingBottom:0,overflowX:"auto",scrollbarWidth:"none"}}>
-          {TABS.map(t=>(
-            <button key={t.key} onClick={()=>setTab(t.key)} style={{
-              display:"flex",alignItems:"center",gap:6,padding:"8px 14px",whiteSpace:"nowrap",
-              background:"none",border:"none",borderBottom:tab===t.key?`2px solid ${BK}`:"2px solid transparent",
-              cursor:"pointer",fontSize:13,fontWeight:tab===t.key?700:400,
-              color:tab===t.key?BK:"var(--sub)",borderRadius:0,marginBottom:-1,fontFamily:FONT
-            }}>
-              <TI n={t.icon}/>
-              {t.label}
-            </button>
+        /* Desktop: zweistufige Navigation */
+        <div style={{marginBottom:20}}>
+          {/* Ebene 1: Hauptkategorien */}
+          <div style={{display:"flex",gap:2,borderBottom:"1px solid var(--border)",marginBottom:0}}>
+            {MOBILE_KACHELN.map(k=>{
+              const isActive=k.tabs.includes(tab);
+              return(
+                <button key={k.key} onClick={()=>setTab(k.tabs[0])} style={{
+                  display:"flex",alignItems:"center",gap:6,padding:"10px 16px",whiteSpace:"nowrap",
+                  background:"none",border:"none",borderBottom:isActive?`2px solid ${BK}`:"2px solid transparent",
+                  cursor:"pointer",fontSize:13,fontWeight:isActive?700:400,
+                  color:isActive?BK:"var(--sub)",borderRadius:0,marginBottom:-1,fontFamily:FONT
+                }}>
+                  <TI n={k.icon} size={14} style={{color:isActive?k.color:"var(--sub)"}}/>
+                  {k.label}
+                </button>
+              );
+            })}
+          </div>
+          {/* Ebene 2: Unterkategorien */}
+          {MOBILE_KACHELN.filter(k=>k.tabs.includes(tab)).map(k=>(
+            k.tabs.length>1&&(
+              <div key={k.key} style={{display:"flex",gap:2,borderBottom:"1px solid var(--border)",paddingTop:4,overflowX:"auto",scrollbarWidth:"none"}}>
+                {TABS.filter(t=>k.tabs.includes(t.key)).map(t=>(
+                  <button key={t.key} onClick={()=>setTab(t.key)} style={{
+                    display:"flex",alignItems:"center",gap:5,padding:"6px 12px",whiteSpace:"nowrap",
+                    background:tab===t.key?"var(--surface2)":"none",border:"none",
+                    borderBottom:tab===t.key?`2px solid ${k.color}`:"2px solid transparent",
+                    cursor:"pointer",fontSize:12,fontWeight:tab===t.key?600:400,
+                    color:tab===t.key?"var(--text)":"var(--sub)",borderRadius:0,marginBottom:-1,fontFamily:FONT
+                  }}>
+                    <TI n={t.icon} size={12}/>
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            )
           ))}
         </div>
       )}
