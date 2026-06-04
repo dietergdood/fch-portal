@@ -3,11 +3,10 @@
    An-/Abmeldung für Trainings, Spiele und Vereinsanlässe
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useRef } from "react";
-import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants";
+import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av, Col, Row, SectionLabel, Btn} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, GANTT, ROSTER, SCHEDULE, TABLES, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
-import { getVereinsnameStatic } from "./NavigationModul.jsx";
 
 
 /* ── Style-Konstanten ── */
@@ -27,6 +26,8 @@ const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.slice();
 
 const NR_CACHE={data:Object.fromEntries(ROSTER.map(p=>[p.id,p.rueckennr||""]))};
 try{const s=localStorage.getItem("rueckennrn");if(s){const d=JSON.parse(s);Object.assign(NR_CACHE.data,d);}}catch(e){}
+
+function getVereinsnameStatic(){try{const t=localStorage.getItem("cc-theme");return t?(JSON.parse(t).vereinsname||"ClubCampus"):"ClubCampus";}catch{return "ClubCampus";}}
 
 function getNr(id){return NR_CACHE.data[id]||"";}
 

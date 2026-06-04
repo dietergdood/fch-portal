@@ -3,10 +3,13 @@
    Dashboard-Ansichten für alle Rollen
    ═══════════════════════════════════════════════════════════════ */
 import { useState } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants";
+import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { Card, Chip, H1, InfoBox, Row, STitle, Stat, useIsMobile , Btn} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, ATT_LOG, BUSES, EVENTS, HELPERS, HELPER_EVENTS, POLLS, ROSTER, TABLES } from "./demoData.js";
+
+/* ── Shared navigation target ── */
+const NAV_TARGET={tab:null,filter:null,kindTeam:null,openEvId:null,selectedSpiel:null};
 
 function Dashboard({role,setActive,account,meineTeams,myRosterId}){
   if(role==="administrator")  return <DashboardAdmin setActive={setActive} account={account}/>;

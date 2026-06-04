@@ -3,7 +3,7 @@
    Broadcast & Diskussions-Modul
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants";
+import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { ModalOrSheet, ModalTitle, Row, useIsMobile , Btn} from "./theme.jsx";
 

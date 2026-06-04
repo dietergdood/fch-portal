@@ -3,7 +3,7 @@
    Portalverwaltung: Module, Berechtigungen, Benutzer, Aussehen
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useRef } from "react";
-import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants";
+import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { Btn, Card, Chip, Col, H1, InfoBox, LOGO_B64, ModalOrSheet, ModalTitle, Row, SectionLabel, THEME_DEFAULT_STATIC, darkenHex, hexToRgba, useIsMobile } from "./theme.jsx";
 import { FUNKTIONEN } from "./demoData.js";

@@ -3,7 +3,7 @@
    Team-Kader Ansicht mit Spielerliste
    ═══════════════════════════════════════════════════════════════ */
 import { useState } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT20, GN, R, BL, BK, GB } from "./constants";
+import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT20, GN, R, BL, BK, GB } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { useIsMobile, Card, Chip, Av, Row, Between, Col, SectionLabel, Btn, Input } from "./theme.jsx";
 import { ROSTER } from "./demoData.js";
