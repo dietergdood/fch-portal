@@ -401,7 +401,9 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
       {/* Nav items */}
       <div style={{flex:1,padding:"10px 8px",overflowY:"auto",overflowX:"hidden"}}>
         {nav.map(n=>(
-          <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined} style={{
+          <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined}
+            className="cc-nav-item"
+            style={{
             width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
             padding:collapsed?"10px 0":"10px 12px",borderRadius:9,border:"none",
             background:active===n.key?"var(--nav-a)":"transparent",

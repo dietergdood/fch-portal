@@ -32,6 +32,7 @@ const PWA_CSS=`
 .cc-topbar{background:var(--bg)!important;border-color:var(--border)!important}
 .cc-main{background:var(--bg)!important}
 .hov-row:hover{background:var(--cc-hover)!important;cursor:pointer}
+.cc-nav-item:hover{background:var(--nav-hover,#1A1A1A)!important}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 html{scroll-behavior:smooth}
 button:active:not([disabled]){transform:scale(0.96)}
