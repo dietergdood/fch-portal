@@ -3,13 +3,11 @@
    Broadcast & Diskussions-Modul
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2 } from "./constants.js";
+import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, GN, BL, R, RL } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { ModalOrSheet, ModalTitle, Row, useIsMobile , Btn} from "./theme.jsx";
+import { ModalOrSheet, ModalTitle, Row, useIsMobile, Btn } from "./theme.jsx";
 
-/* ── Style-Konstanten ── */
-const S_LABEL={fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6};
-
+const S_LABEL={fontSize:12,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5};
 
 function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null,kannSchreiben=false,kannVerwalten=false}){
   const isMobile=useIsMobile();
@@ -48,95 +46,59 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
       const{data}=await q;
       if(data) setNachrichten(data);
       const{data:gel}=await sb.from("nachrichten_gelesen").select("nachricht_id").eq("user_id",account?.id||"");
-      if(gel){const m={};gel.forEach(g=>{m[g.nachricht_id]=true;});setUngelesen(m);}
-    }catch(e){}
+      if(gel){const g={};gel.forEach(r=>{g[r.nachricht_id]=true;});setUngelesen(g);}
+    }catch(e){console.warn(e);}
     setLoading(false);
   }
 
-  async function loadAntworten(nid){
-    if(!sb||!nid) return;
-    const{data}=await sb.from("nachrichten_antworten").select("*").eq("nachricht_id",nid).order("erstellt_am");
-    if(data) setAntworten(data);
-    const{data:df}=await sb.from("nachrichten_dateien").select("*").eq("nachricht_id",nid);
-    if(df) setDateien(df);
-    await sb.from("nachrichten_gelesen").upsert({nachricht_id:nid,user_id:account?.id||""},{onConflict:"nachricht_id,user_id"});
-    setUngelesen(u=>({...u,[nid]:true}));
+  async function loadAntworten(id){
+    if(!sb) return;
+    try{
+      const{data}=await sb.from("nachrichten_antworten").select("*").eq("nachricht_id",id).order("erstellt_am");
+      if(data) setAntworten(data);
+      const{data:df}=await sb.from("nachrichten_dateien").select("*").eq("nachricht_id",id);
+      if(df) setDateien(df);
+      await sb.from("nachrichten_gelesen").upsert({nachricht_id:id,user_id:account?.id||""},{onConflict:"nachricht_id,user_id"});
+      setUngelesen(prev=>({...prev,[id]:true}));
+    }catch(e){console.warn(e);}
   }
 
   async function sendAntwort(){
-    if(!antwortText.trim()||!selected||!sb) return;
+    if(!antwortText.trim()) return;
     setSending(true);
-    await sb.from("nachrichten_antworten").insert({nachricht_id:selected.id,autor_id:account?.id||null,autor_name:account?.name||"Unbekannt",inhalt:antwortText.trim()});
-    setAntwortText("");
-    loadAntworten(selected.id);
+    try{
+      const row={nachricht_id:selected.id,inhalt:antwortText,autor_name:account?.name||role,autor_id:account?.id||""};
+      if(sb){const{data}=await sb.from("nachrichten_antworten").insert(row).select().single();if(data)setAntworten(a=>[...a,data]);}
+      else setAntworten(a=>[...a,{...row,id:Date.now(),erstellt_am:new Date().toISOString()}]);
+      setAntwortText("");
+    }catch(e){console.warn(e);}
     setSending(false);
   }
 
   async function sendNachricht(){
-    if(!neuForm.titel.trim()||!neuForm.inhalt.trim()||!sb) return;
+    if(!neuForm.titel.trim()||!neuForm.inhalt.trim()) return;
     setSending(true);
-    await sb.from("nachrichten").insert({
-      titel:neuForm.titel.trim(),inhalt:neuForm.inhalt.trim(),typ:neuForm.typ,
-      autor_id:account?.id||null,autor_name:account?.name||"Unbekannt",
-      empfaenger_typ:neuForm.empfaenger_typ,
-      empfaenger_rolle:neuForm.empfaenger_typ==="rolle"?neuForm.empfaenger_rolle:null,
-      empfaenger_gruppe_id:neuForm.empfaenger_typ==="gruppe"?neuForm.empfaenger_gruppe_id:null,
-      empfaenger_team:neuForm.empfaenger_typ==="team"?neuForm.empfaenger_team:(teamFilter||null),
-    });
-    setShowNeu(false);
-    setNeuForm({titel:"",inhalt:"",typ:"broadcast",empfaenger_typ:"rolle",empfaenger_rolle:"",empfaenger_gruppe_id:null,empfaenger_team:""});
-    loadNachrichten();
+    try{
+      const row={...neuForm,autor_name:account?.name||role,autor_id:account?.id||"",erstellt_am:new Date().toISOString()};
+      if(sb){const{data}=await sb.from("nachrichten").insert(row).select().single();if(data)setNachrichten(n=>[data,...n]);}
+      else setNachrichten(n=>[{...row,id:Date.now()},...n]);
+      setShowNeu(false);
+      setNeuForm({titel:"",inhalt:"",typ:"broadcast",empfaenger_typ:"rolle",empfaenger_rolle:"",empfaenger_gruppe_id:null,empfaenger_team:""});
+    }catch(e){console.warn(e);}
     setSending(false);
   }
 
-  useEffect(()=>{loadNachrichten();},[teamFilter]);
-
-  useEffect(()=>{
-    if(!sb) return;
-    const sub=sb.channel("nachrichten-rt-"+Math.random())
-      .on("postgres_changes",{event:"INSERT",schema:"public",table:"nachrichten_antworten"},
-        p=>{if(selected&&p.new.nachricht_id===selected.id) loadAntworten(selected.id);})
-      .on("postgres_changes",{event:"INSERT",schema:"public",table:"nachrichten"},
-        ()=>loadNachrichten())
-      .subscribe();
-    return()=>{sb.removeChannel(sub);};
-  },[selected?.id]);
-
-  const filtered=nachrichten.filter(n=>{
-    if(tab==="gesendet") return n.autor_id===account?.id;
-    if(tab==="ungelesen") return !ungelesen[n.id];
-    return true;
-  }).filter(n=>{
-    if(!filter) return true;
-    if(filter==="broadcast") return n.typ==="broadcast";
-    if(filter==="diskussion") return n.typ==="diskussion";
-    return n.empfaenger_rolle===filter||n.empfaenger_team===filter;
-  });
-
-  function getGruppe(n){
-    const d=new Date(n.erstellt_am);
-    const heute=new Date();
-    const gestern=new Date(heute);gestern.setDate(heute.getDate()-1);
-    const woche=new Date(heute);woche.setDate(heute.getDate()-7);
-    let datum=d>woche?(d.toDateString()===gestern.toDateString()?"Gestern":d.toDateString()===heute.toDateString()?"Heute":"Diese Woche"):"Älter";
-    return datum+" · "+(n.typ==="broadcast"?"Broadcast":"Diskussion");
-  }
-
-  const grouped=[];let lastGrp=null;
-  filtered.forEach(n=>{
-    const grp=getGruppe(n);
-    if(grp!==lastGrp){grouped.push({type:"header",label:grp});lastGrp=grp;}
-    grouped.push({type:"item",n});
-  });
+  useEffect(()=>{loadNachrichten();},[sb,teamFilter]);
 
   function getEmpfLabel(n){
-    if(n.empfaenger_typ==="rolle") return ROLLEN_OPTS.find(r=>r.value===n.empfaenger_rolle)?.label||n.empfaenger_rolle||"";
-    if(n.empfaenger_typ==="team") return n.empfaenger_team||"";
-    if(n.empfaenger_typ==="gruppe"){const g=gruppen.find(g=>g.id===n.empfaenger_gruppe_id);return g?.name||"Gruppe";}
-    return "";
+    if(n.empfaenger_rolle) return ROLLEN_OPTS.find(r=>r.value===n.empfaenger_rolle)?.label||n.empfaenger_rolle;
+    if(n.empfaenger_team) return n.empfaenger_team;
+    if(n.empfaenger_gruppe_id) return gruppen.find(g=>g.id===n.empfaenger_gruppe_id)?.name||"Gruppe";
+    return "Alle";
   }
 
   function fmtTime(ts){
+    if(!ts) return "";
     const d=new Date(ts);const h=new Date();
     if(d.toDateString()===h.toDateString()) return d.toLocaleTimeString("de-CH",{hour:"2-digit",minute:"2-digit"});
     return d.toLocaleDateString("de-CH",{day:"2-digit",month:"2-digit"});
@@ -147,76 +109,123 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
   const AV_TEXT=["#085041","#3C3489","#0C447C","#633806","#27500A"];
   function avC(name){const i=(name||"").charCodeAt(0)%5;return{bg:AV_COLORS[i],txt:AV_TEXT[i]};}
 
+  const filtered=nachrichten.filter(n=>{
+    if(tab==="gesendet"&&n.autor_id!==account?.id) return false;
+    if(tab==="ungelesen"&&ungelesen[n.id]) return false;
+    if(filter&&n.typ!==filter) return false;
+    return true;
+  });
+
+  const ungelesenCount=nachrichten.filter(n=>!ungelesen[n.id]).length;
+
   /* ── Thread ── */
   function renderThread(){
     if(!selected) return(
-      <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100%",color:"var(--sub)",fontSize:13}}>
-        <div style={{textAlign:"center"}}>
-          <TI n="message" size={32} style={{opacity:0.3,marginBottom:8}}/>
-          <div>Nachricht auswählen</div>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100%",flexDirection:"column",gap:12}}>
+        <div style={{width:56,height:56,borderRadius:16,background:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <TI n="message-2" size={26} style={{color:"var(--border)"}}/>
         </div>
+        <div style={{fontSize:14,color:"var(--sub)",fontWeight:500}}>Nachricht auswählen</div>
+        <div style={{fontSize:12,color:"var(--border)"}}>Klicke links auf eine Nachricht</div>
       </div>
     );
+    const av=avC(selected.autor_name);
     return(
       <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
-        <div style={{padding:"12px 18px",borderBottom:"0.5px solid var(--border)",flexShrink:0}}>
+        {/* Thread Header */}
+        <div style={{padding:"16px 20px",borderBottom:"0.5px solid var(--border)",flexShrink:0,background:"var(--surface)"}}>
           {isMobile&&(
-            <Btn variant="ghost" onClick={()=>{setShowThread(false);setSelected(null);}}><TI n="arrow-left" size={14}/> Zurück</Btn>
+            <Btn variant="ghost" onClick={()=>{setShowThread(false);setSelected(null);}} style={{marginBottom:10}}>
+              <TI n="arrow-left" size={14}/> Zurück
+            </Btn>
           )}
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8,marginBottom:6}}>
-            <h2 style={{margin:0,fontSize:14,fontWeight:700,color:"var(--text)"}}>{selected.titel}</h2>
-            <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,background:selected.typ==="broadcast"?"#E6F1FB":"#E1F5EE",color:selected.typ==="broadcast"?"#0C447C":"#085041",fontWeight:600,flexShrink:0}}>{selected.typ==="broadcast"?"Broadcast":"Diskussion"}</span>
-                  {kannVerwalten&&(
-                    <Btn variant="ghost" onClick={async()=>{ if(!window.confirm("Nachricht löschen?")) return; await sb.from("nachrichten").delete().eq("id",selected.id); setSelected(null);setAntworten([]);loadNachrichten(); }}><TI n="trash" size={14}/></Btn>
-                  )}
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-            <span style={{fontSize:13,color:"var(--sub)"}}>{selected.autor_name}</span>
-            <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,border:"0.5px solid var(--border)",color:"var(--sub)"}}>{getEmpfLabel(selected)}</span>
-            <span style={{fontSize:13,color:"var(--sub)"}}>{fmtTime(selected.erstellt_am)}</span>
+          <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+            <div style={{width:36,height:36,borderRadius:10,background:av.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:av.txt,flexShrink:0}}>
+              {initials(selected.autor_name)}
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3,flexWrap:"wrap"}}>
+                <span style={{fontSize:15,fontWeight:700,color:"var(--text)"}}>{selected.titel}</span>
+                <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,fontWeight:600,
+                  background:selected.typ==="broadcast"?"#DBEAFE":"#DCFCE7",
+                  color:selected.typ==="broadcast"?"#1D4ED8":"#166534"}}>
+                  {selected.typ==="broadcast"?"📢 Broadcast":"💬 Diskussion"}
+                </span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                <span style={{fontSize:12,fontWeight:600,color:"var(--text)"}}>{selected.autor_name}</span>
+                <span style={{fontSize:12,color:"var(--sub)"}}>→</span>
+                <span style={{fontSize:12,color:"var(--sub)",background:"var(--surface2)",padding:"2px 8px",borderRadius:6}}>{getEmpfLabel(selected)}</span>
+                <span style={{fontSize:11,color:"var(--sub)"}}>{fmtTime(selected.erstellt_am)}</span>
+              </div>
+            </div>
+            {kannVerwalten&&(
+              <button onClick={async()=>{if(!window.confirm("Nachricht löschen?"))return;await sb.from("nachrichten").delete().eq("id",selected.id);setSelected(null);setAntworten([]);loadNachrichten();}}
+                className="cc-icon-btn" style={{flexShrink:0}}>
+                <TI n="trash" size={14} style={{color:R}}/>
+              </button>
+            )}
           </div>
         </div>
-        <div style={{flex:1,overflowY:"auto",padding:"16px 18px"}}>
-          <p style={{fontSize:14,color:"var(--text)",lineHeight:1.65,margin:"0 0 14px",whiteSpace:"pre-wrap"}}>{selected.inhalt}</p>
+        {/* Thread Body */}
+        <div style={{flex:1,overflowY:"auto",padding:"20px"}}>
+          <p style={{fontSize:14,color:"var(--text)",lineHeight:1.75,margin:"0 0 20px",whiteSpace:"pre-wrap"}}>{selected.inhalt}</p>
           {dateien.length>0&&(
-            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:18}}>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
               {dateien.map(d=>(
                 <a key={d.id} href={d.datei_url} target="_blank" rel="noreferrer"
-                  style={{padding:"7px 12px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:8,textDecoration:"none"}}>
+                  style={{padding:"7px 12px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:8,textDecoration:"none",background:"var(--surface2)"}}>
                   <TI n="paperclip" size={13}/>{d.datei_name}
                 </a>
               ))}
             </div>
           )}
           {antworten.length>0&&(
-            <div style={{marginBottom:8}}>
-              <div style={{fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:10}}>
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.8,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+                <div style={{flex:1,height:1,background:"var(--border)"}}/>
                 {antworten.length} {antworten.length===1?"Antwort":"Antworten"}
+                <div style={{flex:1,height:1,background:"var(--border)"}}/>
               </div>
               {antworten.map(a=>{
-                const av=avC(a.autor_name);
+                const aav=avC(a.autor_name);
                 return(
-                  <div key={a.id} style={{background:"var(--surface2)",borderRadius:10,padding:"10px 12px",marginBottom:8}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-                      <div style={{width:26,height:26,borderRadius:"50%",background:av.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:600,color:av.txt,flexShrink:0}}>{initials(a.autor_name)}</div>
-                      <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{a.autor_name}</span>
-                      <span style={{fontSize:11,color:"var(--sub)"}}>{fmtTime(a.erstellt_am)}</span>
+                  <div key={a.id} style={{display:"flex",gap:10,marginBottom:12}}>
+                    <div style={{width:30,height:30,borderRadius:8,background:aav.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:aav.txt,flexShrink:0}}>
+                      {initials(a.autor_name)}
                     </div>
-                    <p style={{fontSize:13,color:"var(--text)",margin:0,lineHeight:1.5}}>{a.inhalt}</p>
-                    {kannVerwalten&&(
-                      <Btn variant="ghost" onClick={async()=>{ await sb.from("nachrichten_antworten").delete().eq("id",a.id); loadAntworten(selected.id); }}><TI n="trash" size={11}/>Löschen</Btn>
-                    )}
+                    <div style={{flex:1,background:"var(--surface2)",borderRadius:10,padding:"10px 14px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+                        <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{a.autor_name}</span>
+                        <span style={{fontSize:11,color:"var(--sub)"}}>{fmtTime(a.erstellt_am)}</span>
+                        {kannVerwalten&&(
+                          <button onClick={async()=>{await sb.from("nachrichten_antworten").delete().eq("id",a.id);loadAntworten(selected.id);}}
+                            className="cc-icon-btn" style={{width:22,height:22,marginLeft:"auto"}}>
+                            <TI n="trash" size={11} style={{color:"var(--sub)"}}/>
+                          </button>
+                        )}
+                      </div>
+                      <p style={{fontSize:13,color:"var(--text)",margin:0,lineHeight:1.6}}>{a.inhalt}</p>
+                    </div>
                   </div>
                 );
               })}
             </div>
           )}
         </div>
-        <div style={{padding:"10px 18px",borderTop:"0.5px solid var(--border)",display:"flex",gap:8,alignItems:"center",flexShrink:0}}>
+        {/* Reply Box */}
+        <div style={{padding:"12px 16px",borderTop:"0.5px solid var(--border)",display:"flex",gap:8,alignItems:"center",flexShrink:0,background:"var(--surface)"}}>
+          <div style={{width:28,height:28,borderRadius:8,background:avC(account?.name||role).bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:avC(account?.name||role).txt,flexShrink:0}}>
+            {initials(account?.name||role)}
+          </div>
           <input value={antwortText} onChange={e=>setAntwortText(e.target.value)}
             onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendAntwort();}}}
-            placeholder="Antworten..." style={{flex:1,padding:"8px 12px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}/>
-          <Btn variant="primary" color={BTN} onClick={sendAntwort} disabled={!antwortText.trim()||sending}><TI n="send" size={14}/></Btn>
+            placeholder="Antworten…"
+            className="cc-input" style={{flex:1}}/>
+          <button onClick={sendAntwort} disabled={!antwortText.trim()||sending}
+            style={{width:36,height:36,borderRadius:10,background:ACCENT,border:"none",cursor:antwortText.trim()?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",opacity:antwortText.trim()?1:0.4,transition:"opacity 0.15s",flexShrink:0}}>
+            <TI n="send" size={15} style={{color:ACCENT2}}/>
+          </button>
         </div>
       </div>
     );
@@ -226,56 +235,82 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
   function renderListe(){
     return(
       <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
-        <div style={{padding:"12px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
-          <span style={{fontSize:14,fontWeight:700,color:"var(--text)"}}>Nachrichten</span>
-          <Row>
-            {nachrichten.filter(n=>!ungelesen[n.id]).length>0&&(
-              <span style={{background:"#E24B4A",color:"#fff",fontSize:11,fontWeight:600,padding:"2px 7px",borderRadius:10}}>
-                {nachrichten.filter(n=>!ungelesen[n.id]).length}
+        {/* List Header */}
+        <div style={{padding:"14px 16px",borderBottom:"0.5px solid var(--border)",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <span style={{fontSize:15,fontWeight:800,color:"var(--text)",letterSpacing:-0.3}}>Nachrichten</span>
+            {ungelesenCount>0&&(
+              <span style={{background:ACCENT,color:ACCENT2,fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:10,minWidth:18,textAlign:"center"}}>
+                {ungelesenCount}
               </span>
             )}
-            {kannSenden&&(
-              <Btn variant="primary" color={BTN} onClick={()=>setShowNeu(true)}>+ Neu</Btn>
-            )}
-          </Row>
+          </div>
+          {kannSenden&&(
+            <button onClick={()=>setShowNeu(true)}
+              style={{display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:8,border:"none",background:ACCENT,color:ACCENT2,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+              <TI n="plus" size={13}/> Neu
+            </button>
+          )}
         </div>
-        <div style={{display:"flex",padding:"0 14px",borderBottom:"0.5px solid var(--border)",overflowX:"auto",scrollbarWidth:"none",flexShrink:0}}>
-          {["alle","gesendet","ungelesen"].map(t=>(
-            <Btn variant="ghost" onClick={()=>setTab(t)}>{t==="alle"?"Alle":t==="gesendet"?"Gesendet":"Ungelesen"}</Btn>
+        {/* Tabs */}
+        <div style={{padding:"8px 12px",borderBottom:"0.5px solid var(--border)",flexShrink:0}}>
+          <div className="cc-seg">
+            {["alle","ungelesen","gesendet"].map(t=>(
+              <button key={t} onClick={()=>setTab(t)} className={"cc-seg-item"+(tab===t?" cc-seg-active":"")}>
+                {t==="alle"?"Alle":t==="ungelesen"?"Ungelesen":"Gesendet"}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* Filter Chips */}
+        <div style={{padding:"8px 12px",borderBottom:"0.5px solid var(--border)",display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",flexShrink:0}}>
+          {[null,"broadcast","diskussion"].map(f=>(
+            <button key={f||"all"} onClick={()=>setFilter(filter===f?null:f)}
+              className={"cc-chip-toggle"+(filter===f?" cc-chip-active":"")}>
+              {f===null?"Alle":f==="broadcast"?"📢 Broadcast":"💬 Diskussion"}
+            </button>
           ))}
         </div>
-        <div style={{padding:"8px 14px",borderBottom:"0.5px solid var(--border)",display:"flex",gap:8,overflowX:"auto",scrollbarWidth:"none",flexShrink:0}}>
-          {[null,"broadcast","diskussion","trainer","eltern"].map(f=>(
-            <Btn onClick={()=>setFilter(filter===f?null:f)}>{f===null?"Alle":f==="broadcast"?"Broadcast":f==="diskussion"?"Diskussion":f==="trainer"?"Trainer":"Eltern"}</Btn>
-          ))}
-        </div>
+        {/* List */}
         <div style={{flex:1,overflowY:"auto"}}>
           {loading?(
             <div style={{padding:40,textAlign:"center",color:"var(--sub)",fontSize:13}}>Wird geladen…</div>
-          ):grouped.length===0?(
-            <div style={{padding:40,textAlign:"center",color:"var(--sub)",fontSize:13}}>Keine Nachrichten</div>
-          ):grouped.map((item,i)=>{
-            if(item.type==="header") return(
-              <div key={i} style={{padding:"5px 14px",fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6,background:"var(--surface2)",borderBottom:"0.5px solid var(--border)"}}>
-                {item.label}
+          ):filtered.length===0?(
+            <div style={{padding:40,textAlign:"center"}}>
+              <div style={{width:48,height:48,borderRadius:14,background:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}>
+                <TI n="inbox" size={22} style={{color:"var(--border)"}}/>
               </div>
-            );
-            const n=item.n;
+              <div style={{fontSize:13,color:"var(--sub)",fontWeight:500}}>Keine Nachrichten</div>
+            </div>
+          ):filtered.map(n=>{
             const isSelected=selected?.id===n.id;
             const isUngelesen=!ungelesen[n.id];
+            const av=avC(n.autor_name);
             return(
               <div key={n.id} onClick={()=>{setSelected(n);loadAntworten(n.id);if(isMobile)setShowThread(true);}}
-                style={{padding:"10px 14px",borderBottom:"0.5px solid var(--border)",cursor:"pointer",background:isSelected?"var(--surface2)":"transparent",borderLeft:isSelected?"2px solid "+ACCENT:"2px solid transparent",transition:"background 0.1s"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
-                  <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0}}>
-                    {isUngelesen&&<div style={{width:7,height:7,borderRadius:"50%",background:ACCENT,flexShrink:0}}/>}
-                    <span style={{fontSize:13,fontWeight:isUngelesen?700:500,color:"var(--text)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{n.titel}</span>
+                style={{padding:"12px 14px",borderBottom:"0.5px solid var(--border)",cursor:"pointer",
+                  background:isSelected?"var(--surface2)":"transparent",
+                  borderLeft:`3px solid ${isSelected?ACCENT:"transparent"}`,
+                  transition:"background 0.1s"}}>
+                <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
+                  <div style={{width:34,height:34,borderRadius:10,background:av.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:av.txt,flexShrink:0,position:"relative"}}>
+                    {initials(n.autor_name)}
+                    {isUngelesen&&<div className="cc-unread-dot" style={{background:ACCENT}}/>}
                   </div>
-                  <span style={{fontSize:11,color:"var(--sub)",flexShrink:0,marginLeft:6}}>{fmtTime(n.erstellt_am)}</span>
-                </div>
-                <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                  <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,border:"0.5px solid var(--border)",color:"var(--sub)"}}>{getEmpfLabel(n)}</span>
-                  <span style={{fontSize:11,padding:"2px 8px",borderRadius:10,background:n.typ==="broadcast"?"#E6F1FB":"#E1F5EE",color:n.typ==="broadcast"?"#0C447C":"#085041"}}>{n.typ==="broadcast"?"Broadcast":"Diskussion"}</span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}}>
+                      <span style={{fontSize:13,fontWeight:isUngelesen?700:500,color:"var(--text)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,marginRight:8}}>{n.titel}</span>
+                      <span style={{fontSize:11,color:"var(--sub)",flexShrink:0}}>{fmtTime(n.erstellt_am)}</span>
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:6}}>
+                      <span style={{fontSize:11,color:"var(--sub)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>{n.autor_name} → {getEmpfLabel(n)}</span>
+                      <span style={{fontSize:10,padding:"2px 7px",borderRadius:8,fontWeight:600,flexShrink:0,
+                        background:n.typ==="broadcast"?"#DBEAFE":"#DCFCE7",
+                        color:n.typ==="broadcast"?"#1D4ED8":"#166534"}}>
+                        {n.typ==="broadcast"?"BC":"DK"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
@@ -287,72 +322,94 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
 
   return(
     <div>
+      {/* Neue Nachricht Modal */}
       <ModalOrSheet open={showNeu} onClose={()=>setShowNeu(false)} maxWidth={520}>
         <div style={{padding:"20px 20px 0",flexShrink:0}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
             <ModalTitle>Neue Nachricht</ModalTitle>
-            <Btn variant="ghost" onClick={()=>setShowNeu(false)} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
+            <button onClick={()=>setShowNeu(false)} className="cc-icon-btn"><TI n="x" size={14}/></button>
           </div>
         </div>
         <div style={{padding:"0 20px 20px",overflowY:"auto"}}>
+          {/* Typ */}
           <div style={{marginBottom:14}}>
             <label style={S_LABEL}>Typ</label>
-            <Row align="flex-start">
+            <div style={{display:"flex",gap:8}}>
               {["broadcast","diskussion"].map(t=>(
-                <Btn onClick={()=>setNeuForm(f=>({...f,typ:t}))}>{t==="broadcast"?"📢 Broadcast":"💬 Diskussion"}</Btn>
+                <button key={t} onClick={()=>setNeuForm(f=>({...f,typ:t}))}
+                  style={{flex:1,padding:"10px",borderRadius:10,border:`2px solid ${neuForm.typ===t?ACCENT:"var(--border)"}`,
+                    background:neuForm.typ===t?ACCENT+"15":"var(--surface2)",
+                    cursor:"pointer",fontFamily:FONT,fontSize:13,fontWeight:600,
+                    color:neuForm.typ===t?"var(--text)":"var(--sub)",transition:"all 0.15s"}}>
+                  {t==="broadcast"?"📢 Broadcast":"💬 Diskussion"}
+                </button>
               ))}
-            </Row>
-            <div style={{fontSize:11,color:"var(--sub)",marginTop:5}}>{neuForm.typ==="broadcast"?"Nur Absender sieht Antworten der anderen":"Alle sehen alle Antworten"}</div>
+            </div>
+            <div style={{fontSize:11,color:"var(--sub)",marginTop:6}}>{neuForm.typ==="broadcast"?"Nur Absender sieht Antworten der anderen":"Alle sehen alle Antworten"}</div>
           </div>
+          {/* Empfänger */}
           <div style={{marginBottom:14}}>
             <label style={S_LABEL}>Empfänger</label>
-            <div style={{display:"flex",gap:8,marginBottom:8,flexWrap:"wrap"}}>
+            <div style={{display:"flex",gap:6,marginBottom:8}}>
               {["rolle","gruppe","team"].map(t=>(
-                <Btn onClick={()=>setNeuForm(f=>({...f,empfaenger_typ:t}))}>{t==="rolle"?"Nach Rolle":t==="gruppe"?"Nach Gruppe":"Team"}</Btn>
+                <button key={t} onClick={()=>setNeuForm(f=>({...f,empfaenger_typ:t}))}
+                  style={{padding:"5px 12px",borderRadius:8,border:`1.5px solid ${neuForm.empfaenger_typ===t?"var(--text)":"var(--border)"}`,
+                    background:neuForm.empfaenger_typ===t?"var(--text)":"transparent",
+                    color:neuForm.empfaenger_typ===t?"var(--bg)":"var(--sub)",
+                    fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
+                  {t==="rolle"?"Rolle":t==="gruppe"?"Gruppe":"Team"}
+                </button>
               ))}
             </div>
             {neuForm.empfaenger_typ==="rolle"&&(
               <select value={neuForm.empfaenger_rolle} onChange={e=>setNeuForm(f=>({...f,empfaenger_rolle:e.target.value}))}
-                style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
-                <option value="">Empfänger wählen...</option>
+                style={{width:"100%",padding:"9px 12px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}>
+                <option value="">Empfänger wählen…</option>
                 {ROLLEN_OPTS.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}
               </select>
             )}
             {neuForm.empfaenger_typ==="gruppe"&&(
               <select value={neuForm.empfaenger_gruppe_id||""} onChange={e=>setNeuForm(f=>({...f,empfaenger_gruppe_id:e.target.value?parseInt(e.target.value):null}))}
-                style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
-                <option value="">Gruppe wählen...</option>
+                style={{width:"100%",padding:"9px 12px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}>
+                <option value="">Gruppe wählen…</option>
                 {gruppen.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
               </select>
             )}
             {neuForm.empfaenger_typ==="team"&&(
               <select value={neuForm.empfaenger_team} onChange={e=>setNeuForm(f=>({...f,empfaenger_team:e.target.value}))}
-                style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT}}>
-                <option value="">Team wählen...</option>
+                style={{width:"100%",padding:"9px 12px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--text)",fontSize:13,fontFamily:FONT,outline:"none"}}>
+                <option value="">Team wählen…</option>
                 {dbTeams.map(t=><option key={t.id||t.name} value={t.name}>{t.name}</option>)}
               </select>
             )}
           </div>
-          <div style={{marginBottom:14}}>
+          {/* Betreff */}
+          <div style={{marginBottom:12}}>
             <label style={S_LABEL}>Betreff</label>
             <input value={neuForm.titel} onChange={e=>setNeuForm(f=>({...f,titel:e.target.value}))}
-              placeholder="z.B. Neuer Trainingsplan" style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none"}}/>
+              placeholder="z.B. Neuer Trainingsplan"
+              className="cc-input"/>
           </div>
+          {/* Nachricht */}
           <div style={{marginBottom:18}}>
             <label style={S_LABEL}>Nachricht</label>
             <textarea value={neuForm.inhalt} onChange={e=>setNeuForm(f=>({...f,inhalt:e.target.value}))}
-              placeholder="Deine Nachricht..." rows={5}
-              style={{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--text)",fontSize:13,fontFamily:FONT,boxSizing:"border-box",outline:"none",resize:"vertical"}}/>
+              placeholder="Deine Nachricht…" rows={5}
+              className="cc-input" style={{resize:"vertical"}}/>
           </div>
-          <Btn variant="primary" color={BTN} onClick={sendNachricht} disabled={!neuForm.titel.trim()||!neuForm.inhalt.trim()||sending}>{sending?"Wird gesendet…":"Senden"}</Btn>
+          <button onClick={sendNachricht} disabled={!neuForm.titel.trim()||!neuForm.inhalt.trim()||sending}
+            style={{width:"100%",padding:"11px",borderRadius:10,border:"none",background:ACCENT,color:ACCENT2,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT,opacity:(!neuForm.titel.trim()||!neuForm.inhalt.trim()||sending)?0.5:1,transition:"opacity 0.15s"}}>
+            {sending?"Wird gesendet…":"Nachricht senden"}
+          </button>
         </div>
       </ModalOrSheet>
+
       {isMobile?(
         showThread&&selected?renderThread():renderListe()
       ):(
-        <div style={{display:"grid",gridTemplateColumns:"300px 1fr",border:"0.5px solid var(--border)",borderRadius:14,overflow:"hidden",minHeight:600}}>
-          <div style={{borderRight:"0.5px solid var(--border)"}}>{renderListe()}</div>
-          <div>{renderThread()}</div>
+        <div style={{display:"grid",gridTemplateColumns:"320px 1fr",border:"0.5px solid var(--border)",borderRadius:14,overflow:"hidden",minHeight:"calc(100vh - 120px)",background:"var(--surface)"}}>
+          <div style={{borderRight:"0.5px solid var(--border)",background:"var(--surface)"}}>{renderListe()}</div>
+          <div style={{background:"var(--bg)"}}>{renderThread()}</div>
         </div>
       )}
     </div>

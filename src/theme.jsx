@@ -40,6 +40,16 @@ const PWA_CSS=`
 .cc-btn-group-item:hover{background:var(--surface);color:var(--text)}
 .cc-btn-group-active{background:var(--text)!important;color:var(--bg)!important}
 .cc-btn-group-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.cc-seg{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px}
+.cc-seg-item{flex:1;padding:5px 8px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:400;background:transparent;color:var(--sub);transition:all 0.15s;white-space:nowrap}
+.cc-seg-item:hover{color:var(--text)}
+.cc-seg-active{background:var(--surface)!important;color:var(--text)!important;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.cc-chip-toggle{padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--sub);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
+.cc-chip-toggle:hover{border-color:var(--text);color:var(--text)}
+.cc-chip-active{border-color:var(--text)!important;background:var(--text)!important;color:var(--bg)!important}
+.cc-input{width:100%;padding:9px 12px;border-radius:8px;border:0.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box;outline:none;transition:border-color 0.15s}
+.cc-input:focus{border-color:var(--text)}
+.cc-unread-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;border:2px solid var(--surface)}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 html{scroll-behavior:smooth}
 button:active:not([disabled]){transform:scale(0.96)}
