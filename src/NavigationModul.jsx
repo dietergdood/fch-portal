@@ -402,7 +402,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
       <div style={{flex:1,padding:"10px 8px",overflowY:"auto",overflowX:"hidden"}}>
         {nav.map(n=>(
           <button key={n.key} onClick={()=>setActive(n.key)} title={collapsed?n.label:undefined}
-            className="cc-nav-item"
+            className={`cc-nav-item${active===n.key?" cc-nav-active":""}`}
             style={{
             width:"100%",display:"flex",alignItems:"center",gap:collapsed?0:11,
             padding:collapsed?"10px 0":"10px 12px",borderRadius:9,border:"none",
@@ -423,10 +423,35 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
       <div style={{height:1,background:"var(--nav-b)",margin:"0 12px"}}/>
 
       {/* User footer – klickbar → Profil */}
-      <Btn variant="ghost" onClick={()=>setShowProfile(true)}>{!collapsed&&<div style={{fontSize:11,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>} <div style={{display:"flex",alignItems:"center",gap:8,justifyContent:collapsed?"center":"flex-start"}}> <Av size={32} bg={ACCENT} name={userName}/> {!collapsed&&( <div style={{minWidth:0,flex:1}}> <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div> <div style={{marginTop:3,fontSize:11,color:"var(--sub)",fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}> <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:rc,flexShrink:0}}/> {getRole(role).label} </div> </div> )} {!collapsed&&<TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>} </div></Btn>
+      <button className="cc-nav-item" onClick={()=>setShowProfile(true)} style={{
+        width:"100%",border:"none",background:"transparent",cursor:"pointer",
+        padding:collapsed?"12px 8px":"12px",textAlign:"left",fontFamily:"inherit",
+        transition:"background 0.15s",borderRadius:0,
+      }}>
+        {!collapsed&&<div style={{fontSize:11,color:"var(--nav-t)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:9,paddingLeft:2}}>Angemeldet als</div>}
+        <div style={{display:"flex",alignItems:"center",gap:8,justifyContent:collapsed?"center":"flex-start"}}>
+          <Av size={32} bg={ACCENT} name={userName}/>
+          {!collapsed&&(
+            <div style={{minWidth:0,flex:1}}>
+              <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
+              <div style={{marginTop:3,fontSize:11,color:"var(--nav-t)",opacity:0.6,fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>
+                <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:rc,flexShrink:0}}/>
+                {getRole(role).label}
+              </div>
+            </div>
+          )}
+          {!collapsed&&<TI n="chevron-right" size={13} style={{color:"var(--nav-t)",opacity:0.5,flexShrink:0}}/>}
+        </div>
+      </button>
 
       {/* Einklappen-Button */}
-      <Btn variant="ghost" onClick={toggleCollapse}><TI n={collapsed?"chevrons-right":"chevrons-left"} size={16}/></Btn>
+      <button className="cc-nav-item" onClick={toggleCollapse} style={{
+        width:"100%",border:"none",background:"transparent",cursor:"pointer",
+        padding:"10px",display:"flex",justifyContent:"center",alignItems:"center",
+        fontFamily:"inherit",transition:"background 0.15s",borderRadius:0,
+      }}>
+        <TI n={collapsed?"chevrons-right":"chevrons-left"} size={16} style={{color:"var(--nav-t)",opacity:0.6}}/>
+      </button>
 
       <ProfileModal open={showProfile} onClose={()=>setShowProfile(false)} account={account} role={role} sb={sb} onNameUpdated={onNameUpdated} onLogout={onLogout}/>
     </nav>
