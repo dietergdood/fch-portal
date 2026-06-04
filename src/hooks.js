@@ -1,0 +1,7 @@
+import { useState, useEffect } from "react";
+import { BP_MOBILE, BP_TABLET } from "./constants";
+
+function useBreakpoint(){const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);return{isMobile:w<BP_MOBILE,isTablet:w>=BP_MOBILE&&w<BP_TABLET,isDesktop:w>=BP_TABLET,width:w};}
+function useIsMobile(){return useBreakpoint().isMobile;}
+
+export { useBreakpoint, useIsMobile };
