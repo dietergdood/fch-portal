@@ -1171,11 +1171,10 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
               minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
             }}>
               {active===n.key&&!mehrActive&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
-              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:active===n.key&&!mehrActive?"var(--nav-a)":"transparent",transition:"background 0.15s"}}>
-                <TI n={n.icon||"circle"} size={19} style={{color:active===n.key&&!mehrActive?ACCENT2:"var(--nav-t)"}}/>
+              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s"}}>
+                <TI n={n.icon||"circle"} size={19} style={{color:active===n.key&&!mehrActive?"var(--nav-a)":"var(--nav-t)"}}/>
               </div>
-              <span style={{fontSize:10,color:active===n.key&&!mehrActive?"var(--nav-accent-text)":"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
+              <span style={{fontSize:10,color:active===n.key&&!mehrActive?"var(--nav-a)":"var(--nav-t)",fontWeight:active===n.key&&!mehrActive?600:400}}>{n.label}</span>
             </button>
           ))}
           {/* Mehr-Button (nur wenn mehr-Einträge vorhanden) */}
@@ -1186,11 +1185,10 @@ function MobileNav({role,active,setActive,account,sb,onNameUpdated,onLogout,effe
               minHeight:56,WebkitTapHighlightColor:"transparent",position:"relative",gap:3
             }}>
               {(mehrActive||showMehr)&&<span style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 3px 3px",background:"var(--nav-a)"}}/>}
-              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                background:mehrActive||showMehr?ACCENT:"transparent",transition:"background 0.15s"}}>
-                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"#111":"var(--nav-t)"}}/>
+              <div style={{width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s"}}>
+                <TI n="menu-2" size={19} style={{color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)"}}/>
               </div>
-              <span style={{fontSize:10,color:mehrActive||showMehr?ACCENT:"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
+              <span style={{fontSize:10,color:mehrActive||showMehr?"var(--nav-a)":"var(--nav-t)",fontWeight:mehrActive||showMehr?600:400}}>Mehr</span>
             </button>
           )}
         </div>
