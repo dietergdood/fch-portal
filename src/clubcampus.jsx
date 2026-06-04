@@ -11839,7 +11839,7 @@ export default function Portal({supabaseClient}){
     if(!sb) return;
     try{
       /* Theme aus vereine laden - kein Login nötig (public read) */
-      const{data,error}=await sb.from("vereine").select("name,theme").single();
+      const{data,error}=await sb.from("vereine").select("id,name,theme").single();
       if(error||!data) return;
       setTenant(data);
       const t={...THEME_DEFAULT_STATIC,...(data.theme||{})};
