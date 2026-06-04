@@ -3,6 +3,7 @@
    Theme-System, Logo, CSS-Variablen, Default-Farben
    ═══════════════════════════════════════════════════════════════ */
 import { createContext, useContext, useState, useEffect } from "react";
+import { TI } from "./icons.jsx";
 import { ACCENT, ACCENT2, ACCENT20, BK, BL, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, FONT, R } from "./constants";
 
 
