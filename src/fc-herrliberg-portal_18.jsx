@@ -1041,7 +1041,7 @@ const PSTATS=[
    KLEINE HILFKOMPONENTEN
 ========================================== */
 function Av({name="",init,size=34,bg="var(--surface2)"}){
-  const textColor=bg===ACCENT||bg==="rgba(255,255,255,0.3)"?"#000":bg===ACCENT20||bg==="var(--surface2)"||bg==="var(--border)"||bg==="#e5e5e5"?"var(--sub)":"#fff";
+  const textColor=bg===ACCENT||bg==="rgba(255,255,255,0.3)"?ACCENT2:bg===ACCENT20||bg==="var(--surface2)"||bg==="var(--border)"||bg==="#e5e5e5"?"var(--sub)":"#fff";
   // init kann ein Icon-Name sein (z.B. "settings") oder Initialen
   const isIcon = init && TI_PATHS[init];
   const l = isIcon ? null : (init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase());
