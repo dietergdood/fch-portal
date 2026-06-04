@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
 import { useIsMobile, ModalOrSheet } from "./theme.jsx";
-import { GANTT, INITIAL_PLAENE, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
+import { ATT_EVENTS, GANTT, INITIAL_PLAENE, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 import { SlotModal } from "./TermineModul.jsx";
 
 /* Mutable reference — wird von PlaetzeView befüllt */

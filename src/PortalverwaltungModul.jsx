@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants";
 import { TI } from "./icons.jsx";
 import { hexToRgba, darkenHex, THEME_DEFAULT_STATIC, LOGO_B64, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip } from "./theme.jsx";
+import { FUNKTIONEN } from "./demoData.js";
 
 /* ── Geteilte Konstanten ── */
 const ROLES = {

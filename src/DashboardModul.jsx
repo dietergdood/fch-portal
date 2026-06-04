@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants";
 import { TI } from "./icons.jsx";
 import { useIsMobile, InfoBox, Card, Chip, Stat, STitle } from "./theme.jsx";
-import { EVENTS, HELPERS, BUSES, ROSTER, ATT_INITIAL, ATT_EVENTS, HELPER_EVENTS } from "./demoData.js";
+import { ATT_EVENTS, ATT_INITIAL, ATT_LOG, BUSES, EVENTS, HELPERS, HELPER_EVENTS, POLLS, ROSTER, TABLES } from "./demoData.js";
 
 function Dashboard({role,setActive,account,meineTeams,myRosterId}){
   if(role==="administrator")  return <DashboardAdmin setActive={setActive} account={account}/>;
