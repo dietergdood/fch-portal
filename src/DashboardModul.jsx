@@ -28,13 +28,13 @@ function DashboardAdmin({setActive,account}){
     <div>
       <H1 mb={4}>Hallo, {vorname}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>ClubCampus – Systemübersicht</p>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12,marginBottom:24}}>
+      <div className="cc-grid-stats" style={{marginBottom:24}}>
         <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" semantic="primary" icon="users"/>
         <Stat label="Aktive Benutzer" value="134" sub="in den letzten 30 Tagen" semantic="info" icon="user"/>
         <Stat label="Sync-Fehler" value="2" sub="Fairgate / FVRZ" semantic="danger" icon="refresh"/>
         <Stat label="Offene Datenprüfungen" value="12" sub="Mitglieder fällig" semantic="warning" icon="clipboard-list"/>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+      <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
         <Card>
           <STitle>Systemstatus</STitle>
           {[
@@ -102,13 +102,13 @@ function DashboardAdministration({setActive,account}){
       <H1 mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Mitglieder total" value="187" semantic="info"/>
         <Stat label="Datenprüfung fällig" value="12" semantic="danger" sub="halbjährliche Prüfung"/>
         <Stat label="Sync-Fehler" value="2" semantic="warning"/>
         <Stat label="Offene Materialanfragen" value="3" semantic="neutral"/>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+      <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
         <Card>
           <STitle action={<Btn variant="ghost" onClick={()=>setActive("members")}>Alle →</Btn>}>Datenprüfstatus</STitle>
           {[{label:"Vollständig",n:162,c:GN},{label:"Prüfung fällig",n:12,c:AM},{label:"Unvollständig",n:8,c:R},{label:"Sync-Fehler",n:5,c:"#888"}].map((x,i)=>(
@@ -167,13 +167,13 @@ function DashboardFunktionaer({setActive,account}){
       <H1 mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Offene Rückmeldungen" value="22" semantic="danger"/>
         <Stat label="Helfer-Soll erfüllt" value="61%" semantic="warning"/>
         <Stat label="Vereinsbusse heute" value="1" semantic="info" sub="Bus A reserviert"/>
         <Stat label="Offene Materialanfragen" value="3" semantic="neutral"/>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+      <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
         <Card>
           <STitle>Kommende Vereinsanlässe</STitle>
           {EVENTS.map((e,i)=>(
@@ -253,13 +253,13 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
     <div>
       <H1 mb={6}>Guten Morgen, {firstName}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Trainer · {trainerTeams.join(" & ")} · Freitag, 23. Mai 2026</p>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} semantic="success"/>
         <Stat label="Nächstes Spiel"    value={nextSpiel?nextSpiel.date.replace(/^\w+\s/,""):"-"} sub={nextSpiel?`${nextSpiel.time} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel"} semantic="info"/>
         <Stat label="Ø Anwesenheit"     value="77%"      sub="letzte 5 Trainings"   semantic="success"/>
         <Stat label="Tabellenrang"      value={myRow?myRow.rank+".":"-"} sub={myRow?TABLES[team]?.length+" Teams · "+myRow.pts+" Punkte":"Keine Tabelle"} semantic="info"/>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+      <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
         <Card>
           <STitle action={<Chip text={upcoming.filter(e=>e.rsvp!==false).length+" offen"} semantic="danger"/>}>Fehlende Rückmeldungen</STitle>
           {upcoming.filter(e=>e.rsvp!==false).slice(0,3).map((x,i,arr)=>{
@@ -393,7 +393,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
     <div>
       <H1 mb={6}>Hallo, {firstName}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Spieler · {team} · Freitag, 23. Mai 2026</p>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={pastEvs.length?zuCount+"/"+pastEvs.length+" Trainings":"Noch keine vergangenen"} color={attColor}/>
         <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} semantic="success"/>
         <Stat label="Nächstes Spiel" value={nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextSpiel?`${(nextSpiel.time||"").slice(0,5)} Uhr · ${nextSpielAufgebotStatus}`:nextSpielAufgebotStatus} color={nextSpielImAufgebot?"#4F46E5":nextSpiel?BL:"#aaa"}/>
@@ -414,7 +414,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
           <Chip text="Aufgebot" color="#4F46E5"/>
         </div>
       )}
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+      <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
         <Card>
           <STitle>Meine nächsten Termine</STitle>
           {(()=>{
@@ -555,7 +555,7 @@ function DashboardEltern({account,meineTeams,setActive}){
               const nextSpiel=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
               const nextTraining=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Training"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
               return(
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12,marginBottom:14}}>
+                <div className="cc-grid-stats" style={{marginBottom:14}}>
                   <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={attTotal?zuCount+"/"+attTotal+" Trainings":"Noch keine"} color={attColor}/>
                   <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} semantic="success"/>
                   {(()=>{
@@ -588,7 +588,7 @@ function DashboardEltern({account,meineTeams,setActive}){
               </div>
             )}
 
-            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+            <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
               {/* Nächste 4 Trainings & Spiele */}
               <Card style={{cursor:setActive?"pointer":"default"}} onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;setActive("team");}:undefined}>
                 <STitle action={setActive&&<span style={{fontSize:13,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Trainings & Spiele</STitle>

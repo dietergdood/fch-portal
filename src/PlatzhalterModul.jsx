@@ -38,7 +38,7 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
               <div key={j} style={{padding:"9px 0",borderBottom:j<bus.reservations.length-1?`0.5px solid ${GB}`:"none"}}>
                 <div style={{display:"flex",justifyContent:"space-between"}}>
                   <span style={{fontWeight:600,fontSize:13}}>{r.date} · {r.time+" Uhr"}</span>
-                  <Chip text="Reserviert" color={BL} bg="#EFF6FF"/>
+                  <Chip text="Reserviert" color={BL}/>
                 </div>
                 <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>{r.purpose}</div>
                 <div style={{fontSize:13,color:"var(--sub)"}}>von {r.by} · {r.team}</div>
@@ -155,7 +155,7 @@ function MediaView(){
             <div>
               <div style={{display:"flex",gap:6,marginBottom:5,flexWrap:"wrap"}}>
                 <Chip text={m.cat} color={R}/>
-                {m.area.map((a,j)=><Chip key={j} text={a} color={BL} bg="#EFF6FF"/>)}
+                {m.area.map((a,j)=><Chip key={j} text={a} color={BL}/>)}
               </div>
               <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700}}>{m.title}</h3>
               <div style={{fontSize:13,color:"var(--sub)"}}>{m.team} · {m.date} · {m.author}</div>
@@ -208,7 +208,7 @@ function DocsView(){
               <div style={{fontWeight:600,fontSize:13}}>{d.name}</div>
               <div style={{fontSize:13,color:"var(--sub)"}}>{d.size} · {d.updated}</div>
             </div>
-            <Chip text={d.area} color="#666" bg="#f5f5f5"/>
+            <Chip text={d.area} color="#666"/>
             <Btn>↓ Download</Btn>
           </div>
         ))}
@@ -248,7 +248,7 @@ function NewsView({role,meineTeams,kannVerwalten}){
         <Card key={i} style={{marginBottom:12}}>
           <div style={{display:"flex",gap:7,marginBottom:6,flexWrap:"wrap",alignItems:"center"}}>
             <Chip text={n.target} color={R}/>
-            <Chip text={n.channel} color={BL} bg="#EFF6FF"/>
+            <Chip text={n.channel} color={BL}/>
             <span style={{fontSize:13,color:"var(--sub)"}}>{n.date} · {n.author}</span>
           </div>
           <h3 style={{margin:"0 0 6px",fontSize:15,fontWeight:700}}>{n.title}</h3>
@@ -263,7 +263,7 @@ function AttendanceCentral(){
   return(
     <div>
       <H1 mb={18}>Zentrale Anwesenheitsstatistik</H1>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Ø Alle Teams" value="75%" color={GN}/>
         <Stat label="Ø Trainings" value="72%" color={BL}/>
         <Stat label="Ø Spiele"    value="90%" color={R}/>

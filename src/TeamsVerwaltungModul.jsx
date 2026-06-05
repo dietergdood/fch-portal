@@ -621,7 +621,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             </select>
           </div>
           {/* Ebene 2 + 3 */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Vereinsstufe (Ebene 2)</label>
               <select value={dbStufen.length>0?form.stufe_ebene2:form.vereinsstufe}
@@ -648,7 +648,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             </div>
           </div>
           {/* Ebene 4: Teamname + Kurzname */}
-          <div style={{display:"grid",gridTemplateColumns:"2fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Teamname (Ebene 4) *</label>
               <input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))}
@@ -661,7 +661,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             </div>
           </div>
           {/* Stufenleitung + Liga */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Stufenleitung</label>
               <input value={form.stufenleitung} onChange={e=>setForm(p=>({...p,stufenleitung:e.target.value}))}
@@ -674,7 +674,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             </div>
           </div>
           {/* Saison + Status */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Saison</label>
               <input value={form.saison} onChange={e=>setForm(p=>({...p,saison:e.target.value}))}
@@ -1385,7 +1385,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </select>
           </div>
           {/* Ebene 2 + 3 */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Vereinsstufe (Ebene 2)</label>
               <select value={dbStufen.length>0?form.stufe_ebene2:form.vereinsstufe}
@@ -1412,7 +1412,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </div>
           </div>
           {/* Ebene 4: Teamname + Kurzname */}
-          <div style={{display:"grid",gridTemplateColumns:"2fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Teamname (Ebene 4) *</label>
               <input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))}
@@ -1425,7 +1425,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </div>
           </div>
           {/* Stufenleitung + Liga */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Stufenleitung</label>
               <input value={form.stufenleitung} onChange={e=>setForm(p=>({...p,stufenleitung:e.target.value}))}
@@ -1438,7 +1438,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </div>
           </div>
           {/* Saison + Status */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <div className="cc-grid-form">
             <div>
               <label className="cc-label">Saison</label>
               <input value={form.saison} onChange={e=>setForm(p=>({...p,saison:e.target.value}))}

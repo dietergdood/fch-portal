@@ -341,7 +341,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
   const termine=allTermine;
 
   return(
-    <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+    <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
       {/* Team Übersicht */}
       <Card>
         <STitle>Info</STitle>
@@ -377,7 +377,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
               {trainer.length>0&&(
                 <div>
                   <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Trainer &amp; Staff</div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                  <div className="cc-grid-2" style={{gap:8}}>
                     {trainer.map((t,i)=>(
                     <div key={i} onClick={setTab&&setRosterInitial?()=>{setRosterInitial(t.id);setTab("roster");}:undefined}
                       style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",background:"var(--surface2)",borderRadius:8,cursor:setTab?"pointer":"default",transition:"background 0.1s"}}
@@ -431,7 +431,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
           const col=(v)=>v===null?"#aaa":v>=80?GN:v>=60?AM:R;
           const fmt=(v)=>v===null?"-":v+"%";
           return(
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <div className="cc-grid-2" style={{gap:8}}>
               {[
                 {l:"Total",              v:fmt(calcPct(pastEvs)),           c:col(calcPct(pastEvs))},
                 {l:"Trainings",          v:fmt(calcPct(trainEvs)),          c:col(calcPct(trainEvs))},
@@ -776,7 +776,7 @@ function EventsList({teamOnly,role}){
       {showForm&&canCreate&&(
         <div style={{background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:12,padding:"16px 18px",marginBottom:16,marginTop:10}}>
           <div style={{fontWeight:700,fontSize:14,marginBottom:12}}>{"Neuer "+(isTrainer?"Team-Event":"Anlass")}</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:10}}>
+          <div className="cc-grid-form">
             <div>
               <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Titel</div>
               <input value={newEvent.title} onChange={e=>setNewEvent(p=>({...p,title:e.target.value}))}

@@ -374,7 +374,7 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             {/* Standard Rollen */}
             <div>
               <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Standard-Rollen (Demo)</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              <div className="cc-grid-2" style={{gap:8}}>
                 {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length===1&&a.kinder.length===0).map(([key,a])=>{
                   const rd=ROLES[a.primaryRole];
                   const isActive=account===a&&!activeSubRole;

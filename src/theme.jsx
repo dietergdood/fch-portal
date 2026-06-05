@@ -119,6 +119,10 @@ const PWA_CSS=`
 .cc-detail-label{font-size:13px;color:var(--sub);min-width:120px;flex-shrink:0}
 .cc-empty{padding:32px;text-align:center;color:var(--sub);font-size:13px}
 .cc-table-wrap{background:var(--surface);border-radius:12px;overflow:hidden;overflow-x:auto}
+.cc-grid-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.cc-grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cc-grid-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .cc-count{font-size:11px;font-weight:400;color:var(--sub);opacity:0.7;margin-left:4px}
 .cc-check-row{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:8px;background:var(--surface2);cursor:pointer}
 

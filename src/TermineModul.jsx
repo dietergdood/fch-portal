@@ -1750,7 +1750,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                 <div style={{fontSize:13,color:"var(--sub)",fontWeight:600,marginBottom:6}}><TI n="target" style={{marginRight:3}}/> Treffpunkt</div>
                 {editingNote&&canEditEvent(selEv)?(
                   <div style={S_10}>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                    <div className="cc-grid-2" style={{gap:8}}>
                       <div>
                         <div style={{fontSize:13,color:"var(--sub)",marginBottom:2}}>Datum</div>
                         <input type="date" value={(()=>{const d=besammlungen[selEv.id]?.date||selEv.date||"";const c=d.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim();const p=c.split(".");return p.length>=2?`2026-${p[1]?.padStart(2,"0")}-${p[0]?.padStart(2,"0")}`:"";})()}

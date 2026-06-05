@@ -1163,7 +1163,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
 
       {/* ── MOBILE: Kacheln oder Unternavigation ── */}
       {isMobile&&mobileKachel===null&&(
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
+        <div className="cc-grid-form">
           {KATEGORIEN_NAV.map(k=>(
             <button key={k.key} onClick={()=>{setMobileKachel(k.key);setTab(k.tabs[0].key);setAktiveKat(k.key);}}
               style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:10,

@@ -398,7 +398,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         {canExport&&<Row align="flex-start"><Btn>Export CSV</Btn><Btn>Export Excel</Btn></Row>}
       </div>
       {/* Stats */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Total" value={allMembers.length} color={BL}/>
         <Stat label="Trainer" value={allMembers.filter(m=>m.role==="Trainer").length} color={R}/>
         <Stat label="Aktivmitglieder" value={allMembers.filter(m=>m.type==="Aktivmitglied").length} color={GN}/>
@@ -657,7 +657,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         {canExport&&<div style={{display:"flex",gap:8}}><Btn>Export CSV</Btn><Btn>Export Excel</Btn></div>}
       </div>
       {/* Stats */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
+      <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Total" value={allMembers.length} color={BL}/>
         <Stat label="Trainer" value={allMembers.filter(m=>m.role==="Trainer").length} color={R}/>
         <Stat label="Aktivmitglieder" value={allMembers.filter(m=>m.type==="Aktivmitglied").length} color={GN}/>
