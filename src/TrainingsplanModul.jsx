@@ -5,9 +5,8 @@
 import { useState, useEffect, useRef } from "react";
 import { ACCENT, ACCENT2, ACCENT20, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet , Col, Row} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Col, Row, H1, Btn, SectionLabel, Empty, Input } from "./theme.jsx";
 import { ATT_EVENTS, GANTT, INITIAL_PLAENE, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
-import { SlotModal, PlanEditorModal } from "./TermineModul.jsx";
 
 /* Mutable reference — wird von PlaetzeView befüllt */
 const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.map(p=>({...p}));
@@ -90,77 +89,64 @@ function PlaetzeView(){
 
   return(
     <div style={{maxWidth:560}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+      <Row justify="space-between" align="center" mb={20}>
         <div>
-          <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px"}}>Trainingsplätze</h1>
+          <H1 mb={4}>Trainingsplätze</H1>
           <p style={{fontSize:14,color:"var(--sub)",margin:0}}>Plätze verwalten, Hälften konfigurieren, aktivieren/deaktivieren</p>
         </div>
-        <button onClick={function(){setShowAdd(true);}}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-          style={{padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer"}}>
-          + Platz
-        </button>
-      </div>
+        <Btn onClick={function(){setShowAdd(true);}}>+ Platz</Btn>
+      </Row>
 
       {/* Aktiv */}
-      <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Aktive Plätze</div>
+      <div className="cc-label" style={{marginBottom:6,paddingLeft:2}}>Aktive Plätze</div>
       <div style={{background:"var(--surface)",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden",marginBottom:16}}>
         {plaetze.filter(function(p){return p.active;}).length===0&&(
-          <div style={{padding:"16px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Keine aktiven Plätze</div>
+          <div className="cc-empty">Keine aktiven Plätze</div>
         )}
         {plaetze.map(function(p,i){
           if(!p.active) return null;
           return(
             <div key={p.id} style={{borderBottom:i<plaetze.length-1?"0.5px solid "+GB:"none"}}>
               {editId===p.id ? (
-                <div style={{padding:"12px 14px",display:"flex",flexDirection:"column",gap:8}}>
-                  <input value={editName} onChange={function(e){setEditName(e.target.value);}} autoFocus
-                    placeholder="Platzname"
-                    style={{padding:"7px 10px",border:"1.5px solid "+BL,borderRadius:8,fontSize:14,outline:"none"}}/>
+                <Col style={{padding:"12px 14px"}} gap={8}>
+                  <Input value={editName} onChange={function(e){setEditName(e.target.value);}} autoFocus placeholder="Platzname"/>
                   <div>
-                    <div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Hälften (kommagetrennt, z.B. <em>Hüttliseite, Rappiseite</em>)</div>
-                    <input value={editHaelften} onChange={function(e){setEditHaelften(e.target.value);}}
-                      placeholder="leer = keine Hälften"
-                      style={{width:"100%",padding:"7px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:14,outline:"none",boxSizing:"border-box"}}/>
+                    <p style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Hälften (kommagetrennt, z.B. <em>Hüttliseite, Rappiseite</em>)</p>
+                    <Input value={editHaelften} onChange={function(e){setEditHaelften(e.target.value);}} placeholder="leer = keine Hälften" style={{width:"100%",boxSizing:"border-box"}}/>
                   </div>
-                  <div style={S_FLEX8}>
-                    <button onClick={function(){handleRename(p.id);}}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-                      style={{flex:1,padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer"}}>Speichern</button>
-                    <button onClick={function(){setEditId(null);setEditName("");setEditHaelften("");}}
-                      style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:14,cursor:"pointer"}}>Abbrechen</button>
-                  </div>
-                </div>
+                  <Row gap={8}>
+                    <Btn style={{flex:1}} onClick={function(){handleRename(p.id);}}>Speichern</Btn>
+                    <Btn variant="ghost" onClick={function(){setEditId(null);setEditName("");setEditHaelften("");}}>Abbrechen</Btn>
+                  </Row>
+                </Col>
               ) : (
-                <div style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px"}}>
-                  <div style={{display:"flex",flexDirection:"column",gap:4,flexShrink:0}}>
+                <Row gap={12} style={{padding:"11px 14px"}}>
+                  <Col gap={4} style={{flexShrink:0}}>
                     <button onClick={function(){moveUp(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===0}
-                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:14,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
+                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:12,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
                     <button onClick={function(){moveDown(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===plaetze.filter(function(x){return x.active;}).length-1}
-                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:14,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
-                  </div>
-                  <div style={{width:10,height:10,borderRadius:"50%",background:GN,flexShrink:0}}/>
+                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:12,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
+                  </Col>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:GN,flexShrink:0,marginTop:2}}/>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={S_BOLD}>{p.name}</div>
                     {p.halfn&&p.halfn.length>0&&(
                       <div style={{fontSize:14,color:"var(--sub)",marginTop:1}}>{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
-                  <div style={{display:"flex",gap:8,flexShrink:0}}>
+                  <Row gap={6} style={{flexShrink:0}}>
                     <button onClick={function(){setEditId(p.id);setEditName(p.name);setEditHaelften((p.halfn||[]).join(", "));}} title="Bearbeiten"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
                     <button onClick={function(){handleToggle(p.id);}} title="Deaktivieren"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
                       </svg>
                     </button>
                     <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
-                  </div>
-                </div>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
+                  </Row>
+                </Row>
               )}
             </div>
           );
@@ -170,26 +156,23 @@ function PlaetzeView(){
       {/* Inaktiv */}
       {plaetze.some(function(p){return !p.active;})&&(
         <>
-          <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Inaktive Plätze</div>
+          <div className="cc-label" style={{marginBottom:6,paddingLeft:2}}>Inaktive Plätze</div>
           <div style={{background:"var(--surface)",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden",marginBottom:16,opacity:0.7}}>
             {plaetze.map(function(p,i){
               if(p.active) return null;
               return(
-                <div key={p.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",borderBottom:i<plaetze.length-1?"0.5px solid "+GB:"none"}}>
-                  <div style={{width:10,height:10,borderRadius:"50%",background:"#ccc",flexShrink:0}}/>
+                <Row key={p.id} gap={12} style={{padding:"10px 14px",borderBottom:i<plaetze.length-1?"0.5px solid "+GB:"none"}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:"var(--border)",flexShrink:0,marginTop:2}}/>
                   <div style={{flex:1}}>
-                    <div style={S_SUB}>{p.name}</div>
+                    <div style={{fontSize:14,color:"var(--sub)"}}>{p.name}</div>
                     {p.halfn&&p.halfn.length>0&&(
-                      <div style={S_SUB}>{p.halfn.join("  ·  ")}</div>
+                      <div style={{fontSize:14,color:"var(--sub)"}}>{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
-                  <button onClick={function(){handleToggle(p.id);}} title="Aktivieren"
-                    style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+GN,background:"var(--surface)",color:GN,fontSize:14,fontWeight:600,cursor:"pointer"}}>
-                    Aktivieren
-                  </button>
+                  <Btn variant="ghost" onClick={function(){handleToggle(p.id);}}>Aktivieren</Btn>
                   <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
-                </div>
+                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
+                </Row>
               );
             })}
           </div>
@@ -200,27 +183,15 @@ function PlaetzeView(){
       {showAdd&&(
         <div style={{background:"var(--surface)",border:"1.5px solid "+BL,borderRadius:12,padding:"16px",display:"flex",flexDirection:"column",gap:12,marginBottom:12}}>
           <div style={{fontWeight:600,fontSize:14}}>Neuer Platz</div>
-          <input value={newName} onChange={function(e){setNewName(e.target.value);}} autoFocus
-            placeholder="z.B. Platz Erlenbach"
-            style={{padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:14,outline:"none"}}/>
+          <Input value={newName} onChange={function(e){setNewName(e.target.value);}} autoFocus placeholder="z.B. Platz Erlenbach"/>
           <div>
-            <div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Hälften (optional, kommagetrennt)</div>
-            <input value={newHaelften} onChange={function(e){setNewHaelften(e.target.value);}}
-              placeholder="z.B. Nordseite, Südseite"
-              style={{width:"100%",padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:14,outline:"none",boxSizing:"border-box"}}/>
+            <p style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Hälften (optional, kommagetrennt)</p>
+            <Input value={newHaelften} onChange={function(e){setNewHaelften(e.target.value);}} placeholder="z.B. Nordseite, Südseite" style={{width:"100%",boxSizing:"border-box"}}/>
           </div>
-          <div style={S_FLEX8}>
-            <button onClick={handleAdd}
-              onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
-              onMouseLeave={e=>e.currentTarget.style.background=BTN}
-              style={{flex:1,padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer"}}>
-              Hinzufügen
-            </button>
-            <button onClick={function(){setShowAdd(false);setNewName("");setNewHaelften("");}}
-              style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:14,cursor:"pointer"}}>
-              Abbrechen
-            </button>
-          </div>
+          <Row gap={8}>
+            <Btn style={{flex:1}} onClick={handleAdd}>Hinzufügen</Btn>
+            <Btn variant="ghost" onClick={function(){setShowAdd(false);setNewName("");setNewHaelften("");}}>Abbrechen</Btn>
+          </Row>
         </div>
       )}
 
@@ -1329,7 +1300,363 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
 }
 
 
-/* -- Slot-Bearbeitungs-Modal -- */
-/* TermineModul via ./TermineModul.jsx */
+/* ── SlotModal & PlanEditorModal — hier definiert, von TermineModul importiert ── */
 
-export { TrainingsplanModul, PlaetzeView };
+const S_FIELD_LABEL={fontSize:11,fontWeight:600,color:"var(--sub)",marginBottom:6,textTransform:"uppercase",letterSpacing:"0.05em"};
+const S_INPUT_MODAL={width:"100%",padding:"10px 12px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:16,outline:"none",boxSizing:"border-box",background:"var(--surface)",color:"var(--text)"};
+const S_SELECT_MODAL={width:"100%",padding:"10px 12px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:16,outline:"none",background:"var(--surface)",color:"var(--text)"};
+const S_07_MODAL={display:"flex",gap:8,flexWrap:"wrap"};
+const S_08_MODAL={display:"flex",gap:12};
+const S_SUB_MODAL={fontSize:14,color:"var(--sub)",marginBottom:4};
+
+function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, onSave, onDelete, onAusnahme, onClose}){
+  const DAYS=["Mo","Di","Mi","Do","Fr","Sa","So"];
+  const TEAM_COLORS_MAP={};
+  (plan?.slots||[]).forEach(s=>{TEAM_COLORS_MAP[s.team]=s.color;});
+  const isEdit=!!slot?.id;
+  const isZusatz=slot?.isZusatz;
+
+  const baseMonday = monday ? new Date(monday) : new Date();
+  function getKWLabel(offset){
+    const d = new Date(baseMonday);
+    d.setDate(d.getDate() + offset*7);
+    function getKW(dt){ const j=new Date(dt.getFullYear(),0,4); return Math.ceil(((dt-j)/86400000+j.getDay()+1)/7); }
+    const kwNum = getKW(d);
+    const dd = String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0");
+    const de = new Date(d); de.setDate(de.getDate()+6);
+    const de2 = String(de.getDate()).padStart(2,"0")+"."+String(de.getMonth()+1).padStart(2,"0");
+    return {offset, kwNum, label:"KW "+kwNum+" ("+dd+"–"+de2+")", key:d.getFullYear()+"_"+kwNum};
+  }
+  const kwOptions = Array.from({length:20},function(_,i){ return getKWLabel(i); });
+  const [selectedKwOffset, setSelectedKwOffset] = useState(0);
+  const selectedKw = kwOptions[selectedKwOffset];
+
+  const [form, setForm] = useState({
+    weekday: slot?.weekday||(prefill?.weekday)||"Mo",
+    team: slot?.team||teams[0]||"",
+    start: slot?.start||(prefill?.start)||17,
+    end: slot?.end||(prefill?.end)||18.5,
+    location: slot?.location||(prefill?.location)||"",
+    half: slot?.half||(prefill?.half)||"",
+    wechsel_zeit: slot?.wechsel_zeit||"",
+    end_ort: slot?.end_ort||"",
+    end_half: slot?.end_half||"",
+    color: slot?.color||TEAM_COLORS_MAP[slot?.team||""]||BL,
+  });
+  const [ausnahmeMode, setAusnahmeMode] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [ausnahmeTyp, setAusnahmeTyp] = useState("absage");
+  const [fuerAlleWochen, setFuerAlleWochen] = useState(false);
+  const [verschiebungStart, setVerschiebungStart] = useState(slot?.start||17);
+  const [verschiebungEnd, setVerschiebungEnd] = useState(slot?.end||18.5);
+  const [verschiebungOrt, setVerschiebungOrt] = useState(slot?.location||"");
+  const [verschiebungGrund, setVerschiebungGrund] = useState("");
+
+  const TIMES = Array.from({length:(22-7)*2+1},(_,i)=>7+i*0.5);
+  const fmtT = v=>`${Math.floor(v).toString().padStart(2,"0")}:${v%1===0?"00":"30"}`;
+  const COLORS = ["#C8102E","#2563EB","#059669","#7C3AED","#0891B2","#D97706","#64748B","#DB2777"];
+
+  return(
+    <ModalOrSheet open onClose={onClose} maxWidth={480}>
+      <div style={{padding:"0 0 8px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px 12px",borderBottom:"0.5px solid var(--border)"}}>
+          <div style={{fontWeight:700,fontSize:14}}>{isEdit?(isZusatz?"Zusatztraining":"Training bearbeiten"):"Training hinzufügen"}</div>
+          <Btn variant="ghost" onClick={onClose} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
+        </div>
+        <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:16}}>
+          {!ausnahmeMode?(
+            <>
+              {!isEdit&&(
+                <div>
+                  <div style={S_FIELD_LABEL}>Kalenderwoche</div>
+                  <select value={selectedKwOffset} onChange={e=>setSelectedKwOffset(parseInt(e.target.value))} style={S_SELECT_MODAL}>
+                    {kwOptions.map(function(o){
+                      return <option key={o.offset} value={o.offset}>{o.label}{o.offset===0?" (diese Woche)":""}</option>;
+                    })}
+                  </select>
+                </div>
+              )}
+              <div>
+                <div style={S_FIELD_LABEL}>Wochentag</div>
+                <div style={S_07_MODAL}>
+                  {DAYS.map(d=>(
+                    <button key={d} onClick={()=>setForm(f=>({...f,weekday:d}))}
+                      style={{minWidth:44,minHeight:44,padding:"8px 12px",borderRadius:8,border:`1.5px solid ${form.weekday===d?BK:GB}`,background:form.weekday===d?BK:"var(--surface)",color:form.weekday===d?"#fff":"var(--sub)",fontSize:15,cursor:"pointer",fontWeight:form.weekday===d?600:400}}>
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div style={S_FIELD_LABEL}>Team</div>
+                <select value={form.team} onChange={e=>setForm(f=>({...f,team:e.target.value,color:TEAM_COLORS_MAP[e.target.value]||f.color}))} style={S_INPUT_MODAL}>
+                  {teams.map(t=><option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div style={S_08_MODAL}>
+                <div style={{flex:1}}>
+                  <div style={S_FIELD_LABEL}>Von</div>
+                  <select value={form.start} onChange={e=>{const v=parseFloat(e.target.value);setForm(f=>({...f,start:v,end:f.end>v?f.end:v+1.5,wechsel_zeit:f.wechsel_zeit&&f.wechsel_zeit>v&&f.wechsel_zeit<(f.end>v?f.end:v+1.5)?f.wechsel_zeit:"",end_ort:"",end_half:""}));}} style={S_INPUT_MODAL}>
+                    {TIMES.map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
+                  </select>
+                </div>
+                <div style={{flex:1}}>
+                  <div style={S_FIELD_LABEL}>Bis</div>
+                  <select value={form.end} onChange={e=>{const v=parseFloat(e.target.value);setForm(f=>({...f,end:v,wechsel_zeit:f.wechsel_zeit&&f.wechsel_zeit<v?f.wechsel_zeit:"",end_ort:f.wechsel_zeit&&f.wechsel_zeit<v?f.end_ort:"",end_half:f.wechsel_zeit&&f.wechsel_zeit<v?f.end_half:""}));}} style={S_INPUT_MODAL}>
+                    {TIMES.filter(t=>t>form.start).map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div style={{background:"var(--surface2)",borderRadius:10,padding:"14px",display:"flex",flexDirection:"column",gap:12}}>
+                <div className="cc-label">Platzeinteilung</div>
+                <div style={{background:"var(--surface)",borderRadius:8,padding:"10px 12px",border:"0.5px solid var(--border)"}}>
+                  <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",marginBottom:10}}>
+                    Phase 1 <span style={{fontWeight:400,marginLeft:6}}>{fmtT(form.start)} – {form.wechsel_zeit?fmtT(form.wechsel_zeit):fmtT(form.end)}</span>
+                  </div>
+                  <div style={{marginBottom:8}}>
+                    <div style={S_SUB_MODAL}>Platz</div>
+                    <select value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value,half:""}))}
+                      style={{...S_SELECT_MODAL,border:`1.5px solid ${form.location?GB:R+"80"}`}}>
+                      <option value="" disabled>– Platz wählen –</option>
+                      {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
+                        <option key={p.id} value={p.name}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {form.location&&(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).length>0&&(
+                    <div>
+                      <div style={S_SUB_MODAL}>Seite</div>
+                      <div style={S_07_MODAL}>
+                        <button onClick={()=>setForm(f=>({...f,half:""}))}
+                          style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${!form.half?BK:GB}`,background:!form.half?BK:"var(--surface)",color:!form.half?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
+                          Ganzer Platz
+                        </button>
+                        {(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).map(h=>(
+                          <button key={h} onClick={()=>setForm(f=>({...f,half:h}))}
+                            style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${form.half===h?BL:GB}`,background:form.half===h?BL:"var(--surface)",color:form.half===h?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
+                            {h}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {form.location&&(
+                  <Row gap={12}>
+                    <div style={{fontSize:14,color:"var(--sub)",flexShrink:0}}>Wechsel um:</div>
+                    <select value={form.wechsel_zeit} onChange={e=>setForm(f=>({...f,wechsel_zeit:e.target.value?parseFloat(e.target.value):"",end_ort:e.target.value?f.end_ort:"",end_half:e.target.value?f.end_half:""}))}
+                      style={{...S_SELECT_MODAL,flex:1}}>
+                      <option value="">– kein Wechsel –</option>
+                      {Array.from({length:(form.end-form.start)*4},(_,i)=>form.start+i*0.25+0.25).filter(t=>t<form.end).map(t=>(
+                        <option key={t} value={t}>{Math.floor(t).toString().padStart(2,"0")}:{Math.round((t%1)*60).toString().padStart(2,"0")} Uhr</option>
+                      ))}
+                    </select>
+                  </Row>
+                )}
+                {form.location&&form.wechsel_zeit&&(
+                  <div style={{background:"var(--surface)",borderRadius:8,padding:"10px 12px",border:"0.5px solid var(--border)"}}>
+                    <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",marginBottom:10}}>
+                      Phase 2 <span style={{fontWeight:400,marginLeft:6}}>{fmtT(form.wechsel_zeit)} – {fmtT(form.end)}</span>
+                    </div>
+                    <div style={{marginBottom:8}}>
+                      <div style={S_SUB_MODAL}>Platz</div>
+                      <select value={form.end_ort} onChange={e=>setForm(f=>({...f,end_ort:e.target.value,end_half:""}))} style={S_SELECT_MODAL}>
+                        <option value="">– gleich wie Phase 1 ({form.location}) –</option>
+                        {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
+                          <option key={p.id} value={p.name}>{p.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).length>0&&(
+                      <div>
+                        <div style={S_SUB_MODAL}>Seite</div>
+                        <div style={S_07_MODAL}>
+                          <button onClick={()=>setForm(f=>({...f,end_half:""}))}
+                            style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${!form.end_half?BK:GB}`,background:!form.end_half?BK:"var(--surface)",color:!form.end_half?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
+                            Ganzer Platz
+                          </button>
+                          {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).map(h=>(
+                            <button key={h} onClick={()=>setForm(f=>({...f,end_half:h}))}
+                              style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${form.end_half===h?BL:GB}`,background:form.end_half===h?BL:"var(--surface)",color:form.end_half===h?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
+                              {h}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {form.location&&(
+                  <div style={{fontSize:14,color:"var(--sub)",padding:"8px 10px",background:"var(--surface)",borderRadius:6,lineHeight:1.7}}>
+                    <div><strong>{fmtT(form.start)}–{form.wechsel_zeit?fmtT(form.wechsel_zeit):fmtT(form.end)}</strong>{" "}{form.location}{form.half?" / "+form.half:" / Ganzer Platz"}</div>
+                    {form.wechsel_zeit&&(<div><strong>{fmtT(form.wechsel_zeit)}–{fmtT(form.end)}</strong>{" "}{form.end_ort||form.location}{form.end_half?" / "+form.end_half:" / Ganzer Platz"}</div>)}
+                  </div>
+                )}
+              </div>
+              <div>
+                <div style={S_FIELD_LABEL}>Farbe</div>
+                <Row align="flex-start" gap={8}>
+                  {COLORS.map(c=>(
+                    <button key={c} onClick={()=>setForm(f=>({...f,color:c}))}
+                      style={{width:32,height:32,borderRadius:"50%",background:c,border:form.color===c?"3px solid var(--text)":"2px solid transparent",cursor:"pointer",flexShrink:0}}/>
+                  ))}
+                </Row>
+              </div>
+              {showSaveDialog ? (
+                <div style={{background:"var(--surface2)",borderRadius:10,padding:"14px",display:"flex",flexDirection:"column",gap:12}}>
+                  <div style={{fontSize:14,fontWeight:600,color:"var(--text)",marginBottom:2}}>{isEdit?"Änderung übernehmen für:":"Training gilt:"}</div>
+                  <button onClick={()=>{ onSave(Object.assign({},form,{nurDieseWoche:true, selectedKwKey:selectedKw.key})); setShowSaveDialog(false); }}
+                    style={{padding:"8px 14px",borderRadius:10,border:`1.5px solid ${BL}`,background:"var(--surface)",color:BL,fontSize:14,fontWeight:600,cursor:"pointer",textAlign:"left"}}>
+                    <div style={{fontWeight:700}}>Nur diese Woche</div>
+                    <div style={{fontSize:13,fontWeight:400,color:"var(--sub)",marginTop:2}}>{isEdit?"Wird als Ausnahme gespeichert":"Einmaliger Zusatztermin"}</div>
+                  </button>
+                  <button onClick={()=>{ onSave(Object.assign({},form,{nurDieseWoche:false, selectedKwKey:selectedKw.key})); setShowSaveDialog(false); }}
+                    style={{padding:"10px 18px",borderRadius:10,border:`1.5px solid ${BK}`,background:BTN,color:BTN_TXT,fontSize:14,fontWeight:600,cursor:"pointer",textAlign:"left"}}>
+                    <div style={{fontWeight:700}}>Dauerhaft (neuer Standard)</div>
+                    <div style={{fontSize:13,fontWeight:400,color:"rgba(255,255,255,0.7)",marginTop:2}}>
+                      {isEdit?"Gilt für alle zukünftigen Wochen":"Ab "+selectedKw.label+" bis Ende des Trainingsplans"}
+                    </div>
+                  </button>
+                  <button onClick={()=>setShowSaveDialog(false)}
+                    style={{padding:"10px",borderRadius:10,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:14,cursor:"pointer"}}>
+                    Abbrechen
+                  </button>
+                </div>
+              ) : (
+                <button onClick={()=>{ if(!form.location){alert("Bitte einen Platz auswählen.");return;} setShowSaveDialog(true); }}
+                  style={{width:"100%",padding:"14px",borderRadius:10,border:"none",background:form.location?BTN:"var(--surface2)",color:form.location?BTN_TXT:"var(--sub)",fontSize:15,fontWeight:600,cursor:form.location?"pointer":"not-allowed"}}>
+                  {isEdit?"Speichern":"Hinzufügen"}
+                </button>
+              )}
+              {isEdit&&!isZusatz&&(
+                <Row align="flex-start" gap={8}>
+                  <button onClick={()=>setAusnahmeMode(true)}
+                    style={{flex:1,padding:"9px",borderRadius:10,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:14,cursor:"pointer"}}>
+                    <TI n="bolt"/> Ausnahme diese Woche
+                  </button>
+                  <button onClick={onDelete}
+                    style={{padding:"8px 14px",borderRadius:10,border:`1px solid ${R}`,background:RL,color:R,fontSize:14,cursor:"pointer"}}>
+                    Löschen
+                  </button>
+                </Row>
+              )}
+            </>
+          ):(
+            <>
+              <div style={{padding:"10px 12px",background:"var(--surface)",borderRadius:8,border:"1px solid #FED7AA",fontSize:14,color:STATUS_CLR.warn}}>
+                <strong>{slot?.team} · {slot?.weekday}</strong> — Ausnahme für diese Woche.
+              </div>
+              <div>
+                <div style={S_FIELD_LABEL}>Typ</div>
+                <div style={S_07_MODAL}>
+                  {[{v:"absage",l:"Absagen"},{v:"verschiebung",l:"Verschieben"},{v:"location",l:"Ort ändern"}].map(t=>(
+                    <button key={t.v} onClick={()=>setAusnahmeTyp(t.v)}
+                      style={{flex:1,padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${ausnahmeTyp===t.v?(t.v==="absage"?R:BL):GB}`,background:ausnahmeTyp===t.v?(t.v==="absage"?RL:"#EFF6FF"):"var(--surface)",color:ausnahmeTyp===t.v?(t.v==="absage"?R:BL):"var(--sub)",fontSize:14,cursor:"pointer"}}>
+                      {t.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {ausnahmeTyp==="verschiebung"&&(
+                <div style={S_08_MODAL}>
+                  <div style={{flex:1}}>
+                    <div style={S_FIELD_LABEL}>Von</div>
+                    <select value={verschiebungStart} onChange={e=>setVerschiebungStart(parseFloat(e.target.value))} style={S_INPUT_MODAL}>
+                      {TIMES.map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
+                    </select>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={S_FIELD_LABEL}>Bis</div>
+                    <select value={verschiebungEnd} onChange={e=>setVerschiebungEnd(parseFloat(e.target.value))} style={S_INPUT_MODAL}>
+                      {TIMES.filter(t=>t>verschiebungStart).map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
+                    </select>
+                  </div>
+                </div>
+              )}
+              {ausnahmeTyp==="location"&&(
+                <div>
+                  <div style={S_FIELD_LABEL}>Neuer Platz</div>
+                  <select value={verschiebungOrt} onChange={e=>setVerschiebungOrt(e.target.value)} style={S_INPUT_MODAL}>
+                    <option value="" disabled>– Platz wählen –</option>
+                    {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
+                      <option key={p.id} value={p.name}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div>
+                <div style={S_FIELD_LABEL}>Begründung <span style={{fontWeight:400,textTransform:"none"}}>(optional)</span></div>
+                <input value={verschiebungGrund} onChange={e=>setVerschiebungGrund(e.target.value)}
+                  placeholder="z.B. Platz für Spiel benötigt" style={S_INPUT_MODAL}/>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:"var(--surface2)",borderRadius:8}}>
+                <input type="checkbox" id="fuerAlle" checked={fuerAlleWochen} onChange={e=>setFuerAlleWochen(e.target.checked)} style={{width:16,height:16,cursor:"pointer"}}/>
+                <label htmlFor="fuerAlle" style={{fontSize:14,cursor:"pointer"}}>Als neuer Standard (alle zukünftigen Wochen)</label>
+              </div>
+              <Row align="flex-start" gap={8}>
+                <button onClick={()=>onAusnahme({
+                  type:ausnahmeTyp, slot_id:slot.id, weekday:slot.weekday, team:slot.team,
+                  ...(ausnahmeTyp==="verschiebung"?{neue_start:verschiebungStart,neue_end:verschiebungEnd}:{}),
+                  ...(ausnahmeTyp==="location"?{neuer_ort:verschiebungOrt}:{}),
+                  begruendung:verschiebungGrund,
+                },fuerAlleWochen)}
+                  style={{flex:1,padding:"12px",borderRadius:10,border:"none",background:ausnahmeTyp==="absage"?R:BTN,color:ausnahmeTyp==="absage"?"#fff":BTN_TXT,fontSize:14,fontWeight:600,cursor:"pointer"}}>
+                  {ausnahmeTyp==="absage"?"Absagen":ausnahmeTyp==="verschiebung"?"Verschieben":"Ort ändern"}
+                </button>
+                <button onClick={()=>setAusnahmeMode(false)}
+                  style={{padding:"12px 18px",borderRadius:10,border:"0.5px solid var(--border)",background:"var(--surface)",fontSize:14,cursor:"pointer"}}>
+                  Zurück
+                </button>
+              </Row>
+            </>
+          )}
+        </div>
+      </div>
+    </ModalOrSheet>
+  );
+}
+
+function PlanEditorModal({plan, plaene, onSave, onClose}){
+  const [form, setForm] = useState({
+    name: plan?.name||"Neuer Trainingsplan",
+    valid_from: plan?.valid_from||new Date().toISOString().split("T")[0],
+    valid_until: plan?.valid_until||"",
+    active: plan?.active??true,
+  });
+  return(
+    <ModalOrSheet open onClose={onClose} maxWidth={480}>
+      <div style={{padding:"0 0 8px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px 12px",borderBottom:"0.5px solid var(--border)"}}>
+          <div style={{fontWeight:700,fontSize:14}}>{plan?.id?"Plan bearbeiten":"Neuer Plan"}</div>
+          <Btn variant="ghost" onClick={onClose} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
+        </div>
+        <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:16}}>
+          <div>
+            <div style={S_FIELD_LABEL}>Name</div>
+            <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} style={S_INPUT_MODAL}/>
+          </div>
+          <div style={S_08_MODAL}>
+            <div style={{flex:1}}>
+              <div style={S_FIELD_LABEL}>Gültig ab</div>
+              <input type="date" value={form.valid_from} onChange={e=>setForm(f=>({...f,valid_from:e.target.value}))} style={S_INPUT_MODAL}/>
+            </div>
+            <div style={{flex:1}}>
+              <div style={S_FIELD_LABEL}>Gültig bis</div>
+              <input type="date" value={form.valid_until} onChange={e=>setForm(f=>({...f,valid_until:e.target.value}))} style={S_INPUT_MODAL}/>
+            </div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:"var(--surface2)",borderRadius:8}}>
+            <input type="checkbox" id="planAktiv" checked={form.active} onChange={e=>setForm(f=>({...f,active:e.target.checked}))} style={{width:16,height:16,cursor:"pointer"}}/>
+            <label htmlFor="planAktiv" style={{fontSize:14,cursor:"pointer"}}>Plan aktiv (erscheint bei Teams als Termine)</label>
+          </div>
+          <button onClick={()=>onSave(form)}
+            style={{width:"100%",padding:"14px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,fontSize:15,fontWeight:600,cursor:"pointer"}}>
+            Speichern
+          </button>
+        </div>
+      </div>
+    </ModalOrSheet>
+  );
+}
+
+export { TrainingsplanModul, PlaetzeView, SlotModal, PlanEditorModal };
