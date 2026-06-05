@@ -1523,7 +1523,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
           </div>
         )}
       </Card>
-      )}
+      </>)}
 
       {/* ── ELTERN ANSICHT ── */}
       {viewMode==="eltern"&&(
