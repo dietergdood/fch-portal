@@ -2406,6 +2406,20 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       <Chip text="Fehler" color={R} bg={RL}/>
                     </div>
                   </Row2>
+                  <Row2 label="Semantische Farben" code="semantic='success|danger|warning|info|primary|neutral'" usage={["Stat","Chip","InfoBox"]}>
+                    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                      {["success","danger","warning","info","primary","neutral"].map(s=>(
+                        <Chip key={s} text={s} semantic={s}/>
+                      ))}
+                    </div>
+                  </Row2>
+                  <Row2 label="Stat semantisch" code="<Stat semantic='...'>" usage={["Dashboard","MitgliederModul"]}>
+                    <div style={{display:"flex",gap:8}}>
+                      <Stat label="Aktiv" value={42} semantic="success"/>
+                      <Stat label="Fehler" value={3} semantic="danger"/>
+                      <Stat label="Info" value={8} semantic="info"/>
+                    </div>
+                  </Row2>
                   <Row2 label="Ungelesen-Dot" code=".cc-unread-dot" usage={["Nachrichten"]}>
                     <div style={{position:"relative",display:"inline-block"}}>
                       <div style={{width:34,height:34,borderRadius:10,background:"#E1F5EE",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:"#085041"}}>DG</div>

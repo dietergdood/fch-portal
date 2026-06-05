@@ -29,10 +29,10 @@ function DashboardAdmin({setActive,account}){
       <H1 style={{fontSize:24}} mb={4}>Hallo, {vorname}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>ClubCampus – Systemübersicht</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:12,marginBottom:24}}>
-        <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" color="#7C3AED" icon="users"/>
-        <Stat label="Aktive Benutzer" value="134" sub="in den letzten 30 Tagen" color={BL} icon="user"/>
-        <Stat label="Sync-Fehler" value="2" sub="Fairgate / FVRZ" color={R} icon="refresh"/>
-        <Stat label="Offene Datenprüfungen" value="12" sub="Mitglieder fällig" color={AM} icon="clipboard-list"/>
+        <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" semantic="primary" icon="users"/>
+        <Stat label="Aktive Benutzer" value="134" sub="in den letzten 30 Tagen" semantic="info" icon="user"/>
+        <Stat label="Sync-Fehler" value="2" sub="Fairgate / FVRZ" semantic="danger" icon="refresh"/>
+        <Stat label="Offene Datenprüfungen" value="12" sub="Mitglieder fällig" semantic="warning" icon="clipboard-list"/>
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
         <Card>
@@ -75,7 +75,7 @@ function DashboardAdmin({setActive,account}){
               <div style={{fontSize:13,color:"var(--sub)"}}>{c.conflict}</div>
             </div>
           ))}
-          <InfoBox text="2 Konflikte müssen manuell aufgelöst werden." color={R}/>
+          <InfoBox text="2 Konflikte müssen manuell aufgelöst werden." semantic="danger"/>
         </Card>
         <Card>
           <STitle>Letzte Audit-Einträge</STitle>
@@ -103,10 +103,10 @@ function DashboardAdministration({setActive,account}){
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
-        <Stat label="Mitglieder total" value="187" color={BL}/>
-        <Stat label="Datenprüfung fällig" value="12" color={R} sub="halbjährliche Prüfung"/>
-        <Stat label="Sync-Fehler" value="2" color={AM}/>
-        <Stat label="Offene Materialanfragen" value="3" color={BK}/>
+        <Stat label="Mitglieder total" value="187" semantic="info"/>
+        <Stat label="Datenprüfung fällig" value="12" semantic="danger" sub="halbjährliche Prüfung"/>
+        <Stat label="Sync-Fehler" value="2" semantic="warning"/>
+        <Stat label="Offene Materialanfragen" value="3" semantic="neutral"/>
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
         <Card>
@@ -126,7 +126,7 @@ function DashboardAdministration({setActive,account}){
               <Chip text={x.ok?"OK":x.last} color={x.ok?GN:R} bg={x.ok?"#ECFDF5":RL}/>
             </div>
           ))}
-          <InfoBox text="FVRZ-Sync: Verbindungsfehler. Manuelle Überprüfung erforderlich." color={R}/>
+          <InfoBox text="FVRZ-Sync: Verbindungsfehler. Manuelle Überprüfung erforderlich." semantic="danger"/>
         </Card>
         <Card>
           <STitle>Zentrale Anwesenheitsstatistik</STitle>
@@ -148,9 +148,9 @@ function DashboardAdministration({setActive,account}){
             <div key={i} style={{padding:"8px 0",borderBottom:i<EVENTS.filter(x=>x.rsvp).length-1?`0.5px solid ${GB}`:"none"}}>
               <div style={{fontWeight:600,fontSize:13}}>{e.title}</div>
               <div style={{display:"flex",gap:8,marginTop:4}}>
-                <Chip text={`✓ ${e.res?.y}`} color={GN} bg="#ECFDF5"/>
-                <Chip text={`✕ ${e.res?.n}`} color={R} bg={RL}/>
-                <Chip text={`? ${e.res?.o}`} color={AM} bg="#FFFBEB"/>
+                <Chip text={`✓ ${e.res?.y}`} semantic="success" bg="#ECFDF5"/>
+                <Chip text={`✕ ${e.res?.n}`} semantic="danger" bg={RL}/>
+                <Chip text={`? ${e.res?.o}`} semantic="warning" bg="#FFFBEB"/>
               </div>
             </div>
           ))}
@@ -168,10 +168,10 @@ function DashboardFunktionaer({setActive,account}){
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
-        <Stat label="Offene Rückmeldungen" value="22" color={R}/>
-        <Stat label="Helfer-Soll erfüllt" value="61%" color={AM}/>
-        <Stat label="Vereinsbusse heute" value="1" color={BL} sub="Bus A reserviert"/>
-        <Stat label="Offene Materialanfragen" value="3" color={BK}/>
+        <Stat label="Offene Rückmeldungen" value="22" semantic="danger"/>
+        <Stat label="Helfer-Soll erfüllt" value="61%" semantic="warning"/>
+        <Stat label="Vereinsbusse heute" value="1" semantic="info" sub="Bus A reserviert"/>
+        <Stat label="Offene Materialanfragen" value="3" semantic="neutral"/>
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
         <Card>
@@ -254,22 +254,22 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
       <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px",color:"var(--text)",letterSpacing:-0.5}}>Guten Morgen, {firstName}</h1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Trainer · {trainerTeams.join(" & ")} · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
-        <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} color={GN}/>
-        <Stat label="Nächstes Spiel"    value={nextSpiel?nextSpiel.date.replace(/^\w+\s/,""):"-"} sub={nextSpiel?`${nextSpiel.time} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel"} color={BL}/>
-        <Stat label="Ø Anwesenheit"     value="77%"      sub="letzte 5 Trainings"   color={GN}/>
-        <Stat label="Tabellenrang"      value={myRow?myRow.rank+".":"-"} sub={myRow?TABLES[team]?.length+" Teams · "+myRow.pts+" Punkte":"Keine Tabelle"} color={BL}/>
+        <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} semantic="success"/>
+        <Stat label="Nächstes Spiel"    value={nextSpiel?nextSpiel.date.replace(/^\w+\s/,""):"-"} sub={nextSpiel?`${nextSpiel.time} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel"} semantic="info"/>
+        <Stat label="Ø Anwesenheit"     value="77%"      sub="letzte 5 Trainings"   semantic="success"/>
+        <Stat label="Tabellenrang"      value={myRow?myRow.rank+".":"-"} sub={myRow?TABLES[team]?.length+" Teams · "+myRow.pts+" Punkte":"Keine Tabelle"} semantic="info"/>
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
         <Card>
-          <STitle action={<Chip text={upcoming.filter(e=>e.rsvp!==false).length+" offen"} color={R}/>}>Fehlende Rückmeldungen</STitle>
+          <STitle action={<Chip text={upcoming.filter(e=>e.rsvp!==false).length+" offen"} semantic="danger"/>}>Fehlende Rückmeldungen</STitle>
           {upcoming.filter(e=>e.rsvp!==false).slice(0,3).map((x,i,arr)=>{
             const teamPids=ROSTER.filter(p=>(p.teams||[]).includes(team)&&!p.role).map(p=>p.id);
             const missing=teamPids.filter(pid=>!ATT_INITIAL[x.id]?.[pid]?.status).length;
             return(
               <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<arr.length-1?`0.5px solid ${GB}`:"none"}}>
                 <span style={{fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.type} · {x.date}</span>
-                {missing>0&&<Chip text={`${missing} fehlen`} color={AM} bg="#FEF3C7"/>}
-                {missing===0&&<Chip text="✓ Vollständig" color={GN} bg="#ECFDF5"/>}
+                {missing>0&&<Chip text={`${missing} fehlen`} semantic="warning" bg="#FEF3C7"/>}
+                {missing===0&&<Chip text="✓ Vollständig" semantic="success" bg="#ECFDF5"/>}
               </div>
             );
           })}
@@ -310,7 +310,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
           {POLLS.filter(p=>!p.closed).map((p,i)=>(
             <div key={i} style={{padding:"8px 0"}}>
               <div style={{fontWeight:600,fontSize:13}}>{p.title}</div>
-              <Chip text={p.target} color={BL}/>
+              <Chip text={p.target} semantic="info"/>
             </div>
           ))}
           <div style={{padding:"8px 0",borderTop:"0.5px solid var(--border)",marginTop:6}}>
@@ -395,7 +395,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Spieler · {team} · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={pastEvs.length?zuCount+"/"+pastEvs.length+" Trainings":"Noch keine vergangenen"} color={attColor}/>
-        <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} color={GN}/>
+        <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} semantic="success"/>
         <Stat label="Nächstes Spiel" value={nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextSpiel?`${(nextSpiel.time||"").slice(0,5)} Uhr · ${nextSpielAufgebotStatus}`:nextSpielAufgebotStatus} color={nextSpielImAufgebot?"#4F46E5":nextSpiel?BL:"#aaa"}/>
         <Stat label="Helfereinsätze" value={helferSoll>0?helferGeleistet+"/"+helferSoll:"-"} sub={helferSoll>0?"Geleistet / Soll":"Keine Einsätze"} color={helferSoll>0?(helferOffen===0?GN:AM):"#aaa"}/>
       </div>
@@ -486,7 +486,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
               </div>
             </div>
           ))}
-          <InfoBox text="Datenprüfung: Deine Stammdaten wurden zuletzt vor 7 Monaten geprüft. Bitte überprüfen." color={AM}/>
+          <InfoBox text="Datenprüfung: Deine Stammdaten wurden zuletzt vor 7 Monaten geprüft. Bitte überprüfen." semantic="warning"/>
         </Card>
       </div>
     </div>
@@ -558,7 +558,7 @@ function DashboardEltern({account,meineTeams,setActive}){
               return(
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:12,marginBottom:14}}>
                   <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={attTotal?zuCount+"/"+attTotal+" Trainings":"Noch keine"} color={attColor}/>
-                  <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} color={GN}/>
+                  <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} semantic="success"/>
                   {(()=>{
                     const imAufgebot=nextSpiel&&(aufgebotState[nextSpiel.id]||[]).includes(rosterId);
                     return(

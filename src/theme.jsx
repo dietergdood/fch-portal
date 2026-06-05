@@ -75,6 +75,24 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 `;
 /* localStorage polyfill voor window.storage */
 
+/* ── Semantische Farben ────────────────────────────────────────
+   Löst "success"|"danger"|"warning"|"info"|"primary"|"neutral"
+   auf konkrete Farb-Paare {text, bg}
+   ──────────────────────────────────────────────────────────── */
+const SEMANTIC = {
+  success: { text:"#15803D", bg:"#DCFCE7" },
+  danger:  { text:"#C8102E", bg:"#FEF2F2" },
+  warning: { text:"#C2410C", bg:"#FEF3C7" },
+  info:    { text:"#1D4ED8", bg:"#DBEAFE" },
+  primary: { text:"var(--btn-primary-text,#000)", bg:"var(--btn-primary,#FFBF00)" },
+  neutral: { text:"var(--sub)", bg:"var(--surface2)" },
+};
+export function resolveColor(sem, fallbackColor){
+  if(sem && SEMANTIC[sem]) return SEMANTIC[sem];
+  const c = fallbackColor||"var(--text)";
+  return {text:c, bg:c+"20"};
+}
+
 function hexToRgba(hex,alpha){
   const h=(hex||"#F8DE09").replace("#","");
   const r=parseInt(h.slice(0,2),16);
@@ -189,21 +207,31 @@ function Card({children,style={},onClick}){
   return <div onClick={onClick} className="cc-card" style={{borderRadius:14,padding:"20px 22px",border:"0.5px solid",...style}}>{children}</div>;
 }
 
-function Chip({text,color=R,bg}){
-  return <span style={{background:bg||color+"15",color,fontSize:13,fontWeight:700,padding:"3px 10px",borderRadius:20,whiteSpace:"nowrap",letterSpacing:0.2,border:`0.5px solid ${color}25`}}>{text}</span>;
+function Chip({text,color,bg,semantic,size="sm"}){
+  const c=semantic?resolveColor(semantic):null;
+  const clr=c?c.text:(color||"var(--sub)");
+  const bgc=bg||(c?c.bg:clr+"15");
+  const fs=size==="sm"?11:size==="md"?12:13;
+  return <span style={{background:bgc,color:clr,fontSize:fs,fontWeight:700,padding:"3px 10px",borderRadius:20,whiteSpace:"nowrap",letterSpacing:0.2,border:`0.5px solid ${clr}30`}}>{text}</span>;
 }
 
 
 
-function Stat({label,value,sub,color=BK,icon}){
+function Stat({label,value,sub,color,semantic,icon}){
+  /* Verwendung:
+     <Stat label="Aktiv" value={42} semantic="success" icon="users"/>
+     <Stat label="Fehler" value={3} semantic="danger"/>
+     <Stat label="Total" value={380} semantic="info"/>
+     <Stat label="Custom" value={8} color="#7C3AED"/>  */
+  const c=semantic?resolveColor(semantic):{text:color||"var(--text)",bg:(color||"var(--sub)")+"20"};
   return(
     <div className="cc-card" style={{borderRadius:12,padding:"18px 20px",flex:1,minWidth:0,border:"0.5px solid"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-        <div style={{fontSize:13,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>{label}</div>
-        {icon&&<div style={{width:28,height:28,borderRadius:6,background:color+"15",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n={icon} size={14} style={{color}}/></div>}
+        <div style={{fontSize:11,color:"var(--sub)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.8}}>{label}</div>
+        {icon&&<div style={{width:28,height:28,borderRadius:6,background:c.bg,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n={icon} size={14} style={{color:c.text}}/></div>}
       </div>
-      <div style={{fontSize:24,fontWeight:800,color,lineHeight:1,marginBottom:5}}>{value}</div>
-      {sub&&<div style={{fontSize:13,color:"var(--sub)",fontWeight:400}}>{sub}</div>}
+      <div style={{fontSize:24,fontWeight:800,color:c.text,lineHeight:1,marginBottom:sub?4:0}}>{value}</div>
+      {sub&&<div style={{fontSize:12,color:"var(--sub)",marginTop:3}}>{sub}</div>}
     </div>
   );
 }
