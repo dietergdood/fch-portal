@@ -107,14 +107,14 @@ const PWA_CSS=`
 .cc-th{padding:8px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--sub);border-bottom:1px solid var(--border);background:var(--bg);white-space:nowrap}
 .cc-th-center{text-align:center}
 .cc-td{padding:9px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
-.cc-tr:hover .cc-td{background:var(--surface2);cursor:pointer}
+.cc-tr:hover .cc-td{background:var(--cc-hover,rgba(255,191,0,0.19));cursor:pointer}
 .cc-tr:last-child .cc-td{border-bottom:none}
 
 /* ── Listen ── */
 .cc-list{border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
 .cc-list-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--border);transition:background 0.1s}
 .cc-list-row:last-child{border-bottom:none}
-.cc-list-row:hover{background:var(--surface2);cursor:pointer}
+.cc-list-row:hover{background:var(--cc-hover,rgba(255,191,0,0.19));cursor:pointer}
 .cc-list-name{font-weight:500;font-size:14px;color:var(--text);white-space:nowrap}
 .cc-detail-label{font-size:13px;color:var(--sub);min-width:120px;flex-shrink:0}
 .cc-empty{padding:32px;text-align:center;color:var(--sub);font-size:13px}
