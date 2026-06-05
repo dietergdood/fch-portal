@@ -515,7 +515,8 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
       for(const e of eltern){
         if(!e.email) continue;
         try{
-          const {data}=await sb.from("benutzer").select("id,email,role,active,name,created_at").eq("email",e.email).single();
+          const {data:buArr2}=await sb.from("benutzer").select("id,email,role,active,name,created_at").eq("email",e.email).limit(1);
+          const data=buArr2?.[0]||null;
           if(data) setElternBenutzer(prev=>({...prev,[e.email]:data}));
         }catch(_){}
       }
@@ -527,7 +528,8 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
     setLinkLoading(prev=>({...prev,[e.email]:true}));
     setLinkMsg(prev=>({...prev,[e.email]:null}));
     try{
-      const {data:bu,error:buErr}=await sb.from("benutzer").select("id,role,active").eq("email",e.email).single();
+      const {data:buArr3}=await sb.from("benutzer").select("id,role,active").eq("email",e.email).limit(1);
+      const bu=buArr3?.[0]||null; const buErr=null;
       if(!bu){ setLinkMsg(prev=>({...prev,[e.email]:{ok:false,text:"Kein Konto gefunden. Elternteil muss sich zuerst registrieren."}})); setLinkLoading(prev=>({...prev,[e.email]:false})); return; }
       const {error}=await sb.from("elternkontakte").update({benutzer_id:bu.id}).eq("mitglied_id",raw.id).eq("email",e.email);
       if(error) throw error;
@@ -561,7 +563,8 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
         .eq("email",e.email);
       if(error) throw error;
       // Prüfen ob Konto mit neuer E-Mail existiert
-      const {data:bu}=await sb.from("benutzer").select("id,email,role,active").eq("email",neueEmail.trim()).single();
+      const {data:buArr4}=await sb.from("benutzer").select("id,email,role,active").eq("email",neueEmail.trim()).limit(1);
+      const bu=buArr4?.[0]||null;
       if(bu){
         // Direkt verknüpfen
         await sb.from("elternkontakte").update({benutzer_id:bu.id}).eq("mitglied_id",raw.id).eq("email",neueEmail.trim());
@@ -844,7 +847,8 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
       if(benutzer!==null||portalLoading||!sb) return;
       setPortalLoading(true);
       try{
-        const {data}=await sb.from("benutzer").select("*").eq("mitglied_id",raw.id).single();
+        const {data:buArr}=await sb.from("benutzer").select("*").eq("mitglied_id",raw.id).limit(1);
+        const data=buArr?.[0]||null;
         setBenutzer(data||null);
       }catch(e){ setBenutzer(null); }
       setPortalLoading(false);
