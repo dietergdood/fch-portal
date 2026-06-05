@@ -229,7 +229,7 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
               ].filter(r=>r.value&&vis.includes(r.field)).map(r=>(
                 <Row key={r.field} gap={8}>
                   <span className="cc-detail-label">{r.label}</span>
-                  <span style={{fontSize:13,color:r.color}}>{r.value}</span>
+                  <span style={{fontSize:14,color:r.color}}>{r.value}</span>
                 </Row>
               ))}
             </div>
@@ -244,14 +244,14 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
           <button className="cc-icon-btn" onClick={()=>setShowExport(false)}><TI n="x" size={14}/></button>
         </div>
         <div className="cc-modal-body">
-          <p style={{fontSize:13,color:"var(--sub)"}}>Felder auswählen die exportiert werden sollen</p>
+          <p style={{fontSize:14,color:"var(--sub)"}}>Felder auswählen die exportiert werden sollen</p>
           <Col gap={6}>
             {COL_DEF_ALL.map(c=>(
               <label key={c.key} className="cc-check-row">
                 <input type="checkbox" checked={exportFields.includes(c.key)}
                   onChange={e=>setExportFields(prev=>e.target.checked?[...prev,c.key]:prev.filter(k=>k!==c.key))}
                   style={{width:16,height:16,accentColor:"var(--text)",cursor:"pointer"}}/>
-                <span style={{fontSize:13,color:"var(--text)"}}>{c.label}</span>
+                <span style={{fontSize:14,color:"var(--text)"}}>{c.label}</span>
               </label>
             ))}
           </Col>

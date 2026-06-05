@@ -76,7 +76,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
         onFocus={()=>setOpen(true)}
         placeholder={placeholder}
         style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:8,
-          fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",
+          fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",
           boxSizing:"border-box",outline:"none"}}
       />
       {open&&suggestions.length>0&&(
@@ -93,7 +93,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
               onMouseLeave={e=>e.currentTarget.style.background="none"}>
               <Av name={m.name} size={26}/>
               <div>
-                <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{m.name}</div>
+                <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{m.name}</div>
                 <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div>
               </div>
             </button>
@@ -311,13 +311,13 @@ function LoginScreen({onLogin, sb, appTheme}){
               <div style={{fontWeight:700,fontSize:16,color:"var(--text)",marginBottom:20}}>Anmelden</div>
               <form onSubmit={handleLogin}>
                 <div style={{marginBottom:14}}>
-                  <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>E-Mail</label>
+                  <label style={{fontSize:14,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>E-Mail</label>
                   <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required
                     style={{width:"100%",padding:"10px 12px",borderRadius:8,border:"1px solid "+GB,fontSize:14,outline:"none",boxSizing:"border-box"}}
                     placeholder="name@mail.ch" autoComplete="email"/>
                 </div>
                 <div style={{marginBottom:20}}>
-                  <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>Passwort</label>
+                  <label style={{fontSize:14,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>Passwort</label>
                   <div style={{position:"relative"}}>
                     <input type={showPw?"text":"password"} value={pw} onChange={e=>setPw(e.target.value)} required
                       style={{width:"100%",padding:"10px 40px 10px 12px",borderRadius:8,border:"1px solid "+GB,fontSize:14,outline:"none",boxSizing:"border-box"}}
@@ -328,34 +328,34 @@ function LoginScreen({onLogin, sb, appTheme}){
                     </button>
                   </div>
                 </div>
-                {error&&<div style={{fontSize:13,color:"#DC2626",background:"var(--cc-danger-bg, #FEF2F2)",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
+                {error&&<div style={{fontSize:14,color:"#DC2626",background:"var(--cc-danger-bg, #FEF2F2)",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                 <button type="submit" disabled={loading}
                   style={{width:"100%",padding:"11px",borderRadius:8,border:"none",background:ACCENT,color:"var(--text)",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",opacity:loading?0.7:1}}>
                   {loading?"Wird angemeldet…":"Anmelden"}
                 </button>
               </form>
               <button onClick={()=>{setShowReset(true);setError("");}}
-                style={{marginTop:14,width:"100%",background:"none",border:"none",color:"var(--sub)",fontSize:13,cursor:"pointer",textAlign:"center"}}>
+                style={{marginTop:14,width:"100%",background:"none",border:"none",color:"var(--sub)",fontSize:14,cursor:"pointer",textAlign:"center"}}>
                 Passwort vergessen?
               </button>
             </>
           ) : (
             <>
               <div style={{fontWeight:700,fontSize:16,color:"var(--text)",marginBottom:6}}>Passwort zurücksetzen</div>
-              <div style={{fontSize:13,color:"var(--sub)",marginBottom:20}}>Wir senden dir einen Link per E-Mail.</div>
+              <div style={{fontSize:14,color:"var(--sub)",marginBottom:20}}>Wir senden dir einen Link per E-Mail.</div>
               {resetSent ? (
-                <div style={{fontSize:13,color:GN,background:"var(--surface)",padding:"12px",borderRadius:8,textAlign:"center"}}>
+                <div style={{fontSize:14,color:GN,background:"var(--surface)",padding:"12px",borderRadius:8,textAlign:"center"}}>
                   E-Mail gesendet! Bitte prüfe dein Postfach.
                 </div>
               ) : (
                 <form onSubmit={handleReset}>
                   <div style={{marginBottom:14}}>
-                    <label style={{fontSize:13,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>E-Mail</label>
+                    <label style={{fontSize:14,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:5}}>E-Mail</label>
                     <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required
                       style={{width:"100%",padding:"10px 12px",borderRadius:8,border:"1px solid "+GB,fontSize:14,outline:"none",boxSizing:"border-box"}}
                       placeholder="name@mail.ch"/>
                   </div>
-                  {error&&<div style={{fontSize:13,color:"#DC2626",background:"var(--cc-danger-bg, #FEF2F2)",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
+                  {error&&<div style={{fontSize:14,color:"#DC2626",background:"var(--cc-danger-bg, #FEF2F2)",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                   <button type="submit" disabled={loading}
                     style={{width:"100%",padding:"8px 14px",borderRadius:8,border:"none",background:ACCENT,color:"var(--text)",fontWeight:700,fontSize:14,cursor:"pointer"}}>
                     {loading?"Wird gesendet…":"Link senden"}
@@ -363,7 +363,7 @@ function LoginScreen({onLogin, sb, appTheme}){
                 </form>
               )}
               <button onClick={()=>{setShowReset(false);setResetSent(false);setError("");}}
-                style={{marginTop:14,width:"100%",background:"none",border:"none",color:"var(--sub)",fontSize:13,cursor:"pointer",textAlign:"center"}}>
+                style={{marginTop:14,width:"100%",background:"none",border:"none",color:"var(--sub)",fontSize:14,cursor:"pointer",textAlign:"center"}}>
                 ← Zurück zum Login
               </button>
             </>
@@ -691,7 +691,7 @@ function Portal({supabaseClient}){
           <div style={{width:64,height:64,borderRadius:16,overflow:"hidden",display:"inline-flex",marginBottom:12}}>
             <img src={appTheme?.logo||LOGO_B64} style={{width:64,height:64,objectFit:"cover"}} alt="Logo"/>
           </div>
-          <div style={{fontSize:13,color:"var(--sub)"}}>Wird geladen…</div>
+          <div style={{fontSize:14,color:"var(--sub)"}}>Wird geladen…</div>
         </div>
       </div>
     );
@@ -785,7 +785,7 @@ function Portal({supabaseClient}){
       case "training":          return <TrainingsplanModul role={role} team={role==="trainer"?meineTeams?.[0]:undefined} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} sb={sb}/>;
       case "schedule":          return <SpielplanModul role={role}/>;
       case "attendance_central":return <AttendanceCentral/>;
-      case "events":            return <div style={{maxWidth:900}}><h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px"}}>Termine</h1><p style={{fontSize:13,color:"var(--sub)",margin:"0 0 18px"}}>Bitte alle notwendigen Termine zu- oder absagen.</p><TermineModul role={role} team={meineTeams?.[0]||"Cc-Junioren"} allTeams={meineTeams} myRosterId={myRosterId} account={account} setActive={setActive} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} onNavigateToSpiel={(spiel)=>{NAV_TARGET.tab="spielplan";NAV_TARGET.selectedSpiel=spiel;setActive("team");}}/></div>;
+      case "events":            return <div style={{maxWidth:900}}><h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px"}}>Termine</h1><p style={{fontSize:14,color:"var(--sub)",margin:"0 0 18px"}}>Bitte alle notwendigen Termine zu- oder absagen.</p><TermineModul role={role} team={meineTeams?.[0]||"Cc-Junioren"} allTeams={meineTeams} myRosterId={myRosterId} account={account} setActive={setActive} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} onNavigateToSpiel={(spiel)=>{NAV_TARGET.tab="spielplan";NAV_TARGET.selectedSpiel=spiel;setActive("team");}}/></div>;
       case "helpers":           return <HelpersList role={role} meineTeams={meineTeams} account={account} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
       case "buses":             return <BusesView role={role} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten}/>;
       case "material":          return <MaterialView/>;

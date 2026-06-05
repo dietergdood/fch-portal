@@ -13,9 +13,9 @@ import { SlotModal, PlanEditorModal } from "./TermineModul.jsx";
 const TRAININGSPLAETZE = TRAININGSPLAETZE_DEFAULT.map(p=>({...p}));
 
 /* ── Style-Konstanten ── */
-const S_SUB={fontSize:13,color:"var(--sub)"};
+const S_SUB={fontSize:14,color:"var(--sub)"};
 const S_FLEX8={display:"flex",gap:8};
-const S_BOLD={fontSize:13,fontWeight:600,color:"var(--text)"};
+const S_BOLD={fontSize:14,fontWeight:600,color:"var(--text)"};
 
 
 
@@ -93,21 +93,21 @@ function PlaetzeView(){
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
         <div>
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px"}}>Trainingsplätze</h1>
-          <p style={{fontSize:13,color:"var(--sub)",margin:0}}>Plätze verwalten, Hälften konfigurieren, aktivieren/deaktivieren</p>
+          <p style={{fontSize:14,color:"var(--sub)",margin:0}}>Plätze verwalten, Hälften konfigurieren, aktivieren/deaktivieren</p>
         </div>
         <button onClick={function(){setShowAdd(true);}}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
-          style={{padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+          style={{padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer"}}>
           + Platz
         </button>
       </div>
 
       {/* Aktiv */}
-      <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Aktive Plätze</div>
+      <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Aktive Plätze</div>
       <div style={{background:"var(--surface)",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden",marginBottom:16}}>
         {plaetze.filter(function(p){return p.active;}).length===0&&(
-          <div style={{padding:"16px",textAlign:"center",color:"var(--sub)",fontSize:13}}>Keine aktiven Plätze</div>
+          <div style={{padding:"16px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Keine aktiven Plätze</div>
         )}
         {plaetze.map(function(p,i){
           if(!p.active) return null;
@@ -117,48 +117,48 @@ function PlaetzeView(){
                 <div style={{padding:"12px 14px",display:"flex",flexDirection:"column",gap:8}}>
                   <input value={editName} onChange={function(e){setEditName(e.target.value);}} autoFocus
                     placeholder="Platzname"
-                    style={{padding:"7px 10px",border:"1.5px solid "+BL,borderRadius:8,fontSize:13,outline:"none"}}/>
+                    style={{padding:"7px 10px",border:"1.5px solid "+BL,borderRadius:8,fontSize:14,outline:"none"}}/>
                   <div>
-                    <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Hälften (kommagetrennt, z.B. <em>Hüttliseite, Rappiseite</em>)</div>
+                    <div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Hälften (kommagetrennt, z.B. <em>Hüttliseite, Rappiseite</em>)</div>
                     <input value={editHaelften} onChange={function(e){setEditHaelften(e.target.value);}}
                       placeholder="leer = keine Hälften"
-                      style={{width:"100%",padding:"7px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+                      style={{width:"100%",padding:"7px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:14,outline:"none",boxSizing:"border-box"}}/>
                   </div>
                   <div style={S_FLEX8}>
                     <button onClick={function(){handleRename(p.id);}}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
-                      style={{flex:1,padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:13,fontWeight:600,cursor:"pointer"}}>Speichern</button>
+                      style={{flex:1,padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer"}}>Speichern</button>
                     <button onClick={function(){setEditId(null);setEditName("");setEditHaelften("");}}
-                      style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:13,cursor:"pointer"}}>Abbrechen</button>
+                      style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:14,cursor:"pointer"}}>Abbrechen</button>
                   </div>
                 </div>
               ) : (
                 <div style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px"}}>
                   <div style={{display:"flex",flexDirection:"column",gap:4,flexShrink:0}}>
                     <button onClick={function(){moveUp(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===0}
-                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
+                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:14,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
                     <button onClick={function(){moveDown(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===plaetze.filter(function(x){return x.active;}).length-1}
-                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
+                      style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:14,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▼</button>
                   </div>
                   <div style={{width:10,height:10,borderRadius:"50%",background:GN,flexShrink:0}}/>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={S_BOLD}>{p.name}</div>
                     {p.halfn&&p.halfn.length>0&&(
-                      <div style={{fontSize:13,color:"var(--sub)",marginTop:1}}>{p.halfn.join("  ·  ")}</div>
+                      <div style={{fontSize:14,color:"var(--sub)",marginTop:1}}>{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
                   <div style={{display:"flex",gap:8,flexShrink:0}}>
                     <button onClick={function(){setEditId(p.id);setEditName(p.name);setEditHaelften((p.halfn||[]).join(", "));}} title="Bearbeiten"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
                     <button onClick={function(){handleToggle(p.id);}} title="Deaktivieren"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
                       </svg>
                     </button>
                     <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
+                      style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
                   </div>
                 </div>
               )}
@@ -170,7 +170,7 @@ function PlaetzeView(){
       {/* Inaktiv */}
       {plaetze.some(function(p){return !p.active;})&&(
         <>
-          <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Inaktive Plätze</div>
+          <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6,paddingLeft:2}}>Inaktive Plätze</div>
           <div style={{background:"var(--surface)",border:"0.5px solid "+GB,borderRadius:12,overflow:"hidden",marginBottom:16,opacity:0.7}}>
             {plaetze.map(function(p,i){
               if(p.active) return null;
@@ -184,11 +184,11 @@ function PlaetzeView(){
                     )}
                   </div>
                   <button onClick={function(){handleToggle(p.id);}} title="Aktivieren"
-                    style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+GN,background:"var(--surface)",color:GN,fontSize:13,fontWeight:600,cursor:"pointer"}}>
+                    style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+GN,background:"var(--surface)",color:GN,fontSize:14,fontWeight:600,cursor:"pointer"}}>
                     Aktivieren
                   </button>
                   <button onClick={function(){handleDelete(p.id);}} title="Löschen"
-                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
+                    style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
                 </div>
               );
             })}
@@ -202,22 +202,22 @@ function PlaetzeView(){
           <div style={{fontWeight:600,fontSize:14}}>Neuer Platz</div>
           <input value={newName} onChange={function(e){setNewName(e.target.value);}} autoFocus
             placeholder="z.B. Platz Erlenbach"
-            style={{padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:13,outline:"none"}}/>
+            style={{padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:14,outline:"none"}}/>
           <div>
-            <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Hälften (optional, kommagetrennt)</div>
+            <div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Hälften (optional, kommagetrennt)</div>
             <input value={newHaelften} onChange={function(e){setNewHaelften(e.target.value);}}
               placeholder="z.B. Nordseite, Südseite"
-              style={{width:"100%",padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+              style={{width:"100%",padding:"8px 10px",border:"1px solid "+GB,borderRadius:8,fontSize:14,outline:"none",boxSizing:"border-box"}}/>
           </div>
           <div style={S_FLEX8}>
             <button onClick={handleAdd}
               onMouseEnter={e=>e.currentTarget.style.background="var(--btn-hover)"}
               onMouseLeave={e=>e.currentTarget.style.background=BTN}
-              style={{flex:1,padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+              style={{flex:1,padding:"10px 18px",borderRadius:10,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer"}}>
               Hinzufügen
             </button>
             <button onClick={function(){setShowAdd(false);setNewName("");setNewHaelften("");}}
-              style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:13,cursor:"pointer"}}>
+              style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",fontSize:14,cursor:"pointer"}}>
               Abbrechen
             </button>
           </div>
@@ -284,7 +284,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
   }
 
   return (
-    <div ref={containerRef} style={{width:"100%", overflowX:"auto", WebkitOverflowScrolling:"touch", fontFamily:FONT, fontSize:13}}>
+    <div ref={containerRef} style={{width:"100%", overflowX:"auto", WebkitOverflowScrolling:"touch", fontFamily:FONT, fontSize:14}}>
       <div style={{minWidth: timeW + nDays*dayW}}>
 
         {/* Headers */}
@@ -296,8 +296,8 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
             const hasSlots = (wochenSlots[idxMap[di]]||[]).length > 0;
             return (
               <div key={di} style={{width:dayW, flexShrink:0, borderRight:"1.5px solid #C8C5BC", background:isToday?"#EEF2FF":"transparent", textAlign:"center", padding:"4px", height:"100%", boxSizing:"border-box", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
-                <div style={{fontSize:13, fontWeight:700, letterSpacing:0.5, color:isToday?"#4F46E5":hasSlots?BK:"#888580", textTransform:"uppercase"}}>{day}</div>
-                <div style={{fontSize:13, marginTop:1, color:isToday?"#6366F1":"#6B7280", fontWeight:isToday?600:400}}>{fmtDate(d)}</div>
+                <div style={{fontSize:14, fontWeight:700, letterSpacing:0.5, color:isToday?"#4F46E5":hasSlots?BK:"#888580", textTransform:"uppercase"}}>{day}</div>
+                <div style={{fontSize:14, marginTop:1, color:isToday?"#6366F1":"#6B7280", fontWeight:isToday?600:400}}>{fmtDate(d)}</div>
               </div>
             );
           })}
@@ -313,7 +313,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
               const isLast = pi===aktivePlaetze.length-1;
               return (
                 <div key={di+"_"+p.id} style={{width:spanCols*colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"1px solid #DDD9CF", background:isToday?"#E8ECFF":"transparent", textAlign:"center", padding:"2px 3px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
-                  <div style={{fontSize:13, fontWeight:600, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{p.name}</div>
+                  <div style={{fontSize:14, fontWeight:600, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{p.name}</div>
                 </div>
               );
             });
@@ -329,7 +329,7 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
               const isLast = ci===alleCols.length-1;
               return (
                 <div key={di+"_"+col.key} style={{width:colW, flexShrink:0, borderRight:isLast?"1.5px solid #C8C5BC":"0.5px solid #DDD9CF", background:isToday?"#DDE1F8":"transparent", textAlign:"center", padding:"1px 2px", height:"100%", boxSizing:"border-box", display:"flex", alignItems:"center", justifyContent:"center"}}>
-                  <div style={{fontSize:13, fontWeight:600, color:"var(--sub)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.half||""}</div>
+                  <div style={{fontSize:14, fontWeight:600, color:"var(--sub)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.3}}>{col.half||""}</div>
                 </div>
               );
             });
@@ -352,8 +352,8 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
                   display:"flex", alignItems:"flex-start", justifyContent:"flex-end",
                   paddingRight:5, paddingTop:1
                 }}>
-                  {isHour && <span style={{fontSize:13, color:"var(--sub)", fontWeight:600, letterSpacing:-0.3}}>{fmtT15(t)}</span>}
-                  {!isHour && <span style={{fontSize:13, color:"#D1D5DB", fontWeight:400}}>{fmtT15(t)}</span>}
+                  {isHour && <span style={{fontSize:14, color:"var(--sub)", fontWeight:600, letterSpacing:-0.3}}>{fmtT15(t)}</span>}
+                  {!isHour && <span style={{fontSize:14, color:"#D1D5DB", fontWeight:400}}>{fmtT15(t)}</span>}
                 </div>
               );
             })}
@@ -468,8 +468,8 @@ function PlatzGantt({plan,wochenSlots,dayDates,DAYS,dagIndexes,today,displayStar
                                 boxSizing:"border-box",
                                 boxShadow:"0 1px 3px rgba(0,0,0,0.18)"
                               }}>
-                              <div style={{color:"#fff", fontWeight:700, fontSize:13, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.2}}>{s.team}</div>
-                              {h>28 && <div style={{color:"rgba(255,255,255,0.82)", fontSize:13, letterSpacing:0.1}}>{fmtT15(b.start)}-{fmtT15(b.end)}</div>}
+                              <div style={{color:"#fff", fontWeight:700, fontSize:14, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:0.2}}>{s.team}</div>
+                              {h>28 && <div style={{color:"rgba(255,255,255,0.82)", fontSize:14, letterSpacing:0.1}}>{fmtT15(b.start)}-{fmtT15(b.end)}</div>}
                             </div>
                           );
                         });
@@ -917,7 +917,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
 
   function Btn2({children, onClick, active, small, danger}){
     return (
-      <button onClick={onClick} style={{padding:small?"4px 10px":"6px 14px", borderRadius:20, border:"1px solid "+(danger?R:active?BK:GB), background:danger?RL:active?BK:"#fff", color:danger?R:active?"#fff":"#555", fontSize:13, fontWeight:active?600:400, cursor:"pointer", whiteSpace:"nowrap"}}>{children}</button>
+      <button onClick={onClick} style={{padding:small?"4px 10px":"6px 14px", borderRadius:20, border:"1px solid "+(danger?R:active?BK:GB), background:danger?RL:active?BK:"#fff", color:danger?R:active?"#fff":"#555", fontSize:14, fontWeight:active?600:400, cursor:"pointer", whiteSpace:"nowrap"}}>{children}</button>
     );
   }
 
@@ -932,7 +932,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
               <button onClick={function(){setShowPlanVerwaltung(false);}} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)",lineHeight:1}}>x</button>
             </div>
             <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:12}}>
-              <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Aktiviere einen Plan um ihn im GANTT anzuzeigen. Dupliziere einen Plan als Vorlage fur eine neue Version.</div>
+              <div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Aktiviere einen Plan um ihn im GANTT anzuzeigen. Dupliziere einen Plan als Vorlage fur eine neue Version.</div>
               {plaene.map(function(p){
                 const isAktiv = p.id===aktiverPlan;
                 const slotCount = (p.slots||[]).length;
@@ -942,8 +942,8 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
                           <div style={{fontWeight:700,fontSize:14,color:isAktiv?BL:BK}}>{p.name}</div>
-                          {isAktiv&&<span style={{fontSize:13,padding:"2px 8px",borderRadius:20,background:BL,color:"#fff",fontWeight:600}}>Aktiv</span>}
-                          {p.active&&!isAktiv&&<span style={{fontSize:13,padding:"2px 8px",borderRadius:20,background:"var(--surface)",color:GN,fontWeight:600}}>Aktiviert</span>}
+                          {isAktiv&&<span style={{fontSize:14,padding:"2px 8px",borderRadius:20,background:BL,color:"#fff",fontWeight:600}}>Aktiv</span>}
+                          {p.active&&!isAktiv&&<span style={{fontSize:14,padding:"2px 8px",borderRadius:20,background:"var(--surface)",color:GN,fontWeight:600}}>Aktiviert</span>}
                         </div>
                         <div style={S_SUB}>
                           {p.valid_from?p.valid_from.split("-").reverse().join("."):"–"}
@@ -955,17 +955,17 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                       <div style={{display:"flex",gap:8,flexShrink:0}}>
                         {!isAktiv&&(
                           <button onClick={function(){handlePlanAktivieren(p.id);}}
-                            style={{padding:"8px 14px",borderRadius:8,border:"1.5px solid "+BL,background:"var(--surface)",color:BL,fontSize:13,fontWeight:600,cursor:"pointer"}}>
+                            style={{padding:"8px 14px",borderRadius:8,border:"1.5px solid "+BL,background:"var(--surface)",color:BL,fontSize:14,fontWeight:600,cursor:"pointer"}}>
                             Aktivieren
                           </button>
                         )}
                         <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);setShowPlanVerwaltung(false);}} title="Bearbeiten"
-                          style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
+                          style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
                         <button onClick={function(){handlePlanDuplizieren(p);}} title="Duplizieren"
-                          style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
+                          style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
                         {plaene.length>1&&!isAktiv&&(
                           <button onClick={function(){if(window.confirm("Plan \""+p.name+"\" loeschen?")){handlePlanLoeschen(p.id);}}} title="Loeschen"
-                            style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
+                            style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>
                         )}
                       </div>
                     </div>
@@ -973,7 +973,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                 );
               })}
               <button onClick={function(){setEditPlan(null);setShowPlanEditor(true);setShowPlanVerwaltung(false);}}
-                style={{padding:"10px",borderRadius:10,border:"1.5px dashed "+GB,background:"transparent",color:"var(--sub)",fontSize:13,cursor:"pointer",textAlign:"center",marginTop:4}}>
+                style={{padding:"10px",borderRadius:10,border:"1.5px dashed "+GB,background:"transparent",color:"var(--sub)",fontSize:14,cursor:"pointer",textAlign:"center",marginTop:4}}>
                 + Neuen Plan erstellen
               </button>
             </div>
@@ -989,7 +989,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             var isActive = trainingsTab===t.v;
             return(
               <button key={t.v} onClick={function(){setTrainungsTab(t.v);}}
-                style={{padding:"8px 14px",borderRadius:8,border:"none",background:isActive?"#fff":"transparent",color:isActive?BK:"#888",fontWeight:isActive?700:400,fontSize:13,cursor:"pointer",boxShadow:isActive?"0 1px 4px rgba(0,0,0,0.1)":"none"}}>
+                style={{padding:"8px 14px",borderRadius:8,border:"none",background:isActive?"#fff":"transparent",color:isActive?BK:"#888",fontWeight:isActive?700:400,fontSize:14,cursor:"pointer",boxShadow:isActive?"0 1px 4px rgba(0,0,0,0.1)":"none"}}>
                 {t.l}
               </button>
             );
@@ -1006,7 +1006,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
       {/* === Tab: Plane === */}
       {trainingsTab==="plaene"&&(
         <Col gap={12}>
-          <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Aktiviere einen Plan um ihn im GANTT anzuzeigen. Dupliziere ihn als Vorlage fur eine neue Version.</div>
+          <div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>Aktiviere einen Plan um ihn im GANTT anzuzeigen. Dupliziere ihn als Vorlage fur eine neue Version.</div>
           {plaene.map(function(p){
             const isAktiv = p.id===aktiverPlan;
             const slotCount = (p.slots||[]).length;
@@ -1016,7 +1016,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
                       <div style={{fontWeight:700,fontSize:14,color:isAktiv?BL:BK}}>{p.name}</div>
-                      {isAktiv&&<span style={{fontSize:13,padding:"2px 8px",borderRadius:20,background:BL,color:"#fff",fontWeight:600}}>Aktiv</span>}
+                      {isAktiv&&<span style={{fontSize:14,padding:"2px 8px",borderRadius:20,background:BL,color:"#fff",fontWeight:600}}>Aktiv</span>}
                     </div>
                     <div style={S_SUB}>
                       {p.valid_from?p.valid_from.split("-").reverse().join("."):"–"}
@@ -1027,17 +1027,17 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                   </div>
                   {canEdit&&(
                     <div style={{display:"flex",gap:8,flexShrink:0}}>
-                      {!isAktiv&&<button onClick={function(){handlePlanAktivieren(p.id);}} style={{padding:"8px 14px",borderRadius:8,border:"1.5px solid "+BL,background:"var(--surface)",color:BL,fontSize:13,fontWeight:600,cursor:"pointer"}}>Aktivieren</button>}
+                      {!isAktiv&&<button onClick={function(){handlePlanAktivieren(p.id);}} style={{padding:"8px 14px",borderRadius:8,border:"1.5px solid "+BL,background:"var(--surface)",color:BL,fontSize:14,fontWeight:600,cursor:"pointer"}}>Aktivieren</button>}
                       <button onClick={function(){setEditPlan(p);setShowPlanEditor(true);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
                       <button onClick={function(){handlePlanDuplizieren(p);}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>≡</button>
                       {plaene.length>1&&!isAktiv&&<button onClick={function(){if(window.confirm("Plan loeschen?")){handlePlanLoeschen(p.id);}}} style={{width:30,height:30,borderRadius:8,border:"0.5px solid "+R+"30",background:RL,cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="trash"/></button>}
                     </div>
                   )}
                 </div>
-                {isAktiv&&<button onClick={function(){setTrainungsTab("gantt");}} style={{marginTop:10,width:"100%",padding:"7px",borderRadius:8,border:"1px solid "+BL+"40",background:"transparent",color:BL,fontSize:13,cursor:"pointer"}}>Zum GANTT →</button>}
+                {isAktiv&&<button onClick={function(){setTrainungsTab("gantt");}} style={{marginTop:10,width:"100%",padding:"7px",borderRadius:8,border:"1px solid "+BL+"40",background:"transparent",color:BL,fontSize:14,cursor:"pointer"}}>Zum GANTT →</button>}
                 {!isAktiv&&canEdit&&(
                   <button onClick={function(){setVorschauPlan(p.id);setTrainungsTab("gantt");}}
-                    style={{marginTop:10,width:"100%",padding:"7px",borderRadius:8,border:"1px solid #FDE68A",background:"var(--surface)",color:STATUS_CLR.warn,fontSize:13,fontWeight:600,cursor:"pointer"}}>
+                    style={{marginTop:10,width:"100%",padding:"7px",borderRadius:8,border:"1px solid #FDE68A",background:"var(--surface)",color:STATUS_CLR.warn,fontSize:14,fontWeight:600,cursor:"pointer"}}>
                     Vorschau im GANTT →
                   </button>
                 )}
@@ -1056,7 +1056,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
 
       {/* Ausserhalb Gültigkeitsspanne */}
       {!planGueltigDieseWoche&&(
-        <div style={{padding:"10px 14px",background:"var(--surface2)",border:"1px solid #D1D5DB",borderRadius:10,marginBottom:12,fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:8}}>
+        <div style={{padding:"10px 14px",background:"var(--surface2)",border:"1px solid #D1D5DB",borderRadius:10,marginBottom:12,fontSize:14,color:"var(--sub)",display:"flex",alignItems:"center",gap:8}}>
           <span style={{fontSize:14}}>&#128197;</span>
           <span>
             Diese Woche liegt ausserhalb der Gültigkeitsspanne des Plans
@@ -1068,17 +1068,17 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
       {isVorschau&&(
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"10px 14px",background:"var(--surface)",border:"1.5px solid #FDE68A",borderRadius:10,marginBottom:12}}>
           <div>
-            <span style={{fontSize:13,fontWeight:700,color:STATUS_CLR.warn}}>Vorschau: </span>
-            <span style={{fontSize:13,color:STATUS_CLR.warn}}>{plan.name}</span>
-            <span style={{fontSize:13,color:"#B45309",marginLeft:8}}>Nicht der aktive Plan</span>
+            <span style={{fontSize:14,fontWeight:700,color:STATUS_CLR.warn}}>Vorschau: </span>
+            <span style={{fontSize:14,color:STATUS_CLR.warn}}>{plan.name}</span>
+            <span style={{fontSize:14,color:"#B45309",marginLeft:8}}>Nicht der aktive Plan</span>
           </div>
           <div style={S_FLEX8}>
             <button onClick={function(){handlePlanAktivieren(vorschauPlan);setVorschauPlan(null);}}
-              style={{padding:"5px 12px",borderRadius:8,border:"1.5px solid "+BL,background:"var(--surface)",color:BL,fontSize:13,fontWeight:600,cursor:"pointer"}}>
+              style={{padding:"5px 12px",borderRadius:8,border:"1.5px solid "+BL,background:"var(--surface)",color:BL,fontSize:14,fontWeight:600,cursor:"pointer"}}>
               Jetzt aktivieren
             </button>
             <button onClick={function(){setVorschauPlan(null);}}
-              style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid #FDE68A",background:"var(--surface)",color:STATUS_CLR.warn,fontSize:13,cursor:"pointer"}}>
+              style={{padding:"8px 14px",borderRadius:8,border:"0.5px solid #FDE68A",background:"var(--surface)",color:STATUS_CLR.warn,fontSize:14,cursor:"pointer"}}>
               Schliessen
             </button>
           </div>
@@ -1090,10 +1090,10 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
           <div>
             <div style={{fontWeight:700,fontSize:14,color:isVorschau?"#92400E":BK}}>
-              {isVorschau&&<span style={{fontSize:13,background:"#FDE68A",color:STATUS_CLR.warn,padding:"2px 7px",borderRadius:20,marginRight:7,fontWeight:600}}>Vorschau</span>}
+              {isVorschau&&<span style={{fontSize:14,background:"#FDE68A",color:STATUS_CLR.warn,padding:"2px 7px",borderRadius:20,marginRight:7,fontWeight:600}}>Vorschau</span>}
               {plan?plan.name:"Trainingsplan"}
             </div>
-            <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>
+            <div style={{fontSize:14,color:"var(--sub)",marginTop:2}}>
               {plan&&plan.valid_from?"Gueltig: "+fmtDate(new Date(plan.valid_from))+" - "+(plan.valid_until?fmtDate(new Date(plan.valid_until)):"unbegrenzt"):""}
             </div>
           </div>
@@ -1111,12 +1111,12 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             <div style={{textAlign:"center",minWidth:130}}>
               {ansicht==="woche" ? (
                 <>
-                  <div style={{fontSize:13,fontWeight:700,color:"var(--text)"}}>KW {kw}</div>
+                  <div style={{fontSize:14,fontWeight:700,color:"var(--text)"}}>KW {kw}</div>
                   <div style={S_SUB}>{fmtDate(dayDates[0])} - {fmtDate(dayDates[6])}.{dayDates[6].getFullYear()}</div>
                 </>
               ) : (
                 <>
-                  <div style={{fontSize:13,fontWeight:700,color:"var(--text)"}}>{DAYS[selectedDay]}, {fmtDate(dayDates[selectedDay])}.{dayDates[selectedDay].getFullYear()}</div>
+                  <div style={{fontSize:14,fontWeight:700,color:"var(--text)"}}>{DAYS[selectedDay]}, {fmtDate(dayDates[selectedDay])}.{dayDates[selectedDay].getFullYear()}</div>
                   <div style={S_SUB}>KW {kw}</div>
                 </>
               )}
@@ -1125,7 +1125,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
               if(ansicht==="tag"){ setSelectedDay(function(d){return d===6?0:d+1;}); }
               else { setKwOffset(function(o){return o+1;}); }
             }} style={{width:28,height:28,borderRadius:"50%",border:"1px solid "+GB,background:"var(--surface)",cursor:"pointer",fontSize:14}}>&#8250;</button>
-            {kwOffset!==0 && <button onClick={function(){setKwOffset(0);setSelectedDay(0);}} style={{padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",color:"var(--sub)",fontSize:13,cursor:"pointer"}}>Heute</button>}
+            {kwOffset!==0 && <button onClick={function(){setKwOffset(0);setSelectedDay(0);}} style={{padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",color:"var(--sub)",fontSize:14,cursor:"pointer"}}>Heute</button>}
           </Row>
           {ansicht==="tag" && (
             <div style={{display:"flex",gap:4,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
@@ -1134,7 +1134,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                 const isSelected = selectedDay===i;
                 return(
                   <button key={i} onClick={function(){setSelectedDay(i);}}
-                    style={{padding:"5px 12px",borderRadius:20,border:"1.5px solid "+(isSelected?BK:isToday?"#6366F1":GB),background:isSelected?BK:isToday?"#EEF2FF":"#fff",color:isSelected?"#fff":isToday?"#4F46E5":"#555",fontSize:13,fontWeight:isSelected?700:400,cursor:"pointer",flexShrink:0}}>
+                    style={{padding:"5px 12px",borderRadius:20,border:"1.5px solid "+(isSelected?BK:isToday?"#6366F1":GB),background:isSelected?BK:isToday?"#EEF2FF":"#fff",color:isSelected?"#fff":isToday?"#4F46E5":"#555",fontSize:14,fontWeight:isSelected?700:400,cursor:"pointer",flexShrink:0}}>
                     {d}
                   </button>
                 );
@@ -1142,13 +1142,13 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             </div>
           )}
           {kwAusnahmen.length>0 && (
-            <span style={{fontSize:13,fontWeight:600,padding:"3px 8px",borderRadius:20,background:"var(--surface)",color:"#D97706",border:"1px solid #FED7AA"}}>
+            <span style={{fontSize:14,fontWeight:600,padding:"3px 8px",borderRadius:20,background:"var(--surface)",color:"#D97706",border:"1px solid #FED7AA"}}>
               {kwAusnahmen.length} Ausnahme{kwAusnahmen.length>1?"n":""}
             </span>
           )}
           {/* Team-Filter Dropdown */}
           <select value={teamFilter} onChange={function(e){setTeamFilter(e.target.value);}}
-            style={{padding:"8px 14px",borderRadius:8,border:"1px solid "+GB,background:"var(--surface)",fontSize:13,outline:"none",cursor:"pointer",maxWidth:180}}>
+            style={{padding:"8px 14px",borderRadius:8,border:"1px solid "+GB,background:"var(--surface)",fontSize:14,outline:"none",cursor:"pointer",maxWidth:180}}>
             <option value="alle">Alle Mannschaften</option>
             {alleTeams.map(function(t){
               return <option key={t} value={t}>{t}</option>;
@@ -1160,7 +1160,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             {[{v:"woche",l:"Woche"},{v:"tag",l:"Tag"}].map(function(a){
               return(
                 <button key={a.v} onClick={function(){setAnsicht(a.v);}}
-                  style={{padding:"5px 12px",borderRadius:20,border:"none",background:ansicht===a.v?"#fff":"transparent",color:ansicht===a.v?BK:"#999",fontWeight:ansicht===a.v?600:400,fontSize:13,cursor:"pointer",boxShadow:ansicht===a.v?"0 1px 3px rgba(0,0,0,0.1)":"none"}}>
+                  style={{padding:"5px 12px",borderRadius:20,border:"none",background:ansicht===a.v?"#fff":"transparent",color:ansicht===a.v?BK:"#999",fontWeight:ansicht===a.v?600:400,fontSize:14,cursor:"pointer",boxShadow:ansicht===a.v?"0 1px 3px rgba(0,0,0,0.1)":"none"}}>
                   {a.l}
                 </button>
               );
@@ -1196,7 +1196,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
       <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:10}}>
         {alleTeams.filter(function(t){return teamFilter==="alle"||t===teamFilter;}).map(function(t){
           return (
-            <div key={t} style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:"var(--sub)"}}>
+            <div key={t} style={{display:"flex",alignItems:"center",gap:4,fontSize:14,color:"var(--sub)"}}>
               <div style={{width:10,height:10,borderRadius:4,background:TEAM_COLORS[t]||BL}}/>
               {t}
             </div>
@@ -1208,13 +1208,13 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
       {trainerNachrichten.filter(function(n){return n.type==="training_geloescht";}).length>0 && (
         <div style={{marginTop:12,border:"1px solid #2563EB40",borderRadius:12,overflow:"hidden"}}>
           <div style={{background:"var(--surface)",padding:"10px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-            <span style={{fontSize:13,fontWeight:700,color:BL}}>Training dauerhaft aus dem Plan entfernt</span>
+            <span style={{fontSize:14,fontWeight:700,color:BL}}>Training dauerhaft aus dem Plan entfernt</span>
             <button onClick={async function(){
               try{
                 const nr = await window.storage.get("trainer_benachrichtigungen");
                 if(nr){ const alle=JSON.parse(nr.value).map(function(n){return Object.assign({},n,{gelesen:true});}); await window.storage.set("trainer_benachrichtigungen",JSON.stringify(alle)); setTrainerNachrichten([]); }
               }catch(e){}
-            }} style={{fontSize:13,padding:"5px 12px",borderRadius:20,border:"1px solid #2563EB40",background:"var(--surface)",color:BL,cursor:"pointer"}}>Gelesen</button>
+            }} style={{fontSize:14,padding:"5px 12px",borderRadius:20,border:"1px solid #2563EB40",background:"var(--surface)",color:BL,cursor:"pointer"}}>Gelesen</button>
           </div>
         </div>
       )}
@@ -1223,7 +1223,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
       {trainerAbsagen.length>0 && (
         <div style={{marginTop:12,border:"1px solid "+R+"40",borderRadius:12,overflow:"hidden"}}>
           <div style={{background:RL,padding:"10px 14px",borderBottom:"1px solid "+R+"20"}}>
-            <span style={{fontSize:13,fontWeight:700,color:R}}>{trainerAbsagen.length} Training{trainerAbsagen.length>1?"s":""} diese Woche vom Trainer abgesagt</span>
+            <span style={{fontSize:14,fontWeight:700,color:R}}>{trainerAbsagen.length} Training{trainerAbsagen.length>1?"s":""} diese Woche vom Trainer abgesagt</span>
           </div>
           {trainerAbsagen.map(function(a,i){
             const slot=(plan?plan.slots||[]:[]||[]).find(function(s){return s.id===a.slot_id;});
@@ -1231,9 +1231,9 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
               <div key={i} style={{padding:"9px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:i<trainerAbsagen.length-1?"0.5px solid "+GB:"none",background:"var(--surface)"}}>
                 <div>
                   <span style={S_BOLD}>{a.team}</span>
-                  <span style={{fontSize:13,color:"var(--sub)",marginLeft:8}}>{a.weekday}{slot?" "+fmtTime(slot.start)+"-"+fmtTime(slot.end)+" Uhr":""}</span>
+                  <span style={{fontSize:14,color:"var(--sub)",marginLeft:8}}>{a.weekday}{slot?" "+fmtTime(slot.start)+"-"+fmtTime(slot.end)+" Uhr":""}</span>
                 </div>
-                <span style={{fontSize:13,padding:"2px 8px",borderRadius:20,background:RL,color:R,fontWeight:600}}>Abgesagt</span>
+                <span style={{fontSize:14,padding:"2px 8px",borderRadius:20,background:RL,color:R,fontWeight:600}}>Abgesagt</span>
               </div>
             );
           })}
@@ -1253,15 +1253,15 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             </div>
             <div style={{padding:"16px 20px",display:"flex",flexDirection:"column",gap:16}}>
               <div style={{padding:"12px",background:RL,borderRadius:8,border:"1px solid "+R+"30"}}>
-                <div style={{fontSize:13,fontWeight:700,color:R,marginBottom:2}}>Training wird dauerhaft aus dem Plan entfernt</div>
+                <div style={{fontSize:14,fontWeight:700,color:R,marginBottom:2}}>Training wird dauerhaft aus dem Plan entfernt</div>
                 <div style={S_SUB}>{deleteSlot.team} - {deleteSlot.weekday} {fmtTime(deleteSlot.start)}-{fmtTime(deleteSlot.end)} Uhr</div>
               </div>
               {deleteSlot.zukunftigeEvents.length>0 ? (
                 <div>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",marginBottom:8,textTransform:"uppercase",letterSpacing:0.5}}>Welche Termine absagen?</div>
+                  <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",marginBottom:8,textTransform:"uppercase",letterSpacing:0.5}}>Welche Termine absagen?</div>
                   <div style={{display:"flex",gap:8,marginBottom:10}}>
-                    <button onClick={function(){setDeleteSlot(function(s){return Object.assign({},s,{selectedEvIds:new Set(s.zukunftigeEvents.map(function(e){return e.id;}))});});}} style={{fontSize:13,padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",cursor:"pointer"}}>Alle</button>
-                    <button onClick={function(){setDeleteSlot(function(s){return Object.assign({},s,{selectedEvIds:new Set()});});}} style={{fontSize:13,padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",cursor:"pointer"}}>Keine</button>
+                    <button onClick={function(){setDeleteSlot(function(s){return Object.assign({},s,{selectedEvIds:new Set(s.zukunftigeEvents.map(function(e){return e.id;}))});});}} style={{fontSize:14,padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",cursor:"pointer"}}>Alle</button>
+                    <button onClick={function(){setDeleteSlot(function(s){return Object.assign({},s,{selectedEvIds:new Set()});});}} style={{fontSize:14,padding:"5px 12px",borderRadius:20,border:"1px solid "+GB,background:"var(--surface)",cursor:"pointer"}}>Keine</button>
                   </div>
                   <div style={{display:"flex",flexDirection:"column",gap:4,maxHeight:200,overflowY:"auto"}}>
                     {deleteSlot.zukunftigeEvents.map(function(e){
@@ -1269,7 +1269,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                       return (
                         <div key={e.id} onClick={function(){setDeleteSlot(function(s){const next=new Set(s.selectedEvIds);selected?next.delete(e.id):next.add(e.id);return Object.assign({},s,{selectedEvIds:next});});}} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",borderRadius:8,border:"1px solid "+(selected?R:GB),background:selected?RL:"#fff",cursor:"pointer"}}>
                           <div style={{width:16,height:16,borderRadius:4,border:"1.5px solid "+(selected?R:"#ccc"),background:selected?R:"#fff",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                            {selected && <span style={{color:"#fff",fontSize:13,fontWeight:700}}>v</span>}
+                            {selected && <span style={{color:"#fff",fontSize:14,fontWeight:700}}>v</span>}
                           </div>
                           <div style={{flex:1}}>
                             <div style={S_BOLD}>{e.date}</div>
@@ -1281,13 +1281,13 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                   </div>
                 </div>
               ) : (
-                <div style={{padding:"12px",background:"var(--surface2)",borderRadius:8,fontSize:13,color:"var(--sub)"}}>Keine zukuenftigen Termine vorhanden.</div>
+                <div style={{padding:"12px",background:"var(--surface2)",borderRadius:8,fontSize:14,color:"var(--sub)"}}>Keine zukuenftigen Termine vorhanden.</div>
               )}
               <div style={S_FLEX8}>
-                <button onClick={function(){handleSlotDeleteConfirm(deleteSlot,deleteSlot.selectedEvIds);}} style={{flex:1,padding:"8px 14px",borderRadius:10,border:"none",background:R,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+                <button onClick={function(){handleSlotDeleteConfirm(deleteSlot,deleteSlot.selectedEvIds);}} style={{flex:1,padding:"8px 14px",borderRadius:10,border:"none",background:R,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
                   Training loeschen{deleteSlot.selectedEvIds.size>0?" & "+deleteSlot.selectedEvIds.size+" Termin"+(deleteSlot.selectedEvIds.size>1?"e":"")+" absagen":""}
                 </button>
-                <button onClick={function(){setShowDeleteDialog(false);setDeleteSlot(null);}} style={{padding:"10px 18px",borderRadius:10,border:"1px solid "+GB,background:"var(--surface)",fontSize:13,cursor:"pointer"}}>Abbrechen</button>
+                <button onClick={function(){setShowDeleteDialog(false);setDeleteSlot(null);}} style={{padding:"10px 18px",borderRadius:10,border:"1px solid "+GB,background:"var(--surface)",fontSize:14,cursor:"pointer"}}>Abbrechen</button>
               </div>
             </div>
           </div>

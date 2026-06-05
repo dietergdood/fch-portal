@@ -308,14 +308,14 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
   const hasMultiRoles=account.rollen.length>1;
   return(
     <>
-      <Btn onClick={()=>setOpen(true)}><span style={{fontSize:14}}>{cur.icon}</span> <span style={{fontSize:13,fontWeight:700,color:cur.color}}>{cur.label}</span> {hasMultiRoles&&<span style={{fontSize:13,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rollen.length}</span>} <span style={{fontSize:13,color:cur.color,opacity:0.7}}>▾</span></Btn>
+      <Btn onClick={()=>setOpen(true)}><span style={{fontSize:14}}>{cur.icon}</span> <span style={{fontSize:14,fontWeight:700,color:cur.color}}>{cur.label}</span> {hasMultiRoles&&<span style={{fontSize:14,background:cur.color,color:"#fff",padding:"1px 5px",borderRadius:10,marginLeft:2}}>{account.rollen.length}</span>} <span style={{fontSize:14,color:cur.color,opacity:0.7}}>▾</span></Btn>
       {open&&(
         <div onClick={()=>setOpen(false)} style={isMobile?{position:"fixed",inset:0,zIndex:1000,display:"flex",flexDirection:"column",justifyContent:"flex-end",background:"rgba(0,0,0,0.5)"}:{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}>
           <div onClick={e=>e.stopPropagation()} style={isMobile?{position:"relative",background:"var(--surface)",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)",overflowY:"auto"}:{padding:24}}>
             <Between style={{marginBottom:18}}>
               <div>
                 <h2 style={{margin:0,fontSize:18,fontWeight:800}}>Konto &amp; Rolle wechseln</h2>
-                <p style={{margin:"3px 0 0",fontSize:13,color:"var(--sub)"}}>Teste die App aus verschiedenen Perspektiven</p>
+                <p style={{margin:"3px 0 0",fontSize:14,color:"var(--sub)"}}>Teste die App aus verschiedenen Perspektiven</p>
               </div>
               <Btn variant="ghost" onClick={()=>setOpen(false)} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
             </Between>
@@ -323,28 +323,28 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             {/* Konten mit Mehrfach-Rollen */}
             {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length>1).length>0&&(
               <div style={{marginBottom:16}}>
-                <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Konten mit Mehrfach-Rollen</div>
+                <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Konten mit Mehrfach-Rollen</div>
                 <Col>
                   {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length>1).map(([key,a])=>{
                     const isActive=account===a;
                     return(
                       <div key={key} style={{border:`1.5px solid ${isActive?R:GB}`,borderRadius:10,padding:"10px 14px",background:isActive?R+"08":"#fafaf8"}}>
                         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-                          <div style={{width:32,height:32,borderRadius:"50%",background:R,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:13,flexShrink:0}}>
+                          <div style={{width:32,height:32,borderRadius:"50%",background:R,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:14,flexShrink:0}}>
                             {a.name.split(" ").map(n=>n[0]).join("").slice(0,2)}
                           </div>
                           <div>
-                            <div style={{fontWeight:700,fontSize:13}}>{a.name}</div>
-                            <div style={{fontSize:13,color:"var(--sub)"}}>{a.kinder.length>0?`${a.kinder.length} Kind${a.kinder.length>1?"er":""}: ${a.kinder.map(k=>k.name).join(", ")}`:"Kein Kind"}</div>
+                            <div style={{fontWeight:700,fontSize:14}}>{a.name}</div>
+                            <div style={{fontSize:14,color:"var(--sub)"}}>{a.kinder.length>0?`${a.kinder.length} Kind${a.kinder.length>1?"er":""}: ${a.kinder.map(k=>k.name).join(", ")}`:"Kein Kind"}</div>
                           </div>
-                          {isActive&&<span style={{marginLeft:"auto",fontSize:13,color:R,fontWeight:700}}>AKTIVES KONTO</span>}
+                          {isActive&&<span style={{marginLeft:"auto",fontSize:14,color:R,fontWeight:700}}>AKTIVES KONTO</span>}
                         </div>
                         <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                           {a.rollen.map(r=>{
                             const rd=ROLES[r];
                             const isActiveSub=(isActive&&(activeSubRole||a.primaryRole)===r);
                             return(
-                              <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(r);setOpen(false);}}><span>{rd.icon}</span>{rd.label} {isActiveSub&&<span style={{fontSize:13,color:rd.color}}>✓</span>}</Btn>
+                              <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(r);setOpen(false);}}><span>{rd.icon}</span>{rd.label} {isActiveSub&&<span style={{fontSize:14,color:rd.color}}>✓</span>}</Btn>
                             );
                           })}
                         </div>
@@ -358,13 +358,13 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
             {/* Eltern mit Kindern */}
             {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rollen.length===1).length>0&&(
               <div style={{marginBottom:16}}>
-                <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Eltern-Zugänge</div>
+                <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Eltern-Zugänge</div>
                 <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                   {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.kinder.length>0&&a.rollen.length===1).map(([key,a])=>{
                     const rd=ROLES[a.primaryRole];
                     const isActive=account===a;
                     return(
-                      <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}> <span style={{fontSize:16}}>{rd.icon}</span> <span style={{fontWeight:700,fontSize:13,color:isActive?rd.color:"var(--text)"}}>{a.name}</span> </div> {a.kinder.map((k,i)=>( <div key={i} style={{fontSize:13,color:"var(--sub)",marginTop:2}}> <span style={{color:GN}}>►</span> {k.name} <span style={{color:"var(--sub)"}}>({k.team})</span> </div> ))} {isActive&&<div style={{marginTop:5,fontSize:13,color:rd.color,fontWeight:700}}>AKTIV</div>}</Btn>
+                      <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}> <span style={{fontSize:16}}>{rd.icon}</span> <span style={{fontWeight:700,fontSize:14,color:isActive?rd.color:"var(--text)"}}>{a.name}</span> </div> {a.kinder.map((k,i)=>( <div key={i} style={{fontSize:14,color:"var(--sub)",marginTop:2}}> <span style={{color:GN}}>►</span> {k.name} <span style={{color:"var(--sub)"}}>({k.team})</span> </div> ))} {isActive&&<div style={{marginTop:5,fontSize:14,color:rd.color,fontWeight:700}}>AKTIV</div>}</Btn>
                     );
                   })}
                 </div>
@@ -373,14 +373,14 @@ function RoleSwitcher({account,activeSubRole,setActiveSubRole,onRoleChange}){
 
             {/* Standard Rollen */}
             <div>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Standard-Rollen (Demo)</div>
+              <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Standard-Rollen (Demo)</div>
               <div className="cc-grid-2" style={{gap:8}}>
                 {Object.entries(USER_ACCOUNTS).filter(([,a])=>a.rollen.length===1&&a.kinder.length===0).map(([key,a])=>{
                   const rd=ROLES[a.primaryRole];
                   const isActive=account===a&&!activeSubRole;
                   const teamLabel=a.trainerTeams?a.trainerTeams[0]:a.team||null;
                   return(
-                    <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}> <span style={{fontSize:18}}>{rd.icon}</span> <span style={{fontWeight:700,fontSize:13,color:isActive?rd.color:"var(--text)"}}>{a.name}</span> {isActive&&<span style={{marginLeft:"auto",fontSize:13,color:rd.color,fontWeight:700}}>AKTIV</span>} </div> <div style={{fontSize:13,color:rd.color,fontWeight:600,marginBottom:2}}>{rd.label}</div> {teamLabel&&<div style={{fontSize:13,color:"var(--sub)"}}>{teamLabel}</div>} {!teamLabel&&<p style={{margin:0,fontSize:13,color:"var(--sub)"}}>{rd.desc}</p>}</Btn>
+                    <Btn onClick={()=>{onRoleChange(key);setActiveSubRole(null);setOpen(false);}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}> <span style={{fontSize:18}}>{rd.icon}</span> <span style={{fontWeight:700,fontSize:14,color:isActive?rd.color:"var(--text)"}}>{a.name}</span> {isActive&&<span style={{marginLeft:"auto",fontSize:14,color:rd.color,fontWeight:700}}>AKTIV</span>} </div> <div style={{fontSize:14,color:rd.color,fontWeight:600,marginBottom:2}}>{rd.label}</div> {teamLabel&&<div style={{fontSize:14,color:"var(--sub)"}}>{teamLabel}</div>} {!teamLabel&&<p style={{margin:0,fontSize:14,color:"var(--sub)"}}>{rd.desc}</p>}</Btn>
                   );
                 })}
               </div>
@@ -413,7 +413,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
         </div>
         {!collapsed&&(
           <div style={{minWidth:0,overflow:"hidden"}}>
-            <div style={{color:"var(--nav-t)",fontWeight:800,fontSize:13,lineHeight:1.25,letterSpacing:-0.2,wordBreak:"break-word",overflowWrap:"break-word"}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
+            <div style={{color:"var(--nav-t)",fontWeight:800,fontSize:14,lineHeight:1.25,letterSpacing:-0.2,wordBreak:"break-word",overflowWrap:"break-word"}}>{appTheme?.vereinsname||getVereinsnameStatic()}</div>
             <div style={{color:"var(--nav-a)",fontSize:11,letterSpacing:0.6,marginTop:2,textTransform:"uppercase",fontWeight:600}}>{"ClubCampus"}</div>
           </div>
         )}
@@ -453,7 +453,7 @@ function SideNav({role,active,setActive,account,sb,onNameUpdated,onLogout,appThe
           <Av size={32} bg={ACCENT} name={userName}/>
           {!collapsed&&(
             <div style={{minWidth:0,flex:1}}>
-              <div style={{color:"var(--nav-a)",fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
+              <div style={{color:"var(--nav-a)",fontSize:14,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:0.1}}>{userName}</div>
               <div style={{marginTop:3,fontSize:11,color:"var(--nav-t)",opacity:0.6,fontWeight:600,letterSpacing:0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>
                 <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:rc,flexShrink:0}}/>
                 {getRole(role).label}
@@ -514,7 +514,7 @@ function TopBar({role,active,setActive,onRoleChange,account,activeSubRole,setAct
       <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
         {/* Dark Toggle – nur Desktop */}
         {!isMobile&&(
-          <Btn onClick={toggle}><div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}> <TI n={dark?"sun":"moon"} size={12} style={{color:dark?ACCENT:"var(--sub)"}}/> </div> <span style={{fontSize:13,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span></Btn>
+          <Btn onClick={toggle}><div style={{width:22,height:22,borderRadius:"50%",background:dark?"#111":"var(--surface)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.25s",flexShrink:0,boxShadow:"0 1px 4px rgba(0,0,0,0.15)"}}> <TI n={dark?"sun":"moon"} size={12} style={{color:dark?ACCENT:"var(--sub)"}}/> </div> <span style={{fontSize:14,fontWeight:600,color:dark?"#111":"var(--sub)",whiteSpace:"nowrap",fontFamily:FONT}}>{dark?"Hell":"Dunkel"}</span></Btn>
         )}
         {!isMobile&&!onLogout&&<RoleSwitcher account={acc} activeSubRole={activeSubRole} setActiveSubRole={setActiveSubRole||((r)=>{})} onRoleChange={onRoleChange}/>}
         {!isMobile&&!onLogout&&<Chip text="DEMO" color="#999" bg="var(--surface2)"/>}
@@ -710,13 +710,13 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
   }
 
   const inputStyle={width:"100%",padding:"10px 12px",border:"1px solid var(--border)",borderRadius:9,
-    fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",
+    fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",
     boxSizing:"border-box",outline:"none"};
 
   const StatusBox=({status,msg})=>status==="ok"?(
-    <div style={{padding:"10px 14px",background:"var(--surface)",border:"1px solid "+GN,borderRadius:9,fontSize:13,color:GN,fontWeight:600,marginTop:4}}>{msg}</div>
+    <div style={{padding:"10px 14px",background:"var(--surface)",border:"1px solid "+GN,borderRadius:9,fontSize:14,color:GN,fontWeight:600,marginTop:4}}>{msg}</div>
   ):status==="error"?(
-    <div style={{padding:"10px 14px",background:RL,border:"1px solid "+R,borderRadius:9,fontSize:13,color:R,fontWeight:600,marginTop:4}}>{msg}</div>
+    <div style={{padding:"10px 14px",background:RL,border:"1px solid "+R,borderRadius:9,fontSize:14,color:R,fontWeight:600,marginTop:4}}>{msg}</div>
   ):null;
 
   return(
@@ -749,9 +749,9 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             {/* Name – editierbar */}
             <div style={{padding:"11px 0",borderBottom:"1px solid var(--border)"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:editName?8:0}}>
-                <span style={{fontSize:13,color:"var(--sub)",minWidth:90}}>Name</span>
+                <span style={{fontSize:14,color:"var(--sub)",minWidth:90}}>Name</span>
                 {!editName&&(
-                  <span style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{userName}</span>
+                  <span style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{userName}</span>
                 )}
               </div>
               {editName&&(
@@ -771,21 +771,21 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
             {/* E-Mail – read only */}
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",
               padding:"11px 0",borderBottom:"1px solid var(--border)"}}>
-              <span style={{fontSize:13,color:"var(--sub)",minWidth:90}}>E-Mail</span>
-              <span style={{fontSize:13,fontWeight:500,color:"var(--text)",textAlign:"right"}}>{userEmail}</span>
+              <span style={{fontSize:14,color:"var(--sub)",minWidth:90}}>E-Mail</span>
+              <span style={{fontSize:14,fontWeight:500,color:"var(--text)",textAlign:"right"}}>{userEmail}</span>
             </div>
 
             {/* Rolle */}
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",
               padding:"11px 0",borderBottom:"1px solid var(--border)"}}>
-              <span style={{fontSize:13,color:"var(--sub)",minWidth:90}}>Rolle</span>
-              <span style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{getRole(role).label}</span>
+              <span style={{fontSize:14,color:"var(--sub)",minWidth:90}}>Rolle</span>
+              <span style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{getRole(role).label}</span>
             </div>
 
             {/* Mitglied */}
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"11px 0"}}>
-              <span style={{fontSize:13,color:"var(--sub)",minWidth:90}}>Verein</span>
-              <span style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{getVereinsnameStatic()}</span>
+              <span style={{fontSize:14,color:"var(--sub)",minWidth:90}}>Verein</span>
+              <span style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{getVereinsnameStatic()}</span>
             </div>
 
             {/* Rollen-Badge */}
@@ -818,19 +818,19 @@ function ProfileModal({open,onClose,account,role,sb,onNameUpdated,onLogout}){
         {tab==="passwort"&&(
           <form onSubmit={handlePwChange} style={{display:"flex",flexDirection:"column",gap:14}}>
             <div>
-              <div style={{fontSize:13,fontWeight:600,color:"var(--text)",marginBottom:6}}>Aktuelles Passwort</div>
+              <div style={{fontSize:14,fontWeight:600,color:"var(--text)",marginBottom:6}}>Aktuelles Passwort</div>
               <input type="password" placeholder="••••••••" value={pwForm.current}
                 onChange={e=>setPwForm(p=>({...p,current:e.target.value}))}
                 style={inputStyle} autoComplete="current-password"/>
             </div>
             <div>
-              <div style={{fontSize:13,fontWeight:600,color:"var(--text)",marginBottom:6}}>Neues Passwort</div>
+              <div style={{fontSize:14,fontWeight:600,color:"var(--text)",marginBottom:6}}>Neues Passwort</div>
               <input type="password" placeholder="Mindestens 8 Zeichen" value={pwForm.next}
                 onChange={e=>setPwForm(p=>({...p,next:e.target.value}))}
                 style={inputStyle} autoComplete="new-password"/>
             </div>
             <div>
-              <div style={{fontSize:13,fontWeight:600,color:"var(--text)",marginBottom:6}}>Passwort bestätigen</div>
+              <div style={{fontSize:14,fontWeight:600,color:"var(--text)",marginBottom:6}}>Passwort bestätigen</div>
               <input type="password" placeholder="Wiederholen" value={pwForm.repeat}
                 onChange={e=>setPwForm(p=>({...p,repeat:e.target.value}))}
                 style={inputStyle} autoComplete="new-password"/>
@@ -885,7 +885,7 @@ function DarkModeRow(){
   return(
     <Between>
       <div>
-        <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
+        <div style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
         <div style={{fontSize:12,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
       </div>
       <button onClick={toggle} className={"cc-toggle cc-toggle-dark"+(dark?" cc-toggle-on":"")}>

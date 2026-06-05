@@ -22,11 +22,11 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
         <Card style={{marginTop:14,background:"var(--surface)",border:`0.5px solid ${AM}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Reservation</h3>
           <div className="cc-grid-3">
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Bus</label><br/><Select ><option>Bus A (9-Plätzer)</option><option>Bus B (15-Plätzer)</option></Select></div>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Datum</label><br/><input type="date" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/></div>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Zeit</label><br/><input type="text" placeholder="09:00-14:00" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13}}/></div>
+            <div><label style={{fontSize:14,color:"var(--sub)"}}>Bus</label><br/><Select ><option>Bus A (9-Plätzer)</option><option>Bus B (15-Plätzer)</option></Select></div>
+            <div><label style={{fontSize:14,color:"var(--sub)"}}>Datum</label><br/><input type="date" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14}}/></div>
+            <div><label style={{fontSize:14,color:"var(--sub)"}}>Zeit</label><br/><input type="text" placeholder="09:00-14:00" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14}}/></div>
           </div>
-          <div style={{marginTop:10}}><label style={{fontSize:13,color:"var(--sub)"}}>Zweck</label><br/><input type="text" placeholder="z.B. Auswärtsspiel vs. FC Küsnacht" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box"}}/></div>
+          <div style={{marginTop:10}}><label style={{fontSize:14,color:"var(--sub)"}}>Zweck</label><br/><input type="text" placeholder="z.B. Auswärtsspiel vs. FC Küsnacht" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14,boxSizing:"border-box"}}/></div>
           <div style={{marginTop:10,display:"flex",gap:8}}><Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(false)}>Reservieren</Btn><Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn></div>
         </Card>
       )}
@@ -37,11 +37,11 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
             {bus.reservations.map((r,j)=>(
               <div key={j} style={{padding:"9px 0",borderBottom:j<bus.reservations.length-1?`0.5px solid ${GB}`:"none"}}>
                 <div style={{display:"flex",justifyContent:"space-between"}}>
-                  <span style={{fontWeight:600,fontSize:13}}>{r.date} · {r.time+" Uhr"}</span>
+                  <span style={{fontWeight:600,fontSize:14}}>{r.date} · {r.time+" Uhr"}</span>
                   <Chip text="Reserviert" color={BL}/>
                 </div>
-                <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>{r.purpose}</div>
-                <div style={{fontSize:13,color:"var(--sub)"}}>von {r.by} · {r.team}</div>
+                <div style={{fontSize:14,color:"var(--sub)",marginTop:2}}>{r.purpose}</div>
+                <div style={{fontSize:14,color:"var(--sub)"}}>von {r.by} · {r.team}</div>
               </div>
             ))}
           </Card>
@@ -64,10 +64,10 @@ function MaterialView(){
         <Card style={{marginBottom:16,background:"var(--surface)",border:`0.5px solid ${BL}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Materialanfrage</h3>
           <div className="cc-grid-form" style={{gap:10}}>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Art</label><br/><Select >{["Bestellung","Ersatzmaterial","Tenüs","Mangel","Defekt","Verlust","Neue Anforderung"].map(t=><option key={t}>{t}</option>)}</Select></div>
-            <div><label style={{fontSize:13,color:"var(--sub)"}}>Team</label><br/><Select ><option>Cc-Junioren</option><option>D-Junioren</option></Select></div>
+            <div><label style={{fontSize:14,color:"var(--sub)"}}>Art</label><br/><Select >{["Bestellung","Ersatzmaterial","Tenüs","Mangel","Defekt","Verlust","Neue Anforderung"].map(t=><option key={t}>{t}</option>)}</Select></div>
+            <div><label style={{fontSize:14,color:"var(--sub)"}}>Team</label><br/><Select ><option>Cc-Junioren</option><option>D-Junioren</option></Select></div>
           </div>
-          <div style={{marginTop:10}}><label style={{fontSize:13,color:"var(--sub)"}}>Beschreibung</label><br/><input type="text" placeholder="z.B. Neue Bälle Grösse 4" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:13,boxSizing:"border-box"}}/></div>
+          <div style={{marginTop:10}}><label style={{fontSize:14,color:"var(--sub)"}}>Beschreibung</label><br/><input type="text" placeholder="z.B. Neue Bälle Grösse 4" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14,boxSizing:"border-box"}}/></div>
           <div style={{marginTop:10,display:"flex",gap:8}}><Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(false)}>Einreichen</Btn><Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn></div>
         </Card>
       )}
@@ -76,7 +76,7 @@ function MaterialView(){
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Team","Art","Material","von","Datum","Status"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -108,12 +108,12 @@ function LockersView(){
   return(
     <div>
       <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px"}}>Garderobenplan</h1>
-      <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Gantt-Ansicht · 07:00-22:00 Uhr</p>
+      <p style={{color:"var(--sub)",fontSize:14,margin:"0 0 18px"}}>Gantt-Ansicht · 07:00-22:00 Uhr</p>
       <Card style={{padding:0,overflowX:"auto"}}>
         <div style={{minWidth:600}}>
           <div style={{display:"grid",gridTemplateColumns:"110px 1fr",background:"var(--surface2)",borderBottom:"0.5px solid var(--border)"}}>
-            <div style={{padding:"9px 12px",fontWeight:700,fontSize:13,color:"var(--sub)"}}>Garderobe</div>
-            <div style={{padding:"9px 12px",fontSize:13,color:"var(--sub)",borderLeft:`0.5px solid ${GB}`,position:"relative",height:28}}>
+            <div style={{padding:"9px 12px",fontWeight:700,fontSize:14,color:"var(--sub)"}}>Garderobe</div>
+            <div style={{padding:"9px 12px",fontSize:14,color:"var(--sub)",borderLeft:`0.5px solid ${GB}`,position:"relative",height:28}}>
               {[7,9,11,13,15,17,19,21].map((h,i)=>(
                 <span key={i} style={{position:"absolute",left:`${(h-START)/(END-START)*100}%`,transform:"translateX(-50%)"}}>{h}:00</span>
               ))}
@@ -121,14 +121,14 @@ function LockersView(){
           </div>
           {LOCKERS.map((lr,i)=>(
             <div key={i} style={{display:"grid",gridTemplateColumns:"110px 1fr",borderBottom:i<LOCKERS.length-1?`0.5px solid ${GB}`:"none",minHeight:H*2+12}}>
-              <div style={{padding:"8px 12px",fontSize:13,fontWeight:600,borderRight:`0.5px solid ${GB}`,display:"flex",alignItems:"center",background:"var(--surface2)"}}>{lr.name}</div>
+              <div style={{padding:"8px 12px",fontSize:14,fontWeight:600,borderRight:`0.5px solid ${GB}`,display:"flex",alignItems:"center",background:"var(--surface2)"}}>{lr.name}</div>
               <div style={{position:"relative",height:H*2+12}}>
                 {lr.assignments.map((a,j)=>{
                   const left=(a.start-START)/(END-START)*100, width=(a.end-a.start)/(END-START)*100;
                   return(
                     <div key={j} title={`${a.team} · ${fmt(a.start)}-${fmt(a.end)}`} style={{position:"absolute",left:`${left}%`,width:`${width}%`,top:j*(H+4)+4,height:H,background:a.color,borderRadius:5,padding:"3px 7px",overflow:"hidden",cursor:"help"}}>
-                      <div style={{color:"#fff",fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{a.team} ({a.type})</div>
-                      <div style={{color:"rgba(255,255,255,0.8)",fontSize:13}}>{fmt(a.start)}-{fmt(a.end)}</div>
+                      <div style={{color:"#fff",fontSize:14,fontWeight:700,whiteSpace:"nowrap"}}>{a.team} ({a.type})</div>
+                      <div style={{color:"rgba(255,255,255,0.8)",fontSize:14}}>{fmt(a.start)}-{fmt(a.end)}</div>
                     </div>
                   );
                 })}
@@ -158,7 +158,7 @@ function MediaView(){
                 {m.area.map((a,j)=><Chip key={j} text={a} color={BL}/>)}
               </div>
               <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700}}>{m.title}</h3>
-              <div style={{fontSize:13,color:"var(--sub)"}}>{m.team} · {m.date} · {m.author}</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{m.team} · {m.date} · {m.author}</div>
             </div>
             <Chip text={m.status} color={SC[m.status]||"#888"} bg={(SC[m.status]||"#888")+"18"}/>
           </div>
@@ -178,7 +178,7 @@ function WikiView(){
           <Card key={i} style={{cursor:"pointer"}}>
             <Chip text={a.cat} color={CC[a.cat]||"#888"} bg={(CC[a.cat]||"#888")+"18"}/>
             <h3 style={{margin:"6px 0 3px",fontSize:14,fontWeight:700}}>{a.title}</h3>
-            <div style={{fontSize:13,color:"var(--sub)"}}>Aktualisiert {a.updated}</div>
+            <div style={{fontSize:14,color:"var(--sub)"}}>Aktualisiert {a.updated}</div>
           </Card>
         ))}
       </div>
@@ -202,11 +202,11 @@ function DocsView(){
         {docs.map((d,i)=>(
           <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",borderBottom:i<docs.length-1?`0.5px solid ${GB}`:"none"}}>
             <div style={{width:34,height:34,borderRadius:8,background:(TC[d.type]||"#888")+"20",display:"flex",alignItems:"center",justifyContent:"center"}}>
-              <span style={{fontSize:13,fontWeight:800,color:TC[d.type]||"#888"}}>{d.type}</span>
+              <span style={{fontSize:14,fontWeight:800,color:TC[d.type]||"#888"}}>{d.type}</span>
             </div>
             <div style={{flex:1}}>
-              <div style={{fontWeight:600,fontSize:13}}>{d.name}</div>
-              <div style={{fontSize:13,color:"var(--sub)"}}>{d.size} · {d.updated}</div>
+              <div style={{fontWeight:600,fontSize:14}}>{d.name}</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{d.size} · {d.updated}</div>
             </div>
             <Chip text={d.area} color="#666"/>
             <Btn>↓ Download</Btn>
@@ -249,10 +249,10 @@ function NewsView({role,meineTeams,kannVerwalten}){
           <div style={{display:"flex",gap:7,marginBottom:6,flexWrap:"wrap",alignItems:"center"}}>
             <Chip text={n.target} color={R}/>
             <Chip text={n.channel} color={BL}/>
-            <span style={{fontSize:13,color:"var(--sub)"}}>{n.date} · {n.author}</span>
+            <span style={{fontSize:14,color:"var(--sub)"}}>{n.date} · {n.author}</span>
           </div>
           <h3 style={{margin:"0 0 6px",fontSize:15,fontWeight:700}}>{n.title}</h3>
-          <p style={{margin:0,fontSize:13,color:"var(--sub)",lineHeight:1.65}}>{n.content}</p>
+          <p style={{margin:0,fontSize:14,color:"var(--sub)",lineHeight:1.65}}>{n.content}</p>
         </Card>
       ))}
     </div>
@@ -274,7 +274,7 @@ function AttendanceCentral(){
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Team","Ø Total","Ø Training","Ø Spiele","Spieler"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:i>0?"center":"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th key={i} style={{padding:"9px 13px",textAlign:i>0?"center":"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -323,8 +323,8 @@ function ProfileView({role,myRosterId,account}){
             {l:"Telefon",v:player?.tel||"-"},
           ].map((x,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<4?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13,color:"var(--sub)"}}>{x.l}</span>
-              <span style={{fontSize:13,fontWeight:500}}>{x.v}</span>
+              <span style={{fontSize:14,color:"var(--sub)"}}>{x.l}</span>
+              <span style={{fontSize:14,fontWeight:500}}>{x.v}</span>
             </div>
           ))}
           <div style={{marginTop:12}}><Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn></div>
@@ -361,8 +361,8 @@ function ProfileView({role,myRosterId,account}){
                 {rows.map((x,i)=>(
                   <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:i<rows.length-1?`0.5px solid ${GB}`:"none"}}>
                     <div style={{minWidth:140}}>
-                      <div style={{fontSize:13,color:"var(--sub)"}}>{x.l}</div>
-                      <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginTop:1,wordBreak:"break-all"}}>{x.v}</div>
+                      <div style={{fontSize:14,color:"var(--sub)"}}>{x.l}</div>
+                      <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginTop:1,wordBreak:"break-all"}}>{x.v}</div>
                     </div>
                     <Chip text={x.ok?"✓ OK":"Prüfen"} color={x.ok?GN:R} bg={x.ok?"#ECFDF5":RL}/>
                   </div>
@@ -384,7 +384,7 @@ function DarkModeRow(){
   return(
     <Between>
       <div>
-        <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
+        <div style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{dark?"Dunkel":"Hell"}</div>
         <div style={{fontSize:12,color:"var(--sub)",marginTop:1}}>Farbschema des Portals</div>
       </div>
       <Btn onClick={toggle}><div style={{ position:"absolute",top:3,left:dark?22:3,width:20,height:20, borderRadius:"50%",background:dark?"#111":"#fff", boxShadow:"0 1px 4px rgba(0,0,0,0.2)", transition:"left 0.2s cubic-bezier(0.34,1.2,0.64,1)" }}/></Btn>
@@ -408,7 +408,7 @@ function DataCheckView(){
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Mitglied","Problem","Zuletzt geprüft","Aktion"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
               ))}
             </tr>
           </thead>

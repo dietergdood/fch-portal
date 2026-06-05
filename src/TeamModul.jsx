@@ -200,7 +200,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
             const cnt=ROSTER.filter(p=>(p.teams||[]).includes(k.team)&&!p.role).length;
             const info=TEAMS_DATA[k.team]||{liga:"",season:""};
             return(
-              <Btn onClick={()=>handleKindSwitch(k)}><div style={{width:22,height:22,borderRadius:"50%",background:active?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"var(--text)",flexShrink:0}}> {k.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()} </div> <div style={{textAlign:"left"}}> <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{k.name.split(" ")[0]}</div> <div style={{fontSize:13,color:"rgba(0,0,0,0.5)"}}>{k.team} · {info.liga}</div> </div></Btn>
+              <Btn onClick={()=>handleKindSwitch(k)}><div style={{width:22,height:22,borderRadius:"50%",background:active?"rgba(0,0,0,0.1)":GR,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:800,color:"var(--text)",flexShrink:0}}> {k.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()} </div> <div style={{textAlign:"left"}}> <div style={{fontSize:14,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{k.name.split(" ")[0]}</div> <div style={{fontSize:14,color:"rgba(0,0,0,0.5)"}}>{k.team} · {info.liga}</div> </div></Btn>
             );
           })}
         </div>
@@ -216,7 +216,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
               const isActive=activeTeam===team;
               const cnt=ROSTER.filter(p=>(p.teams||[]).includes(team)).length||info.count;
               return(
-                <Btn onClick={()=>handleTeamSwitch(team)}><div style={{width:28,height:28,borderRadius:"50%",background:isActive?ACCENT:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}> {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()} </div> <div style={{textAlign:"left",minWidth:0}}> <div style={{fontSize:13,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{team}</div> <div style={{fontSize:11,color:"var(--sub)"}}>{cnt} · {info.liga}</div> </div></Btn>
+                <Btn onClick={()=>handleTeamSwitch(team)}><div style={{width:28,height:28,borderRadius:"50%",background:isActive?ACCENT:"var(--surface2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:isActive?"#111":"var(--sub)",flexShrink:0}}> {team.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()} </div> <div style={{textAlign:"left",minWidth:0}}> <div style={{fontSize:14,fontWeight:700,color:"var(--text)",whiteSpace:"nowrap"}}>{team}</div> <div style={{fontSize:11,color:"var(--sub)"}}>{cnt} · {info.liga}</div> </div></Btn>
               );
             })}
           </div>
@@ -435,7 +435,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
         })()}
       </Card>
       <Card style={{cursor:setTab?"pointer":"default"}} onClick={setTab?()=>{setAttFilter&&setAttFilter(["training","spiele"]);setTab("attendance");}:undefined}>
-        <STitle action={setTab&&<span style={{fontSize:13,color:BL,fontWeight:600}}>Alle anzeigen →</span>}>Spielplan &amp; Training</STitle>
+        <STitle action={setTab&&<span style={{fontSize:14,color:BL,fontWeight:600}}>Alle anzeigen →</span>}>Spielplan &amp; Training</STitle>
         {(()=>{
           const shown=spielplan.slice(0,4);
           return(<>
@@ -455,14 +455,14 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                     <span>{e.location}</span>
                   </div>
                 </div>
-                <span style={{fontSize:13,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0}}>{e.type}</span>
+                <span style={{fontSize:14,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0}}>{e.type}</span>
               </div>
             ))}
           </>);
         })()}
       </Card>
       <Card style={{cursor:setTab?"pointer":"default"}} onClick={setTab?()=>{setAttFilter&&setAttFilter(["team-event","vereinsanlass"]);setTab("attendance");}:undefined}>
-        <STitle action={setTab&&<span style={{fontSize:13,color:BL,fontWeight:600}}>Alle anzeigen →</span>}>Vereinsanlässe &amp; Team-Events</STitle>
+        <STitle action={setTab&&<span style={{fontSize:14,color:BL,fontWeight:600}}>Alle anzeigen →</span>}>Vereinsanlässe &amp; Team-Events</STitle>
         {termine.length===0&&<div className="cc-empty" style={{padding:"8px 0"}}>Keine anstehenden Anlässe.</div>}
         {termine.map((e,i)=>(
           <div key={e.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:i<termine.length-1?`0.5px solid ${GB}`:"none"}}>
@@ -477,7 +477,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                 <span>{e.location}</span>
               </div>
             </div>
-            <span style={{fontSize:13,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0,whiteSpace:"nowrap"}}>{e.subtype||e.type}</span>
+            <span style={{fontSize:14,fontWeight:700,padding:"2px 7px",borderRadius:20,background:accentFor(e)+"18",color:accentFor(e),flexShrink:0,whiteSpace:"nowrap"}}>{e.subtype||e.type}</span>
           </div>
         ))}
       </Card>
@@ -543,7 +543,7 @@ function PollsTab({role}){
               const my=votes[i]===j;
               return(
                 <div key={j} onClick={()=>!p.closed&&setVotes(v=>({...v,[i]:j}))} style={{marginBottom:7,cursor:p.closed?"default":"pointer"}}>
-                  <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:2}}>
+                  <div style={{display:"flex",justifyContent:"space-between",fontSize:14,marginBottom:2}}>
                     <span style={{fontWeight:my?700:400}}>{opt}{my?" ✓":""}</span>
                     <span style={{color:"var(--sub)",fontWeight:600}}>{pct}%</span>
                   </div>
@@ -588,8 +588,8 @@ function StatsTab({team="Cc-Junioren"}){
               <td className="cc-td" style={{textAlign:"center"}}>{p.sp}</td>
               <td className="cc-td" style={{textAlign:"center",fontWeight:p.tore>=5?700:400,color:p.tore>=5?R:BK}}>{p.tore}</td>
               <td className="cc-td" style={{textAlign:"center"}}>{p.assists}</td>
-              <td className="cc-td" style={{textAlign:"center"}}>{p.gelb>0?<span style={{background:"#FCD34D",color:"#78350F",padding:"1px 7px",borderRadius:4,fontWeight:700,fontSize:13}}>{p.gelb}</span>:"-"}</td>
-              <td className="cc-td" style={{textAlign:"center"}}>{p.rot>0?<span style={{background:R,color:"#fff",padding:"1px 7px",borderRadius:4,fontWeight:700,fontSize:13}}>{p.rot}</span>:"-"}</td>
+              <td className="cc-td" style={{textAlign:"center"}}>{p.gelb>0?<span style={{background:"#FCD34D",color:"#78350F",padding:"1px 7px",borderRadius:4,fontWeight:700,fontSize:14}}>{p.gelb}</span>:"-"}</td>
+              <td className="cc-td" style={{textAlign:"center"}}>{p.rot>0?<span style={{background:R,color:"#fff",padding:"1px 7px",borderRadius:4,fontWeight:700,fontSize:14}}>{p.rot}</span>:"-"}</td>
             </tr>
           ))}
         </tbody>
@@ -718,7 +718,7 @@ function ProfileView({role,myRosterId,account}){
                   <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:i<rows.length-1?`0.5px solid ${GB}`:"none"}}>
                     <div style={{minWidth:140}}>
                       <div style={{color:"var(--sub)"}}>{x.l}</div>
-                      <div style={{fontSize:13,fontWeight:600,color:"var(--text)",marginTop:1,wordBreak:"break-all"}}>{x.v}</div>
+                      <div style={{fontSize:14,fontWeight:600,color:"var(--text)",marginTop:1,wordBreak:"break-all"}}>{x.v}</div>
                     </div>
                     <Chip text={x.ok?"✓ OK":"Prüfen"} color={x.ok?GN:R} bg={x.ok?"#ECFDF5":RL}/>
                   </div>
@@ -766,7 +766,7 @@ function EventsList({teamOnly,role}){
             <div>
               <label className="cc-label">Titel</label>
               <input value={newEvent.title} onChange={e=>setNewEvent(p=>({...p,title:e.target.value}))}
-                placeholder="Titel des Anlasses" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box"}}/>
+                placeholder="Titel des Anlasses" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14,boxSizing:"border-box"}}/>
             </div>
             <div>
               <label className="cc-label">Typ</label>
@@ -788,12 +788,12 @@ function EventsList({teamOnly,role}){
             <div style={{gridColumn:"1/-1"}}>
               <label className="cc-label">Ort</label>
               <input value={newEvent.loc} onChange={e=>setNewEvent(p=>({...p,loc:e.target.value}))}
-                placeholder="Vereinslokal, Mehrzweckhalle…" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:13,boxSizing:"border-box"}}/>
+                placeholder="Vereinslokal, Mehrzweckhalle…" style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14,boxSizing:"border-box"}}/>
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
             <input type="checkbox" id="rsvp-chk" checked={newEvent.rsvp} onChange={e=>setNewEvent(p=>({...p,rsvp:e.target.checked}))} style={{cursor:"pointer"}}/>
-            <label htmlFor="rsvp-chk" style={{fontSize:13,cursor:"pointer"}}>Rückmeldung erforderlich</label>
+            <label htmlFor="rsvp-chk" style={{fontSize:14,cursor:"pointer"}}>Rückmeldung erforderlich</label>
           </div>
           <Row align="flex-start">
             <Btn variant="primary" color="#F3F4F6">Erstellen</Btn>
@@ -812,26 +812,26 @@ function EventsList({teamOnly,role}){
               <div style={{flex:1,padding:"14px 16px",minWidth:0}}>
                 {/* Type + RSVP badge row */}
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:7}}>
-                  <span style={{background:accentColor+"18",color:accentColor,fontSize:13,fontWeight:700,padding:"2px 8px",borderRadius:20,border:`0.5px solid ${accentColor}30`}}>
+                  <span style={{background:accentColor+"18",color:accentColor,fontSize:14,fontWeight:700,padding:"2px 8px",borderRadius:20,border:`0.5px solid ${accentColor}30`}}>
                     {e.type}
                   </span>
                   {e.rsvp&&(
-                    <span style={{fontSize:13,fontWeight:600,color:AM,background:"var(--surface)",border:"0.5px solid #FDE68A",padding:"2px 8px",borderRadius:20}}>
+                    <span style={{fontSize:14,fontWeight:600,color:AM,background:"var(--surface)",border:"0.5px solid #FDE68A",padding:"2px 8px",borderRadius:20}}>
                       {"Rückmeldung erforderlich"}
                     </span>
                   )}
                   {e.rsvp&&e.res&&(
                     <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8}}>
-                      <span style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:GN,fontWeight:700}}>
-                        <span style={{width:18,height:18,borderRadius:"50%",background:GN,color:"#fff",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700}}>{"✓"}</span>
+                      <span style={{display:"flex",alignItems:"center",gap:4,fontSize:14,color:GN,fontWeight:700}}>
+                        <span style={{width:18,height:18,borderRadius:"50%",background:GN,color:"#fff",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700}}>{"✓"}</span>
                         {e.res.y}
                       </span>
-                      <span style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:R,fontWeight:700}}>
-                        <span style={{width:18,height:18,borderRadius:"50%",background:R,color:"#fff",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700}}>{"✕"}</span>
+                      <span style={{display:"flex",alignItems:"center",gap:4,fontSize:14,color:R,fontWeight:700}}>
+                        <span style={{width:18,height:18,borderRadius:"50%",background:R,color:"#fff",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700}}>{"✕"}</span>
                         {e.res.n}
                       </span>
-                      <span style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:AM,fontWeight:700}}>
-                        <span style={{width:18,height:18,borderRadius:"50%",background:STATUS_BG.warn,border:`1.5px solid ${AM}`,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:13,color:AM,fontWeight:800}}>{"?"}</span>
+                      <span style={{display:"flex",alignItems:"center",gap:4,fontSize:14,color:AM,fontWeight:700}}>
+                        <span style={{width:18,height:18,borderRadius:"50%",background:STATUS_BG.warn,border:`1.5px solid ${AM}`,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:14,color:AM,fontWeight:800}}>{"?"}</span>
                         {e.res.o}
                       </span>
                     </div>
@@ -840,7 +840,7 @@ function EventsList({teamOnly,role}){
                 {/* Title */}
                 <div className="cc-list-name" style={{marginBottom:7}}>{e.title}</div>
                 {/* Meta */}
-                <div style={{display:"flex",alignItems:"center",gap:0,flexWrap:"wrap",fontSize:13,color:"var(--sub)"}}>
+                <div style={{display:"flex",alignItems:"center",gap:0,flexWrap:"wrap",fontSize:14,color:"var(--sub)"}}>
                   <span style={{display:"flex",alignItems:"center",gap:4}}>
                     <span><TI n="calendar"/></span>{e.date}{e.endDate?" - "+e.endDate:""}
                   </span>

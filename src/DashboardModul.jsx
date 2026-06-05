@@ -52,9 +52,9 @@ function DashboardAdmin({setActive,account}){
             {label:"Push-Benachricht.", status:"OK",     last:"active",        ok:true},
           ].map((s,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13,fontWeight:600}}>{s.label}</span>
+              <span style={{fontSize:14,fontWeight:600}}>{s.label}</span>
               <Row>
-                <span style={{fontSize:13,color:"var(--sub)"}}>{s.last}</span>
+                <span style={{fontSize:14,color:"var(--sub)"}}>{s.last}</span>
                 <Chip text={s.status} color={s.ok?GN:R} bg={s.ok?"#ECFDF5":RL}/>
               </Row>
             </div>
@@ -67,8 +67,8 @@ function DashboardAdmin({setActive,account}){
             {r:"Funktionäre/Vorstand",n:6},{r:"Spieler",n:112},{r:"Eltern",n:56},
           ].map((x,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<5?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13}}>{x.r}</span>
-              <span style={{fontWeight:700,fontSize:13}}>{x.n}</span>
+              <span style={{fontSize:14}}>{x.r}</span>
+              <span style={{fontWeight:700,fontSize:14}}>{x.n}</span>
             </div>
           ))}
         </Card>
@@ -80,7 +80,7 @@ function DashboardAdmin({setActive,account}){
           ].map((c,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div className="cc-list-name">{c.member} · {c.field}</div>
-              <div style={{fontSize:13,color:"var(--sub)"}}>{c.conflict}</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{c.conflict}</div>
             </div>
           ))}
           <InfoBox text="2 Konflikte müssen manuell aufgelöst werden." semantic="danger"/>
@@ -93,8 +93,8 @@ function DashboardAdmin({setActive,account}){
             {action:"Rolle geändert",         user:"Admin User",  time:"10:45"},
           ].map((a,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
-              <div style={{fontSize:13,fontWeight:600}}>{a.action}</div>
-              <div style={{fontSize:13,color:"var(--sub)"}}>{a.user} · {a.time+" Uhr"}</div>
+              <div style={{fontSize:14,fontWeight:600}}>{a.action}</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{a.user} · {a.time+" Uhr"}</div>
             </div>
           ))}
         </Card>
@@ -121,7 +121,7 @@ function DashboardAdministration({setActive,account}){
           <STitle action={<Btn variant="ghost" onClick={()=>setActive("members")}>Alle →</Btn>}>Datenprüfstatus</STitle>
           {[{label:"Vollständig",n:162,c:GN},{label:"Prüfung fällig",n:12,c:AM},{label:"Unvollständig",n:8,c:R},{label:"Sync-Fehler",n:5,c:"#888"}].map((x,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13}}>{x.label}</span>
+              <span style={{fontSize:14}}>{x.label}</span>
               <Chip text={x.n} color={x.c} bg={x.c+"18"}/>
             </div>
           ))}
@@ -130,7 +130,7 @@ function DashboardAdministration({setActive,account}){
           <STitle>Fairgate &amp; FVRZ Sync</STitle>
           {[{s:"Fairgate-Import",ok:true,last:"vor 2h"},{s:"FVRZ-Spielplan",ok:false,last:"Fehler"},{s:"Rückschreiben",ok:true,last:"vor 6h"}].map((x,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<2?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:13}}>{x.s}</span>
+              <span style={{fontSize:14}}>{x.s}</span>
               <Chip text={x.ok?"OK":x.last} color={x.ok?GN:R} bg={x.ok?"#ECFDF5":RL}/>
             </div>
           ))}
@@ -141,8 +141,8 @@ function DashboardAdministration({setActive,account}){
           {[{t:"Cc-Junioren",pct:77},{t:"D-Junioren",pct:82},{t:"A-Junioren",pct:71},{t:"Aktive 1",pct:68}].map((x,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:13,fontWeight:600}}>{x.t}</span>
-                <span style={{fontSize:13,fontWeight:700,color:x.pct>=75?GN:x.pct>=65?AM:R}}>{x.pct}%</span>
+                <span style={{fontSize:14,fontWeight:600}}>{x.t}</span>
+                <span style={{fontSize:14,fontWeight:700,color:x.pct>=75?GN:x.pct>=65?AM:R}}>{x.pct}%</span>
               </div>
               <div style={{height:4,background:GB,borderRadius:2}}>
                 <div style={{height:"100%",width:`${x.pct}%`,background:x.pct>=75?GN:x.pct>=65?AM:R,borderRadius:2}}/>
@@ -190,7 +190,7 @@ function DashboardFunktionaer({setActive,account}){
                 <span className="cc-list-name">{e.title}</span>
                 <Chip text={e.type==="Vereinsanlass"?"Verein":"Team"} color={e.type==="Vereinsanlass"?R:BL}/>
               </div>
-              <div style={{fontSize:13,color:"var(--sub)"}}>{e.date} · {e.time+" Uhr"}</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{e.date} · {e.time+" Uhr"}</div>
             </div>
           ))}
         </Card>
@@ -199,8 +199,8 @@ function DashboardFunktionaer({setActive,account}){
           {[{t:"Cc-Junioren",pct:77},{t:"D-Junioren",pct:82},{t:"A-Junioren",pct:71}].map((x,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:13,fontWeight:600}}>{x.t}</span>
-                <span style={{fontSize:13,fontWeight:700,color:x.pct>=75?GN:AM}}>{x.pct}%</span>
+                <span style={{fontSize:14,fontWeight:600}}>{x.t}</span>
+                <span style={{fontSize:14,fontWeight:700,color:x.pct>=75?GN:AM}}>{x.pct}%</span>
               </div>
               <div style={{height:4,background:GB,borderRadius:2}}>
                 <div style={{height:"100%",width:`${x.pct}%`,background:x.pct>=75?GN:AM,borderRadius:2}}/>
@@ -220,7 +220,7 @@ function DashboardFunktionaer({setActive,account}){
             else status="Offen";
             return(
               <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<4?`0.5px solid ${GB}`:"none"}}>
-                <span style={{fontSize:13}}>{h.name}</span>
+                <span style={{fontSize:14}}>{h.name}</span>
                 <Chip text={status} color={["Erfüllt","Geplant erfüllt"].includes(status)?GN:status==="Befreit"?"#888":R} bg={["Erfüllt","Geplant erfüllt"].includes(status)?"#ECFDF5":status==="Befreit"?"#f5f5f5":RL}/>
               </div>
             );
@@ -231,7 +231,7 @@ function DashboardFunktionaer({setActive,account}){
           {BUSES.flatMap(b=>b.reservations.map(r=>({...r,bus:b.name}))).map((r,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div className="cc-list-name">{r.date} · {r.time+" Uhr"}</div>
-              <div style={{fontSize:13,color:"var(--sub)"}}>{r.bus} · {r.purpose}</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{r.bus} · {r.purpose}</div>
             </div>
           ))}
         </Card>
@@ -275,7 +275,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <Between mb={3}>
                 <span className="cc-list-name">{a.date} <Chip text={a.type} color={a.type==="Spiel"?BL:GN}/></span>
-                <span style={{fontSize:13,fontWeight:800,color:R}}>{Math.round(a.present.length/(a.present.length+a.absent.length)*100)}%</span>
+                <span style={{fontSize:14,fontWeight:800,color:R}}>{Math.round(a.present.length/(a.present.length+a.absent.length)*100)}%</span>
               </Between>
               <div style={{height:4,background:GB,borderRadius:2}}>
                 <div style={{height:"100%",width:`${a.present.length/(a.present.length+a.absent.length)*100}%`,background:R,borderRadius:2}}/>
@@ -477,7 +477,7 @@ function DashboardEltern({account,meineTeams,setActive}){
             {/* Kind-Header */}
             <Row gap={8} mb={12}>
               <div style={{width:6,height:28,borderRadius:4,background:ACCENT,flexShrink:0}}/>
-              <H2>{vorname} <span style={{fontSize:13,color:"var(--sub)",fontWeight:600}}>· {team}</span></H2>
+              <H2>{vorname} <span style={{fontSize:14,color:"var(--sub)",fontWeight:600}}>· {team}</span></H2>
             </Row>
 
             {/* Stat-Kacheln */}
@@ -514,14 +514,14 @@ function DashboardEltern({account,meineTeams,setActive}){
                   </div>
                   {nextAufgebotSpiel.treffpunkt&&<Row gap={4} mt={3}><TI n="target" style={{marginRight:3}}/> Treffpunkt: {nextAufgebotSpiel.treffpunkt}</Row>}
                 </Col>
-                <div style={{background:"#4F46E5",color:"#fff",fontSize:13,fontWeight:700,padding:"3px 9px",borderRadius:20}}>Aufgebot</div>
+                <div style={{background:"#4F46E5",color:"#fff",fontSize:14,fontWeight:700,padding:"3px 9px",borderRadius:20}}>Aufgebot</div>
               </div>
             )}
 
             <div className="cc-grid-cards" >
               {/* Nächste 4 Trainings & Spiele */}
               <Card style={{cursor:setActive?"pointer":"default"}} onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;setActive("team");}:undefined}>
-                <STitle action={setActive&&<span style={{fontSize:13,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Trainings & Spiele</STitle>
+                <STitle action={setActive&&<span style={{fontSize:14,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Trainings & Spiele</STitle>
                 {upcoming.length===0&&<div className="cc-empty" style={{padding:"8px 0",textAlign:"left"}}>Keine anstehenden Trainings oder Spiele.</div>}
                 {upcoming.map((e,i)=>(
                   <div key={e.id} className="cc-list-row" style={{borderBottom:i===0&&false?undefined:undefined}}>
@@ -539,7 +539,7 @@ function DashboardEltern({account,meineTeams,setActive}){
 
               {/* Team-Events & Vereinsanlässe */}
               <Card style={{cursor:setActive?"pointer":"default"}} onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["team-event","vereinsanlass"];NAV_TARGET.kindTeam=team;setActive("team");}:undefined}>
-                <STitle action={setActive&&<span style={{fontSize:13,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Team-Events & Anlässe</STitle>
+                <STitle action={setActive&&<span style={{fontSize:14,color:BL,fontWeight:600}}>Alle →</span>}>{vorname} · Team-Events & Anlässe</STitle>
                 {anlaesse.length===0&&<div className="cc-empty" style={{padding:"8px 0",textAlign:"left"}}>Keine anstehenden Anlässe.</div>}
                 {anlaesse.map((e,i)=>(
                   <div key={e.id} className="cc-list-row" style={{borderBottom:i===0&&false?undefined:undefined}}>

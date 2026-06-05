@@ -104,26 +104,26 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
 
   const Row=({label,value,mono,blue})=>(
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",padding:"9px 14px",borderBottom:"0.5px solid var(--border)",gap:12}}>
-      <span style={{fontSize:13,color:"var(--sub)",flexShrink:0,minWidth:120}}>{label}</span>
-      <span style={{fontSize:13,fontWeight:600,color:blue?BL:mono?"#666":BK,textAlign:"right",wordBreak:"break-word",fontFamily:mono?"monospace":"inherit"}}>{value||"-"}</span>
+      <span style={{fontSize:14,color:"var(--sub)",flexShrink:0,minWidth:120}}>{label}</span>
+      <span style={{fontSize:14,fontWeight:600,color:blue?BL:mono?"#666":BK,textAlign:"right",wordBreak:"break-word",fontFamily:mono?"monospace":"inherit"}}>{value||"-"}</span>
     </div>
   );
 
   const NrRow=()=>(
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 14px",borderBottom:"0.5px solid var(--border)",gap:12}}>
-      <span style={{fontSize:13,color:"var(--sub)",flexShrink:0,minWidth:120}}>{"Rückennummer"}</span>
+      <span style={{fontSize:14,color:"var(--sub)",flexShrink:0,minWidth:120}}>{"Rückennummer"}</span>
       {canEdit&&editingNr?(
         <input autoFocus type="number" min="1" max="99" value={nrVal}
           onChange={e=>setNrVal(e.target.value)}
           onBlur={()=>{setEditingNr(false);if(onUpdateNr)onUpdateNr(nrVal);}}
           onKeyDown={e=>{if(e.key==="Enter"){setEditingNr(false);if(onUpdateNr)onUpdateNr(nrVal);}}}
-          style={{width:60,padding:"3px 7px",border:`1.5px solid ${R}`,borderRadius:6,fontSize:13,fontWeight:700,textAlign:"right",color:R,outline:"none"}}
+          style={{width:60,padding:"3px 7px",border:`1.5px solid ${R}`,borderRadius:6,fontSize:14,fontWeight:700,textAlign:"right",color:R,outline:"none"}}
         />
       ):(
         <div onClick={canEdit?()=>setEditingNr(true):undefined}
           style={{display:"flex",alignItems:"center",gap:8,cursor:canEdit?"pointer":"default"}}>
-          <span style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{nrVal||"-"}</span>
-          {canEdit&&<span style={{fontSize:13,color:"var(--sub)"}}><TI n="edit"/></span>}
+          <span style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{nrVal||"-"}</span>
+          {canEdit&&<span style={{fontSize:14,color:"var(--sub)"}}><TI n="edit"/></span>}
         </div>
       )}
     </div>
@@ -140,12 +140,12 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           </div>
           <div style={{flex:1}}>
             <div style={{color:"#fff",fontWeight:800,fontSize:18,lineHeight:1.2}}>{person.firstName} {person.lastName}</div>
-            <div style={{color:"rgba(255,255,255,0.8)",fontSize:13,marginTop:4,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+            <div style={{color:"rgba(255,255,255,0.8)",fontSize:14,marginTop:4,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
               <Chip text={person.pos||"-"} color="#fff" bg="rgba(255,255,255,0.25)"/>
               {(person.teams||["Cc-Junioren"]).map((t,i)=>(
-                <span key={i} style={{color:"rgba(255,255,255,0.85)",fontSize:13}}>{i>0&&<span style={{opacity:0.5,margin:"0 3px"}}>·</span>}{t}</span>
+                <span key={i} style={{color:"rgba(255,255,255,0.85)",fontSize:14}}>{i>0&&<span style={{opacity:0.5,margin:"0 3px"}}>·</span>}{t}</span>
               ))}
-              <span style={{color:"rgba(255,255,255,0.6)",fontSize:13}}>Saison 2024/25</span>
+              <span style={{color:"rgba(255,255,255,0.6)",fontSize:14}}>Saison 2024/25</span>
             </div>
           </div>
           <Btn onClick={onClose} style={{ width:32,height:32 }}>×</Btn>
@@ -222,7 +222,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           )}
 
           {/* Rollenhinweis */}
-          <div style={{padding:"8px 12px",background:"var(--surface)",borderRadius:8,fontSize:13,color:"var(--sub)",display:"flex",alignItems:"center",gap:8}}>
+          <div style={{padding:"8px 12px",background:"var(--surface)",borderRadius:8,fontSize:14,color:"var(--sub)",display:"flex",alignItems:"center",gap:8}}>
             <span><TI n="eye"/></span>
             <span>Feldsichtbarkeit gemäss Rolle: <strong>{getRole(role).label}</strong></span>
           </div>
@@ -314,7 +314,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     ?<span style={{marginLeft:4,fontSize:11}}>{sortDir==="asc"?"▲":"▼"}</span>
     :<span style={{marginLeft:4,fontSize:11,opacity:0.25}}>↕</span>;
 
-  const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
+  const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
 
   /* ── Detail-Modal ── */
   const MemberDetail=({m,onClose})=>{
@@ -361,12 +361,12 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             <div>
               {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
                 <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
-                  <span style={{fontSize:13,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
-                  <span style={{fontSize:13,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
+                  <span style={{fontSize:14,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
+                  <span style={{fontSize:14,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
                 </div>
               ))}
               {m.hat_portal_zugang&&(
-                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:13,color:GN,fontWeight:600}}>
+                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:14,color:GN,fontWeight:600}}>
                   ✓ Hat Portal-Zugang
                 </div>
               )}
@@ -374,12 +374,12 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           )}
           {(selectedMember?._tab||"info")==="eltern"&&(
             <Col gap={12}>
-              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:13,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
+              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
               {eltern.map((e,i)=>(
                 <div key={i} className="cc-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px"}}>
                   <div style={{fontWeight:600,fontSize:14,color:"var(--text)",marginBottom:8}}>{e.vorname} {e.nachname}</div>
-                  {e.email&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
-                  {e.telefon&&<div style={{fontSize:13,color:"var(--sub)"}}>📞 {e.telefon}</div>}
+                  {e.email&&<div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
+                  {e.telefon&&<div style={{fontSize:14,color:"var(--sub)"}}>📞 {e.telefon}</div>}
                 </div>
               ))}
             </Col>
@@ -440,7 +440,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
               {COLS.map(c=>(
                 <th key={c.key} onClick={()=>handleSort(c.key)}
                   style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",
-                    fontSize:13,textTransform:"uppercase",letterSpacing:0.4,cursor:"pointer",
+                    fontSize:14,textTransform:"uppercase",letterSpacing:0.4,cursor:"pointer",
                     userSelect:"none",whiteSpace:"nowrap"}}
                   onMouseEnter={e=>e.currentTarget.style.color="var(--text)"}
                   onMouseLeave={e=>e.currentTarget.style.color="var(--sub)"}>
@@ -455,7 +455,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 {groupBy!=="none"&&(
                   <tr key={"g-"+key}>
                     <td colSpan={6} style={{padding:"10px 13px 6px",background:"var(--surface2)",
-                      fontWeight:700,fontSize:13,color:"var(--sub)",textTransform:"uppercase",
+                      fontWeight:700,fontSize:14,color:"var(--sub)",textTransform:"uppercase",
                       letterSpacing:0.6,borderTop:"1px solid var(--border)"}}>
                       {key} <span style={{fontWeight:400,opacity:0.6}}>({members.length})</span>
                     </td>
@@ -484,7 +484,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           </tbody>
         </table>
         {filtered.length===0&&(
-          <div style={{padding:"32px",textAlign:"center",color:"var(--sub)",fontSize:13}}>
+          <div style={{padding:"32px",textAlign:"center",color:"var(--sub)",fontSize:14}}>
             Keine Mitglieder gefunden.
           </div>
         )}
@@ -573,7 +573,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     ?<span style={{marginLeft:4,fontSize:11}}>{sortDir==="asc"?"▲":"▼"}</span>
     :<span style={{marginLeft:4,fontSize:11,opacity:0.25}}>↕</span>;
 
-  const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:13,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
+  const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
 
   /* ── Detail-Modal ── */
   const MemberDetail=({m,onClose})=>{
@@ -620,12 +620,12 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             <div>
               {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
                 <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
-                  <span style={{fontSize:13,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
-                  <span style={{fontSize:13,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
+                  <span style={{fontSize:14,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
+                  <span style={{fontSize:14,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
                 </div>
               ))}
               {m.hat_portal_zugang&&(
-                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:13,color:GN,fontWeight:600}}>
+                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:14,color:GN,fontWeight:600}}>
                   ✓ Hat Portal-Zugang
                 </div>
               )}
@@ -633,12 +633,12 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           )}
           {(selectedMember?._tab||"info")==="eltern"&&(
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
-              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:13,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
+              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
               {eltern.map((e,i)=>(
                 <div key={i} className="cc-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px"}}>
                   <div style={{fontWeight:600,fontSize:14,color:"var(--text)",marginBottom:8}}>{e.vorname} {e.nachname}</div>
-                  {e.email&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
-                  {e.telefon&&<div style={{fontSize:13,color:"var(--sub)"}}>📞 {e.telefon}</div>}
+                  {e.email&&<div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
+                  {e.telefon&&<div style={{fontSize:14,color:"var(--sub)"}}>📞 {e.telefon}</div>}
                 </div>
               ))}
             </div>
@@ -682,7 +682,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
               style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
                 background:filterVals.length===0?BK:"var(--surface)",
                 color:filterVals.length===0?"#fff":"var(--sub)",
-                fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
+                fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
               Alle
             </button>
             {vals.map(v=>{
@@ -693,7 +693,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                     border:"1px solid "+(active?BK:"var(--border)"),
                     background:active?BK:"var(--surface)",
                     color:active?"#fff":"var(--sub)",
-                    fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s",
+                    fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s",
                     display:"flex",alignItems:"center",gap:8}}>
                   {active&&<span style={{fontSize:11}}>✓</span>}
                   {v}
@@ -721,7 +721,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
               {COLS.map(c=>(
                 <th key={c.key} onClick={()=>handleSort(c.key)}
                   style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",
-                    fontSize:13,textTransform:"uppercase",letterSpacing:0.4,cursor:"pointer",
+                    fontSize:14,textTransform:"uppercase",letterSpacing:0.4,cursor:"pointer",
                     userSelect:"none",whiteSpace:"nowrap"}}
                   onMouseEnter={e=>e.currentTarget.style.color="var(--text)"}
                   onMouseLeave={e=>e.currentTarget.style.color="var(--sub)"}>
@@ -736,7 +736,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 {groupBy!=="none"&&(
                   <tr key={"g-"+key}>
                     <td colSpan={6} style={{padding:"10px 13px 6px",background:"var(--surface2)",
-                      fontWeight:700,fontSize:13,color:"var(--sub)",textTransform:"uppercase",
+                      fontWeight:700,fontSize:14,color:"var(--sub)",textTransform:"uppercase",
                       letterSpacing:0.6,borderTop:"1px solid var(--border)"}}>
                       {key} <span style={{fontWeight:400,opacity:0.6}}>({members.length})</span>
                     </td>
@@ -767,7 +767,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           </tbody>
         </table>
         {filtered.length===0&&(
-          <div style={{padding:"32px",textAlign:"center",color:"var(--sub)",fontSize:13}}>
+          <div style={{padding:"32px",textAlign:"center",color:"var(--sub)",fontSize:14}}>
             Keine Mitglieder gefunden.
           </div>
         )}

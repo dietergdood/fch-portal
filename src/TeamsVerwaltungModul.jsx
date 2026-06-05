@@ -46,7 +46,7 @@ function PersonPicker({value,onChange,placeholder="Person suchen…",style={}}){
           background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,
           boxShadow:"0 4px 16px rgba(0,0,0,0.12)",overflow:"hidden"}}>
           {suggestions.map(m=>(
-            <Btn variant="ghost"><Av name={m.name} size={26}/> <div> <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>{m.name}</div> <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div> </div></Btn>
+            <Btn variant="ghost"><Av name={m.name} size={26}/> <div> <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{m.name}</div> <div style={{fontSize:11,color:"var(--sub)"}}>{m.role}{m.team&&m.team!=="-"?" · "+m.team:""}</div> </div></Btn>
           ))}
         </div>
       )}
@@ -381,7 +381,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
         <div>
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
-          <div style={{fontSize:13,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
+          <div style={{fontSize:14,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {/* View Toggle */}
@@ -413,7 +413,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
       <ModalOrSheet open={showSaison} onClose={()=>setShowSaison(false)} maxWidth={380}>
         <div style={{padding:"24px 20px"}}>
           <h2 style={{margin:"0 0 6px",fontSize:16,fontWeight:700,color:"var(--text)"}}>Saison wechseln</h2>
-          <p style={{margin:"0 0 18px",fontSize:13,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
+          <p style={{margin:"0 0 18px",fontSize:14,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
           <div style={{marginBottom:16}}>
             <label className="cc-label">Neue Saison</label>
             <input value={saisonDraft} onChange={e=>setSaisonDraft(e.target.value)}
@@ -424,7 +424,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             <Btn variant="primary" color={BTN} onClick={handleSaisonAlle} disabled={saving||!saisonDraft.trim()}>{saving?"Wird gesetzt…":"Für alle übernehmen"}</Btn>
             <Btn onClick={()=>setShowSaison(false)}>Abbrechen</Btn>
           </Row>
-          {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
+          {!sb&&<div style={{fontSize:14,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
         </div>
       </ModalOrSheet>
 
@@ -473,7 +473,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           {groupedTeams.map(({key,items})=>(
             <div key={key||"all"}>
               {groupBy!=="none"&&key&&(
-                <div style={{padding:"10px 4px 6px",fontWeight:700,fontSize:13,color:"var(--sub)",
+                <div style={{padding:"10px 4px 6px",fontWeight:700,fontSize:14,color:"var(--sub)",
                   textTransform:"uppercase",letterSpacing:0.7,marginTop:8,
                   borderBottom:"1px solid var(--border)",marginBottom:8}}>
                   {key} <span style={{fontWeight:400,opacity:0.6}}>({items.length})</span>
@@ -523,7 +523,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                         )}
                       </div>
                     </div>
-                    <div style={{fontSize:13,color:"var(--sub)",display:"flex",flexDirection:"column",gap:4}}>
+                    <div style={{fontSize:14,color:"var(--sub)",display:"flex",flexDirection:"column",gap:4}}>
                       <span>{sp.e1}{sp.e2?" · "+sp.e2:""}</span>
                       {team.liga&&<span>{team.liga}</span>}
                       <div style={{display:"flex",gap:12,marginTop:4}}>
@@ -545,7 +545,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                         {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
                         {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
                       </div>
-                      <div style={{fontSize:13,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+                      <div style={{fontSize:14,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
                         {sp.e1&&<span style={{fontWeight:600}}>{sp.e1}</span>}
                         {sp.e2&&<span>· {sp.e2}</span>}
                         {team.liga&&<span>· {team.liga}</span>}
@@ -585,7 +585,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             </div>
           ))}
           {sorted.length===0&&(
-            <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:13}}>
+            <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:14}}>
               Keine Teams gefunden.
             </div>
           )}
@@ -686,7 +686,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                 <button onClick={()=>setForm(p=>({...p,aktiv:!p.aktiv}))} className={"cc-toggle"+(form.aktiv?" cc-toggle-on":"")}>
                     <div className={"cc-toggle-knob"+(form.aktiv?" cc-toggle-knob-on":"")}/>
                   </button>
-                <span style={{fontSize:13,color:"var(--text)",fontWeight:600}}>{form.aktiv?"Aktiv":"Inaktiv"}</span>
+                <span style={{fontSize:14,color:"var(--text)",fontWeight:600}}>{form.aktiv?"Aktiv":"Inaktiv"}</span>
               </div>
             </div>
           </div>
@@ -727,7 +727,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           {/* Modul-Tab: nur bei bestehenden Teams */}
           {editTeam&&formTab==="module"&&(
             <div>
-              <div style={{fontSize:13,color:"var(--sub)",marginBottom:12}}>
+              <div style={{fontSize:14,color:"var(--sub)",marginBottom:12}}>
                 Module ein/ausschalten für dieses Team. Trainer sehen nur aktive Module.
               </div>
               {[
@@ -751,7 +751,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                     const cur=p.module_aktiv||editTeam.module_aktiv||[];
                     return{...p,module_aktiv:isActive?cur.filter(m=>m!==mod.key):[...cur,mod.key]};
                   })} className="cc-input">
-                    <span style={{fontSize:13,color:"var(--text)"}}>{mod.label}</span>
+                    <span style={{fontSize:14,color:"var(--text)"}}>{mod.label}</span>
                     <div style={{
                       width:36,height:20,borderRadius:10,transition:"background 0.2s",
                       background:isActive?BK:"var(--border)",position:"relative"
@@ -772,7 +772,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             <Btn variant="primary" color={BTN} onClick={handleSave} disabled={saving}>{saving?"Speichern…":editTeam?"Änderungen speichern":"Team erstellen"}</Btn>
             <Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn>
           </Row>
-          {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
+          {!sb&&<div style={{fontSize:14,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
         </div>
       </ModalOrSheet>
 
@@ -783,7 +783,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             <TI n="trash" size={22} style={{color:R}}/>
           </div>
           <div style={{fontWeight:700,fontSize:16,color:"var(--text)",marginBottom:8}}>Team löschen?</div>
-          <div style={{fontSize:13,color:"var(--sub)",marginBottom:20}}>
+          <div style={{fontSize:14,color:"var(--sub)",marginBottom:20}}>
             <strong style={{color:"var(--text)"}}>{deleteConfirm?.name}</strong> wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.
           </div>
           <Row gap={12} align="flex-start">
@@ -1079,7 +1079,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
         <div>
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
-          <div style={{fontSize:13,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
+          <div style={{fontSize:14,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {/* View Toggle */}
@@ -1104,7 +1104,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                 minWidth:180,overflow:"hidden"}}>
                 <button onClick={()=>{setSaisonDraft(teams[0]?.saison||"2025/26");setShowSaison(true);setOpenMenuId(null);}}
                   style={{width:"100%",padding:"11px 16px",border:"none",background:"none",cursor:"pointer",
-                    display:"flex",alignItems:"center",gap:12,fontFamily:FONT,fontSize:13,color:"var(--text)",textAlign:"left"}}
+                    display:"flex",alignItems:"center",gap:12,fontFamily:FONT,fontSize:14,color:"var(--text)",textAlign:"left"}}
                   onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                   onMouseLeave={e=>e.currentTarget.style.background="none"}>
                   <TI n="calendar" size={14} style={{color:"var(--sub)",flexShrink:0}}/>Saison wechseln
@@ -1112,7 +1112,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                 <div style={{height:1,background:"var(--border)",margin:"0 12px"}}/>
                 <button onClick={()=>{openNeu();setOpenMenuId(null);}}
                   style={{width:"100%",padding:"11px 16px",border:"none",background:"none",cursor:"pointer",
-                    display:"flex",alignItems:"center",gap:12,fontFamily:FONT,fontSize:13,color:"var(--text)",textAlign:"left",fontWeight:600}}
+                    display:"flex",alignItems:"center",gap:12,fontFamily:FONT,fontSize:14,color:"var(--text)",textAlign:"left",fontWeight:600}}
                   onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                   onMouseLeave={e=>e.currentTarget.style.background="none"}>
                   <TI n="edit" size={14} style={{color:"var(--sub)",flexShrink:0}}/>+ Neues Team
@@ -1127,7 +1127,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
       <ModalOrSheet open={showSaison} onClose={()=>setShowSaison(false)} maxWidth={380}>
         <div style={{padding:"24px 20px"}}>
           <h2 style={{margin:"0 0 6px",fontSize:16,fontWeight:700,color:"var(--text)"}}>Saison wechseln</h2>
-          <p style={{margin:"0 0 18px",fontSize:13,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
+          <p style={{margin:"0 0 18px",fontSize:14,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
           <div style={{marginBottom:16}}>
             <label className="cc-label">Neue Saison</label>
             <input value={saisonDraft} onChange={e=>setSaisonDraft(e.target.value)}
@@ -1146,7 +1146,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </button>
             <Btn onClick={()=>setShowSaison(false)}>Abbrechen</Btn>
           </div>
-          {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
+          {!sb&&<div style={{fontSize:14,color:"var(--sub)",textAlign:"center",marginTop:10}}>Demo: nur lokal.</div>}
         </div>
       </ModalOrSheet>
 
@@ -1166,7 +1166,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             {SORT_OPTS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
           </select>
           <button onClick={()=>setSortDir(d=>d==="asc"?"desc":"asc")}
-            style={{padding:"9px 11px",borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
+            style={{padding:"9px 11px",borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",fontSize:14,color:"var(--sub)",fontFamily:FONT,flexShrink:0}}>
             {sortDir==="asc"?"↑":"↓"}
           </button>
         </div>
@@ -1178,7 +1178,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
               background:filterVals.length===0?BK:"var(--surface)",
               color:filterVals.length===0?"#fff":"var(--sub)",
-              fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
+              fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
             Alle
           </button>
           {filterOptions.map(v=>{
@@ -1186,7 +1186,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             const c=KAT_COLORS[v]||(active?BK:"var(--sub)");
             return(
               <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
-                style={{padding:"4px 12px",borderRadius:20,fontFamily:FONT,fontSize:13,fontWeight:600,cursor:"pointer",
+                style={{padding:"4px 12px",borderRadius:20,fontFamily:FONT,fontSize:14,fontWeight:600,cursor:"pointer",
                   transition:"all 0.15s",display:"flex",alignItems:"center",gap:4,
                   border:"1px solid "+(active?c:"var(--border)"),
                   background:active?c+"18":"var(--surface)",
@@ -1216,7 +1216,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           {groupedTeams.map(({key,items})=>(
             <div key={key||"all"}>
               {groupBy!=="none"&&key&&(
-                <div style={{padding:"10px 4px 6px",fontWeight:700,fontSize:13,color:"var(--sub)",
+                <div style={{padding:"10px 4px 6px",fontWeight:700,fontSize:14,color:"var(--sub)",
                   textTransform:"uppercase",letterSpacing:0.7,marginTop:8,
                   borderBottom:"1px solid var(--border)",marginBottom:8}}>
                   {key} <span style={{fontWeight:400,opacity:0.6}}>({items.length})</span>
@@ -1262,7 +1262,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                               {icon:"edit", label:"Bearbeiten",color:"var(--text)", fn:()=>{openEdit(team);closeMenu();}},
                               {icon:"trash",label:"Löschen",   color:R,  fn:()=>{setDeleteConfirm(team);closeMenu();}},
                             ].map(a=>(
-                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"9px 14px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontFamily:FONT,fontSize:13,color:a.color,textAlign:"left"}}
+                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"9px 14px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontFamily:FONT,fontSize:14,color:a.color,textAlign:"left"}}
                                 onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                                 onMouseLeave={e=>e.currentTarget.style.background="none"}>
                                 <TI n={a.icon} size={13}/>{a.label}
@@ -1272,7 +1272,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                         )}
                       </div>
                     </div>
-                    <div style={{fontSize:13,color:"var(--sub)",display:"flex",flexDirection:"column",gap:4}}>
+                    <div style={{fontSize:14,color:"var(--sub)",display:"flex",flexDirection:"column",gap:4}}>
                       <span>{sp.e1}{sp.e2?" · "+sp.e2:""}</span>
                       {team.liga&&<span>{team.liga}</span>}
                       <div style={{display:"flex",gap:12,marginTop:4}}>
@@ -1294,7 +1294,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                         {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
                         {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
                       </div>
-                      <div style={{fontSize:13,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+                      <div style={{fontSize:14,color:"var(--sub)",marginTop:4,display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
                         {sp.e1&&<span style={{fontWeight:600}}>{sp.e1}</span>}
                         {sp.e2&&<span>· {sp.e2}</span>}
                         {team.liga&&<span>· {team.liga}</span>}
@@ -1315,7 +1315,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                               {icon:"edit", label:"Bearbeiten",color:"var(--text)", fn:()=>{openEdit(team);closeMenu();}},
                               {icon:"trash",label:"Löschen",   color:R,  fn:()=>{setDeleteConfirm(team);closeMenu();}},
                             ].map(a=>(
-                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"10px 16px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontFamily:FONT,fontSize:13,color:a.color,textAlign:"left"}}
+                              <button key={a.label} onClick={a.fn} style={{width:"100%",padding:"10px 16px",border:"none",background:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontFamily:FONT,fontSize:14,color:a.color,textAlign:"left"}}
                                 onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                                 onMouseLeave={e=>e.currentTarget.style.background="none"}>
                                 <TI n={a.icon} size={14}/>{a.label}
@@ -1346,7 +1346,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </div>
           ))}
           {sorted.length===0&&(
-            <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:13}}>
+            <div style={{textAlign:"center",padding:"40px 20px",color:"var(--sub)",fontSize:14}}>
               Keine Teams gefunden.
             </div>
           )}
@@ -1365,7 +1365,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
               {["info","module"].map(t=>(
                 <button key={t} onClick={()=>setFormTab(t)} style={{
                   padding:"8px 14px",borderRadius:8,border:"none",cursor:"pointer",fontFamily:FONT,
-                  fontSize:13,fontWeight:600,
+                  fontSize:14,fontWeight:600,
                   background:formTab===t?"var(--text)":"var(--surface2)",
                   color:formTab===t?"var(--surface)":"var(--sub)"
                 }}>{t==="info"?"Team-Info":"Module"}</button>
@@ -1454,7 +1454,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                 }}>
                   <div style={{position:"absolute",top:3,left:form.aktiv?21:3,width:18,height:18,borderRadius:"50%",background:form.aktiv?"#111":"#fff",boxShadow:"0 1px 3px rgba(0,0,0,0.2)",transition:"left 0.2s"}}/>
                 </button>
-                <span style={{fontSize:13,color:"var(--text)",fontWeight:600}}>{form.aktiv?"Aktiv":"Inaktiv"}</span>
+                <span style={{fontSize:14,color:"var(--text)",fontWeight:600}}>{form.aktiv?"Aktiv":"Inaktiv"}</span>
               </div>
             </div>
           </div>
@@ -1479,7 +1479,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                   </div>
                 ))}
                 <button onClick={()=>setForm(p=>({...p,[key]:[...(p[key]||[]),""]}))}
-                  style={{padding:"7px 14px",borderRadius:8,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:13,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
+                  style={{padding:"7px 14px",borderRadius:8,border:"1px dashed var(--border)",background:"none",cursor:"pointer",fontSize:14,color:"var(--sub)",fontFamily:FONT,textAlign:"left"}}>
                   + {label} hinzufügen
                 </button>
               </div>
@@ -1499,7 +1499,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           {/* Modul-Tab: nur bei bestehenden Teams */}
           {editTeam&&formTab==="module"&&(
             <div>
-              <div style={{fontSize:13,color:"var(--sub)",marginBottom:12}}>
+              <div style={{fontSize:14,color:"var(--sub)",marginBottom:12}}>
                 Module ein/ausschalten für dieses Team. Trainer sehen nur aktive Module.
               </div>
               {[
@@ -1523,7 +1523,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                     const cur=p.module_aktiv||editTeam.module_aktiv||[];
                     return{...p,module_aktiv:isActive?cur.filter(m=>m!==mod.key):[...cur,mod.key]};
                   })} className="cc-input">
-                    <span style={{fontSize:13,color:"var(--text)"}}>{mod.label}</span>
+                    <span style={{fontSize:14,color:"var(--text)"}}>{mod.label}</span>
                     <div style={{
                       width:36,height:20,borderRadius:10,transition:"background 0.2s",
                       background:isActive?BK:"var(--border)",position:"relative"
@@ -1552,7 +1552,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             </button>
             <Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn>
           </div>
-          {!sb&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
+          {!sb&&<div style={{fontSize:14,color:"var(--sub)",textAlign:"center"}}>Demo-Modus: Änderungen nicht persistent.</div>}
         </div>
       </ModalOrSheet>
 
@@ -1563,7 +1563,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             <TI n="trash" size={22} style={{color:R}}/>
           </div>
           <div style={{fontWeight:700,fontSize:16,color:"var(--text)",marginBottom:8}}>Team löschen?</div>
-          <div style={{fontSize:13,color:"var(--sub)",marginBottom:20}}>
+          <div style={{fontSize:14,color:"var(--sub)",marginBottom:20}}>
             <strong style={{color:"var(--text)"}}>{deleteConfirm?.name}</strong> wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.
           </div>
           <div style={{display:"flex",gap:12}}>

@@ -127,7 +127,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
     setTimeout(()=>setSaveMsg(""),2000);
   }
 
-  if(loading) return <div style={{padding:20,color:"var(--sub)",fontSize:13}}>Lade Team-Module…</div>;
+  if(loading) return <div style={{padding:20,color:"var(--sub)",fontSize:14}}>Lade Team-Module…</div>;
 
   const hauptbereiche=["alle",...[...new Set(teams.map(t=>t.hauptbereich).filter(Boolean))]];
   const filtered=filterHaupt==="alle"?teams:teams.filter(t=>t.hauptbereich===filterHaupt);
@@ -250,11 +250,11 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                     <tr key={t.id} style={{borderTop:"0.5px solid var(--border)"}}
                       onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                       onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                      <td style={{padding:"8px 16px",fontWeight:500,color:"var(--text)",position:"sticky",left:0,background:"var(--surface)",fontSize:13,zIndex:1}}>
+                      <td style={{padding:"8px 16px",fontWeight:500,color:"var(--text)",position:"sticky",left:0,background:"var(--surface)",fontSize:14,zIndex:1}}>
                         <Row>
                           <div style={{width:3,height:20,borderRadius:2,background:HB_COLORS[t.hauptbereich]||"var(--border)",flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.name}</div>
+                            <div style={{fontWeight:600,fontSize:14,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.name}</div>
                             {t.kurzname&&t.kurzname!==t.name&&<div style={{fontSize:10,color:"var(--sub)"}}>{t.kurzname}</div>}
                           </div>
                           <div onClick={()=>TEAM_MODS.forEach(m=>toggleTeamModul(t.id,m.key,!allAktiv))}
@@ -486,7 +486,7 @@ export const BORDER = '${t.borderWidth}';`;
         const SectionHdr=({icon, title, color='var(--sub)'})=>(
           <div style={{display:'flex',alignItems:'center',gap:8,padding:'10px 0 4px',borderBottom:'2px solid var(--border)',marginBottom:4}}>
             <TI n={icon} size={15} style={{color}}/>
-            <span style={{fontSize:13,fontWeight:800,color:'var(--text)',letterSpacing:-0.2}}>{title}</span>
+            <span style={{fontSize:14,fontWeight:800,color:'var(--text)',letterSpacing:-0.2}}>{title}</span>
           </div>
         );
 
@@ -1156,7 +1156,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
         <div>
           <H1>Portalverwaltung</H1>
-          <div style={{fontSize:13,color:"var(--sub)",marginTop:3}}>Module, Benutzer, API-Verbindungen und Einstellungen</div>
+          <div style={{fontSize:14,color:"var(--sub)",marginTop:3}}>Module, Benutzer, API-Verbindungen und Einstellungen</div>
         </div>
         {saveMsg&&<Chip text={saveMsg} color={saveMsg==="Ungespeichert"?R:GN} bg={saveMsg==="Ungespeichert"?RL:"#ECFDF5"}/>}
       </div>
@@ -1187,7 +1187,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <div style={{marginBottom:16}}>
             <button onClick={()=>setMobileKachel(null)}
               style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",
-                cursor:"pointer",color:"var(--sub)",fontSize:13,padding:"0 0 12px",fontFamily:"inherit"}}>
+                cursor:"pointer",color:"var(--sub)",fontSize:14,padding:"0 0 12px",fontFamily:"inherit"}}>
               <TI n="arrow-left" size={14}/>Übersicht
             </button>
             {kat.tabs.length>1&&(
@@ -1219,7 +1219,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   style={{display:"flex",alignItems:"center",gap:6,padding:"9px 16px",
                     background:isAktiv?k.bg:"none",border:"none",
                     borderBottom:isAktiv?"2px solid "+k.color:"2px solid transparent",
-                    cursor:"pointer",fontSize:13,fontWeight:isAktiv?700:400,
+                    cursor:"pointer",fontSize:14,fontWeight:isAktiv?700:400,
                     color:isAktiv?k.color:"var(--sub)",marginBottom:-1,fontFamily:"inherit",
                     borderRadius:"6px 6px 0 0",whiteSpace:"nowrap"}}>
                   <TI n={k.icon} size={15} style={{color:isAktiv?k.color:"var(--sub)"}}/>
@@ -1252,7 +1252,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
         </div>
       )}
 
-      {loading&&(!isMobile||mobileKachel!==null)&&<div style={{padding:40,textAlign:"center",color:"var(--sub)",fontSize:13}}>Wird geladen…</div>}
+      {loading&&(!isMobile||mobileKachel!==null)&&<div style={{padding:40,textAlign:"center",color:"var(--sub)",fontSize:14}}>Wird geladen…</div>}
 
       {/* ── TAB: MODULE & RECHTE ── */}
       {!loading&&(!isMobile||mobileKachel!==null)&&tab==="module"&&(
@@ -1354,7 +1354,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                                     <div style={{position:"absolute",top:2,width:11,height:11,borderRadius:"50%",background:"var(--surface)",transition:"left 0.15s",left:isAktiv||isPflicht?13:2}}/>
                                   </div>
                                   <TI n={m.icon} size={13} style={{color:isPflicht?"#B45309":"var(--sub)",flexShrink:0}}/>
-                                  <span style={{fontWeight:500,color:isPflicht?"#B45309":isExpanded?"var(--text)":"var(--text)",fontSize:13}}>{m.name||m.label}</span>
+                                  <span style={{fontWeight:500,color:isPflicht?"#B45309":isExpanded?"var(--text)":"var(--text)",fontSize:14}}>{m.name||m.label}</span>
                                   {isPflicht&&<span style={{fontSize:9,padding:"1px 5px",borderRadius:5,background:STATUS_BG.warn,color:"#B45309",fontWeight:600}}>Pflicht</span>}
                                   <TI n={isExpanded?"chevron-up":"chevron-down"} size={11} style={{color:"var(--sub)",marginLeft:"auto"}}/>
                                 </div>
@@ -1464,7 +1464,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                               <td style={{padding:"8px 14px"}}>
                                 <div style={{display:"flex",alignItems:"center",gap:7}}>
                                   <TI n={m.icon} size={13} style={{color:"var(--sub)"}}/>
-                                  <span style={{fontWeight:500,fontSize:13}}>{m.name||m.label}</span>
+                                  <span style={{fontWeight:500,fontSize:14}}>{m.name||m.label}</span>
                                 </div>
                               </td>
                               <td style={{padding:"8px 10px"}}>
@@ -1503,7 +1503,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     ]).map(g=>(
                       <div key={g.name} style={{display:"flex",alignItems:"center",gap:10,padding:"7px 10px",borderRadius:8,border:"0.5px solid var(--border)"}}>
                         <div style={{width:8,height:8,borderRadius:"50%",background:g.farbe,flexShrink:0}}/>
-                        <span style={{fontWeight:500,fontSize:13,flex:1}}>{g.name}</span>
+                        <span style={{fontWeight:500,fontSize:14,flex:1}}>{g.name}</span>
                         <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                           {(g.module||[]).map(mk=>{
                             const mod=ALLE_MODULE.find(m=>m.key===mk);
@@ -1529,7 +1529,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,marginBottom:20}}>
             <InfoBox text="Gruppen bündeln Module für Funktionäre. Funktionen schränken innerhalb einer Gruppe ein (Teams, Filter)." color={BL}/>
             <button onClick={()=>{setEditGruppe(null);setGruppeForm({name:"",beschreibung:"",module:[],farbe:"#8B5CF6",modul_stufen:{}});setShowGruppeForm(true);}}
-              style={{padding:"7px 16px",borderRadius:9,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FONT,flexShrink:0}}>
+              style={{padding:"7px 16px",borderRadius:9,border:"none",background:BTN,color:BTN_TXT,transition:"background 0.15s",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,flexShrink:0}}>
               + Neue Gruppe
             </button>
           </div>
@@ -1601,7 +1601,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     {/* Funktionen-Grid */}
                     <div style={{padding:"6px 12px 14px",display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:8}}>
                       {gFunktionen.length===0&&(
-                        <div style={{gridColumn:"1/-1",padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:13,border:"1px dashed var(--border)",borderRadius:10}}>
+                        <div style={{gridColumn:"1/-1",padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14,border:"1px dashed var(--border)",borderRadius:10}}>
                           Noch keine Funktionen — klicke «+ Funktion hinzufügen»
                         </div>
                       )}
@@ -1611,7 +1611,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                           border:"1px solid var(--border)",padding:"11px 13px"
                         }}>
                           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
-                            <span style={{fontWeight:600,fontSize:13,color:"var(--text)"}}>{f.name}</span>
+                            <span style={{fontWeight:600,fontSize:14,color:"var(--text)"}}>{f.name}</span>
                             <button onClick={()=>{setEditFunktion(f);setFunktionForm({name:f.name,beschreibung:f.beschreibung||"",gruppe_id:f.gruppe_id||g.id,module_override:f.module_override||[],teams:f.teams||[],filter:f.filter||{}});setShowFunktionForm(true);}}
                               style={{width:26,height:26,borderRadius:7,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--sub)",flexShrink:0}}>
                               <TI n="edit" size={12}/>
@@ -1664,7 +1664,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Gruppenname *</label>
                   <input value={gruppeForm.name} onChange={e=>setGruppeForm(p=>({...p,name:e.target.value}))}
                     placeholder="z.B. Vereinsleben & Events" autoFocus
-                    style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                    style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
                 </div>
                 <div>
                   <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Farbe</label>
@@ -1683,7 +1683,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Beschreibung</label>
                 <input value={gruppeForm.beschreibung||""} onChange={e=>setGruppeForm(p=>({...p,beschreibung:e.target.value}))}
                   placeholder="Wofür ist diese Gruppe?"
-                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
               {/* Module */}
               <div>
@@ -1754,7 +1754,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   setShowGruppeForm(false); setEditGruppe(null);
                   setSaveMsg(editGruppe?"Gruppe gespeichert":"Gruppe erstellt");
                   setTimeout(()=>setSaveMsg(""),2000);
-                }} style={{flex:1,padding:"10px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                }} style={{flex:1,padding:"10px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
                   {editGruppe?"Änderungen speichern":"Gruppe erstellen"}
                 </button>
                 <Btn onClick={()=>{setShowGruppeForm(false);setEditGruppe(null);}}>Abbrechen</Btn>
@@ -1782,14 +1782,14 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Name *</label>
                 <input value={funktionForm.name} onChange={e=>setFunktionForm(p=>({...p,name:e.target.value}))}
                   placeholder="z.B. Chef Anlässe" autoFocus
-                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
               {/* Beschreibung */}
               <div>
                 <label style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:5,display:"block"}}>Beschreibung</label>
                 <input value={funktionForm.beschreibung||""} onChange={e=>setFunktionForm(p=>({...p,beschreibung:e.target.value}))}
                   placeholder="Was macht diese Funktion?"
-                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:13,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
+                  style={{width:"100%",padding:"9px 12px",border:"1px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:FONT,background:"var(--surface2)",color:"var(--text)",boxSizing:"border-box",outline:"none"}}/>
               </div>
               {/* Module einschränken + Stufe überschreiben */}
               <div>
@@ -1866,7 +1866,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   setShowFunktionForm(false); setEditFunktion(null);
                   setSaveMsg(editFunktion?"Funktion gespeichert":"Funktion erstellt");
                   setTimeout(()=>setSaveMsg(""),2000);
-                }} style={{flex:1,padding:"10px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
+                }} style={{flex:1,padding:"10px",borderRadius:10,background:BTN,color:BTN_TXT,transition:"background 0.15s",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FONT}}>
                   {editFunktion?"Änderungen speichern":"Funktion erstellen"}
                 </button>
                 <Btn onClick={()=>{setShowFunktionForm(false);setEditFunktion(null);}}>Abbrechen</Btn>
@@ -1902,7 +1902,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {!loading&&(!isMobile||mobileKachel!==null)&&tab==="users"&&(
         <div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-            <div style={{fontSize:13,color:"var(--sub)"}}>{benutzerListe.length} Benutzer</div>
+            <div style={{fontSize:14,color:"var(--sub)"}}>{benutzerListe.length} Benutzer</div>
             <Btn variant="primary" onClick={()=>{}}>+ Benutzer einladen</Btn>
           </div>
           <Card style={{padding:0,overflowX:"auto"}}>
@@ -1918,7 +1918,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               </thead>
               <tbody>
                 {benutzerListe.length===0&&(
-                  <tr><td colSpan={5} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:13}}>Keine Benutzer gefunden</td></tr>
+                  <tr><td colSpan={5} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Keine Benutzer gefunden</td></tr>
                 )}
                 {benutzerListe.map((b,i)=>(
                   <tr key={b.id} style={{borderTop:"0.5px solid var(--border)"}}>
@@ -1991,7 +1991,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <tr style={{background:"var(--surface2)"}}>
                   <th className="cc-th">Feld</th>
                   {ROLLEN.map((r,i)=>(
-                    <th key={i} style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{ROLLEN_LABELS[r]}</th>
+                    <th key={i} style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{ROLLEN_LABELS[r]}</th>
                   ))}
                 </tr>
               </thead>
@@ -2006,7 +2006,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                         <td key={rolle} style={{padding:"9px 13px",textAlign:"center"}}>
                           <div onClick={isAdmin?undefined:()=>toggleFeld(key,rolle,!sichtbar)}
                             style={{width:20,height:20,borderRadius:4,background:sichtbar?GN:"#e5e7eb",cursor:isAdmin?"not-allowed":"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",border:`1px solid ${sichtbar?"#16a34a":"#d1d5db"}`}}>
-                            {sichtbar&&<TI n="check" style={{fontSize:13,color:"#fff"}}/>}
+                            {sichtbar&&<TI n="check" style={{fontSize:14,color:"#fff"}}/>}
                           </div>
                         </td>
                       );
@@ -2014,7 +2014,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </tr>
                 ))}
                 {Object.keys(felderNachKey).length===0&&(
-                  <tr><td colSpan={7} style={{padding:20,textAlign:"center",color:"var(--sub)",fontSize:13}}>
+                  <tr><td colSpan={7} style={{padding:20,textAlign:"center",color:"var(--sub)",fontSize:14}}>
                     Noch keine Felder konfiguriert — SQL-Schema importieren
                   </td></tr>
                 )}
@@ -2060,9 +2060,9 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             <div style={{display:"flex",alignItems:"center",gap:14}}>
               <TI n="building-community" size={18} style={{color:"var(--sub)",flexShrink:0}}/>
               <div style={{flex:1}}>
-                <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:4}}>Vereinsname</div>
+                <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginBottom:4}}>Vereinsname</div>
                 <input value={theme.vereinsname||""} onChange={e=>updateTheme("vereinsname",e.target.value)}
-                  style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",outline:"none",fontFamily:FONT}}/>
+                  style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:14,background:"var(--surface)",color:"var(--text)",outline:"none",fontFamily:FONT}}/>
                 <div style={{fontSize:11,color:"var(--sub)",marginTop:3}}>Wird unter dem Portal-Logo angezeigt</div>
               </div>
             </div>
@@ -2080,7 +2080,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 }
               </div>
               <div style={{flex:1}}>
-                <div style={{fontSize:13,fontWeight:500,color:"var(--text)",marginBottom:6}}>Logo hochladen</div>
+                <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginBottom:6}}>Logo hochladen</div>
                 <div style={{fontSize:11,color:"var(--sub)",marginBottom:10}}>SVG oder PNG, empfohlen mind. 200×200px</div>
                 <Row align="flex-start">
                   <label style={{
@@ -2129,7 +2129,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <input type="color" value={theme[item.key]||(item.key==="navAccent"||item.key==="avatarBg"?theme.vereinsfarbe1:item.key==="navAccentText"||item.key==="avatarText"?theme.vereinsfarbe2||"#000000":"#000000")||"#000000"} onChange={e=>updateTheme(item.key,e.target.value)}
                   style={{width:36,height:36,borderRadius:8,border:"0.5px solid var(--border)",padding:2,cursor:"pointer",background:"none"}}/>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{item.label}</div>
+                  <div style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{item.label}</div>
                   <div style={{fontSize:11,color:"var(--sub)",marginTop:1}}>{item.hint}</div>
                 </div>
                 <code style={{fontSize:11,color:"var(--sub)",background:"var(--surface2)",padding:"2px 7px",borderRadius:5}}>{theme[item.key]||(["navAccent","navAccentText","avatarBg","avatarText"].includes(item.key)?"auto":"")}</code>
@@ -2145,7 +2145,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
 
           {/* Speichern */}
           <div style={{display:"flex",gap:10,marginTop:16}}>
-            <Btn variant="primary" onClick={saveTheme} style={{padding:"9px 24px",fontSize:13,fontWeight:700}}>
+            <Btn variant="primary" onClick={saveTheme} style={{padding:"9px 24px",fontSize:14,fontWeight:700}}>
               Speichern & anwenden
             </Btn>
             <Btn onClick={()=>{
@@ -2184,19 +2184,19 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     </Row>
                     <Chip text={api.sync_status||"deaktiviert"} color={statusColor} bg={statusBg}/>
                   </div>
-                  <p style={{fontSize:13,color:"var(--sub)",margin:"0 0 10px",lineHeight:1.5}}>{info.description||"Externe API-Verbindung"}</p>
+                  <p style={{fontSize:14,color:"var(--sub)",margin:"0 0 10px",lineHeight:1.5}}>{info.description||"Externe API-Verbindung"}</p>
                   {info.felder&&(
                     <div style={{marginBottom:12}}>
-                      <div style={{fontSize:13,color:"var(--sub)",fontWeight:600,marginBottom:4}}>Synchronisierte Daten:</div>
+                      <div style={{fontSize:14,color:"var(--sub)",fontWeight:600,marginBottom:4}}>Synchronisierte Daten:</div>
                       {info.felder.map((f,i)=>(
-                        <div key={i} style={{display:"flex",alignItems:"center",gap:6,fontSize:13,color:"var(--sub)",padding:"2px 0"}}>
-                          <TI n="check" style={{fontSize:13,color:api.active?GN:"#ccc"}}/>{f}
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:6,fontSize:14,color:"var(--sub)",padding:"2px 0"}}>
+                          <TI n="check" style={{fontSize:14,color:api.active?GN:"#ccc"}}/>{f}
                         </div>
                       ))}
                     </div>
                   )}
                   {api.letzter_sync&&(
-                    <div style={{fontSize:13,color:"var(--sub)",marginBottom:10}}>
+                    <div style={{fontSize:14,color:"var(--sub)",marginBottom:10}}>
                       Letzter Sync: {new Date(api.letzter_sync).toLocaleString("de-CH")}
                     </div>
                   )}
@@ -2219,17 +2219,17 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Zeit","API / System","Status","Neu","Aktualisiert","Fehler","Details"].map((h,i)=>(
-                    <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                    <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {auditLogs.length===0&&(
-                  <tr><td colSpan={7} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:13}}>Noch keine Sync-Logs vorhanden</td></tr>
+                  <tr><td colSpan={7} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Noch keine Sync-Logs vorhanden</td></tr>
                 )}
                 {auditLogs.map((log,i)=>(
                   <tr key={log.id} style={{borderTop:"0.5px solid var(--border)",background:i%2===0?"var(--surface)":"var(--surface2)"}}>
-                    <td style={{padding:"9px 13px",color:"var(--sub)",whiteSpace:"nowrap",fontSize:13}}>
+                    <td style={{padding:"9px 13px",color:"var(--sub)",whiteSpace:"nowrap",fontSize:14}}>
                       {log.gestartet_am?new Date(log.gestartet_am).toLocaleString("de-CH",{dateStyle:"short",timeStyle:"short"}):"—"}
                     </td>
                     <td style={{padding:"9px 13px",fontWeight:600}}>{log.api_verbindungen?.label||"System"}</td>
@@ -2237,7 +2237,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     <td style={{padding:"9px 13px",color:GN,fontWeight:600}}>{log.datensaetze_neu||0}</td>
                     <td style={{padding:"9px 13px",color:BL,fontWeight:600}}>{log.datensaetze_aktualisiert||0}</td>
                     <td style={{padding:"9px 13px",color:log.datensaetze_fehler>0?R:"#aaa",fontWeight:600}}>{log.datensaetze_fehler||0}</td>
-                    <td style={{padding:"9px 13px",color:"var(--sub)",fontSize:13,maxWidth:200,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{log.meldung||"—"}</td>
+                    <td style={{padding:"9px 13px",color:"var(--sub)",fontSize:14,maxWidth:200,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{log.meldung||"—"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -2262,7 +2262,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               <div>
                 <div style={{marginBottom:16}}>
                   <div style={{fontSize:16,fontWeight:800,color:"var(--text)",letterSpacing:-0.3,marginBottom:4}}>{title}</div>
-                  {desc&&<div style={{fontSize:13,color:"var(--sub)"}}>{desc}</div>}
+                  {desc&&<div style={{fontSize:14,color:"var(--sub)"}}>{desc}</div>}
                 </div>
                 <Card style={{padding:20}}>
                   <div style={{display:"flex",flexDirection:"column",gap:16}}>{children}</div>
@@ -2297,7 +2297,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               return(
                 <div style={{display:"flex",alignItems:"flex-start",gap:16,padding:"14px 0",borderBottom:"0.5px solid var(--border)"}}>
                   <div style={{width:270,flexShrink:0}}>
-                    <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:4}}>{label}</div>
+                    <div style={{fontSize:14,fontWeight:700,color:"var(--text)",marginBottom:4}}>{label}</div>
                     {code&&<code style={{fontSize:11,color:"#7C3AED",background:"#F5F3FF",padding:"2px 8px",borderRadius:4,display:"inline-block",marginBottom:6}}>{""+code}</code>}
                     {cssDef&&(
                       <div style={{background:"#0f0f11",borderRadius:6,padding:"7px 10px",marginBottom:6,overflowX:"auto"}}>
@@ -2354,7 +2354,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     </div>
                   </Row2>
                   <Row2 label="Truncate" code=".cc-truncate" usage={["—"]}>
-                    <div className="cc-truncate" style={{maxWidth:200,fontSize:13,color:"var(--text)"}}>Sehr langer Text der abgeschnitten wird wenn er zu lang ist</div>
+                    <div className="cc-truncate" style={{maxWidth:200,fontSize:14,color:"var(--text)"}}>Sehr langer Text der abgeschnitten wird wenn er zu lang ist</div>
                   </Row2>
                   <Row2 label="Divider" code=".cc-divider" usage={["Nachrichten","Portalverwaltung"]}>
                     <div style={{width:200}}><div className="cc-divider"/></div>
@@ -2422,7 +2422,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </Row2>
                   <Row2 label="Ungelesen-Dot" code=".cc-unread-dot" usage={["Nachrichten"]}>
                     <div style={{position:"relative",display:"inline-block"}}>
-                      <div style={{width:34,height:34,borderRadius:10,background:"#E1F5EE",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:"#085041"}}>DG</div>
+                      <div style={{width:34,height:34,borderRadius:10,background:"#E1F5EE",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#085041"}}>DG</div>
                       <div className="cc-unread-dot" style={{background:BL}}/>
                     </div>
                   </Row2>
@@ -2432,7 +2432,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 <Section title="Karten & Layout" desc="Container-Komponenten">
                   <Row2 label="Card" code="<Card>" usage={["Mitglieder","TeamsVerwaltung","clubcampus"]}>
                     <Card style={{padding:"12px 16px",maxWidth:200}}>
-                      <div style={{fontSize:13,fontWeight:600}}>Karten-Inhalt</div>
+                      <div style={{fontSize:14,fontWeight:600}}>Karten-Inhalt</div>
                       <div style={{fontSize:12,color:"var(--sub)"}}>Beschreibung</div>
                     </Card>
                   </Row2>
@@ -2512,7 +2512,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     <div key={v.name} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:"0.5px solid var(--border)"}}>
                       <div style={{width:32,height:32,borderRadius:8,background:`var(${v.name})`,border:"0.5px solid var(--border)",flexShrink:0}}/>
                       <code style={{fontSize:12,color:"var(--text)",background:"var(--surface2)",padding:"3px 8px",borderRadius:6,width:160,flexShrink:0}}>{v.name}</code>
-                      <span style={{fontSize:13,color:"var(--sub)"}}>{v.desc}</span>
+                      <span style={{fontSize:14,color:"var(--sub)"}}>{v.desc}</span>
                     </div>
                   ))}
                 </Section>

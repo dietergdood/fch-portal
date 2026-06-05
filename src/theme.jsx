@@ -54,7 +54,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 
 /* ── Button Group ── */
 .cc-btn-group{display:flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--surface2)}
-.cc-btn-group-item{height:32px;min-width:32px;padding:0 10px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);transition:background 0.1s,color 0.1s;flex-shrink:0;font-size:13px}
+.cc-btn-group-item{height:32px;min-width:32px;padding:0 10px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);transition:background 0.1s,color 0.1s;flex-shrink:0;font-size:14px}
 .cc-btn-group-item:hover{background:var(--surface);color:var(--text)}
 .cc-btn-group-item:active{transform:scale(0.95)}
 .cc-btn-group-active{background:var(--text)!important;color:var(--bg)!important}
@@ -62,7 +62,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 
 /* ── Segment ── */
 .cc-seg{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px}
-.cc-seg-item{flex:1;padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:400;background:transparent;color:var(--sub);transition:all 0.1s;white-space:nowrap;font-family:inherit}
+.cc-seg-item{flex:1;padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-size:14px;font-weight:400;background:transparent;color:var(--sub);transition:all 0.1s;white-space:nowrap;font-family:inherit}
 .cc-seg-item:hover{color:var(--text)}
 .cc-seg-item:active{transform:scale(0.98)}
 .cc-seg-active{background:var(--surface)!important;color:var(--text)!important;font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
@@ -104,7 +104,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-hov-row:hover{background:var(--surface2)!important;cursor:pointer}
 
 /* ── Tabellen ── */
-.cc-table{width:100%;border-collapse:collapse;font-size:13px}
+.cc-table{width:100%;border-collapse:collapse;font-size:14px}
 .cc-th{padding:8px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--sub);border-bottom:1px solid var(--border);background:var(--bg);white-space:nowrap}
 .cc-th-center{text-align:center}
 .cc-td{padding:9px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
@@ -117,8 +117,8 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-list-row:last-child{border-bottom:none}
 .cc-list-row:hover{background:var(--cc-hover,rgba(255,191,0,0.19));cursor:pointer}
 .cc-list-name{font-weight:500;font-size:14px;color:var(--text);white-space:nowrap}
-.cc-detail-label{font-size:13px;color:var(--sub);min-width:120px;flex-shrink:0}
-.cc-empty{padding:32px;text-align:center;color:var(--sub);font-size:13px}
+.cc-detail-label{font-size:14px;color:var(--sub);min-width:120px;flex-shrink:0}
+.cc-empty{padding:32px;text-align:center;color:var(--sub);font-size:14px}
 .cc-table-wrap{background:var(--surface);border-radius:12px;overflow:hidden;overflow-x:auto}
 .cc-grid-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .cc-grid-stats-sm{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
@@ -144,13 +144,13 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 
 /* ── Page Title ── */
 .cc-page-title{font-size:21px;font-weight:700;color:var(--text);letter-spacing:-0.3px;margin-bottom:4px}
-.cc-page-sub{font-size:13px;color:var(--sub);margin-bottom:20px}
+.cc-page-sub{font-size:14px;color:var(--sub);margin-bottom:20px}
 
 /* ── Avatar ── */
 .cc-av{display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
 .cc-av-sm{width:24px;height:24px;border-radius:6px;font-size:9px}
 .cc-av-md{width:32px;height:32px;border-radius:8px;font-size:11px}
-.cc-av-lg{width:40px;height:40px;border-radius:10px;font-size:13px}
+.cc-av-lg{width:40px;height:40px;border-radius:10px;font-size:14px}
 
 @media(max-width:680px){
   .cc-grid-stats{grid-template-columns:repeat(2,1fr)!important}
@@ -247,7 +247,7 @@ function ModalOrSheet({open,onClose,children,maxWidth=660}){
 /* Vereinsname global lesbar (aus localStorage wenn kein appTheme prop) */
 
 function InfoBox({text,color=BL}){
-  return <div style={{padding:"10px 14px",background:color+"12",borderRadius:10,fontSize:13,color:"var(--text)",marginTop:14,borderLeft:`3px solid ${color}`,lineHeight:1.5,fontFamily:FONT}}>{text}</div>;
+  return <div style={{padding:"10px 14px",background:color+"12",borderRadius:10,fontSize:14,color:"var(--text)",marginTop:14,borderLeft:`3px solid ${color}`,lineHeight:1.5,fontFamily:FONT}}>{text}</div>;
 }
 
 /* ==========================================
@@ -378,7 +378,7 @@ function Tabs({tabs,active,setActive}){
           padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:6,
           background:active===t.key?"var(--surface)":"transparent",
           color:active===t.key?"var(--text)":"var(--sub)",
-          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:13,
+          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:14,
           boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
           whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
           display:"flex",alignItems:"center",gap:8,WebkitTapHighlightColor:"transparent"
@@ -429,10 +429,10 @@ function Between({children, gap=8, style={}, ...props}){
 
 /* ── Typografie-Komponenten ── */
 function Sub({children, style={}, mb=0}){
-  return <div style={{fontSize:13,color:"var(--sub)",marginBottom:mb||undefined,...style}}>{children}</div>;
+  return <div style={{fontSize:14,color:"var(--sub)",marginBottom:mb||undefined,...style}}>{children}</div>;
 }
 function Label({children, style={}}){
-  return <div style={{fontSize:13,fontWeight:600,color:"var(--sub)",...style}}>{children}</div>;
+  return <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",...style}}>{children}</div>;
 }
 function H1({children, style={}, mb=0}){
   return <h1 className="cc-h1" style={{margin:mb?`0 0 ${mb}px`:"0",...style}}>{children}</h1>;
@@ -451,13 +451,13 @@ function PageHeader({children, action=null, mb=18}){
 
 /* ── Form-Komponenten ── */
 function Input({style={}, ...props}){
-  return <input style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",...style}} {...props}/>;
+  return <input style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:14,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",...style}} {...props}/>;
 }
 function Select({children, style={}, ...props}){
-  return <select style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",...style}} {...props}>{children}</select>;
+  return <select style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:14,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",...style}} {...props}>{children}</select>;
 }
 function Textarea({style={}, ...props}){
-  return <textarea style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:13,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",resize:"vertical",...style}} {...props}/>;
+  return <textarea style={{width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:14,background:"var(--surface)",color:"var(--text)",fontFamily:"inherit",outline:"none",resize:"vertical",...style}} {...props}/>;
 }
 
 /* ── Feedback-Komponenten ── */
@@ -469,7 +469,7 @@ function Empty({icon="inbox", text="Keine Einträge", sub=null, style={}}){
     <div style={{textAlign:"center",padding:"32px 16px",color:"var(--sub)",...style}}>
       <TI n={icon} size={32} style={{opacity:0.3,marginBottom:8,display:"block"}}/>
       <div style={{fontSize:14,fontWeight:600,color:"var(--sub)"}}>{text}</div>
-      {sub&&<div style={{fontSize:13,color:"var(--sub)",marginTop:4,opacity:0.7}}>{sub}</div>}
+      {sub&&<div style={{fontSize:14,color:"var(--sub)",marginTop:4,opacity:0.7}}>{sub}</div>}
     </div>
   );
 }
