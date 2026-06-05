@@ -517,7 +517,13 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
         try{
           const {data:buArr2}=await sb.from("benutzer").select("id,email,role,active,name,created_at").eq("email",e.email).limit(1);
           const data=buArr2?.[0]||null;
-          if(data) setElternBenutzer(prev=>({...prev,[e.email]:data}));
+          // Auch via benutzer_id suchen falls E-Mail nicht übereinstimmt
+          if(data){ setElternBenutzer(prev=>({...prev,[e.email]:data})); }
+          else if(e.benutzer_id){
+            const {data:buArr3}=await sb.from("benutzer").select("id,email,role,active,name,created_at").eq("id",e.benutzer_id).limit(1);
+            const data3=buArr3?.[0]||null;
+            if(data3) setElternBenutzer(prev=>({...prev,[e.email]:data3}));
+          }
         }catch(_){}
       }
     })();
@@ -535,6 +541,8 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
       if(error) throw error;
       if(!bu.role||bu.role==="spieler") await sb.from("benutzer").update({role:"eltern"}).eq("id",bu.id);
       setElternBenutzer(prev=>({...prev,[e.email]:{...bu,role:"eltern"}}));
+      // Lokal benutzer_id setzen damit isLinked sofort stimmt
+      e.benutzer_id=bu.id;
       setLinkMsg(prev=>({...prev,[e.email]:{ok:true,text:"Erfolgreich verknüpft ✓"}}));
       if(onReload) onReload();
     }catch(err){ setLinkMsg(prev=>({...prev,[e.email]:{ok:false,text:err.message}})); }
@@ -546,6 +554,7 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
     setLinkLoading(prev=>({...prev,[e.email]:true}));
     try{
       await sb.from("elternkontakte").update({benutzer_id:null}).eq("mitglied_id",raw.id).eq("email",e.email);
+      e.benutzer_id=null;
       setElternBenutzer(prev=>{const n={...prev};delete n[e.email];return n;});
       setLinkMsg(prev=>({...prev,[e.email]:{ok:true,text:"Verknüpfung aufgehoben"}}));
     }catch(err){ setLinkMsg(prev=>({...prev,[e.email]:{ok:false,text:err.message}})); }
@@ -641,6 +650,7 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
           </div>
           {eltern.map((e,i)=>{
             const bu=elternBenutzer[e.email];
+            const isLinked=!!e.benutzer_id; // nur auf DB-Wert basieren
             const loading=linkLoading[e.email];
             const msg=linkMsg[e.email];
             return(
@@ -650,13 +660,16 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
                     <div className="cc-list-name">{e.vorname||e.name||""} {e.nachname||""}{e.beziehung?` (${e.beziehung})`:""}</div>
                     <div className="cc-detail-label">{e.email||"Keine E-Mail erfasst"}</div>
                   </div>
-                  <Chip text={bu?"Verknüpft":"Nicht verknüpft"} color={bu?GN:"#9CA3AF"} bg={bu?"#ECFDF5":"var(--surface2)"}/>
+                  <Chip text={isLinked?"Verknüpft":"Nicht verknüpft"} color={isLinked?GN:"#9CA3AF"} bg={isLinked?"#ECFDF5":"var(--surface2)"}/>
                 </div>
                 {bu&&(
                   <div style={{display:"flex",gap:16,fontSize:13,marginBottom:8}}>
                     <span><span className="cc-detail-label">Rolle: </span><strong>{bu.role||"-"}</strong></span>
                     <span><span className="cc-detail-label">Aktiv: </span><strong>{bu.active?"Ja":"Nein"}</strong></span>
                   </div>
+                )}
+                {!bu&&e.benutzer_id&&(
+                  <div style={{fontSize:13,color:"var(--sub)",marginBottom:8}}>✓ Verknüpft (Konto-Details werden geladen…)</div>
                 )}
                 {msg&&(
                   <div style={{padding:"6px 10px",borderRadius:6,background:msg.ok?"#ECFDF5":RL,color:msg.ok?GN:R,fontSize:13,marginBottom:8}}>
@@ -666,7 +679,7 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
                 {canEdit&&(
                   <div style={{display:"flex",flexDirection:"column",gap:8}}>
                     {/* E-Mail bearbeiten wenn kein Konto gefunden */}
-                    {!bu&&e.email&&(
+                    {!isLinked&&e.email&&(
                       emailEditing[e.email]?(
                         <div style={{display:"flex",gap:6}}>
                           <input
@@ -698,7 +711,7 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
                         </div>
                       )
                     )}
-                    {bu&&(
+                    {isLinked&&(
                       <button onClick={()=>unlinkEltern(e)} disabled={loading}
                         style={{padding:"8px 14px",borderRadius:8,border:`0.5px solid ${R}`,background:"var(--surface)",color:R,fontSize:13,cursor:"pointer"}}>
                         {loading?"…":"Verknüpfung aufheben"}
