@@ -360,7 +360,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
                   <Stat label="Tabellenrang"
                     value={myRow.rank+"."}
                     sub={tableData.length+" Teams · "+myRow.pts+" Punkte"}
-                    semantic="info"
+                    semantic="neutral"
                     style={{cursor:setTab?"pointer":"default"}}
                     onClick={setTab?()=>setTab("spielplan"):undefined}
                   />
@@ -435,7 +435,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
         })()}
       </Card>
       <Card style={{cursor:setTab?"pointer":"default"}} onClick={setTab?()=>{setAttFilter&&setAttFilter(["training","spiele"]);setTab("attendance");}:undefined}>
-        <STitle action={setTab&&<span style={{fontSize:14,color:BL,fontWeight:600}}>Alle anzeigen →</span>}>Spielplan &amp; Training</STitle>
+        <STitle action={setTab&&<span style={{fontSize:14,color:"var(--cc-accent)",fontWeight:600}}>Alle anzeigen →</span>}>Spielplan &amp; Training</STitle>
         {(()=>{
           const shown=spielplan.slice(0,4);
           return(<>
@@ -462,7 +462,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
         })()}
       </Card>
       <Card style={{cursor:setTab?"pointer":"default"}} onClick={setTab?()=>{setAttFilter&&setAttFilter(["team-event","vereinsanlass"]);setTab("attendance");}:undefined}>
-        <STitle action={setTab&&<span style={{fontSize:14,color:BL,fontWeight:600}}>Alle anzeigen →</span>}>Vereinsanlässe &amp; Team-Events</STitle>
+        <STitle action={setTab&&<span style={{fontSize:14,color:"var(--cc-accent)",fontWeight:600}}>Alle anzeigen →</span>}>Vereinsanlässe &amp; Team-Events</STitle>
         {termine.length===0&&<div className="cc-empty" style={{padding:"8px 0"}}>Keine anstehenden Anlässe.</div>}
         {termine.map((e,i)=>(
           <div key={e.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:i<termine.length-1?`0.5px solid ${GB}`:"none"}}>

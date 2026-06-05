@@ -380,6 +380,7 @@ function Tabs({tabs,active,setActive}){
           color:active===t.key?"var(--text)":"var(--sub)",
           fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:14,
           boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
+          borderBottom:active===t.key?"2px solid var(--cc-accent)":"2px solid transparent",
           whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
           display:"flex",alignItems:"center",gap:8,WebkitTapHighlightColor:"transparent"
         }}>
@@ -397,7 +398,7 @@ function Tabs({tabs,active,setActive}){
 function STitle({children,action,mb=14}){
   return(
     <div className="cc-stitle" style={{marginBottom:mb}}>
-      <h2 style={{margin:0,fontSize:14,fontWeight:700,letterSpacing:-0.2,color:"var(--text)"}}>{children}</h2>
+      <h2 style={{margin:0,fontSize:16,fontWeight:700,letterSpacing:-0.2,color:"var(--text)"}}>{children}</h2>
       {action}
     </div>
   );
