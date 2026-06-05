@@ -431,62 +431,9 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
             ));
           })()}
         </Card>
-        <Card>
-          <STitle>Offene Anwesenheitsmeldungen</STitle>
-          {(()=>{
-            const open=ATT_EVENTS.filter(e=>(e.team===team||e.team==="Alle")&&e.rsvp!==false&&parseD(e.date)>=today&&(!ATT_INITIAL[e.id]?.[myRosterId]?.status)).slice(0,3);
-            if(open.length===0) return <div style={{fontSize:13,color:GN,fontWeight:600}}>✓ Alle Termine beantwortet</div>;
-            return open.map((x,i)=>(
-              <div key={i} style={{padding:"8px 0",borderBottom:i<open.length-1?`0.5px solid ${GB}`:"none"}}>
-                <div style={{fontWeight:600,fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.type} · {x.date}</div>
-                <div style={{fontSize:13,color:"var(--sub)",marginBottom:4}}>Rückmeldung ausstehend</div>
-              </div>
-            ));
-          })()}
-        </Card>
-        <Card>
-          <STitle>Offene Abstimmungen</STitle>
-          {POLLS.filter(p=>!p.closed).map((p,i)=>(
-            <div key={i} style={{padding:"8px 0"}}>
-              <div style={{fontWeight:600,fontSize:13,marginBottom:5}}>{p.title}</div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                {p.options.map((opt,j)=>(
-                  <Btn small>{opt}</Btn>
-                ))}
-              </div>
-            </div>
-          ))}
-        </Card>
-        <Card>
-          <STitle>Meine Helfereinsätze</STitle>
-          {(()=>{
-            const geplant=meineSchichtenMitDatum.filter(s=>parseDate2(s.einsatzDate)>=today).length;
-            return(
-              <div style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",background:"var(--surface2)",borderRadius:10,marginBottom:14}}>
-                <Stat
-                  label="Geleistet / Soll"
-                  value={helferSoll>0?helferGeleistet+"/"+helferSoll:"-"}
-                  sub={geplant>0?geplant+" ausstehend":helferOffen===0&&helferSoll>0?"Alle erfüllt ✓":"Keine Einsätze"}
-                  semantic={helferOffen===0&&helferSoll>0?"success":helferSoll>0?"warning":"neutral"}
-                />
-              </div>
-            );
-          })()}
-          {meineSchichtenMitDatum.length===0&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:8}}>Keine Helfereinsätze zugeteilt.</div>}
-          {meineSchichtenMitDatum.filter(s=>parseDate2(s.einsatzDate)>=today).map((s,i)=>(
-            <div key={i} style={{padding:"9px 11px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",marginBottom:8}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
-                <div>
-                  <div style={{fontWeight:600,fontSize:13,color:"var(--text)",marginBottom:2}}>{s.label}</div>
-                  <div style={{fontSize:13,color:"var(--sub)"}}>{s.einsatzName||""}</div>
-                  <div style={{fontSize:13,color:"var(--sub)",marginTop:2}}>{""+s.einsatzDate+" · "+(s.location||"")}</div>
-                </div>
-                <span style={{fontSize:13,fontWeight:700,padding:"2px 8px",borderRadius:20,background:"var(--surface)",color:AM,border:`0.5px solid ${AM}`,flexShrink:0}}>Ausstehend</span>
-              </div>
-            </div>
-          ))}
-          <InfoBox text="Datenprüfung: Deine Stammdaten wurden zuletzt vor 7 Monaten geprüft. Bitte überprüfen." semantic="warning"/>
-        </Card>
+
+
+
       </div>
     </div>
   );
