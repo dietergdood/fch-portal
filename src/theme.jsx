@@ -50,6 +50,10 @@ const PWA_CSS=`
 .cc-input{width:100%;padding:9px 12px;border-radius:8px;border:0.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box;outline:none;transition:border-color 0.15s}
 .cc-input:focus{border-color:var(--text)}
 .cc-unread-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;border:2px solid var(--surface)}
+.cc-toggle{width:46px;height:26px;border-radius:13px;border:none;cursor:pointer;background:var(--border);position:relative;flex-shrink:0;transition:background 0.2s;padding:0;outline:none}
+.cc-toggle-on{background:#333}
+.cc-toggle-knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left 0.2s cubic-bezier(0.34,1.2,0.64,1);display:flex;align-items:center;justify-content:center}
+.cc-toggle-knob-on{left:23px;background:var(--cc-accent,#FFBF00)}
 .cc-flex-center{display:flex;align-items:center;justify-content:center}
 .cc-truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cc-divider{height:1px;background:var(--border);flex-shrink:0}
