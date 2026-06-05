@@ -509,7 +509,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const sp=getStufePath(team);
-            const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
+            const spielerCount=dbMitglieder.length>0?dbMitglieder.filter(m=>(m.teams||[]).includes(team.name)&&m.aktiv!==false).length:ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
             const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             const menuOpen=openMenuId===team.id;
             const openMenu=()=>setOpenMenuId(menuOpen?null:team.id);
@@ -1252,7 +1252,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const sp=getStufePath(team);
-            const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
+            const spielerCount=dbMitglieder.length>0?dbMitglieder.filter(m=>(m.teams||[]).includes(team.name)&&m.aktiv!==false).length:ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
             const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             const menuOpen=openMenuId===team.id;
             const openMenu=()=>setOpenMenuId(menuOpen?null:team.id);
