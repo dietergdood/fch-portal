@@ -38,7 +38,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 
 /* ── Base ── */
 .cc-page{animation:cc-in 0.15s ease-out}
-.cc-card{background:var(--surface)!important;border:none!important;box-shadow:0 1px 4px rgba(0,0,0,0.06)!important}
+.cc-card{background:var(--surface)!important;border:none!important;box-shadow:0 3px 10px rgba(0,0,0,0.16)!important}
 .cc-topbar{background:var(--bg)!important;border-color:var(--border)!important}
 .cc-main{background:var(--bg)!important}
 
@@ -311,7 +311,7 @@ function Btn({children,onClick,variant="outline",color=null,small,disabled=false
 }
 
 function Card({children,mb=0,mt=0,style={},onClick}){
-  return <div onClick={onClick} className="cc-card" style={{borderRadius:12,padding:"16px 20px",...style}}>{children}</div>;
+  return <div onClick={onClick} className="cc-card" style={{borderRadius:12,padding:"16px 20px",boxShadow:"0 1px 4px rgba(0,0,0,0.07)",marginBottom:mb,marginTop:mt,...style}}>{children}</div>;
 }
 
 function Chip({text,color,bg,semantic,size="sm"}){
