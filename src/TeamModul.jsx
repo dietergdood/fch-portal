@@ -502,7 +502,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
               "A-Junioren":         "Konditionstraining ab nächster Woche. Neue Taktikbesprechung Mi 28.05. nach Training. Auswärtsspiel Sa 31.05.",
             };
             const text=NEWS[myTeam]||"Keine aktuellen Teamnews.";
-            return <p style={{margin:0,color:"var(--sub)",lineHeight:1.65}}>{text}</p>;
+            return <p style={{margin:0,color:"var(--text)",lineHeight:1.65}}>{text}</p>;
           })()}
         </Card>
       )}
