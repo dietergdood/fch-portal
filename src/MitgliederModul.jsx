@@ -953,6 +953,8 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
     );
   };
 
+  if(selectedMember) return <MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>;
+
   return(
     <div>
       {/* Header */}
