@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile } from "./theme.jsx";
+import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile , avColor} from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
@@ -434,7 +434,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
       })()}
       {/* Tabelle */}
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {COLS.map(c=>(
@@ -715,7 +715,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
       })()}
       {/* Tabelle */}
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {COLS.map(c=>(

@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs, STitle , Between, Col, H1, Row} from "./theme.jsx";
+import { useIsMobile, InfoBox, Btn, Card, Chip, Av, Tabs, STitle , Between, Col, H1, Row, avColor} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, EVENTS, NEWS, POLLS, ROSTER, TABLES } from "./demoData.js";
 
 /* ── Hilfsfunktionen ── */
@@ -585,7 +585,7 @@ function StatsTab({team="Cc-Junioren"}){
   }).sort((a,b)=>b.tore-a.tore);
   if(stats.length===0) return <Card><div style={{textAlign:"center",color:"var(--sub)",padding:20}}>Keine Spielerstatistiken verfügbar.</div></Card>;
   return(
-    <Card style={{padding:0,overflowX:"auto"}}>      <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+    <Card style={{padding:0,overflowX:"auto"}}>      <table className="cc-table">
         <thead>
           <tr style={{background:"var(--surface2)"}}>
             {["Spieler","Spiele","Tore","Assists","Gelb","Rot"].map((h,i)=>(
@@ -640,10 +640,10 @@ function FieldVisView(){
       <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 8px"}}>Feldsichtbarkeit</h1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Konfigurierbar pro Rolle (Kap. 6.1)</p>
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
-              <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>Feld</th>
+              <th className="cc-th">Feld</th>
               {["Spieler","Eltern","Trainer","Funktionäre","Administration","Administrator"].map((h,i)=>(
                 <th key={i} style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
               ))}

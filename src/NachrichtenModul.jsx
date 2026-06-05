@@ -182,7 +182,7 @@ function NachrichtenModul({sb,role,account,dbTeams=[],gruppen=[],teamFilter=null
           )}
           {antworten.length>0&&(
             <div>
-              <div style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.8,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+              <div className="cc-section-hdr">
                 <div style={{flex:1,height:1,background:"var(--border)"}}/>
                 {antworten.length} {antworten.length===1?"Antwort":"Antworten"}
                 <div style={{flex:1,height:1,background:"var(--border)"}}/>

@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av, Col, Row, SectionLabel, Btn} from "./theme.jsx";
+import { useIsMobile, ModalOrSheet, Card, Chip , Stat, Av, Col, Row, SectionLabel, Btn, avColor} from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, GANTT, ROSTER, SCHEDULE, TABLES, TRAININGSPLAETZE_DEFAULT } from "./demoData.js";
 
 
@@ -903,7 +903,7 @@ function SpielplanModul({role,team,initialSelected}){
     <>
       {selected&&<SpielDetail spiel={selected} onClose={()=>setSelected(null)} canEdit={canEdit} motmAll={motmAll} setMotmAll={setMotmAll}/>}
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Datum","Zeit","Gegner","H/A","Ort","Wettbewerb","Resultat",""].map((h,i)=>(
@@ -942,7 +942,7 @@ function TableTab({team}){
     <div>
 
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["#","Mannschaft","Sp","S","U","N","Tore","+/-","Pts"].map((h,i)=>(

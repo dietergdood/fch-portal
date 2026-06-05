@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ACCENT, ACCENT2, ACCENT20, AM, BK, BL, BTN_COLOR as BTN, BTN_TXT, FONT, GB, GN, GR, R, RL, STATUS_BG, STATUS_CLR } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { Btn, Card, Chip, Col, H1, H2, InfoBox, Input, LOGO_B64, ModalOrSheet, ModalTitle, Row, STitle, SectionLabel, Select, Stat, Sub, Av, Tabs, Label, THEME_DEFAULT_STATIC, darkenHex, hexToRgba, useIsMobile } from "./theme.jsx";
+import { Btn, Card, Chip, Col, H1, H2, InfoBox, Input, LOGO_B64, ModalOrSheet, ModalTitle, Row, STitle, SectionLabel, Select, Stat, Sub, Av, Tabs, Label, THEME_DEFAULT_STATIC, darkenHex, hexToRgba, useIsMobile , avColor} from "./theme.jsx";
 import { FUNKTIONEN } from "./demoData.js";
 
 /* ── Geteilte Konstanten ── */
@@ -206,10 +206,10 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
       ):(
         /* ── DESKTOP: Tabelle ── */
         <Card style={{padding:0,overflowX:"auto"}}>
-          <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+          <table className="cc-table">
             <thead>
               <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
-                <th style={{padding:"10px 16px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4,minWidth:180,position:"sticky",left:0,background:"var(--surface2)",zIndex:2}}>
+                <th className="cc-th">
                   Team <span style={{fontWeight:400,opacity:0.6}}>({filtered.length})</span>
                 </th>
                 {TEAM_MODS.map(m=>(
@@ -1317,10 +1317,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           {moduleViewMode==="modul"&&(()=>{
             return(
               <Card style={{padding:0,overflowX:"auto"}}>
-                <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:700}}>
+                <table className="cc-table">
                   <thead>
                     <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
-                      <th style={{padding:"9px 14px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.5,minWidth:180,position:"sticky",left:0,background:"var(--surface2)",zIndex:2}}>Modul</th>
+                      <th className="cc-th">Modul</th>
                       {ROLLEN.map(r=>(
                         <th key={r} style={{textAlign:"center",padding:"9px 8px",fontWeight:700,
                           color:r==="administrator"?"var(--sub)":ROLES[r]?.color||"var(--sub)",
@@ -1446,12 +1446,12 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       <span style={{fontWeight:600,fontSize:14,color:roleInfo.color||"var(--text)"}}>{ROLLEN_LABELS[role]}</span>
                       <span style={{fontSize:11,color:"var(--sub)",marginLeft:4}}>{zugMods.length} Module</span>
                     </div>
-                    <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                    <table className="cc-table">
                       <thead>
                         <tr style={{background:"var(--surface2)"}}>
-                          <th style={{padding:"7px 14px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:10,textTransform:"uppercase",letterSpacing:0.5}}>Modul</th>
-                          <th style={{padding:"7px 10px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:10,textTransform:"uppercase",letterSpacing:0.5,width:90}}>Stufe</th>
-                          <th style={{padding:"7px 10px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:10,textTransform:"uppercase",letterSpacing:0.5}}>Kann</th>
+                          <th className="cc-th">Modul</th>
+                          <th className="cc-th">Stufe</th>
+                          <th className="cc-th">Kann</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1906,14 +1906,14 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             <Btn variant="primary" onClick={()=>{}}>+ Benutzer einladen</Btn>
           </div>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
-                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4}}>Name</th>
-                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4}}>E-Mail</th>
-                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4}}>Portal-Rolle</th>
-                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4}}>Funktionen</th>
-                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:11,textTransform:"uppercase",letterSpacing:0.4}}>Status</th>
+                  <th className="cc-th">Name</th>
+                  <th className="cc-th">E-Mail</th>
+                  <th className="cc-th">Portal-Rolle</th>
+                  <th className="cc-th">Funktionen</th>
+                  <th className="cc-th">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -1986,10 +1986,10 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <InfoBox text="Steuert welche Mitglieder-Felder pro Rolle sichtbar sind. Änderungen wirken sofort." color={BL}/>
           <div style={{height:12}}/>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:600}}>
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
-                  <th style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>Feld</th>
+                  <th className="cc-th">Feld</th>
                   {ROLLEN.map((r,i)=>(
                     <th key={i} style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:"var(--sub)",fontSize:13,textTransform:"uppercase",letterSpacing:0.4}}>{ROLLEN_LABELS[r]}</th>
                   ))}
@@ -2215,7 +2215,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {!loading&&(!isMobile||mobileKachel!==null)&&tab==="audit"&&(
         <div>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Zeit","API / System","Status","Neu","Aktualisiert","Fehler","Details"].map((h,i)=>(

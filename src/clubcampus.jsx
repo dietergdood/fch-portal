@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { FONT, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, BTN_HOV, ACCENT, ACCENT2, ACCENT20, ACCENT15, ACCENT12, GN, R, RL, BL, AM, BK, GR, GB } from "./constants.js";
 import { TI, TI_PATHS } from "./icons.jsx";
-import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle } from "./theme.jsx";
+import { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle , avColor} from "./theme.jsx";
 import { ROSTER, USER_ACCOUNTS, SCHEDULE, GANTT , MEMBERS, FUNKTIONEN} from "./demoData.js";
 import { SideNav, TopBar, MobileNav, RoleSwitcher, getNavForRole, getRole, NAV_BY_ROLE, ProfileModal, getVereinsnameStatic, maxStufe, getEffektiveStufeForFunktionaer, getModuleForFunktionaer } from "./NavigationModul.jsx";
 import { Dashboard, DashboardAdmin, DashboardAdministration, DashboardFunktionaer, DashboardTrainer, DashboardSpieler, DashboardEltern } from "./DashboardModul.jsx";
@@ -328,7 +328,7 @@ function LoginScreen({onLogin, sb, appTheme}){
                     </button>
                   </div>
                 </div>
-                {error&&<div style={{fontSize:13,color:"#DC2626",background:"#FEF2F2",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
+                {error&&<div style={{fontSize:13,color:"#DC2626",background:"var(--cc-danger-bg, #FEF2F2)",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                 <button type="submit" disabled={loading}
                   style={{width:"100%",padding:"11px",borderRadius:8,border:"none",background:ACCENT,color:"var(--text)",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",opacity:loading?0.7:1}}>
                   {loading?"Wird angemeldet…":"Anmelden"}
@@ -355,7 +355,7 @@ function LoginScreen({onLogin, sb, appTheme}){
                       style={{width:"100%",padding:"10px 12px",borderRadius:8,border:"1px solid "+GB,fontSize:14,outline:"none",boxSizing:"border-box"}}
                       placeholder="name@mail.ch"/>
                   </div>
-                  {error&&<div style={{fontSize:13,color:"#DC2626",background:"#FEF2F2",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
+                  {error&&<div style={{fontSize:13,color:"#DC2626",background:"var(--cc-danger-bg, #FEF2F2)",padding:"8px 12px",borderRadius:8,marginBottom:14}}>{error}</div>}
                   <button type="submit" disabled={loading}
                     style={{width:"100%",padding:"8px 14px",borderRadius:8,border:"none",background:ACCENT,color:"var(--text)",fontWeight:700,fontSize:14,cursor:"pointer"}}>
                     {loading?"Wird gesendet…":"Link senden"}

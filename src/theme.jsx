@@ -83,6 +83,43 @@ const PWA_CSS=`
 .cc-divider{height:1px;background:var(--border);flex-shrink:0}
 .cc-shimmer{background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);background-size:200% 100%;animation:cc-shimmer 1.4s ease-in-out infinite}
 .cc-hov-row:hover{background:var(--surface2)!important;cursor:pointer}
+
+/* ── Tabellen ── */
+.cc-table{width:100%;border-collapse:collapse;font-size:13px}
+.cc-th{padding:8px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--sub);border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap}
+.cc-th-center{text-align:center}
+.cc-td{padding:9px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
+.cc-tr:hover .cc-td{background:var(--surface2);cursor:pointer}
+.cc-tr:last-child .cc-td{border-bottom:none}
+
+/* ── Listen ── */
+.cc-list{border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
+.cc-list-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--border);transition:background 0.1s}
+.cc-list-row:last-child{border-bottom:none}
+.cc-list-row:hover{background:var(--surface2);cursor:pointer}
+
+/* ── Formulare ── */
+.cc-field{display:flex;flex-direction:column;gap:5px}
+.cc-input-error{border-color:#C8102E!important;box-shadow:0 0 0 3px rgba(200,16,46,0.1)!important}
+.cc-error-msg{font-size:11px;color:#C8102E;display:flex;align-items:center;gap:4px;margin-top:3px}
+
+/* ── Section Header ── */
+.cc-section-hdr{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--sub);padding-bottom:6px;border-bottom:0.5px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* ── Modal Layout ── */
+.cc-modal-hdr{padding:16px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cc-modal-body{padding:16px 20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1}
+.cc-modal-ftr{padding:12px 20px;border-top:0.5px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+
+/* ── Page Title ── */
+.cc-page-title{font-size:21px;font-weight:700;color:var(--text);letter-spacing:-0.3px;margin-bottom:4px}
+.cc-page-sub{font-size:13px;color:var(--sub);margin-bottom:20px}
+
+/* ── Avatar ── */
+.cc-av{display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.cc-av-sm{width:24px;height:24px;border-radius:6px;font-size:9px}
+.cc-av-md{width:32px;height:32px;border-radius:8px;font-size:11px}
+.cc-av-lg{width:40px;height:40px;border-radius:10px;font-size:13px}
 `;
 /* localStorage polyfill voor window.storage */
 
@@ -264,15 +301,33 @@ function Stat({label,value,sub,color,semantic,icon}){
   );
 }
 
-function Av({name="",init,size=34,bg="var(--surface2)",useTheme=false}){
-  const themeAvatarBg=bg===ACCENT?"var(--avatar-bg)":bg;
-  const textColor=bg===ACCENT?"var(--avatar-text)":bg==="rgba(255,255,255,0.3)"?ACCENT2:bg===ACCENT20||bg==="var(--surface2)"||bg==="var(--border)"||bg==="#e5e5e5"?"var(--sub)":"#fff";
-  // init kann ein Icon-Name sein (z.B. "settings") oder Initialen
+/* Konsistente Farben aus Name-Hash */
+const AV_PALETTES=[
+  {bg:"#E6F1FB",text:"#0C447C"},{bg:"#EEEDFE",text:"#3C3489"},
+  {bg:"#E1F5EE",text:"#085041"},{bg:"#FAEEDA",text:"#633806"},
+  {bg:"#EAF3DE",text:"#27500A"},{bg:"#FCEBEB",text:"#791F1F"},
+  {bg:"#FEF3C7",text:"#92400E"},{bg:"#F0F4FF",text:"#3730A3"},
+];
+export function avColor(name){
+  const i=Math.abs((name||"").split("").reduce((a,c)=>a+c.charCodeAt(0),0))%AV_PALETTES.length;
+  return AV_PALETTES[i];
+}
+
+function Av({name="",init,size="md",bg,useTheme=false}){
+  /* size: "sm"=24, "md"=32, "lg"=40 — oder direkte Zahl für Rückwärtskompatibilität */
+  const px = typeof size==="number" ? size : {sm:24,md:32,lg:40}[size]||32;
+  const r = Math.round(px/4);
+  const palette = bg ? {bg,text:"#fff"} : avColor(name);
   const isIcon = init && TI_PATHS[init];
-  const l = isIcon ? null : (init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase());
-  return <div style={{width:size,height:size,borderRadius:"50%",background:themeAvatarBg,display:"flex",alignItems:"center",justifyContent:"center",color:textColor,fontWeight:700,fontSize:size*0.35,flexShrink:0}}>
-    {isIcon ? <TI n={init} size={size*0.55} style={{color:textColor}}/> : l}
-  </div>;
+  const l = isIcon ? null : (init||name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase()||"?");
+  const fs = px<=24?9:px<=32?11:13;
+  return(
+    <div style={{width:px,height:px,borderRadius:r,background:palette.bg,
+      display:"flex",alignItems:"center",justifyContent:"center",
+      color:palette.text,fontWeight:600,fontSize:fs,flexShrink:0,userSelect:"none"}}>
+      {isIcon ? <TI n={init} size={px*0.5} style={{color:palette.text}}/> : l}
+    </div>
+  );
 }
 
 

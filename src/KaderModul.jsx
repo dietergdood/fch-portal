@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT20, GN, R, BL, BK, GB } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { useIsMobile, Card, Chip, Av, Row, Between, Col, SectionLabel, Btn, Input } from "./theme.jsx";
+import { useIsMobile, Card, Chip, Av, Row, Between, Col, SectionLabel, Btn, Input , avColor} from "./theme.jsx";
 import { ROSTER } from "./demoData.js";
 
 const FIELD_VIS = {
@@ -60,7 +60,7 @@ function GruppenHeader({label, count, colSpan}){
     <tr>
       <td colSpan={colSpan} style={{padding:"6px 14px",background:"var(--surface2)",borderTop:"0.5px solid var(--border)"}}>
         <Row gap={6}>
-          <span style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.6}}>{label}</span>
+          <span className="cc-section-hdr">{label}</span>
           <span style={{fontSize:11,color:"var(--sub)",fontWeight:400,opacity:0.7}}>({count})</span>
         </Row>
       </td>
@@ -418,7 +418,7 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
         /* Desktop Tabelle */
         <div style={{background:"var(--surface)",borderRadius:12,
           border:"0.5px solid var(--border)",overflow:"hidden",overflowX:"auto"}}>
-          <table style={{width:"100%",borderCollapse:"collapse",fontSize:13,minWidth:500}}>
+          <table className="cc-table">
             <thead>
               <tr style={{background:"var(--surface2)"}}>
                 {cols.map((c,i)=>{

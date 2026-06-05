@@ -72,7 +72,7 @@ function MaterialView(){
         </Card>
       )}
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Team","Art","Material","von","Datum","Status"].map((h,i)=>(
@@ -270,7 +270,7 @@ function AttendanceCentral(){
         <Stat label="Teams total" value="8"   color={BK}/>
       </div>
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Team","Ø Total","Ø Training","Ø Spiele","Spieler"].map((h,i)=>(
@@ -404,7 +404,7 @@ function DataCheckView(){
         <Stat label="Sync-Fehler"    value="5"  color="#888"/>
       </div>
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+        <table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Mitglied","Problem","Zuletzt geprüft","Aktion"].map((h,i)=>(

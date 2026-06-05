@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, ACCENT2, ACCENT20, GN, R, RL, BL, AM, BK, GR, GB } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { Av, Between, Btn, Card, Chip, Col, H1, InfoBox, Input, Row, Stat, useIsMobile } from "./theme.jsx";
+import { Av, Between, Btn, Card, Chip, Col, H1, InfoBox, Input, Row, Stat, useIsMobile , avColor} from "./theme.jsx";
 import { HELPER_GRUPPEN, HELPER_EVENTS, HELPERS } from "./demoData.js";
 
 /* ── Hilfsfunktionen ── */
@@ -29,7 +29,7 @@ function getHelperName(role,account){
 }
 
 /* Alle möglichen Übergabe-Empfänger (alle Helfer ausser dem aktuellen) */
-const ALLE_HELFER_NAMEN = HELPERS.map(h=>h.name);
+const ALLE_HELFER_NAMEN = (HELPERS||[]).map(h=>h.name);
 
 function BemerkungEdit({notes,onSave}){
   const [editing,setEditing]=useState(false);
@@ -1117,7 +1117,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
           </div>
 
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Mitglied","Gruppe","Soll","Geleistet","Geplant","Offen","Status",""].map((h,i)=>(
@@ -1972,7 +1972,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
           </div>
 
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Mitglied","Gruppe","Soll","Geleistet","Geplant","Offen","Status",""].map((h,i)=>(
