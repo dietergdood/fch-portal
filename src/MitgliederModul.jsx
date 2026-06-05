@@ -242,6 +242,35 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
   const [filterVals,setFilterVals]=useState([]);
   const [selectedMember,setSelectedMember]=useState(null);
   const canExport=role==="administrator"||role==="administration";
+  const canEdit=role==="administrator"||role==="administration";
+  const [showNewForm,setShowNewForm]=useState(false);
+  const [newForm,setNewForm]=useState({});
+  const [newSaving,setNewSaving]=useState(false);
+  const [newMsg,setNewMsg]=useState(null);
+
+  async function handleNewMember(){
+    if(!sb||!newForm.vorname||!newForm.nachname) return;
+    setNewSaving(true); setNewMsg(null);
+    try{
+      const {data,error}=await sb.from("mitglieder").insert({
+        vorname:newForm.vorname,
+        nachname:newForm.nachname,
+        email:newForm.email||null,
+        telefon:newForm.telefon||null,
+        geburtsdatum:newForm.geburtsdatum||null,
+        geschlecht:newForm.geschlecht||null,
+        mitgliedtyp:newForm.mitgliedtyp||"Spieler",
+        funktion:newForm.funktion||"Spieler",
+        teams:newForm.teams?[newForm.teams]:[],
+        aktiv:true,
+        datenstatus:"Unvollständig",
+      }).select("id").single();
+      if(error) throw error;
+      setNewMsg({ok:true,text:"Mitglied erfolgreich angelegt ✓"});
+      setTimeout(()=>{setShowNewForm(false);setNewForm({});setNewMsg(null);if(onReload)onReload();},1500);
+    }catch(e){ setNewMsg({ok:false,text:e.message}); }
+    setNewSaving(false);
+  }
 
   /* Mitglieder: aus Supabase wenn geladen, sonst MEMBERS Fallback */
   const allMembers=dbMitglieder.length>0
@@ -1207,8 +1236,76 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
       {/* Header */}
       <div className="cc-flex-center" style={{justifyContent:"space-between",alignItems:"flex-start",marginBottom:18,flexWrap:"wrap",gap:12}}>
         <h1>Mitglieder</h1>
-        {canExport&&<div style={{display:"flex",gap:8}}><Btn>Export CSV</Btn><Btn>Export Excel</Btn></div>}
+        <div style={{display:"flex",gap:8}}>
+          {canEdit&&<Btn onClick={()=>{setShowNewForm(true);setNewForm({});setNewMsg(null);}} style={{background:BTN,color:BTN_TXT,border:"none",fontWeight:600}}><TI n="plus"/> Mitglied hinzufügen</Btn>}
+          {canExport&&<><Btn>Export CSV</Btn><Btn>Export Excel</Btn></>}
+        </div>
       </div>
+
+      {/* Neues Mitglied Formular */}
+      {showNewForm&&(
+        <Card style={{marginBottom:20}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <div style={{fontWeight:700,fontSize:15}}>Neues Mitglied anlegen</div>
+            <button onClick={()=>setShowNewForm(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"var(--sub)"}}>×</button>
+          </div>
+          <div className="cc-grid-form" style={{gap:10,marginBottom:12}}>
+            <div>
+              <label className="cc-label">Vorname <span style={{color:R}}>*</span></label>
+              <input className="cc-input" value={newForm.vorname||""} onChange={e=>setNewForm(f=>({...f,vorname:e.target.value}))} placeholder="Vorname"/>
+            </div>
+            <div>
+              <label className="cc-label">Nachname <span style={{color:R}}>*</span></label>
+              <input className="cc-input" value={newForm.nachname||""} onChange={e=>setNewForm(f=>({...f,nachname:e.target.value}))} placeholder="Nachname"/>
+            </div>
+            <div>
+              <label className="cc-label">E-Mail</label>
+              <input className="cc-input" type="email" value={newForm.email||""} onChange={e=>setNewForm(f=>({...f,email:e.target.value}))} placeholder="email@mail.ch"/>
+            </div>
+            <div>
+              <label className="cc-label">Telefon</label>
+              <input className="cc-input" type="tel" value={newForm.telefon||""} onChange={e=>setNewForm(f=>({...f,telefon:e.target.value}))} placeholder="+41 79 000 00 00"/>
+            </div>
+            <div>
+              <label className="cc-label">Geburtsdatum</label>
+              <input className="cc-input" type="date" value={newForm.geburtsdatum||""} onChange={e=>setNewForm(f=>({...f,geburtsdatum:e.target.value}))}/>
+            </div>
+            <div>
+              <label className="cc-label">Geschlecht</label>
+              <select className="cc-input" value={newForm.geschlecht||""} onChange={e=>setNewForm(f=>({...f,geschlecht:e.target.value}))}>
+                <option value="">– wählen –</option>
+                <option value="m">Männlich</option>
+                <option value="w">Weiblich</option>
+              </select>
+            </div>
+            <div>
+              <label className="cc-label">Mitgliedtyp</label>
+              <select className="cc-input" value={newForm.mitgliedtyp||"Spieler"} onChange={e=>setNewForm(f=>({...f,mitgliedtyp:e.target.value}))}>
+                {["Spieler","Trainer","Funktionär","Passivmitglied","Ehrenmitglied","Gönner"].map(t=><option key={t}>{t}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="cc-label">Funktion</label>
+              <input className="cc-input" value={newForm.funktion||""} onChange={e=>setNewForm(f=>({...f,funktion:e.target.value}))} placeholder="z.B. Spieler, Trainer"/>
+            </div>
+            <div style={{gridColumn:"1/-1"}}>
+              <label className="cc-label">Team</label>
+              <select className="cc-input" value={newForm.teams||""} onChange={e=>setNewForm(f=>({...f,teams:e.target.value}))}>
+                <option value="">– kein Team –</option>
+                {[...new Set(allMembers.flatMap(m=>m.team?m.team.split(", "):[])||[])].sort().map(t=><option key={t}>{t}</option>)}
+              </select>
+            </div>
+          </div>
+          {newMsg&&<div style={{padding:"8px 12px",borderRadius:8,background:newMsg.ok?"#ECFDF5":"#FEF2F2",color:newMsg.ok?GN:R,fontSize:13,marginBottom:12}}>{newMsg.text}</div>}
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>setShowNewForm(false)} style={{padding:"9px 18px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:14,cursor:"pointer"}}>Abbrechen</button>
+            <button onClick={handleNewMember} disabled={newSaving||!newForm.vorname||!newForm.nachname}
+              style={{flex:1,padding:"9px",borderRadius:8,border:"none",background:BTN,color:BTN_TXT,fontSize:14,fontWeight:600,cursor:"pointer",opacity:(!newForm.vorname||!newForm.nachname)?0.5:1}}>
+              {newSaving?"Speichert…":"Mitglied anlegen"}
+            </button>
+          </div>
+        </Card>
+      )}
       {/* Stats */}
       <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Total" value={allMembers.length} color={BL}/>
