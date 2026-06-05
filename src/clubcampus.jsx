@@ -821,8 +821,8 @@ function Portal({supabaseClient}){
   async function loadDbMitglieder(){
     if(!sb) return;
     try{
-      const{data}=await sb.from("mitglieder").select("*").eq("aktiv",true).order("nachname").order("vorname");
-      if(data&&data.length>0) setDbMitglieder(data);
+      const{data}=await sb.from("mitglieder").select("*, elternkontakte(id,vorname,nachname,email,telefon,beziehung,benutzer_id)").eq("aktiv",true).order("nachname").order("vorname");
+      if(data&&data.length>0) setDbMitglieder(data.map(m=>({...m, eltern:m.elternkontakte||[]})));
     }catch(e){ console.warn("[FCH] loadDbMitglieder:", e.message); }
   }
 

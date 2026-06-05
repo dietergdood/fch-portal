@@ -556,8 +556,20 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
     if(!sb||!canEdit||!neueEmail.trim()) return;
     setLinkLoading(prev=>({...prev,[e.email]:true}));
     try{
-      // E-Mail in elternkontakte aktualisieren
-      console.log("[FCH] updateElternEmail:", e.email, "→", neueEmail.trim(), "mitglied_id:", raw.id);
+      console.log("[FCH] updateElternEmail:", {
+        alteEmail: e.email,
+        neueEmail: neueEmail.trim(),
+        mitglied_id: raw.id,
+        typ: typeof raw.id,
+        canEdit,
+        sbOk: !!sb,
+      });
+      const {data:checkData, error:checkErr} = await sb.from("elternkontakte")
+        .select("id,email,mitglied_id")
+        .eq("mitglied_id", raw.id)
+        .limit(5);
+      console.log("[FCH] elternkontakte check:", checkData, checkErr);
+
       const {error}=await sb.from("elternkontakte")
         .update({email:neueEmail.trim()})
         .eq("mitglied_id",raw.id)
