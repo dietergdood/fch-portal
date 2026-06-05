@@ -26,7 +26,7 @@ function DashboardAdmin({setActive,account}){
   const vorname=(account?.name||"Administrator").split(" ")[0];
   return(
     <div>
-      <H1 style={{fontSize:24}} mb={4}>Hallo, {vorname}</H1>
+      <H1 mb={4}>Hallo, {vorname}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px",fontWeight:400}}>ClubCampus – Systemübersicht</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12,marginBottom:24}}>
         <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" semantic="primary" icon="users"/>
@@ -99,7 +99,7 @@ function DashboardAdministration({setActive,account}){
   const isMobile=useIsMobile();
   return(
     <div>
-      <H1 style={{fontSize:24}} mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
+      <H1 mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Administration · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -164,7 +164,7 @@ function DashboardFunktionaer({setActive,account}){
   const isMobile=useIsMobile();
   return(
     <div>
-      <H1 style={{fontSize:24}} mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
+      <H1 mb={4}>Hallo, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 24px"}}>ClubCampus – Übersicht</p>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Funktionär / Vorstand · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
@@ -251,7 +251,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
 
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px",color:"var(--text)",letterSpacing:-0.5}}>Guten Morgen, {firstName}</h1>
+      <H1 mb={6}>Guten Morgen, {firstName}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Trainer · {trainerTeams.join(" & ")} · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} semantic="success"/>
@@ -391,7 +391,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
 
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px",color:"var(--text)",letterSpacing:-0.5}}>Hallo, {firstName}</h1>
+      <H1 mb={6}>Hallo, {firstName}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Spieler · {team} · Freitag, 23. Mai 2026</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,160px),1fr))",gap:12,marginBottom:20}}>
         <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={pastEvs.length?zuCount+"/"+pastEvs.length+" Trainings":"Noch keine vergangenen"} color={attColor}/>
@@ -463,13 +463,12 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
             const geplant=meineSchichtenMitDatum.filter(s=>parseDate2(s.einsatzDate)>=today).length;
             return(
               <div style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",background:"var(--surface2)",borderRadius:10,marginBottom:14}}>
-                <div style={{fontSize:24,fontWeight:800,color:helferOffen===0&&helferSoll>0?GN:helferSoll>0?AM:"#aaa",lineHeight:1}}>
-                  {helferSoll>0?helferGeleistet+"/"+helferSoll:"-"}
-                </div>
-                <div>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--text)"}}>Geleistet / Soll</div>
-                  <div style={{fontSize:13,color:"var(--sub)"}}>{geplant>0?geplant+" ausstehend":helferOffen===0&&helferSoll>0?"Alle erfüllt ✓":"Keine Einsätze"}</div>
-                </div>
+                <Stat
+                  label="Geleistet / Soll"
+                  value={helferSoll>0?helferGeleistet+"/"+helferSoll:"-"}
+                  sub={geplant>0?geplant+" ausstehend":helferOffen===0&&helferSoll>0?"Alle erfüllt ✓":"Keine Einsätze"}
+                  semantic={helferOffen===0&&helferSoll>0?"success":helferSoll>0?"warning":"neutral"}
+                />
               </div>
             );
           })()}
@@ -509,7 +508,7 @@ function DashboardEltern({account,meineTeams,setActive}){
 
   return(
     <div>
-      <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 6px",color:"var(--text)",letterSpacing:-0.5}}>Hallo, {parentName}</h1>
+      <H1 mb={6}>Hallo, {parentName}</H1>
       <p style={{color:"var(--sub)",fontSize:13,margin:"0 0 18px"}}>Elternteil · {kinder.map(k=>k.name.split(" ")[0]).join(" & ")} · Freitag, 23. Mai 2026</p>
 
       {kinder.map((kind,ki)=>{
