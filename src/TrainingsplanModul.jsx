@@ -463,7 +463,8 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
   const isMobile = useIsMobile();
   const canEdit = role==="administrator"||role==="administration";
 
-  const [plaene, setPlaene] = useState(INITIAL_PLAENE);
+  const [plaene, setPlaene] = useState([]);  // Leer starten — erst nach useEffect befüllen
+  const [plaeneGeladen, setPlaeneGeladen] = useState(false);
   const [aktiverPlan, setAktiverPlan] = useState("plan_1");
   const [vorschauPlan, setVorschauPlan] = useState(null); // null = aktiver Plan, sonst Plan-ID
   const [teamFilter, setTeamFilter] = useState(teamProp||"alle");
@@ -524,6 +525,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             // Fallback: localStorage
             const r = await window.storage.get("trainingsPlaene");
             if(r) setPlaene(JSON.parse(r.value));
+            else setPlaene(INITIAL_PLAENE);  // Nur lokal anzeigen — NICHT in Supabase schreiben
           }
           // Ausnahmen laden
           const {data: ausnahmenData} = await supabase.from("trainingsplan_ausnahmen").select("*");
@@ -551,6 +553,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
           // Kein Supabase — localStorage
           const r = await window.storage.get("trainingsPlaene");
           if(r) setPlaene(JSON.parse(r.value));
+          else setPlaene(INITIAL_PLAENE);  // Nur wenn gar keine Daten vorhanden
           const a = await window.storage.get("trainingsAusnahmen");
           if(a) setAusnahmen(JSON.parse(a.value));
         }
@@ -565,6 +568,8 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
     if(supabase){
       try{
         for(const plan of p){
+          // Demo-Daten (INITIAL_PLAENE) nie in Supabase schreiben
+          if(!plan.id || plan.id === "plan_1" || plan.id === "plan_demo") continue;
           await supabase.from("trainingsplan_vorlagen").upsert({
             id: plan.id,
             name: plan.name,
@@ -593,7 +598,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
         }
       }catch(e){ console.warn("[FCH] savePlaene Fehler:", e.message); }
     } else {
-      window.storage.set("trainingsPlaene", JSON.stringify(p));
+      try{ await window.storage.set("trainingsPlaene", JSON.stringify(p)); }catch(e){ localStorage.setItem("trainingsPlaene", JSON.stringify(p)); }
     }
   }
 
@@ -1316,6 +1321,14 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
   const isEdit=!!slot?.id;
   const isZusatz=slot?.isZusatz;
 
+  // Dynamisch aus localStorage laden — damit Änderungen aus PlaetzeView sichtbar sind
+  const PLAETZE_LIVE = (()=>{
+    try{
+      const r=localStorage.getItem("trainingsplaetze_custom");
+      return r?JSON.parse(r):TRAININGSPLAETZE_DEFAULT.map(p=>({...p}));
+    }catch(e){ return TRAININGSPLAETZE_DEFAULT.map(p=>({...p})); }
+  })();
+
   const baseMonday = monday ? new Date(monday) : new Date();
   function getKWLabel(offset){
     const d = new Date(baseMonday);
@@ -1418,12 +1431,12 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     <select value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value,half:""}))}
                       style={{...S_SELECT_MODAL,border:`1.5px solid ${form.location?GB:R+"80"}`}}>
                       <option value="" disabled>– Platz wählen –</option>
-                      {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
+                      {PLAETZE_LIVE.filter(p=>p.active).map(p=>(
                         <option key={p.id} value={p.name}>{p.name}</option>
                       ))}
                     </select>
                   </div>
-                  {form.location&&(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).length>0&&(
+                  {form.location&&(PLAETZE_LIVE.find(p=>p.name===form.location)?.halfn||[]).length>0&&(
                     <div>
                       <div style={S_SUB_MODAL}>Seite</div>
                       <div style={S_07_MODAL}>
@@ -1431,7 +1444,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                           style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${!form.half?BK:GB}`,background:!form.half?BK:"var(--surface)",color:!form.half?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
                           Ganzer Platz
                         </button>
-                        {(TRAININGSPLAETZE.find(p=>p.name===form.location)?.halfn||[]).map(h=>(
+                        {(PLAETZE_LIVE.find(p=>p.name===form.location)?.halfn||[]).map(h=>(
                           <button key={h} onClick={()=>setForm(f=>({...f,half:h}))}
                             style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${form.half===h?BL:GB}`,background:form.half===h?BL:"var(--surface)",color:form.half===h?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
                             {h}
@@ -1462,12 +1475,12 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                       <div style={S_SUB_MODAL}>Platz</div>
                       <select value={form.end_ort} onChange={e=>setForm(f=>({...f,end_ort:e.target.value,end_half:""}))} style={S_SELECT_MODAL}>
                         <option value="">– gleich wie Phase 1 ({form.location}) –</option>
-                        {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
+                        {PLAETZE_LIVE.filter(p=>p.active).map(p=>(
                           <option key={p.id} value={p.name}>{p.name}</option>
                         ))}
                       </select>
                     </div>
-                    {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).length>0&&(
+                    {(PLAETZE_LIVE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).length>0&&(
                       <div>
                         <div style={S_SUB_MODAL}>Seite</div>
                         <div style={S_07_MODAL}>
@@ -1475,7 +1488,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                             style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${!form.end_half?BK:GB}`,background:!form.end_half?BK:"var(--surface)",color:!form.end_half?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
                             Ganzer Platz
                           </button>
-                          {(TRAININGSPLAETZE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).map(h=>(
+                          {(PLAETZE_LIVE.find(p=>p.name===(form.end_ort||form.location))?.halfn||[]).map(h=>(
                             <button key={h} onClick={()=>setForm(f=>({...f,end_half:h}))}
                               style={{padding:"8px 14px",minHeight:40,borderRadius:8,border:`1.5px solid ${form.end_half===h?BL:GB}`,background:form.end_half===h?BL:"var(--surface)",color:form.end_half===h?"#fff":"var(--sub)",fontSize:15,cursor:"pointer"}}>
                               {h}
@@ -1578,7 +1591,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                   <div style={S_FIELD_LABEL}>Neuer Platz</div>
                   <select value={verschiebungOrt} onChange={e=>setVerschiebungOrt(e.target.value)} style={S_INPUT_MODAL}>
                     <option value="" disabled>– Platz wählen –</option>
-                    {TRAININGSPLAETZE.filter(p=>p.active).map(p=>(
+                    {PLAETZE_LIVE.filter(p=>p.active).map(p=>(
                       <option key={p.id} value={p.name}>{p.name}</option>
                     ))}
                   </select>
