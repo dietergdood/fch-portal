@@ -1265,8 +1265,8 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
       <div className="cc-flex-center" style={{justifyContent:"space-between",alignItems:"flex-start",marginBottom:18,flexWrap:"wrap",gap:12}}>
         <h1>Mitglieder</h1>
         <div style={{display:"flex",gap:8}}>
-          {canEdit&&<Btn onClick={()=>{setShowNewForm(true);setNewForm({});setNewMsg(null);}} style={{background:BTN,color:BTN_TXT,border:"none",fontWeight:600}}><TI n="plus"/> Mitglied hinzufügen</Btn>}
-          {canExport&&<><Btn>Export CSV</Btn><Btn>Export Excel</Btn></>}
+          {canEdit&&<Btn onClick={()=>{setShowNewForm(true);setNewForm({});setNewMsg(null);}} style={{background:BTN,color:BTN_TXT,border:"none",fontWeight:600}}><TI n="user-plus"/> Mitglied hinzufügen</Btn>}
+          {canExport&&<><Btn><TI n="file-type-csv"/> Export CSV</Btn><Btn><TI n="file-spreadsheet"/> Export Excel</Btn></>}
         </div>
       </div>
 
