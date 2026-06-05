@@ -115,6 +115,12 @@ const PWA_CSS=`
 .cc-list-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--border);transition:background 0.1s}
 .cc-list-row:last-child{border-bottom:none}
 .cc-list-row:hover{background:var(--surface2);cursor:pointer}
+.cc-list-name{font-weight:500;font-size:14px;color:var(--text);white-space:nowrap}
+.cc-detail-label{font-size:13px;color:var(--sub);min-width:120px;flex-shrink:0}
+.cc-empty{padding:32px;text-align:center;color:var(--sub);font-size:13px}
+.cc-table-wrap{background:var(--surface);border-radius:12px;overflow:hidden;overflow-x:auto}
+.cc-count{font-size:11px;font-weight:400;color:var(--sub);opacity:0.7;margin-left:4px}
+.cc-check-row{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:8px;background:var(--surface2);cursor:pointer}
 
 /* ── Formulare ── */
 .cc-field{display:flex;flex-direction:column;gap:5px}

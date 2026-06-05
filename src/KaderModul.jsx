@@ -1,11 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════
    ClubCampus KaderModul — KaderModul.jsx
-   Team-Kader Ansicht mit Spielerliste
    ═══════════════════════════════════════════════════════════════ */
 import { useState } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT20, GN, R, BL, BK, GB } from "./constants.js";
+import { FONT, GN, R, BL, BK } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { useIsMobile, Card, Chip, Av, Row, Between, Col, SectionLabel, Btn, Input , avColor} from "./theme.jsx";
+import { useIsMobile, Card, Av, Row, Between, Col, Btn, Input, ModalOrSheet, ModalTitle } from "./theme.jsx";
 import { ROSTER } from "./demoData.js";
 
 const FIELD_VIS = {
@@ -54,30 +53,25 @@ function normFunktion(s){
   return s;
 }
 
-/* ── Gruppen-Header Zeile ── */
 function GruppenHeader({label, count, colSpan}){
   return(
     <tr>
-      <td colSpan={colSpan} style={{padding:"6px 14px",background:"var(--bg)",borderTop:"0.5px solid var(--border)"}}>
-        <Row gap={6}>
-          <span className="cc-section-hdr">{label}</span>
-          <span style={{fontSize:11,color:"var(--sub)",fontWeight:400,opacity:0.7}}>({count})</span>
-        </Row>
+      <td colSpan={colSpan} className="cc-section-hdr" style={{padding:"6px 14px"}}>
+        {label}
+        <span className="cc-count">({count})</span>
       </td>
     </tr>
   );
 }
 
-/* ── Positions-Badge ── */
 function PosBadge({pos}){
-  if(!pos) return <span style={{fontSize:13,color:"var(--sub)"}}>-</span>;
-  return <span style={{fontSize:12,fontWeight:700,color:"var(--sub)",background:"var(--surface2)",padding:"2px 8px",borderRadius:6}}>{pos}</span>;
+  if(!pos) return <span style={{color:"var(--sub)",fontSize:13}}>-</span>;
+  return <span className="cc-chip-toggle" style={{fontSize:11,padding:"2px 8px",borderRadius:6,cursor:"default"}}>{pos}</span>;
 }
 
-/* ── Funktions-Badge ── */
 function FunktionBadge({role}){
-  if(!role) return <span style={{fontSize:11,fontWeight:500,background:"var(--surface2)",color:"var(--sub)",padding:"2px 8px",borderRadius:8,whiteSpace:"nowrap",border:"0.5px solid var(--border)"}}>Spieler/in</span>;
-  return <span style={{fontSize:11,fontWeight:500,background:"var(--surface2)",color:"var(--sub)",padding:"2px 8px",borderRadius:8,whiteSpace:"nowrap",border:"0.5px solid var(--border)"}}>{role}</span>;
+  const label = role||"Spieler/in";
+  return <span className="cc-chip-toggle" style={{cursor:"default"}}>{label}</span>;
 }
 
 function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
@@ -160,10 +154,9 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
     : [{key:null, items:filtered}];
 
   const SortIcon = ({col}) => sortKey===col
-    ? <TI n={sortDir===1?"arrow-up":"arrow-down"} size={13} style={{marginLeft:3,color:R}}/>
+    ? <TI n={sortDir===1?"arrow-up":"arrow-down"} size={13} style={{marginLeft:3,color:"var(--cc-accent)"}}/>
     : <TI n="arrows-sort" size={13} style={{marginLeft:3,color:"var(--sub)",opacity:0.5}}/>;
 
-  /* ── Export Modal ── */
   const handleExport = () => {
     const fields = COL_DEF_ALL.filter(c=>exportFields.includes(c.key));
     const header = fields.map(c=>c.label).join(";");
@@ -182,69 +175,48 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
     setShowExport(false);
   };
 
-  /* ── Mobile Zeile ── */
+  /* ── Mobile Row ── */
   const MobileRow = ({p}) => (
-    <div onClick={()=>setSelected(p)}
-      style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",
-        borderTop:"0.5px solid var(--border)",cursor:"pointer",background:"var(--surface)"}}>
-      <Av name={p.name} size={32}/>
+    <div onClick={()=>setSelected(p)} className="cc-list-row">
+      <Av name={p.name} size="md"/>
       <div style={{flex:1,minWidth:0}}>
-        <div style={{fontWeight:600,fontSize:14,color:"var(--text)",marginBottom:3}}>
+        <div className="cc-list-name" style={{marginBottom:3}}>
           {p.lastName} {p.firstName}
         </div>
         <Row gap={6} wrap>
           {positions[p.id]&&<PosBadge pos={positions[p.id]}/>}
           {rueckennrn[p.id]&&<span style={{fontSize:12,color:"var(--sub)"}}>Nr. {rueckennrn[p.id]}</span>}
           {p.role&&<FunktionBadge role={p.role}/>}
-          {!p.role&&p.teams&&p.teams.length>1&&p.teams.map((t,i)=>(
-            <span key={i} style={{fontSize:12,fontWeight:600,background:i===0?R+"15":"#EFF6FF",color:i===0?R:BL,padding:"2px 6px",borderRadius:6}}>{t}</span>
-          ))}
         </Row>
       </div>
       <TI n="chevron-right" size={16} style={{color:"var(--sub)",flexShrink:0}}/>
     </div>
   );
 
-  /* ── Desktop Zeile ── */
+  /* ── Desktop Row ── */
   const DesktopRow = ({p}) => (
-    <tr onClick={()=>setSelected(p)} className="hov-row"
-      style={{borderTop:"0.5px solid var(--border)",cursor:"pointer"}}>
+    <tr onClick={()=>setSelected(p)} className="cc-tr" style={{cursor:"pointer"}}>
       {cols.map((c,j)=>{
-        /* Name */
         if(c.key==="name") return(
-          <td key={j} style={{padding:"10px 14px"}}>
+          <td key={j} className="cc-td">
             <Row gap={10}>
-              <Av name={p.name} size={28}/>
-              <Col gap={2}>
-                <span style={{fontWeight:600,fontSize:13,color:"var(--text)",whiteSpace:"nowrap"}}>
-                  {p.lastName} {p.firstName}
-                </span>
-                {!p.role&&p.teams&&p.teams.length>1&&(
-                  <Row gap={4} wrap>
-                    {p.teams.map((t,i)=>(
-                      <span key={i} style={{fontSize:11,fontWeight:600,background:i===0?R+"15":"#EFF6FF",color:i===0?R:BL,padding:"1px 6px",borderRadius:6}}>{t}</span>
-                    ))}
-                  </Row>
-                )}
-              </Col>
+              <Av name={p.name} size="sm"/>
+              <span className="cc-list-name">
+                {p.lastName} {p.firstName}
+              </span>
             </Row>
           </td>
         );
-        /* Funktion */
         if(c.key==="role") return(
-          <td key={j} style={{padding:"10px 14px"}}>
-            <FunktionBadge role={p.role}/>
-          </td>
+          <td key={j} className="cc-td"><FunktionBadge role={p.role}/></td>
         );
-        /* Position */
         if(c.key==="pos") return(
-          <td key={j} style={{padding:"10px 14px"}} onClick={e=>e.stopPropagation()}>
+          <td key={j} className="cc-td" onClick={e=>e.stopPropagation()}>
             {canEdit&&editingPos===p.id?(
               <select autoFocus value={positions[p.id]||""}
                 onChange={e=>{setPositions(prev=>({...prev,[p.id]:e.target.value}));setEditingPos(null);}}
                 onBlur={()=>setEditingPos(null)}
-                style={{padding:"3px 8px",border:`1.5px solid ${R}`,borderRadius:6,fontSize:13,
-                  fontWeight:600,color:R,background:"var(--surface)",outline:"none"}}>
+                className="cc-input" style={{width:"auto"}}>
                 <option value="">- keine -</option>
                 {POSITION_GROUPS.map(g=>(
                   <optgroup key={g.label} label={g.label}>
@@ -261,34 +233,28 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
             )}
           </td>
         );
-        /* Nummer */
         if(c.key==="nr") return(
-          <td key={j} style={{padding:"10px 14px",textAlign:"center"}} onClick={e=>e.stopPropagation()}>
+          <td key={j} className="cc-td" onClick={e=>e.stopPropagation()}>
             {canEdit&&editingNr===p.id?(
               <input autoFocus type="number" min="1" max="99"
                 value={rueckennrn[p.id]}
                 onChange={e=>saveNr({...rueckennrn,[p.id]:e.target.value})}
                 onBlur={()=>setEditingNr(null)}
                 onKeyDown={e=>{if(e.key==="Enter")setEditingNr(null);}}
-                style={{width:42,padding:"3px 6px",border:`1.5px solid ${R}`,borderRadius:6,
-                  fontSize:13,fontWeight:700,textAlign:"center",color:R,outline:"none"}}/>
+                className="cc-input" style={{width:56,textAlign:"center"}}/>
             ):(
-              <Row gap={4} justify="center" style={{cursor:canEdit?"pointer":"default"}}
+              <Row gap={4} style={{cursor:canEdit?"pointer":"default"}}
                 onClick={canEdit?()=>setEditingNr(p.id):undefined}>
-                <span style={{fontSize:13,fontWeight:600,color:"var(--sub)"}}>
-                  {rueckennrn[p.id]||"-"}
-                </span>
+                <span style={{fontSize:13,color:"var(--sub)"}}>{rueckennrn[p.id]||"-"}</span>
                 {canEdit&&<TI n="edit" size={13} style={{color:"var(--sub)",opacity:0.5}}/>}
               </Row>
             )}
           </td>
         );
-        /* AHV */
-        if(c.key==="ahv") return <td key={j} style={{padding:"10px 14px",color:"var(--sub)",fontSize:13}}>••••••••</td>;
-        /* Default */
-        return <td key={j} style={{padding:"10px 14px",color:c.field==="email"?BL:"var(--sub)",fontSize:13,whiteSpace:"nowrap"}}>{p[c.field]||"-"}</td>;
+        if(c.key==="ahv") return <td key={j} className="cc-td" style={{color:"var(--sub)"}}>••••••••</td>;
+        return <td key={j} className="cc-td" style={{color:c.field==="email"?BL:"var(--sub)",whiteSpace:"nowrap"}}>{p[c.field]||"-"}</td>;
       })}
-      <td style={{padding:"10px 14px",textAlign:"right"}}>
+      <td className="cc-td" style={{textAlign:"right"}}>
         <TI n="chevron-right" size={16} style={{color:"var(--sub)"}}/>
       </td>
     </tr>
@@ -296,96 +262,86 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
 
   return(
     <div>
-      {/* Mitglied-Detail Modal */}
-      {selected&&(
-        <div onClick={()=>setSelected(null)}
-          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:300,
-            display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-          <div onClick={e=>e.stopPropagation()}
-            style={{background:"var(--surface)",borderRadius:"16px 16px 0 0",padding:20,
-              width:"100%",maxWidth:540,maxHeight:"80vh",overflowY:"auto"}}>
-            <Between style={{marginBottom:16}}>
+      {/* Detail Modal */}
+      <ModalOrSheet open={!!selected} onClose={()=>setSelected(null)} maxWidth={540}>
+        {selected&&(
+          <>
+            <div className="cc-modal-hdr">
               <Row gap={12}>
-                <Av name={selected.name} size={44}/>
+                <Av name={selected.name} size="lg"/>
                 <Col gap={2}>
-                  <span style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>
+                  <span style={{fontWeight:600,fontSize:16,color:"var(--text)"}}>
                     {selected.lastName} {selected.firstName}
                   </span>
                   <FunktionBadge role={selected.role}/>
                 </Col>
               </Row>
-              <Btn variant="ghost" onClick={()=>setSelected(null)} style={{color:"var(--sub)",fontSize:20}}>×</Btn>
-            </Between>
-            <Col gap={8}>
+              <button className="cc-icon-btn" onClick={()=>setSelected(null)}>
+                <TI n="x" size={14}/>
+              </button>
+            </div>
+            <div className="cc-modal-body">
               {selected.dob&&vis.includes("dob")&&(
                 <Row gap={8}>
-                  <span style={{fontSize:13,color:"var(--sub)",minWidth:100}}>Geburtsdatum</span>
+                  <span className="cc-detail-label">Geburtsdatum</span>
                   <span style={{fontSize:13,color:"var(--text)"}}>{selected.dob}</span>
                 </Row>
               )}
               {selected.email&&vis.includes("email")&&(
                 <Row gap={8}>
-                  <span style={{fontSize:13,color:"var(--sub)",minWidth:100}}>E-Mail</span>
+                  <span className="cc-detail-label">E-Mail</span>
                   <span style={{fontSize:13,color:BL}}>{selected.email}</span>
                 </Row>
               )}
               {selected.tel&&vis.includes("tel")&&(
                 <Row gap={8}>
-                  <span style={{fontSize:13,color:"var(--sub)",minWidth:100}}>Telefon</span>
+                  <span className="cc-detail-label">Telefon</span>
                   <span style={{fontSize:13,color:"var(--text)"}}>{selected.tel}</span>
                 </Row>
               )}
-            </Col>
-          </div>
-        </div>
-      )}
+            </div>
+          </>
+        )}
+      </ModalOrSheet>
 
       {/* Export Modal */}
-      {showExport&&(
-        <div onClick={()=>setShowExport(false)}
-          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:300,
-            display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div onClick={e=>e.stopPropagation()}
-            style={{background:"var(--surface)",borderRadius:16,padding:24,
-              width:320,maxWidth:"90vw",boxShadow:"0 8px 40px rgba(0,0,0,0.18)"}}>
-            <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:"var(--text)"}}>Kaderliste exportieren</h2>
-            <p style={{margin:"0 0 16px",fontSize:13,color:"var(--sub)"}}>Felder auswählen die exportiert werden sollen</p>
-            <Col gap={6} style={{marginBottom:20}}>
-              {COL_DEF_ALL.map(c=>(
-                <label key={c.key}
-                  style={{display:"flex",alignItems:"center",gap:12,padding:"6px 10px",
-                    borderRadius:8,background:"var(--surface2)",cursor:"pointer"}}>
-                  <input type="checkbox" checked={exportFields.includes(c.key)}
-                    onChange={e=>setExportFields(prev=>e.target.checked?[...prev,c.key]:prev.filter(k=>k!==c.key))}
-                    style={{width:16,height:16,accentColor:BK,cursor:"pointer"}}/>
-                  <span style={{fontSize:13,color:"var(--text)"}}>{c.label}</span>
-                </label>
-              ))}
-            </Col>
-            <Row gap={8}>
-              <Btn variant="primary" color={BK} onClick={handleExport}>Exportieren</Btn>
-              <Btn onClick={()=>setShowExport(false)}>Abbrechen</Btn>
-            </Row>
-          </div>
+      <ModalOrSheet open={showExport} onClose={()=>setShowExport(false)} maxWidth={360}>
+        <div className="cc-modal-hdr">
+          <ModalTitle>Kaderliste exportieren</ModalTitle>
+          <button className="cc-icon-btn" onClick={()=>setShowExport(false)}><TI n="x" size={14}/></button>
         </div>
-      )}
+        <div className="cc-modal-body">
+          <p style={{fontSize:13,color:"var(--sub)"}}>Felder auswählen die exportiert werden sollen</p>
+          <Col gap={6}>
+            {COL_DEF_ALL.map(c=>(
+              <label key={c.key} className="cc-check-row">
+                <input type="checkbox" checked={exportFields.includes(c.key)}
+                  onChange={e=>setExportFields(prev=>e.target.checked?[...prev,c.key]:prev.filter(k=>k!==c.key))}
+                  style={{width:16,height:16,accentColor:"var(--text)",cursor:"pointer"}}/>
+                <span style={{fontSize:13,color:"var(--text)"}}>{c.label}</span>
+              </label>
+            ))}
+          </Col>
+        </div>
+        <div className="cc-modal-ftr">
+          <Btn onClick={()=>setShowExport(false)}>Abbrechen</Btn>
+          <Btn variant="primary" onClick={handleExport}>Exportieren</Btn>
+        </div>
+      </ModalOrSheet>
 
       {/* Toolbar */}
       <Between style={{marginBottom:12,flexWrap:"wrap",gap:8}}>
-        <Input value={search} onChange={e=>setSearch(e.target.value)}
-          placeholder="Spieler suchen…" style={{width:200}}/>
+        <Input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Spieler suchen…" style={{width:200}}/>
         <Row gap={8}>
           {canExport&&(
             <Btn onClick={()=>setShowExport(true)}>
-              <Row gap={6}><TI n="file-download" size={14} style={{color:GN}}/>Export</Row>
+              <TI n="file-download" size={14}/>Export
             </Btn>
           )}
-          <Btn onClick={()=>setGroupBy(g=>!g)}
-            style={groupBy?{background:BK+"12",borderColor:BK,color:BK}:{}}>
-            <Row gap={6}><TI n="layout-list" size={14}/>Gruppieren</Row>
+          <Btn onClick={()=>setGroupBy(g=>!g)} style={groupBy?{background:"var(--text)",color:"var(--bg)"}:{}}>
+            <TI n="layout-list" size={14}/>Gruppieren
           </Btn>
-          <span style={{fontSize:13,color:"var(--sub)",padding:"6px 10px",
-            background:"var(--surface2)",borderRadius:8,fontWeight:600}}>
+          <span className="cc-chip-toggle" style={{cursor:"default",fontWeight:600}}>
             {filtered.length} Mitglieder
           </span>
         </Row>
@@ -393,47 +349,36 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
 
       {/* Mobile */}
       {isMobile?(
-        <div style={{background:"var(--surface)",borderRadius:12,border:"0.5px solid var(--border)",overflow:"hidden"}}>
+        <div className="cc-list">
           {grouped.flatMap(({key,items})=>[
             key&&(
-              <div key={`h-${key}`}
-                style={{padding:"7px 16px",background:"var(--surface2)",
-                  borderTop:"0.5px solid var(--border)"}}>
-                <Row gap={6}>
-                  <span style={{fontSize:11,fontWeight:700,color:"var(--sub)",
-                    textTransform:"uppercase",letterSpacing:0.6}}>{key}</span>
-                  <span style={{fontSize:11,color:"var(--sub)",opacity:0.7}}>({items.length})</span>
-                </Row>
+              <div key={`h-${key}`} className="cc-section-hdr" style={{padding:"6px 14px",margin:0}}>
+                {key}
+                <span className="cc-count">({items.length})</span>
               </div>
             ),
             ...items.map(p=><MobileRow key={p.id} p={p}/>),
           ]).filter(Boolean)}
           {filtered.length===0&&(
-            <div style={{padding:32,textAlign:"center",color:"var(--sub)",fontSize:13}}>
-              Keine Spieler gefunden
-            </div>
+            <div className="cc-empty">Keine Spieler gefunden</div>
           )}
         </div>
       ):(
-        /* Desktop Tabelle */
-        <div style={{background:"var(--surface)",borderRadius:12,
-          border:"0.5px solid var(--border)",overflow:"hidden",overflowX:"auto"}}>
+        <div className="cc-table-wrap">
           <table className="cc-table">
             <thead>
-              <tr style={{background:"var(--bg)"}}>
+              <tr>
                 {cols.map((c,i)=>{
                   const sortable = ["name","pos","nr"].includes(c.key);
                   return(
-                    <th key={i} onClick={sortable?()=>handleSort(c.key):undefined}
-                      style={{padding:"9px 14px",textAlign:"left",fontWeight:600,
-                        color:"var(--sub)",fontSize:11,textTransform:"uppercase",
-                        letterSpacing:0.5,whiteSpace:"nowrap",
-                        cursor:sortable?"pointer":"default",userSelect:"none"}}>
+                    <th key={i} className="cc-th"
+                      onClick={sortable?()=>handleSort(c.key):undefined}
+                      style={{cursor:sortable?"pointer":"default",userSelect:"none"}}>
                       <Row gap={4}>{c.label}{sortable&&<SortIcon col={c.key}/>}</Row>
                     </th>
                   );
                 })}
-                <th style={{width:32}}/>
+                <th className="cc-th" style={{width:32}}/>
               </tr>
             </thead>
             <tbody>
@@ -442,10 +387,7 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
                 ...items.map(p=><DesktopRow key={p.id} p={p}/>),
               ]).filter(Boolean)}
               {filtered.length===0&&(
-                <tr><td colSpan={cols.length+1}
-                  style={{padding:32,textAlign:"center",color:"var(--sub)",fontSize:13}}>
-                  Keine Spieler gefunden
-                </td></tr>
+                <tr><td colSpan={cols.length+1} className="cc-empty">Keine Spieler gefunden</td></tr>
               )}
             </tbody>
           </table>
@@ -453,14 +395,6 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
       )}
     </div>
   );
-}
-
-function getNr(id){
-  try{
-    const s=localStorage.getItem("rueckennrn");
-    if(s){const d=JSON.parse(s);if(d[id]) return d[id];}
-  }catch{}
-  return "";
 }
 
 export default KaderModul;
