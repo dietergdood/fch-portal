@@ -568,8 +568,6 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
     if(supabase){
       try{
         for(const plan of p){
-          // Demo-Daten (INITIAL_PLAENE) nie in Supabase schreiben
-          if(!plan.id || plan.id === "plan_1" || plan.id === "plan_demo") continue;
           await supabase.from("trainingsplan_vorlagen").upsert({
             id: plan.id,
             name: plan.name,
@@ -685,7 +683,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
         const va = kwAusnahmen.find(function(a){ return a.type==="verschiebung"&&a.slot_id===s.id; });
         const oa = kwAusnahmen.find(function(a){ return a.type==="location"&&a.slot_id===s.id; });
         if(va) return Object.assign({},s,{start:va.neue_start,end:va.neue_end,isVerschoben:true});
-        if(oa) return Object.assign({},s,{ort:oa.neuer_ort,isOrtGeaendert:true});
+        if(oa) return Object.assign({},s,{location:oa.neuer_ort,isOrtGeaendert:true});
         return s;
       });
     const zusatz = kwAusnahmen
