@@ -375,16 +375,17 @@ function Av({name="",init,size="md",bg,useTheme=false}){
 function Tabs({tabs,active,setActive}){
   const isMobile=useIsMobile();
   return(
-    <div style={{display:"inline-flex",gap:4,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch",maxWidth:"100%"}}>
+    <div style={{display:"inline-flex",gap:2,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch",maxWidth:"100%"}}>
       {tabs.map(t=>(
         <button key={t.key} onClick={()=>setActive(t.key)} style={{
-          padding:isMobile?"7px 10px":"7px 12px",border:"none",borderRadius:6,
+          padding:isMobile?"6px 10px":"6px 12px",
+          border:active===t.key?"0.5px solid #D8D8D8":"0.5px solid transparent",
+          borderRadius:7,
           background:active===t.key?"var(--surface)":"transparent",
           color:active===t.key?"var(--text)":"var(--sub)",
-          fontWeight:active===t.key?700:400,cursor:"pointer",fontSize:14,
-          boxShadow:active===t.key?"0 1px 4px rgba(0,0,0,0.1)":"none",
-          borderBottom:active===t.key?"2px solid var(--cc-accent)":"2px solid transparent",
-          whiteSpace:"nowrap",fontFamily:FONT,minHeight:36,transition:"all 0.15s",
+          fontWeight:active===t.key?600:400,cursor:"pointer",fontSize:14,
+          boxShadow:active===t.key?"0 1px 3px rgba(0,0,0,0.12)":"none",
+          whiteSpace:"nowrap",fontFamily:FONT,minHeight:34,transition:"none",
           display:"flex",alignItems:"center",gap:8,WebkitTapHighlightColor:"transparent"
         }}>
           {isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>}
