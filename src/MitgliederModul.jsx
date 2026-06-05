@@ -795,6 +795,35 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
   const [selectedMember,setSelectedMember]=useState(null);
   const canExport=role==="administrator"||role==="administration";
   const canEdit=role==="administrator"||role==="administration";
+  const [showNewForm,setShowNewForm]=useState(false);
+  const [newForm,setNewForm]=useState({});
+  const [newSaving,setNewSaving]=useState(false);
+  const [newMsg,setNewMsg]=useState(null);
+
+  async function handleNewMember(){
+    if(!sb||!newForm.vorname||!newForm.nachname) return;
+    setNewSaving(true); setNewMsg(null);
+    try{
+      const {error}=await sb.from("mitglieder").insert({
+        vorname:newForm.vorname,
+        nachname:newForm.nachname,
+        email:newForm.email||null,
+        telefon:newForm.telefon||null,
+        geburtsdatum:newForm.geburtsdatum||null,
+        geschlecht:newForm.geschlecht||null,
+        mitgliedtyp:newForm.mitgliedtyp||"Spieler",
+        funktion:newForm.funktion||"Spieler",
+        teams:newForm.teams?[newForm.teams]:[],
+        aktiv:true,
+        datenstatus:"Unvollständig",
+      });
+      if(error) throw error;
+      setNewMsg({ok:true,text:"Mitglied erfolgreich angelegt ✓"});
+      setTimeout(()=>{setShowNewForm(false);setNewForm({});setNewMsg(null);if(onReload)onReload();},1500);
+    }catch(e){ setNewMsg({ok:false,text:e.message}); }
+    setNewSaving(false);
+  }
+
   const allMembers=dbMitglieder.length>0
     ?dbMitglieder.map(m=>({
         id:m.id,
