@@ -92,6 +92,8 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 /* ── Primary Button ── */
 .cc-btn-primary:hover{background:var(--btn-hover)!important;}
 .cc-btn-primary:active{transform:scale(0.97)}
+.cc-btn-outline{font-size:12px;font-weight:500;color:var(--sub);border:0.5px solid var(--border);border-radius:6px;padding:4px 10px;background:transparent;cursor:pointer;white-space:nowrap;font-family:inherit;transition:background 0.15s,color 0.15s;display:inline-flex;align-items:center;gap:4px}
+.cc-btn-outline:hover{background:var(--surface2);color:var(--text)}
 
 /* ── Unread dot ── */
 .cc-unread-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;border:2px solid var(--surface)}
