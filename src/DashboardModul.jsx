@@ -2,7 +2,7 @@
    ClubCampus DashboardModul — DashboardModul.jsx
    Dashboard-Ansichten für alle Rollen
    ═══════════════════════════════════════════════════════════════ */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { Card, Chip, H1, InfoBox, Row, STitle, Stat, useIsMobile , Btn} from "./theme.jsx";
