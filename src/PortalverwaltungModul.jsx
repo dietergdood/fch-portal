@@ -1891,23 +1891,65 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 </Card>
               </div>
             );
-            const Row2=({label,children,code,usage})=>(
-              <div style={{display:"flex",alignItems:"flex-start",gap:16,padding:"12px 0",borderBottom:"0.5px solid var(--border)"}}>
-                <div style={{width:220,flexShrink:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:"var(--text)",marginBottom:3}}>{label}</div>
-                  {code&&<code style={{fontSize:11,color:"#7C3AED",background:"#F5F3FF",padding:"2px 6px",borderRadius:4,display:"block",marginBottom:4}}>{code}</code>}
-                  {usage&&usage.length>0&&usage[0]!=="—"&&(
-                    <div style={{display:"flex",flexWrap:"wrap",gap:3,marginTop:2}}>
-                      {usage.map(u=>(
-                        <span key={u} style={{fontSize:10,padding:"1px 6px",borderRadius:4,background:"var(--surface2)",color:"var(--sub)",border:"0.5px solid var(--border)"}}>{u}</span>
-                      ))}
-                    </div>
-                  )}
-                  {usage&&usage[0]==="—"&&<span style={{fontSize:11,color:"var(--border)"}}>noch nicht verwendet</span>}
+            const CSS_DEFS={
+  "cc-btn-group": "display:flex; align-items:center; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface2)",
+  "cc-btn-group-active": "background:var(--text)!important; color:var(--bg)!important",
+  "cc-btn-group-item": "height:32px; min-width:32px; padding:0 8px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--sub); transition:background 0.15s,color 0.15s; flex-shrink:0",
+  "cc-btn-group-sep": "width:1px; height:20px; background:var(--border); flex-shrink:0",
+  "cc-card": "background:var(--surface)!important; border-color:var(--border)!important; box-shadow:var(--card-shadow)!important",
+  "cc-chip-active": "border-color:var(--text)!important; background:var(--text)!important; color:var(--bg)!important",
+  "cc-chip-toggle": "padding:4px 12px; border-radius:20px; border:1.5px solid var(--border); background:transparent; color:var(--sub); font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0",
+  "cc-divider": "height:1px; background:var(--border); flex-shrink:0",
+  "cc-flex-center": "display:flex; align-items:center; justify-content:center",
+  "cc-icon-btn": "width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.15s,border-color 0.15s,color 0.15s; color:var(--sub); padding:0",
+  "cc-input": "width:100%; padding:9px 12px; border-radius:8px; border:0.5px solid var(--border); background:var(--surface2); color:var(--text); font-size:13px; font-family:inherit; box-sizing:border-box; outline:none; transition:border-color 0.15s",
+  "cc-main": "background:var(--bg)!important",
+  "cc-page": "animation:cc-in 0.2s ease-out",
+  "cc-seg": "display:flex; gap:2px; background:var(--surface2); border-radius:8px; padding:3px",
+  "cc-seg-active": "background:var(--surface)!important; color:var(--text)!important; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,0.08)",
+  "cc-seg-item": "flex:1; padding:5px 8px; border-radius:6px; border:none; cursor:pointer; font-size:12px; font-weight:400; background:transparent; color:var(--sub); transition:all 0.15s; white-space:nowrap",
+  "cc-shimmer": "background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%); background-size:200% 100%; animation:cc-shimmer 1.4s ease-in-out infinite",
+  "cc-topbar": "background:var(--bg)!important; border-color:var(--border)!important",
+  "cc-truncate": "overflow:hidden; text-overflow:ellipsis; white-space:nowrap",
+  "cc-unread-dot": "position:absolute; top:-2px; right:-2px; width:8px; height:8px; border-radius:50%; border:2px solid var(--surface)"
+};
+            const Row2=({label,children,code,usage})=>{
+              const cssKey=code&&code.startsWith(".")?code.replace(/^\.([\w-]+).*/,"$1"):null;
+              const cssDef=cssKey?CSS_DEFS[cssKey]:null;
+              return(
+                <div style={{display:"flex",alignItems:"flex-start",gap:16,padding:"14px 0",borderBottom:"0.5px solid var(--border)"}}>
+                  <div style={{width:270,flexShrink:0}}>
+                    <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:4}}>{label}</div>
+                    {code&&<code style={{fontSize:11,color:"#7C3AED",background:"#F5F3FF",padding:"2px 8px",borderRadius:4,display:"inline-block",marginBottom:6}}>{""+code}</code>}
+                    {cssDef&&(
+                      <div style={{background:"#0f0f11",borderRadius:6,padding:"7px 10px",marginBottom:6,overflowX:"auto"}}>
+                        {cssDef.split(";").filter(Boolean).map((p,i)=>{
+                          const parts=p.split(":");
+                          const prop=parts[0];
+                          const val=parts.slice(1).join(":");
+                          return(
+                            <div key={i} style={{fontSize:10,fontFamily:"monospace",whiteSpace:"nowrap"}}>
+                              <span style={{color:"#7dd3fc"}}>{prop}:</span>
+                              <span style={{color:"#86efac"}}>{val}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {usage&&usage.length>0&&usage[0]!=="—"&&(
+                      <div style={{display:"flex",flexWrap:"wrap",gap:3,alignItems:"center"}}>
+                        <span style={{fontSize:10,color:"var(--sub)"}}>in:</span>
+                        {usage.map(u=>(
+                          <span key={u} style={{fontSize:10,padding:"1px 6px",borderRadius:4,background:"var(--surface2)",color:"var(--sub)",border:"0.5px solid var(--border)"}}>{u}</span>
+                        ))}
+                      </div>
+                    )}
+                    {usage&&usage[0]==="—"&&<span style={{fontSize:11,color:"var(--border)"}}>noch nicht verwendet</span>}
+                  </div>
+                  <div style={{flex:1,paddingTop:2}}>{children}</div>
                 </div>
-                <div style={{flex:1,paddingTop:2}}>{children}</div>
-              </div>
-            );
+              );
+            };
             return(
               <>
                 {/* Buttons */}
