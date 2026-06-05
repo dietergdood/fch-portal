@@ -583,16 +583,57 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
 
   const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
 
-  /* ── Detail-Modal ── */
+  /* ── Mitglied-Detailseite (volle Breite, kein Modal) ── */
   const MemberDetail=({m,onClose})=>{
     const raw=dbMitglieder.find(d=>d.id===m.id)||{};
     const eltern=raw.eltern||[];
     const fv=getFieldVisibility(role);
     const canEdit=role==="administrator"||role==="administration";
+    const [activeTab,setActiveTab]=useState("info");
     const [editMode,setEditMode]=useState(false);
     const [form,setForm]=useState({...raw});
     const [saving,setSaving]=useState(false);
     const [saveMsg,setSaveMsg]=useState(null);
+    // Anwesenheiten
+    const [anwesenheiten,setAnwesenheiten]=useState(null);
+    const [anwLoading,setAnwLoading]=useState(false);
+    // Dokumente
+    const [dokumente,setDokumente]=useState(null);
+    // Portal
+    const [benutzer,setBenutzer]=useState(null);
+    const [portalLoading,setPortalLoading]=useState(false);
+
+    async function loadAnwesenheiten(){
+      if(anwesenheiten||anwLoading||!sb) return;
+      setAnwLoading(true);
+      try{
+        const {data}=await sb.from("anwesenheiten").select("*").eq("mitglied_id",raw.id).order("updated_at",{ascending:false}).limit(50);
+        setAnwesenheiten(data||[]);
+      }catch(e){ setAnwesenheiten([]); }
+      setAnwLoading(false);
+    }
+
+    async function loadPortal(){
+      if(benutzer!==null||portalLoading||!sb) return;
+      setPortalLoading(true);
+      try{
+        const {data}=await sb.from("benutzer").select("*").eq("mitglied_id",raw.id).single();
+        setBenutzer(data||null);
+      }catch(e){ setBenutzer(null); }
+      setPortalLoading(false);
+    }
+
+    async function togglePortalZugang(){
+      if(!sb||!canEdit) return;
+      const neu=!raw.hat_portal_zugang;
+      await sb.from("mitglieder").update({hat_portal_zugang:neu}).eq("id",raw.id);
+      if(onReload) onReload();
+    }
+
+    useEffect(()=>{
+      if(activeTab==="anwesenheit") loadAnwesenheiten();
+      if(activeTab==="portal") loadPortal();
+    },[activeTab]);
     const S_LABEL={fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",display:"block",marginBottom:4};
     const S_INPUT={width:"100%",padding:"8px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:14,background:"var(--surface)",color:"var(--text)",outline:"none",boxSizing:"border-box"};
 
@@ -664,96 +705,251 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
         }
       </div>
     );
+    const TABS=[
+      {key:"info",       label:"Stammdaten"},
+      {key:"eltern",     label:`Eltern (${eltern.length})`},
+      {key:"teams",      label:"Kader / Teams"},
+      {key:"anwesenheit",label:"Anwesenheiten"},
+      {key:"statistiken",label:"Statistiken"},
+      {key:"dokumente",  label:"Dokumente"},
+      {key:"portal",     label:"Portal-Zugang"},
+    ];
+
     return(
       <div>
         {/* Header */}
-        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20,flexWrap:"wrap"}}>
-          <Btn onClick={onClose} style={{fontSize:13}}><TI n="arrow-left"/> Zurück</Btn>
-          <div style={{display:"flex",alignItems:"center",gap:12,flex:1}}>
-            <Av name={m.name} size={44}/>
-            <div>
-              <div style={{fontWeight:700,fontSize:18,color:"var(--text)"}}>{m.name}</div>
-              <div style={{display:"flex",gap:8,marginTop:4,flexWrap:"wrap"}}>
-                <Chip text={m.role} color={R}/>
-                <Chip text={m.type} color={BL}/>
-                <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-              </div>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16,flexWrap:"wrap"}}>
+          <Btn onClick={onClose}><TI n="arrow-left"/> Zurück</Btn>
+          <Av name={m.name} size={44}/>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:700,fontSize:20,color:"var(--text)"}}>{m.name}</div>
+            <div style={{display:"flex",gap:6,marginTop:4,flexWrap:"wrap"}}>
+              <Chip text={raw.funktion||m.role||"-"} color={R}/>
+              <Chip text={raw.mitgliedtyp||m.type||"-"} color={BL}/>
+              <Chip text={raw.datenstatus||m.status||"-"} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+              {(raw.teams||[]).map(t=><Chip key={t} text={t} color={BK}/>)}
             </div>
           </div>
-          {canEdit&&!editMode&&<Btn onClick={()=>setEditMode(true)} style={{fontSize:13}}><TI n="edit"/> Bearbeiten</Btn>}
-        </div>
-        <div>
-          {!editMode?(
-            <>
-              <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
-              {(selectedMember?._tab||"info")==="info"&&(
-                <div>
-                  {rows.filter(r=>canEdit?true:(r.v&&r.v!=="-")).map((r,i,arr)=>(
-                    <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"0.5px solid var(--border)":"none",gap:12}}>
-                      <span style={{fontSize:14,color:"var(--sub)",minWidth:120,flexShrink:0}}>{r.l}</span>
-                      <span style={{fontSize:14,color:r.v==="-"?"var(--sub)":"var(--text)",fontWeight:r.v==="-"?400:600,textAlign:"right"}}>{r.v}</span>
-                    </div>
-                  ))}
-                  {saveMsg&&<div style={{marginTop:12,padding:"8px 12px",borderRadius:8,background:saveMsg.ok?"#ECFDF5":RL,color:saveMsg.ok?GN:R,fontSize:13}}>{saveMsg.text}</div>}
-                </div>
-              )}
-              {(selectedMember?._tab||"info")==="eltern"&&(
-                <div style={{display:"flex",flexDirection:"column",gap:12}}>
-                  {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
-                  {eltern.map((e,i)=>(
-                    <div key={i} style={{borderRadius:10,border:"0.5px solid var(--border)",padding:"12px 14px"}}>
-                      <div style={{fontWeight:600,fontSize:14,marginBottom:6}}>{e.vorname} {e.nachname}{e.beziehung?` (${e.beziehung})`:""}</div>
-                      {e.email&&<div style={{fontSize:13,color:"var(--sub)",marginBottom:3}}>✉ {e.email}</div>}
-                      {e.telefon&&<div style={{fontSize:13,color:"var(--sub)"}}>📞 {e.telefon}</div>}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          ):(
-            <div style={{display:"flex",flexDirection:"column",gap:12}}>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-                <F lbl="Vorname" fkey="vorname"/>
-                <F lbl="Nachname" fkey="nachname"/>
-                <F lbl="Geburtsdatum" fkey="geburtsdatum" type="date"/>
-                <F lbl="Geschlecht" fkey="geschlecht" opts={[{v:"m",l:"Männlich"},{v:"w",l:"Weiblich"}]}/>
-                <F lbl="Nationalität" fkey="nationalitaet"/>
-                <F lbl="Heimatort" fkey="heimatort"/>
-                <F lbl="Strasse" fkey="strasse"/>
-                <F lbl="PLZ" fkey="plz"/>
-                <F lbl="Ort" fkey="ort"/>
-                <F lbl="Kanton" fkey="kanton"/>
-                <F lbl="Land" fkey="land"/>
-                <F lbl="E-Mail" fkey="email" type="email"/>
-                <F lbl="Telefon" fkey="telefon"/>
-                <F lbl="Mitgliedtyp" fkey="mitgliedtyp" opts={["Spieler","Trainer","Funktionär","Passivmitglied","Ehrenmitglied","Gönner"]}/>
-                <F lbl="Funktion" fkey="funktion"/>
-                <F lbl="Position" fkey="position"/>
-                <F lbl="Spielerpass" fkey="spielerpass"/>
-                <F lbl="AHV-Nr." fkey="ahv_nr"/>
-                <F lbl="J+S Nr." fkey="js_nr"/>
-                <F lbl="Datenstatus" fkey="datenstatus" opts={["Vollständig","Prüfung fällig","Unvollständig"]}/>
-              </div>
-              <div style={{gridColumn:"1/-1"}}>
-                <span style={S_LABEL}>Notizen</span>
-                <textarea value={form.notizen||""} onChange={e=>setForm(f=>({...f,notizen:e.target.value}))}
-                  style={{...S_INPUT,minHeight:70,resize:"vertical"}}/>
-              </div>
-              {saveMsg&&<div style={{padding:"8px 12px",borderRadius:8,background:saveMsg.ok?"#ECFDF5":RL,color:saveMsg.ok?GN:R,fontSize:13}}>{saveMsg.text}</div>}
-              <div style={{display:"flex",gap:8,paddingTop:4}}>
-                <button onClick={()=>{setEditMode(false);setForm({...raw});setSaveMsg(null);}}
-                  style={{padding:"9px 18px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:14,cursor:"pointer"}}>
-                  Abbrechen
-                </button>
-                <button onClick={handleSave} disabled={saving}
-                  style={{flex:1,padding:"9px",borderRadius:8,border:"none",background:BTN,color:BTN_TXT,fontSize:14,fontWeight:600,cursor:"pointer"}}>
-                  {saving?"Speichert…":"Speichern"}
-                </button>
-              </div>
-            </div>
+          {canEdit&&!editMode&&activeTab==="info"&&(
+            <Btn onClick={()=>setEditMode(true)}><TI n="edit"/> Bearbeiten</Btn>
           )}
         </div>
-      </ModalOrSheet>
+
+        <Tabs tabs={TABS} active={activeTab} setActive={t=>{setActiveTab(t);setEditMode(false);}}/>
+
+        {/* TAB: Stammdaten */}
+        {activeTab==="info"&&!editMode&&(
+          <Card style={{marginTop:12}}>
+            {rows.filter(r=>canEdit?true:(r.v&&r.v!=="-")).map((r,i,arr)=>(
+              <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"0.5px solid var(--border)":"none",gap:12}}>
+                <span style={{fontSize:14,color:"var(--sub)",minWidth:130,flexShrink:0}}>{r.l}</span>
+                <span style={{fontSize:14,color:r.v==="-"?"var(--sub)":"var(--text)",fontWeight:r.v==="-"?400:600,textAlign:"right"}}>{r.v}</span>
+              </div>
+            ))}
+            {saveMsg&&<div style={{marginTop:12,padding:"8px 12px",borderRadius:8,background:saveMsg.ok?"#ECFDF5":RL,color:saveMsg.ok?GN:R,fontSize:13}}>{saveMsg.text}</div>}
+          </Card>
+        )}
+
+        {/* TAB: Stammdaten EDIT */}
+        {activeTab==="info"&&editMode&&(
+          <Card style={{marginTop:12}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              <F lbl="Vorname" fkey="vorname"/>
+              <F lbl="Nachname" fkey="nachname"/>
+              <F lbl="Geburtsdatum" fkey="geburtsdatum" type="date"/>
+              <F lbl="Geschlecht" fkey="geschlecht" opts={[{v:"m",l:"Männlich"},{v:"w",l:"Weiblich"}]}/>
+              <F lbl="Nationalität" fkey="nationalitaet"/>
+              <F lbl="Heimatort" fkey="heimatort"/>
+              <F lbl="Strasse" fkey="strasse"/>
+              <F lbl="PLZ" fkey="plz"/>
+              <F lbl="Ort" fkey="ort"/>
+              <F lbl="Kanton" fkey="kanton"/>
+              <F lbl="Land" fkey="land"/>
+              <F lbl="E-Mail" fkey="email" type="email"/>
+              <F lbl="Telefon" fkey="telefon"/>
+              <F lbl="Mitgliedtyp" fkey="mitgliedtyp" opts={["Spieler","Trainer","Funktionär","Passivmitglied","Ehrenmitglied","Gönner"]}/>
+              <F lbl="Funktion" fkey="funktion"/>
+              <F lbl="Position" fkey="position"/>
+              <F lbl="Spielerpass" fkey="spielerpass"/>
+              <F lbl="AHV-Nr." fkey="ahv_nr"/>
+              <F lbl="J+S Nr." fkey="js_nr"/>
+              <F lbl="Datenstatus" fkey="datenstatus" opts={["Vollständig","Prüfung fällig","Unvollständig"]}/>
+            </div>
+            <div style={{marginTop:10}}>
+              <span style={S_LABEL}>Notizen</span>
+              <textarea value={form.notizen||""} onChange={e=>setForm(f=>({...f,notizen:e.target.value}))}
+                style={{...S_INPUT,minHeight:70,resize:"vertical",width:"100%",boxSizing:"border-box",marginTop:4}}/>
+            </div>
+            {saveMsg&&<div style={{marginTop:8,padding:"8px 12px",borderRadius:8,background:saveMsg.ok?"#ECFDF5":RL,color:saveMsg.ok?GN:R,fontSize:13}}>{saveMsg.text}</div>}
+            <div style={{display:"flex",gap:8,marginTop:12}}>
+              <button onClick={()=>{setEditMode(false);setForm({...raw});setSaveMsg(null);}}
+                style={{padding:"9px 18px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface)",color:"var(--sub)",fontSize:14,cursor:"pointer"}}>
+                Abbrechen
+              </button>
+              <button onClick={handleSave} disabled={saving}
+                style={{flex:1,padding:"9px",borderRadius:8,border:"none",background:BTN,color:BTN_TXT,fontSize:14,fontWeight:600,cursor:"pointer"}}>
+                {saving?"Speichert…":"Speichern"}
+              </button>
+            </div>
+          </Card>
+        )}
+
+        {/* TAB: Eltern */}
+        {activeTab==="eltern"&&(
+          <div style={{display:"flex",flexDirection:"column",gap:10,marginTop:12}}>
+            {eltern.length===0&&(
+              <div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:32}}>Keine Elternkontakte erfasst.</div>
+            )}
+            {eltern.map((e,i)=>(
+              <Card key={i}>
+                <div style={{fontWeight:600,fontSize:15,marginBottom:8}}>{e.vorname} {e.nachname}{e.beziehung?` (${e.beziehung})`:""}</div>
+                <div style={{display:"flex",flexDirection:"column",gap:4}}>
+                  {e.email&&<div style={{fontSize:14,color:"var(--sub)"}}>✉ {e.email}</div>}
+                  {e.telefon&&<div style={{fontSize:14,color:"var(--sub)"}}>📞 {e.telefon}</div>}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* TAB: Kader / Teams */}
+        {activeTab==="teams"&&(
+          <Card style={{marginTop:12}}>
+            <div style={{fontWeight:600,fontSize:14,marginBottom:12,color:"var(--sub)",textTransform:"uppercase",fontSize:11,letterSpacing:"0.05em"}}>Zugeteilte Teams</div>
+            {(raw.teams||[]).length===0?(
+              <div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:24}}>Keine Team-Zuteilung.</div>
+            ):(
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {(raw.teams||[]).map((t,i)=>(
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<(raw.teams.length-1)?"0.5px solid var(--border)":"none"}}>
+                    <div style={{fontWeight:600,fontSize:14}}>{t}</div>
+                    <Chip text={raw.funktion||"Spieler"} color={BL}/>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
+
+        {/* TAB: Anwesenheiten */}
+        {activeTab==="anwesenheit"&&(
+          <div style={{marginTop:12}}>
+            {anwLoading&&<div style={{textAlign:"center",padding:32,color:"var(--sub)",fontSize:14}}>Wird geladen…</div>}
+            {!anwLoading&&anwesenheiten===null&&!sb&&(
+              <div style={{textAlign:"center",padding:32,color:"var(--sub)",fontSize:14}}>Supabase nicht verfügbar.</div>
+            )}
+            {!anwLoading&&anwesenheiten!==null&&(
+              anwesenheiten.length===0?(
+                <div style={{textAlign:"center",padding:32,color:"var(--sub)",fontSize:14}}>Keine Anwesenheiten erfasst.</div>
+              ):(
+                <Card>
+                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:12}}>
+                    <div>
+                      <span style={{fontSize:13,color:"var(--sub)"}}>Total Einträge: </span>
+                      <span style={{fontWeight:600}}>{anwesenheiten.length}</span>
+                    </div>
+                    <div style={{display:"flex",gap:16,fontSize:13}}>
+                      <span style={{color:GN}}>✓ Anwesend: {anwesenheiten.filter(a=>a.status==="zu").length}</span>
+                      <span style={{color:R}}>✗ Abwesend: {anwesenheiten.filter(a=>a.status==="ab").length}</span>
+                    </div>
+                  </div>
+                  {anwesenheiten.slice(0,20).map((a,i)=>(
+                    <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderTop:"0.5px solid var(--border)"}}>
+                      <div>
+                        <div style={{fontSize:14,fontWeight:500}}>{a.event_type||"Termin"}</div>
+                        <div style={{fontSize:12,color:"var(--sub)"}}>{a.updated_at?.split("T")[0]||"-"}</div>
+                      </div>
+                      <Chip
+                        text={a.status==="zu"?"Anwesend":a.status==="ab"?"Abwesend":"Offen"}
+                        color={a.status==="zu"?GN:a.status==="ab"?R:AM}
+                      />
+                    </div>
+                  ))}
+                  {anwesenheiten.length>20&&<div style={{fontSize:13,color:"var(--sub)",textAlign:"center",paddingTop:8}}>+{anwesenheiten.length-20} weitere</div>}
+                </Card>
+              )
+            )}
+          </div>
+        )}
+
+        {/* TAB: Statistiken */}
+        {activeTab==="statistiken"&&(
+          <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:12}}>
+            <div className="cc-grid-stats">
+              <Stat label="Teams" value={(raw.teams||[]).length} semantic="info"/>
+              <Stat label="Anwesenheiten" value={anwesenheiten?.length??"-"} semantic="neutral"/>
+              <Stat label="Quote" value={anwesenheiten?Math.round((anwesenheiten.filter(a=>a.status==="zu").length/Math.max(anwesenheiten.length,1))*100)+"%":"-"} semantic="success"/>
+            </div>
+            <Card>
+              <div style={{fontWeight:600,fontSize:14,marginBottom:8}}>Mitglied seit</div>
+              <div style={{fontSize:14,color:"var(--sub)"}}>{raw.created_at?new Date(raw.created_at).toLocaleDateString("de-CH"):"-"}</div>
+            </Card>
+          </div>
+        )}
+
+        {/* TAB: Dokumente */}
+        {activeTab==="dokumente"&&(
+          <Card style={{marginTop:12}}>
+            <div style={{textAlign:"center",padding:24,color:"var(--sub)",fontSize:14}}>
+              Dokumentenverwaltung noch nicht verbunden.<br/>
+              <span style={{fontSize:12}}>Dokumente können über das Dokumente-Modul verwaltet werden.</span>
+            </div>
+            {raw.notizen&&(
+              <div style={{marginTop:12,padding:"12px 14px",background:"var(--surface2)",borderRadius:8}}>
+                <div style={{fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Notizen</div>
+                <div style={{fontSize:14,color:"var(--text)",lineHeight:1.6}}>{raw.notizen}</div>
+              </div>
+            )}
+          </Card>
+        )}
+
+        {/* TAB: Portal-Zugang */}
+        {activeTab==="portal"&&(
+          <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:12}}>
+            <Card>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                <div style={{fontWeight:600,fontSize:15}}>Portal-Zugang</div>
+                <Chip
+                  text={raw.hat_portal_zugang?"Aktiv":"Kein Zugang"}
+                  color={raw.hat_portal_zugang?GN:R}
+                  bg={raw.hat_portal_zugang?"#ECFDF5":RL}
+                />
+              </div>
+              {canEdit&&(
+                <button onClick={togglePortalZugang}
+                  style={{width:"100%",padding:"10px",borderRadius:8,border:`0.5px solid ${raw.hat_portal_zugang?R:GN}`,background:"var(--surface)",color:raw.hat_portal_zugang?R:GN,fontSize:14,cursor:"pointer",fontWeight:500}}>
+                  {raw.hat_portal_zugang?"Portal-Zugang deaktivieren":"Portal-Zugang aktivieren"}
+                </button>
+              )}
+            </Card>
+            {portalLoading&&<div style={{textAlign:"center",padding:16,color:"var(--sub)",fontSize:14}}>Wird geladen…</div>}
+            {!portalLoading&&benutzer&&(
+              <Card>
+                <div style={{fontWeight:600,fontSize:14,marginBottom:10}}>Benutzer-Konto</div>
+                {[
+                  {l:"E-Mail",  v:benutzer.email||"-"},
+                  {l:"Rolle",   v:benutzer.role||"-"},
+                  {l:"Aktiv",   v:benutzer.active?"Ja":"Nein"},
+                  {l:"Erstellt",v:benutzer.created_at?new Date(benutzer.created_at).toLocaleDateString("de-CH"):"-"},
+                ].map((r,i)=>(
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"0.5px solid var(--border)"}}>
+                    <span style={{fontSize:14,color:"var(--sub)"}}>{r.l}</span>
+                    <span style={{fontSize:14,fontWeight:600}}>{r.v}</span>
+                  </div>
+                ))}
+              </Card>
+            )}
+            {!portalLoading&&benutzer===null&&raw.hat_portal_zugang&&(
+              <Card>
+                <div style={{fontSize:14,color:"var(--sub)",textAlign:"center",padding:16}}>
+                  Kein Benutzer-Konto gefunden.<br/>
+                  <span style={{fontSize:12}}>Das Mitglied hat noch keinen Login erstellt.</span>
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
+      </div>
     );
   };
 
