@@ -557,11 +557,12 @@ function PortalZugangTab({raw,eltern,canEdit,sb,benutzer,portalLoading,togglePor
     setLinkLoading(prev=>({...prev,[e.email]:true}));
     try{
       // E-Mail in elternkontakte aktualisieren
+      console.log("[FCH] updateElternEmail:", e.email, "→", neueEmail.trim(), "mitglied_id:", raw.id);
       const {error}=await sb.from("elternkontakte")
         .update({email:neueEmail.trim()})
         .eq("mitglied_id",raw.id)
         .eq("email",e.email);
-      if(error) throw error;
+      if(error){ console.error("[FCH] elternkontakte update error:", error); throw error; }
       // Prüfen ob Konto mit neuer E-Mail existiert
       const {data:buArr4}=await sb.from("benutzer").select("id,email,role,active").eq("email",neueEmail.trim()).limit(1);
       const bu=buArr4?.[0]||null;
@@ -1337,11 +1338,13 @@ function ProfilView({role, dbUser, dbMitglieder=[], sb, onReload}){
       };
 
   const [form,setForm]=useState(initialForm);
+  const [loaded,setLoaded]=useState(false);
   const [saving,setSaving]=useState(false);
   const [msg,setMsg]=useState(null);
 
-  // Felder neu laden wenn dbMitglieder nachgeladen wird
+  // Felder einmalig laden wenn dbMitglieder verfügbar
   useEffect(()=>{
+    if(loaded) return; // nie überschreiben wenn User bereits tippt
     const m=dbMitglieder.find(x=>x.email===dbUser?.email)||null;
     if(!m&&!istEltern) return;
     setForm(istEltern
@@ -1355,6 +1358,7 @@ function ProfilView({role, dbUser, dbMitglieder=[], sb, onReload}){
         email:m?.email||"",telefon:m?.telefon||"",
       }
     );
+    setLoaded(true);
   },[dbMitglieder, dbUser]);
 
   const fehlend = pflichtFelder.filter(f=>!form[f]||String(form[f]).trim()==="");
@@ -1380,6 +1384,7 @@ function ProfilView({role, dbUser, dbMitglieder=[], sb, onReload}){
         if(error) throw error;
       }
       setMsg({ok:true,text:"Profil gespeichert ✓"});
+      setLoaded(false); // erlaubt useEffect die frischen DB-Daten zu laden
       if(onReload) onReload();
     }catch(e){ setMsg({ok:false,text:e.message}); }
     setSaving(false);
