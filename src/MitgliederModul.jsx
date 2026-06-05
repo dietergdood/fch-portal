@@ -322,22 +322,30 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     const eltern=raw.eltern||[];
     const fv=getFieldVisibility(role);
     const rows=[
-      {l:"Vorname",     v:raw.vorname||m.name.split(" ")[0]},
-      {l:"Nachname",    v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
-      ...(fv.showGebdat ?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"}]:[]),
-      {l:"Nationalität",v:raw.nationalitaet||"-"},
-      ...(fv.showAdresse?[{l:"Adresse",v:raw.strasse?`${raw.strasse}, ${raw.plz} ${raw.ort}`:m.location||"-"}]:[]),
-      ...(fv.showEmail  ?[{l:"E-Mail",  v:raw.email||"-"}]:[]),
-      ...(fv.showTelefon?[{l:"Telefon", v:raw.telefon||"-"}]:[]),
-      {l:"Rolle",       v:m.role},
-      {l:"Team(s)",     v:m.team},
-      {l:"Mitgliedtyp", v:m.type},
-      {l:"Position",    v:raw.position||"-"},
-      ...(fv.showPass   ?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
-      ...(fv.showAhv    ?[{l:"AHV-Nr.",    v:raw.ahv_nr||"-"}]:[]),
-      ...(fv.showPass   ?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
+      {l:"Vorname",      v:raw.vorname||m.name.split(" ")[0]},
+      {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
+      ...(fv.showGebdat ?[{l:"Geburtsdatum", v:raw.geburtsdatum||"-"}]:[]),
+      {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":raw.geschlecht||"-"},
+      {l:"Nationalität", v:raw.nationalitaet||"-"},
+      {l:"Heimatort",    v:raw.heimatort||"-"},
+      ...(fv.showAdresse?[
+        {l:"Strasse",    v:raw.strasse||"-"},
+        {l:"PLZ / Ort",  v:raw.plz&&raw.ort?`${raw.plz} ${raw.ort}`:"-"},
+        {l:"Kanton",     v:raw.kanton||"-"},
+        {l:"Land",       v:raw.land||"-"},
+      ]:[]),
+      ...(fv.showEmail  ?[{l:"E-Mail",       v:raw.email||"-"}]:[]),
+      ...(fv.showTelefon?[{l:"Telefon",      v:raw.telefon||"-"}]:[]),
+      {l:"Funktion",     v:raw.funktion||"-"},
+      {l:"Team(s)",      v:(raw.teams||[]).join(", ")||m.team||"-"},
+      {l:"Mitgliedtyp",  v:raw.mitgliedtyp||m.type||"-"},
+      {l:"Position",     v:raw.position||"-"},
+      ...(fv.showPass   ?[{l:"Spielerpass",  v:raw.spielerpass||"-"}]:[]),
+      ...(fv.showAhv    ?[{l:"AHV-Nr.",      v:raw.ahv_nr||"-"}]:[]),
+      ...(fv.showPass   ?[{l:"J+S Nr.",      v:raw.js_nr||"-"}]:[]),
       ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
-      ...(fv.showNotizen?[{l:"Notizen",    v:raw.notizen||"-"}]:[]),
+      {l:"Datenstatus",  v:raw.datenstatus||"-"},
+      ...(fv.showNotizen?[{l:"Notizen",      v:raw.notizen||"-"}]:[]),
     ];
     return(
       <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
@@ -359,7 +367,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
           {(selectedMember?._tab||"info")==="info"&&(
             <div>
-              {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
+              {rows.filter(r=>role==="administrator"||role==="administration"?true:(r.v&&r.v!=="-")).map((r,i,arr)=>(
                 <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
                   <span style={{fontSize:14,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
                   <span style={{fontSize:14,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
@@ -581,22 +589,30 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     const eltern=raw.eltern||[];
     const fv=getFieldVisibility(role);
     const rows=[
-      {l:"Vorname",     v:raw.vorname||m.name.split(" ")[0]},
-      {l:"Nachname",    v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
-      ...(fv.showGebdat ?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"}]:[]),
-      {l:"Nationalität",v:raw.nationalitaet||"-"},
-      ...(fv.showAdresse?[{l:"Adresse",v:raw.strasse?`${raw.strasse}, ${raw.plz} ${raw.ort}`:m.location||"-"}]:[]),
-      ...(fv.showEmail  ?[{l:"E-Mail",  v:raw.email||"-"}]:[]),
-      ...(fv.showTelefon?[{l:"Telefon", v:raw.telefon||"-"}]:[]),
-      {l:"Rolle",       v:m.role},
-      {l:"Team(s)",     v:m.team},
-      {l:"Mitgliedtyp", v:m.type},
-      {l:"Position",    v:raw.position||"-"},
-      ...(fv.showPass   ?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
-      ...(fv.showAhv    ?[{l:"AHV-Nr.",    v:raw.ahv_nr||"-"}]:[]),
-      ...(fv.showPass   ?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
+      {l:"Vorname",      v:raw.vorname||m.name.split(" ")[0]},
+      {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
+      ...(fv.showGebdat ?[{l:"Geburtsdatum", v:raw.geburtsdatum||"-"}]:[]),
+      {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":raw.geschlecht||"-"},
+      {l:"Nationalität", v:raw.nationalitaet||"-"},
+      {l:"Heimatort",    v:raw.heimatort||"-"},
+      ...(fv.showAdresse?[
+        {l:"Strasse",    v:raw.strasse||"-"},
+        {l:"PLZ / Ort",  v:raw.plz&&raw.ort?`${raw.plz} ${raw.ort}`:"-"},
+        {l:"Kanton",     v:raw.kanton||"-"},
+        {l:"Land",       v:raw.land||"-"},
+      ]:[]),
+      ...(fv.showEmail  ?[{l:"E-Mail",       v:raw.email||"-"}]:[]),
+      ...(fv.showTelefon?[{l:"Telefon",      v:raw.telefon||"-"}]:[]),
+      {l:"Funktion",     v:raw.funktion||"-"},
+      {l:"Team(s)",      v:(raw.teams||[]).join(", ")||m.team||"-"},
+      {l:"Mitgliedtyp",  v:raw.mitgliedtyp||m.type||"-"},
+      {l:"Position",     v:raw.position||"-"},
+      ...(fv.showPass   ?[{l:"Spielerpass",  v:raw.spielerpass||"-"}]:[]),
+      ...(fv.showAhv    ?[{l:"AHV-Nr.",      v:raw.ahv_nr||"-"}]:[]),
+      ...(fv.showPass   ?[{l:"J+S Nr.",      v:raw.js_nr||"-"}]:[]),
       ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
-      ...(fv.showNotizen?[{l:"Notizen",    v:raw.notizen||"-"}]:[]),
+      {l:"Datenstatus",  v:raw.datenstatus||"-"},
+      ...(fv.showNotizen?[{l:"Notizen",      v:raw.notizen||"-"}]:[]),
     ];
     return(
       <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
@@ -618,7 +634,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
           {(selectedMember?._tab||"info")==="info"&&(
             <div>
-              {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
+              {rows.filter(r=>role==="administrator"||role==="administration"?true:(r.v&&r.v!=="-")).map((r,i,arr)=>(
                 <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
                   <span style={{fontSize:14,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
                   <span style={{fontSize:14,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
