@@ -13,6 +13,24 @@ const ThemeCtx = createContext({dark:false, toggle:()=>{}});
 const useTheme = ()=>useContext(ThemeCtx);
 
 const PWA_CSS=`
+:root{
+  --bg:#F5F5F3;
+  --surface:#FFFFFF;
+  --surface2:#F1EFE8;
+  --border:#E0DED8;
+  --text:#1A1A1A;
+  --sub:#888780;
+  --card-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+[data-theme=dark]{
+  --bg:#111111;
+  --surface:#1C1C1E;
+  --surface2:#2C2C2E;
+  --border:#3A3A3C;
+  --text:#F5F5F3;
+  --sub:#888780;
+  --card-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
 @keyframes cc-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes cc-shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes cc-dot{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
