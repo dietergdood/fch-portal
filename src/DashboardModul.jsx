@@ -252,7 +252,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
   return(
     <div>
       <H1 mb={6}>Guten Morgen, {firstName}</H1>
-      <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:18}}>Trainer · {trainerTeams.join(" & ")} · Freitag, 23. Mai 2026</p>
+      <p className="cc-detail-label" style={{marginBottom:18}}>Trainer · {trainerTeams.join(" & ")} · Freitag, 23. Mai 2026</p>
       <div className="cc-grid-stats" style={{marginBottom:20}}>
         <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} semantic="success"/>
         <Stat label="Nächstes Spiel"    value={nextSpiel?nextSpiel.date.replace(/^\w+\s/,""):"-"} sub={nextSpiel?`${nextSpiel.time} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel"} semantic="info"/>
@@ -260,28 +260,15 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
         <Stat label="Tabellenrang"      value={myRow?myRow.rank+".":"-"} sub={myRow?TABLES[team]?.length+" Teams · "+myRow.pts+" Punkte":"Keine Tabelle"} semantic="info"/>
       </div>
       <div className="cc-grid-cards" >
-        <Card>
-          <STitle action={<Chip text={upcoming.filter(e=>e.rsvp!==false).length+" offen"} semantic="danger"/>}>Fehlende Rückmeldungen</STitle>
-          {upcoming.filter(e=>e.rsvp!==false).slice(0,3).map((x,i,arr)=>{
-            const teamPids=ROSTER.filter(p=>(p.teams||[]).includes(team)&&!p.role).map(p=>p.id);
-            const missing=teamPids.filter(pid=>!ATT_INITIAL[x.id]?.[pid]?.status).length;
-            return(
-              <div key={i} className="cc-list-row" style={{borderBottom:i===0&&false?undefined:undefined}}>
-                <span style={{fontSize:13}}>{x.opponent?"Spiel vs. "+x.opponent:x.title||x.type} · {x.date}</span>
-                {missing>0&&<Chip text={`${missing} fehlen`} semantic="warning"/>}
-                {missing===0&&<Chip text="✓ Vollständig" semantic="success"/>}
-              </div>
-            );
-          })}
-        </Card>
+
         <Card>
           <STitle>Anwesenheit letzte Anlässe</STitle>
           {ATT_LOG.slice(0,3).map((a,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:13,fontWeight:600}}>{a.date} <Chip text={a.type} color={a.type==="Spiel"?BL:GN}/></span>
+              <Between mb={3}>
+                <span className="cc-list-name">{a.date} <Chip text={a.type} color={a.type==="Spiel"?BL:GN}/></span>
                 <span style={{fontSize:13,fontWeight:800,color:R}}>{Math.round(a.present.length/(a.present.length+a.absent.length)*100)}%</span>
-              </div>
+              </Between>
               <div style={{height:4,background:GB,borderRadius:2}}>
                 <div style={{height:"100%",width:`${a.present.length/(a.present.length+a.absent.length)*100}%`,background:R,borderRadius:2}}/>
               </div>
@@ -294,10 +281,10 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
             const s=e.schichten[0]; const filled=s.helfer.length, max=s.max;
             return(
               <div key={i} style={{marginBottom:i<2?10:0}}>
-                <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:3}}>
-                  <span style={{fontWeight:600}}>{e.name} <span style={{color:"var(--sub)"}}>{e.time+" Uhr"}</span></span>
+                <Between mb={3}>
+                  <span className="cc-list-name">{e.name} <span style={{color:"var(--sub)"}}>{e.time+" Uhr"}</span></span>
                   <span style={{color:filled<max?R:GN,fontWeight:700}}>{filled}/{max}</span>
-                </div>
+                </Between>
                 <div style={{height:5,background:GB,borderRadius:4}}>
                   <div style={{height:"100%",width:`${filled/max*100}%`,background:filled<max?R:GN,borderRadius:4}}/>
                 </div>
@@ -305,19 +292,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
             );
           })}
         </Card>
-        <Card>
-          <STitle>Offene Abstimmungen</STitle>
-          {POLLS.filter(p=>!p.closed).map((p,i)=>(
-            <div key={i} style={{padding:"8px 0"}}>
-              <div className="cc-list-name">{p.title}</div>
-              <Chip text={p.target} semantic="info"/>
-            </div>
-          ))}
-          <div style={{padding:"8px 0",borderTop:"0.5px solid var(--border)",marginTop:6}}>
-            <div className="cc-list-name">Vereinsbus reserviert ✓</div>
-            <div className="cc-detail-label" style={{minWidth:"auto"}}>Bus A · Sa 24.05. · 09:00-14:00</div>
-          </div>
-        </Card>
+
       </div>
     </div>
   );
