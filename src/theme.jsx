@@ -300,7 +300,7 @@ function Chip({text,color,bg,semantic,size="sm"}){
 
 
 
-function Stat({label,value,sub,color,semantic,icon,size="md"}){
+function Stat({label,value,sub,color,semantic,icon}){
   /* Verwendung:
      <Stat label="Aktiv" value={42} semantic="success" icon="users"/>
      <Stat label="Fehler" value={3} semantic="danger"/>
@@ -308,9 +308,9 @@ function Stat({label,value,sub,color,semantic,icon,size="md"}){
      <Stat label="Custom" value={8} color="#7C3AED"/>  */
   const c=semantic?resolveColor(semantic):{text:color||"var(--text)",bg:(color||"var(--sub)")+"20"};
   return(
-    <div className="cc-card" style={{borderRadius:12,padding:size==="sm"?"14px 16px":"20px 22px",flex:1,minWidth:0}}>
-      <div style={{fontSize:11,color:"var(--sub)",fontWeight:600,textTransform:"uppercase",letterSpacing:0.6,marginBottom:size==="sm"?4:8}}>{label}</div>
-      <div style={{fontSize:size==="sm"?18:28,fontWeight:600,color:c.text,lineHeight:1,marginBottom:sub?4:0}}>{value}</div>
+    <div className="cc-card" style={{borderRadius:12,padding:"20px 22px",flex:1,minWidth:0}}>
+      <div style={{fontSize:11,color:"var(--sub)",fontWeight:600,textTransform:"uppercase",letterSpacing:0.6,marginBottom:8}}>{label}</div>
+      <div style={{fontSize:28,fontWeight:600,color:c.text,lineHeight:1,marginBottom:sub?4:0}}>{value}</div>
       {sub&&<div style={{fontSize:12,color:"var(--sub)",lineHeight:1.4,marginTop:2}}>{sub}</div>}
     </div>
   );
