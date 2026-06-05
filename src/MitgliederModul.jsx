@@ -794,8 +794,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
   const [filterVals,setFilterVals]=useState([]);
   const [selectedMember,setSelectedMember]=useState(null);
   const canExport=role==="administrator"||role==="administration";
-
-  /* Mitglieder: aus Supabase wenn geladen, sonst MEMBERS Fallback */
+  const canEdit=role==="administrator"||role==="administration";
   const allMembers=dbMitglieder.length>0
     ?dbMitglieder.map(m=>({
         id:m.id,
