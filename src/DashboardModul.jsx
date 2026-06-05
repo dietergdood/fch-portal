@@ -23,9 +23,9 @@ function getDate(){
   return new Date().toLocaleDateString("de-CH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 }
 
-function Dashboard({role,setActive,account,meineTeams,myRosterId}){
-  if(role==="administrator")  return <DashboardAdmin setActive={setActive} account={account}/>;
-  if(role==="administration") return <DashboardAdministration setActive={setActive} account={account}/>;
+function Dashboard({role,setActive,account,meineTeams,myRosterId,dbMitglieder=[]}){
+  if(role==="administrator")  return <DashboardAdmin setActive={setActive} account={account} dbMitglieder={dbMitglieder}/>;
+  if(role==="administration") return <DashboardAdministration setActive={setActive} account={account} dbMitglieder={dbMitglieder}/>;
   if(role==="funktionaer")    return <DashboardFunktionaer setActive={setActive} account={account}/>;
   if(role==="trainer")        return <DashboardTrainer setActive={setActive} account={account} trainerTeams={meineTeams} myRosterId={myRosterId}/>;
   if(role==="spieler")        return <DashboardSpieler account={account} meineTeams={meineTeams} myRosterId={myRosterId} setActive={setActive}/>;
@@ -33,18 +33,25 @@ function Dashboard({role,setActive,account,meineTeams,myRosterId}){
   return null;
 }
 
-function DashboardAdmin({setActive,account}){
+function DashboardAdmin({setActive,account,dbMitglieder=[]}){
   const isMobile=useIsMobile();
   const vorname=(account?.name||"Administrator").split(" ")[0];
+
+  // Zahlen aus dbMitglieder berechnen
+  const totalMitglieder=dbMitglieder.length;
+  const countByFunktion=(fn)=>dbMitglieder.filter(m=>m.aktiv!==false&&(m.funktion||"").toLowerCase().includes(fn.toLowerCase())).length;
+  const spielerCount=dbMitglieder.filter(m=>m.aktiv!==false&&(!m.funktion||m.funktion.toLowerCase()==="spieler")).length;
+  const trainerCount=countByFunktion("trainer");
+  const elternCount=dbMitglieder.filter(m=>m.aktiv!==false&&m.eltern&&Array.isArray(m.eltern)&&m.eltern.length>0).length;
   return(
     <div>
       <H1 mb={4}>{getGreeting()}, {vorname}</H1>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:24}}>ClubCampus – Systemübersicht</p>
       <div className="cc-grid-stats" style={{marginBottom:24}}>
-        <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" semantic="primary" icon="users"/>
-        <Stat label="Aktive Benutzer" value="134" sub="in den letzten 30 Tagen" semantic="info" icon="user"/>
-        <Stat label="Sync-Fehler" value="2" sub="Fairgate / FVRZ" semantic="danger" icon="refresh"/>
-        <Stat label="Offene Datenprüfungen" value="12" sub="Mitglieder fällig" semantic="warning" icon="clipboard-list"/>
+        <Stat label="Mitglieder total" value={totalMitglieder||"–"} sub="aus Supabase" semantic="primary" icon="users"/>
+        <Stat label="Aktive Benutzer" value="–" sub="noch nicht verbunden" semantic="info" icon="user"/>
+        <Stat label="Sync-Fehler" value="–" sub="Fairgate / FVRZ" semantic="danger" icon="refresh"/>
+        <Stat label="Offene Datenprüfungen" value="–" sub="Mitglieder fällig" semantic="warning" icon="clipboard-list"/>
       </div>
       <div className="cc-grid-cards" >
         <Card>
@@ -65,12 +72,14 @@ function DashboardAdmin({setActive,account}){
           ))}
         </Card>
         <Card>
-          <STitle>Benutzer &amp; Rollen</STitle>
+          <STitle>Mitglieder &amp; Funktionen</STitle>
           {[
-            {r:"Administrator",n:2},{r:"Administration",n:3},{r:"Trainer",n:8},
-            {r:"Funktionäre/Vorstand",n:6},{r:"Spieler",n:112},{r:"Eltern",n:56},
+            {r:"Spieler",         n:spielerCount},
+            {r:"Trainer",         n:trainerCount},
+            {r:"Eltern (mit Kind)",n:elternCount},
+            {r:"Total aktiv",     n:totalMitglieder},
           ].map((x,i)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<5?`0.5px solid ${GB}`:"none"}}>
+            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
               <span style={{fontSize:14}}>{x.r}</span>
               <span style={{fontWeight:700,fontSize:14}}>{x.n}</span>
             </div>
