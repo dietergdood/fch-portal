@@ -98,6 +98,29 @@ const TEAM_HIERARCHY={
   },
 };
 
+/* Nur echte teams-Spalten extrahieren — keine form-internen Felder */
+function toDbData(form){
+  return {
+    name: form.name,
+    kategorie: form.kategorie||form.hauptbereich||"",
+    liga: form.liga||"",
+    saison: form.saison||"",
+    trainer: form.trainer||null,
+    trainer2: form.trainer2||null,
+    aktiv: form.aktiv??true,
+    beschreibung: form.beschreibung||null,
+    haupttrainer: form.haupttrainer||[],
+    staff: form.staff||[],
+    co_trainers: form.co_trainers||[],
+    stufe_id: form.stufe_id||null,
+    kurzname: form.kurzname||null,
+    hauptbereich: form.hauptbereich||null,
+    vereinsstufe: form.vereinsstufe||null,
+    verbandskategorie: form.verbandskategorie||null,
+    stufenleitung: form.stufenleitung||null,
+  };
+}
+
 function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCustomBack,TeamViewComponent=null,KaderModulComponent=null,TrainingsplanModulComponent=null,TermineModulComponent=null,SpielplanModulComponent=null,TableTabComponent=null,HelferModulComponent=null}){
   const EMPTY={stufe_id:null,stufe_ebene1:"",stufe_ebene2:"",stufe_ebene3_id:null,hauptbereich:"Juniorenfussball",vereinsstufe:"Junioren C",verbandskategorie:"",name:"",kurzname:"",stufenleitung:"",liga:"",saison:"2024/25",haupttrainer:[],co_trainers:[],staff:[],aktiv:true,beschreibung:""};
   const FALLBACK=[
@@ -229,7 +252,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
     try{
       if(sb){
         if(editTeam){
-          const saveData={...form};if(form.stufe_id) saveData.stufe_id=form.stufe_id;const{error}=await sb.from("teams").update({...saveData,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
+          const saveData=toDbData(form);const{error}=await sb.from("teams").update({...saveData,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
           if(error) throw error;
           setTeams(ts=>ts.map(t=>t.id===editTeam.id?{...t,...form}:t));
           /* team_module speichern falls geändert */
@@ -239,7 +262,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             await sb.from("team_module").upsert(rows,{onConflict:"team_id,modul"});
           }
         }else{
-          const saveData={...form};if(form.stufe_id) saveData.stufe_id=form.stufe_id;const{data,error}=await sb.from("teams").insert({...saveData,created_at:new Date().toISOString()}).select().single();
+          const saveData=toDbData(form);const{data,error}=await sb.from("teams").insert({...saveData,created_at:new Date().toISOString()}).select().single();
           if(error) throw error;
           setTeams(ts=>[...ts,data]);
           /* team_module für neues Team */
@@ -927,7 +950,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
     try{
       if(sb){
         if(editTeam){
-          const saveData={...form};if(form.stufe_id) saveData.stufe_id=form.stufe_id;const{error}=await sb.from("teams").update({...saveData,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
+          const saveData=toDbData(form);const{error}=await sb.from("teams").update({...saveData,updated_at:new Date().toISOString()}).eq("id",editTeam.id);
           if(error) throw error;
           setTeams(ts=>ts.map(t=>t.id===editTeam.id?{...t,...form}:t));
           /* team_module speichern falls geändert */
@@ -937,7 +960,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             await sb.from("team_module").upsert(rows,{onConflict:"team_id,modul"});
           }
         }else{
-          const saveData={...form};if(form.stufe_id) saveData.stufe_id=form.stufe_id;const{data,error}=await sb.from("teams").insert({...saveData,created_at:new Date().toISOString()}).select().single();
+          const saveData=toDbData(form);const{data,error}=await sb.from("teams").insert({...saveData,created_at:new Date().toISOString()}).select().single();
           if(error) throw error;
           setTeams(ts=>[...ts,data]);
           /* team_module für neues Team */
