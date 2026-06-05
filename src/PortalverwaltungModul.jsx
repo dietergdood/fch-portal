@@ -413,17 +413,59 @@ export const BORDER = '${t.borderWidth}';`;
         }
 
         /* ── Slider helper ── */
+        const PREVIEWS={
+          rBtn:      (v)=><button style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:'4px 12px',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>Button</button>,
+          rInput:    (v)=><div style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:'4px 10px',fontSize:11,color:'var(--sub)'}}>Input</div>,
+          rCard:     (v)=><div style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:'6px 10px',fontSize:11,boxShadow:'0 1px 4px rgba(0,0,0,0.06)'}}>Card</div>,
+          rBadge:    (v)=><div style={{borderRadius:v,background:'var(--text)',color:'var(--bg)',padding:'2px 8px',fontSize:10,fontWeight:600,display:'inline-block'}}>Aktiv</div>,
+          rModal:    (v)=><div style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface)',padding:'5px 10px',fontSize:11,boxShadow:'0 2px 8px rgba(0,0,0,0.1)'}}>Modal</div>,
+          rSeg:      (v)=><div style={{borderRadius:v,background:'var(--surface2)',padding:3,display:'flex',gap:2}}><div style={{borderRadius:Math.max(0,v-2),background:'var(--surface)',padding:'3px 8px',fontSize:10,fontWeight:600}}>Tab 1</div><div style={{padding:'3px 8px',fontSize:10,color:'var(--sub)'}}>Tab 2</div></div>,
+          rIconBtn:  (v)=><button style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface2)',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>⋮</button>,
+          rChip:     (v)=><div style={{borderRadius:v,border:'1.5px solid var(--border)',padding:'2px 10px',fontSize:10,fontWeight:600,color:'var(--sub)',display:'inline-block'}}>Filter</div>,
+          hBtn:      (v)=><button style={{height:v,padding:'0 12px',borderRadius:tok.rBtn,border:'none',background:'var(--text)',color:'var(--bg)',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>Btn</button>,
+          hInput:    (v)=><div style={{height:v,borderRadius:tok.rInput,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:'0 10px',display:'flex',alignItems:'center',fontSize:11,color:'var(--sub)'}}>Input</div>,
+          hIconBtn:  (v)=><button style={{width:v,height:v,borderRadius:tok.rIconBtn,border:'0.5px solid var(--border)',background:'var(--surface2)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:12}}>⋮</button>,
+          padBtnH:   (v)=><button style={{borderRadius:tok.rBtn,border:'none',background:'var(--text)',color:'var(--bg)',padding:`${tok.padBtnV}px ${v}px`,fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>Button</button>,
+          padBtnV:   (v)=><button style={{borderRadius:tok.rBtn,border:'none',background:'var(--text)',color:'var(--bg)',padding:`${v}px ${tok.padBtnH}px`,fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>Button</button>,
+          padInputH: (v)=><div style={{borderRadius:tok.rInput,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:`${tok.padInputV}px ${v}px`,fontSize:11,color:'var(--sub)'}}>Input</div>,
+          padInputV: (v)=><div style={{borderRadius:tok.rInput,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:`${v}px ${tok.padInputH}px`,fontSize:11,color:'var(--sub)'}}>Input</div>,
+          padCard:   (v)=><div style={{borderRadius:tok.rCard,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:v,fontSize:11,boxShadow:'0 1px 4px rgba(0,0,0,0.06)'}}>Card</div>,
+          fsXs:      (v)=><span style={{fontSize:v,color:'var(--sub)'}}>Micro Label</span>,
+          fsSm:      (v)=><span style={{fontSize:v,color:'var(--sub)'}}>Badge · Meta · Chip</span>,
+          fsBase:    (v)=><span style={{fontSize:v}}>Body — Haupttext</span>,
+          fsMd:      (v)=><span style={{fontSize:v,fontWeight:600}}>Subtitel</span>,
+          fsLg:      (v)=><span style={{fontSize:v,fontWeight:700}}>Section Titel</span>,
+          fsXl:      (v)=><span style={{fontSize:v,fontWeight:800}}>Page Header</span>,
+          fwLabel:   (v)=><span style={{fontWeight:v,fontSize:tok.fsBase}}>Label Wert</span>,
+          fwTitle:   (v)=><span style={{fontWeight:v,fontSize:tok.fsBase}}>Überschrift</span>,
+          fwHeader:  (v)=><span style={{fontWeight:v,fontSize:tok.fsLg}}>Page Header</span>,
+          tFast:     (v)=><div style={{width:24,height:24,borderRadius:4,background:'var(--cc-accent,#FFBF00)',transition:`all ${v}ms`,cursor:'pointer'}} title={v+'ms'}/>,
+          tBase:     (v)=><div style={{width:24,height:24,borderRadius:4,background:'var(--text)',transition:`all ${v}ms`,cursor:'pointer'}} title={v+'ms'}/>,
+          tSlow:     (v)=><div style={{width:24,height:24,borderRadius:4,background:'var(--sub)',transition:`all ${v}ms`,cursor:'pointer'}} title={v+'ms'}/>,
+          shCard:    (v)=><div style={{width:40,height:24,borderRadius:tok.rCard,background:'var(--surface)',boxShadow:['none','0 1px 4px rgba(0,0,0,0.06)','0 2px 12px rgba(0,0,0,0.08)','0 4px 20px rgba(0,0,0,0.12)','0 8px 40px rgba(0,0,0,0.18)'][v]}}/>,
+          shDrop:    (v)=><div style={{width:40,height:24,borderRadius:6,background:'var(--surface)',boxShadow:['none','0 1px 4px rgba(0,0,0,0.06)','0 2px 12px rgba(0,0,0,0.08)','0 4px 20px rgba(0,0,0,0.12)','0 8px 40px rgba(0,0,0,0.18)'][v]}}/>,
+          shModal:   (v)=><div style={{width:40,height:24,borderRadius:8,background:'var(--surface)',boxShadow:['none','0 1px 4px rgba(0,0,0,0.06)','0 2px 12px rgba(0,0,0,0.08)','0 4px 20px rgba(0,0,0,0.12)','0 8px 40px rgba(0,0,0,0.18)'][v]}}/>,
+          toggleW:   (v)=><div style={{width:v,height:tok.toggleH,borderRadius:Math.round(tok.toggleH/2),background:'var(--border)',position:'relative'}}><div style={{position:'absolute',top:3,left:3,width:tok.toggleH-6,height:tok.toggleH-6,borderRadius:'50%',background:'#fff',boxShadow:'0 1px 3px rgba(0,0,0,0.2)'}}/></div>,
+          toggleH:   (v)=><div style={{width:tok.toggleW,height:v,borderRadius:Math.round(v/2),background:'var(--border)',position:'relative'}}><div style={{position:'absolute',top:3,left:3,width:v-6,height:v-6,borderRadius:'50%',background:'#fff',boxShadow:'0 1px 3px rgba(0,0,0,0.2)'}}/></div>,
+          segPad:    (v)=><div style={{background:'var(--surface2)',borderRadius:tok.rSeg,padding:v,display:'flex',gap:2}}><div style={{background:'var(--surface)',borderRadius:tok.rSeg-2,padding:'3px 8px',fontSize:10,fontWeight:600}}>An</div><div style={{padding:'3px 8px',fontSize:10,color:'var(--sub)'}}>Aus</div></div>,
+          chipPad:   (v)=><div style={{borderRadius:tok.rChip,border:'1.5px solid var(--border)',padding:`${v}px ${tok.chipPadH}px`,fontSize:10,fontWeight:600,color:'var(--sub)'}}>Chip</div>,
+          chipPadH:  (v)=><div style={{borderRadius:tok.rChip,border:'1.5px solid var(--border)',padding:`${tok.chipPad}px ${v}px`,fontSize:10,fontWeight:600,color:'var(--sub)'}}>Chip</div>,
+        };
+
         const Slider=({label, k, min, max, step=1, unit='px', hint})=>(
-          <div style={{display:'flex',alignItems:'center',gap:10,padding:'6px 0',borderBottom:'0.5px solid var(--border)'}}>
-            <div style={{width:120,flexShrink:0}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'0.5px solid var(--border)'}}>
+            <div style={{width:110,flexShrink:0}}>
               <div style={{fontSize:12,fontWeight:600,color:'var(--text)'}}>{label}</div>
               {hint&&<div style={{fontSize:10,color:'var(--sub)'}}>{hint}</div>}
             </div>
             <input type="range" min={min} max={max} step={step} value={tok[k]}
               onChange={e=>set(k, step===1?parseInt(e.target.value):parseFloat(e.target.value))}
               style={{flex:1,accentColor:'var(--cc-accent, #FFBF00)',height:4}}/>
-            <div style={{fontFamily:'monospace',fontSize:12,color:'var(--text)',minWidth:40,textAlign:'right',background:'var(--surface2)',padding:'2px 6px',borderRadius:4}}>
+            <div style={{fontFamily:'monospace',fontSize:11,color:'var(--text)',minWidth:36,textAlign:'right',background:'var(--surface2)',padding:'2px 6px',borderRadius:4}}>
               {tok[k]}{unit}
+            </div>
+            <div style={{width:80,flexShrink:0,display:'flex',alignItems:'center',justifyContent:'flex-start'}}>
+              {PREVIEWS[k]?PREVIEWS[k](tok[k]):null}
             </div>
           </div>
         );
