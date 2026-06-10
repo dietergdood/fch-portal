@@ -409,7 +409,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         {/* Hero Header */}
         <Card className="cc-card-flush cc-mb-20">
           <div style={{height:6,background:"var(--cc-accent,#FFBF00)"}}/>
-          <div className="cc-row" style={{padding:"24px 28px",gap:20,flexWrap:"wrap"}}>
+          <div className="cc-row" style={{padding:"16px 20px 8px",gap:16,flexWrap:"wrap"}}>
             {/* Avatar */}
             <div style={{width:80,height:80,borderRadius:16,background:"var(--avatar-bg,var(--cc-accent,#FFBF00))",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--cc-avatar-text,#000)",flexShrink:0,position:"relative"}}>
               {initials}
@@ -440,7 +440,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             </div>
           </div>
           {/* Tabs mit cc-seg */}
-          <Tabs
+          <Tabs mb={0}
             tabs={[
               {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
               {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},
@@ -1021,7 +1021,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
         {/* Hero Header */}
         <Card className="cc-card-flush cc-mb-20">
           <div style={{height:6,background:"var(--cc-accent,#FFBF00)"}}/>
-          <div className="cc-row" style={{padding:"24px 28px",gap:20,flexWrap:"wrap"}}>
+          <div className="cc-row" style={{padding:"16px 20px 8px",gap:16,flexWrap:"wrap"}}>
             {/* Avatar */}
             <div style={{width:80,height:80,borderRadius:16,background:"var(--avatar-bg,var(--cc-accent,#FFBF00))",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--cc-avatar-text,#000)",flexShrink:0,position:"relative"}}>
               {initials}
@@ -1052,7 +1052,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
             </div>
           </div>
           {/* Tabs mit cc-seg */}
-          <Tabs
+          <Tabs mb={0}
             tabs={[
               {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
               {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},

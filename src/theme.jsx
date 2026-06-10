@@ -126,7 +126,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-grid-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;align-items:stretch}
 .cc-grid-stats-sm{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .cc-grid-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
-.cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
 .cc-grid-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .cc-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .cc-count{font-size:11px;font-weight:400;color:var(--sub);opacity:0.7;margin-left:4px}
@@ -457,10 +457,10 @@ function Av({name="",init,size="md",bg,useTheme=false}){
 
 
 
-function Tabs({tabs,active,setActive}){
+function Tabs({tabs,active,setActive,mb=18}){
   const isMobile=useIsMobile();
   return(
-    <div style={{display:"inline-flex",gap:2,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch",maxWidth:"100%"}}>
+    <div style={{display:"inline-flex",gap:2,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:mb,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch",maxWidth:"100%"}}>
       {tabs.map(t=>(
         <button key={t.key} onClick={()=>!t.soon&&setActive(t.key)} style={{
           padding:isMobile?"6px 10px":"6px 12px",borderRadius:7,
