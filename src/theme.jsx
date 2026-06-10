@@ -245,10 +245,14 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-profile-nr{position:absolute;bottom:-8px;right:-8px;background:var(--text);color:var(--bg);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;line-height:1.4}
 /* ── Hero Header ── */
 .cc-hero-stripe{height:6px;background:var(--cc-accent,#FFBF00)}
-.cc-hero-body{display:flex;align-items:flex-start;gap:16px;padding:16px 20px 8px;flex-wrap:wrap}
+.cc-hero-body{display:flex;align-items:flex-start;gap:16px;padding:16px 20px 16px;flex-wrap:wrap}
 .cc-hero-avatar{width:80px;height:80px;border-radius:16px;background:var(--avatar-bg,var(--cc-accent,#FFBF00));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:var(--cc-avatar-text,#000);flex-shrink:0;position:relative}
 .cc-hero-meta{flex:1;min-width:0}
 .cc-hero-stats{display:flex;flex-direction:column;gap:20px;flex-shrink:0;align-items:flex-end}
+.cc-hero-sub{font-size:13px;color:var(--sub);margin-bottom:8px;line-height:1.5}
+.cc-hero-role{font-weight:600;color:var(--text)}
+.cc-hero-sep{color:var(--border);margin:0 6px}
+.cc-hero-edit{flex-shrink:0;align-self:flex-start}
 .cc-contact-link{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--cc-accent,#FFBF00);text-decoration:none;font-weight:500}
 .cc-contact-link-muted{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--sub);text-decoration:none}
 

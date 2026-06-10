@@ -94,6 +94,120 @@ function getFieldVisibility(role){
   };
 }
 
+/* ── MemberHero: Hero-Header mit Edit-Modal ── */
+function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,statusBg}){
+  const [editOpen,setEditOpen]=useState(false);
+  const [editForm,setEditForm]=useState({...raw});
+  const [editSaving,setEditSaving]=useState(false);
+  const [editMsg,setEditMsg]=useState(null);
+
+  async function saveEdit(){
+    if(!sb) return;
+    setEditSaving(true); setEditMsg(null);
+    const {error}=await sb.from("mitglieder").update({
+      vorname:editForm.vorname||null, nachname:editForm.nachname||null,
+      geburtsdatum:editForm.geburtsdatum||null, geschlecht:editForm.geschlecht||null,
+      nationalitaet:editForm.nationalitaet||null, telefon:editForm.telefon||null,
+      email:editForm.email||null, strasse:editForm.strasse||null,
+      plz:editForm.plz||null, ort:editForm.ort||null,
+      updated_at:new Date().toISOString(),
+    }).eq("id",raw.id);
+    if(error){ setEditMsg({ok:false,text:error.message}); }
+    else{
+      setEditMsg({ok:true,text:"Gespeichert ✓"});
+      setTimeout(()=>{setEditOpen(false);setEditMsg(null);if(onReload)onReload();},600);
+    }
+    setEditSaving(false);
+  }
+
+  const rollen=[];
+  const teams=raw.teams||[m.team].filter(Boolean);
+  const mitgliedtyp=raw.mitgliedtyp||m.type;
+  if(mitgliedtyp) rollen.push({rolle:mitgliedtyp, teams:teams});
+  if(raw.funktion&&raw.funktion!==mitgliedtyp) rollen.push({rolle:raw.funktion, teams:[]});
+
+  return(
+    <>
+      <Card className="cc-card-flush">
+        <div className="cc-hero-stripe"/>
+        <div className="cc-hero-body">
+          <div className="cc-hero-avatar">
+            {initials}
+            {raw.rueckennr&&<div className="cc-profile-nr">#{raw.rueckennr}</div>}
+          </div>
+          <div className="cc-hero-meta">
+            <Btn variant="ghost" small onClick={onClose} className="cc-back-btn"><TI n="arrow-left"/>Zurück</Btn>
+            <h1 className="cc-profile-name">{m.name}</h1>
+            <div className="cc-hero-sub">
+              {rollen.map((r,i)=>(
+                <span key={i}>
+                  {i>0&&<span className="cc-hero-sep">·</span>}
+                  <span className="cc-hero-role">{r.rolle}</span>
+                  {r.teams.length>0&&<span> {r.teams.join(", ")}</span>}
+                </span>
+              ))}
+            </div>
+            <div className="cc-chip-row">
+              {raw.position&&<Chip text={raw.position} color={BL}/>}
+              <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+              {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
+            </div>
+          </div>
+          {canEdit&&(
+            <div className="cc-hero-edit">
+              <Btn small onClick={()=>{setEditForm({...raw});setEditOpen(true);}}>
+                <TI n="edit" size={13}/> Bearbeiten
+              </Btn>
+            </div>
+          )}
+        </div>
+      </Card>
+      {editOpen&&(
+        <ModalOrSheet open={true} onClose={()=>setEditOpen(false)} maxWidth={560}>
+          <div className="cc-modal-hdr">
+            <div className="cc-text-bold" style={{fontSize:15}}>{m.name} bearbeiten</div>
+            <button className="cc-icon-btn" onClick={()=>setEditOpen(false)}><TI n="x" size={14}/></button>
+          </div>
+          <div className="cc-modal-body">
+            <div className="cc-form-row">
+              {[
+                {k:"vorname",      l:"Vorname"},
+                {k:"nachname",     l:"Nachname"},
+                {k:"geburtsdatum", l:"Geburtsdatum", type:"date"},
+                {k:"geschlecht",   l:"Geschlecht",   opts:[{v:"m",l:"Männlich"},{v:"w",l:"Weiblich"}]},
+                {k:"nationalitaet",l:"Nationalität"},
+                {k:"telefon",      l:"Telefon",       type:"tel"},
+                {k:"email",        l:"E-Mail",         type:"email"},
+                {k:"strasse",      l:"Strasse"},
+                {k:"plz",          l:"PLZ"},
+                {k:"ort",          l:"Ort"},
+              ].map(({k,l,type="text",opts})=>(
+                <div key={k} className={k==="strasse"||k==="email"?"cc-form-full":""}>
+                  <label className="cc-label">{l}</label>
+                  {opts
+                    ?<select className="cc-input" value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))}>
+                      <option value="">–</option>
+                      {opts.map(o=><option key={o.v} value={o.v}>{o.l}</option>)}
+                    </select>
+                    :<input className="cc-input" type={type} value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))} placeholder={l}/>
+                  }
+                </div>
+              ))}
+            </div>
+            {editMsg&&<div className={`cc-badge ${editMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{editMsg.text}</div>}
+          </div>
+          <div className="cc-modal-ftr">
+            <Btn onClick={()=>setEditOpen(false)}>Abbrechen</Btn>
+            <Btn variant="primary" onClick={saveEdit} disabled={editSaving}>
+              {editSaving?"Speichert…":"Speichern"}
+            </Btn>
+          </div>
+        </ModalOrSheet>
+      )}
+    </>
+  );
+}
+
 /* -- Kaderliste mit Feldsichtbarkeit -- */
 
 /* ── Eltern Portal-Verknüpfungs-Zeile ── */
@@ -269,39 +383,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     return(
       <div className="cc-col cc-gap-16">
         {/* Hero Header */}
-        <Card className="cc-card-flush">
-          <div className="cc-hero-stripe"/>
-          <div className="cc-hero-body">
-            {/* Avatar */}
-            <div className="cc-hero-avatar">
-              {initials}
-              {raw.rueckennr&&<div className="cc-profile-nr">#{raw.rueckennr}</div>}
-            </div>
-            {/* Meta */}
-            <div className="cc-hero-meta">
-              <Btn variant="ghost" small onClick={onClose} className="cc-back-btn"><TI n="arrow-left"/>Zurück</Btn>
-              <h1 className="cc-profile-name">{m.name}</h1>
-              <div className="cc-chip-row">
-                <Chip text={m.role} color={R}/>
-                {raw.position&&<Chip text={raw.position} color={BL}/>}
-                <Chip text={m.type} color={"#7C3AED"}/>
-                <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-                {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
-              </div>
-            </div>
-            {/* Quick Stats */}
-            <div className="cc-hero-stats">
-              {m.team&&<div className="cc-text-center">
-                <div className="cc-label">Team</div>
-                <div className="cc-text-bold">{m.team}</div>
-              </div>}
-              {age&&<div className="cc-text-center">
-                <div className="cc-label">Alter</div>
-                <div className="cc-stat-val">{age}</div>
-              </div>}
-            </div>
-          </div>
-        </Card>
+        <MemberHero m={m} raw={raw} initials={initials} age={age} canEdit={canEdit}
+          sb={sb} onReload={onReload} onClose={onClose}
+          statusColor={statusColor} statusBg={statusBg}
+        />
         {/* Tabs ausserhalb Hero */}
         <Tabs
           tabs={[
@@ -898,39 +983,10 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
     return(
       <div className="cc-col cc-gap-16">
         {/* Hero Header */}
-        <Card className="cc-card-flush">
-          <div className="cc-hero-stripe"/>
-          <div className="cc-hero-body">
-            {/* Avatar */}
-            <div className="cc-hero-avatar">
-              {initials}
-              {raw.rueckennr&&<div className="cc-profile-nr">#{raw.rueckennr}</div>}
-            </div>
-            {/* Meta */}
-            <div className="cc-hero-meta">
-              <Btn variant="ghost" small onClick={onClose} className="cc-back-btn"><TI n="arrow-left"/>Zurück</Btn>
-              <h1 className="cc-profile-name">{m.name}</h1>
-              <div className="cc-chip-row">
-                <Chip text={m.role} color={R}/>
-                {raw.position&&<Chip text={raw.position} color={BL}/>}
-                <Chip text={m.type} color={"#7C3AED"}/>
-                <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-                {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
-              </div>
-            </div>
-            {/* Quick Stats */}
-            <div className="cc-hero-stats">
-              {m.team&&<div className="cc-text-center">
-                <div className="cc-label">Team</div>
-                <div className="cc-text-bold">{m.team}</div>
-              </div>}
-              {age&&<div className="cc-text-center">
-                <div className="cc-label">Alter</div>
-                <div className="cc-stat-val">{age}</div>
-              </div>}
-            </div>
-          </div>
-        </Card>
+        <MemberHero m={m} raw={raw} initials={initials} age={age} canEdit={canEdit}
+          sb={sb} onReload={onReload} onClose={onClose}
+          statusColor={statusColor} statusBg={statusBg}
+        />
         {/* Tabs ausserhalb Hero */}
         <Tabs
           tabs={[
