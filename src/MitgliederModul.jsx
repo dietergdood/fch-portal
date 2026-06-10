@@ -2,7 +2,7 @@
    ClubCampus MitgliederModul — MitgliederModul.jsx
    Mitgliederverwaltung und -liste
    ═══════════════════════════════════════════════════════════════ */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile , avColor} from "./theme.jsx";
@@ -149,7 +149,7 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
               {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
             </div>
           </div>
-          {canEdit&&(
+          {canUpload&&(
             <Btn small onClick={()=>{setEditForm({...raw});setEditOpen(true);}}>
               <TI n="edit" size={13}/> Bearbeiten
             </Btn>
@@ -203,7 +203,7 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
 }
 
 /* ── FotoUpload: Foto in Personalien-Card ── */
-function FotoUpload({raw,canEdit,sb,onReload}){
+function FotoUpload({raw,canUpload,sb,onReload}){
   const [uploading,setUploading]=useState(false);
   const [msg,setMsg]=useState(null);
   const inputRef=useRef(null);
@@ -233,7 +233,7 @@ function FotoUpload({raw,canEdit,sb,onReload}){
     if(onReload) onReload();
   }
 
-  if(!raw.foto_url&&!canEdit) return null;
+  if(!raw.foto_url&&!canUpload) return null;
 
   return(
     <div className="cc-foto-row">
@@ -244,7 +244,7 @@ function FotoUpload({raw,canEdit,sb,onReload}){
       )}
       <div className="cc-col cc-gap-8">
         <div className="cc-text-bold">{raw.vorname} {raw.nachname}</div>
-        {canEdit&&(
+        {canUpload&&(
           <div className="cc-row cc-gap-8">
             <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" className="cc-hidden" onChange={handleUpload}/>
             <Btn small onClick={()=>inputRef.current?.click()} disabled={uploading}>
@@ -461,7 +461,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             <Card>
               <div className="cc-section-title"><TI n="id-badge-2" size={14}/> Personalien</div>
               {/* Foto */}
-              <FotoUpload raw={raw} canEdit={canEdit} sb={sb} onReload={onReload}/>
+              <FotoUpload raw={raw} canUpload={kannSchreiben("members")} sb={sb} onReload={onReload}/>
               {[
                 {l:"Vorname",      v:raw.vorname||m.name.split(" ")[0]},
                 {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
@@ -657,13 +657,13 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                             {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={13}/>{tel}</a>}
                           </div>
                           {/* Portal-Verknüpfung inline */}
-                          {canEdit&&(
+                          {canUpload&&(
                             <ElternPortalRow
                               e={e} sb={sb} onReload={onReload}
                             />
                           )}
                         </div>
-                        {canEdit&&(
+                        {canUpload&&(
                           <div className="cc-col cc-gap-4 cc-shrink-0">
                             <button className="cc-btn-ghost" onClick={()=>setEditEltern({mode:"edit",data:{...e}})}><TI n="edit" size={14}/></button>
                             <button className="cc-btn-danger" style={{padding:"4px 8px"}} onClick={()=>deleteEltern(e.id)}><TI n="trash" size={14}/></button>
@@ -1063,7 +1063,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
             <Card>
               <div className="cc-section-title"><TI n="id-badge-2" size={14}/> Personalien</div>
               {/* Foto */}
-              <FotoUpload raw={raw} canEdit={canEdit} sb={sb} onReload={onReload}/>
+              <FotoUpload raw={raw} canUpload={kannSchreiben("members")} sb={sb} onReload={onReload}/>
               {[
                 {l:"Vorname",      v:raw.vorname||m.name.split(" ")[0]},
                 {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
@@ -1259,13 +1259,13 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                             {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={13}/>{tel}</a>}
                           </div>
                           {/* Portal-Verknüpfung inline */}
-                          {canEdit&&(
+                          {canUpload&&(
                             <ElternPortalRow
                               e={e} sb={sb} onReload={onReload}
                             />
                           )}
                         </div>
-                        {canEdit&&(
+                        {canUpload&&(
                           <div className="cc-col cc-gap-4 cc-shrink-0">
                             <button className="cc-btn-ghost" onClick={()=>setEditEltern({mode:"edit",data:{...e}})}><TI n="edit" size={14}/></button>
                             <button className="cc-btn-danger" style={{padding:"4px 8px"}} onClick={()=>deleteEltern(e.id)}><TI n="trash" size={14}/></button>
