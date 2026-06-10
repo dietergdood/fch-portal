@@ -490,44 +490,153 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         )}
 
         {/* Tab: Eltern */}
-        {tab==="eltern"&&(
-          <div className="cc-col cc-gap-8">
-            {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
-            {eltern.map((e,i)=>{
-              const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
-              const tel=e.telefon||e.tel;
-              return(
-                <Card key={i}>
-                  <div style={{display:"flex",alignItems:"center",gap:16}}>
-                    <Av name={name} size={48}/>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,flexWrap:"wrap"}}>
-                        <div className="cc-text-bold" style={{fontSize:15}}>{name}</div>
-                        {e.beziehung&&<span className="cc-badge cc-badge-neutral"><TI n="users" size={10}/> {e.beziehung}</span>}
-                        {e.benutzer_id
-                          ?<span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal verknüpft</span>
-                          :<span className="cc-badge cc-badge-neutral" style={{color:"var(--sub)"}}>Nicht verknüpft</span>
-                        }
-                      </div>
-                      <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
-                        {e.email&&(
-                          <a href={`mailto:${e.email}`} className="cc-contact-link">
-                            <TI n="mail" size={13}/>{e.email}
-                          </a>
-                        )}
-                        {tel&&(
-                          <a href={`tel:${tel}`} className="cc-contact-link-muted">
-                            <TI n="phone" size={13}/>{tel}
-                          </a>
-                        )}
-                      </div>
-                    </div>
+        {tab==="eltern"&&(()=>{
+          const [editEltern,setEditEltern]=useState(null); // {mode:"edit"|"new", data:{}}
+          const [elternMsg,setElternMsg]=useState(null);
+          const [elternSaving,setElternSaving]=useState(false);
+
+          async function saveEltern(){
+            if(!sb) return;
+            setElternSaving(true); setElternMsg(null);
+            try{
+              const d=editEltern.data;
+              if(editEltern.mode==="new"){
+                const {error}=await sb.from("elternkontakte").insert({
+                  mitglied_id:raw.id,
+                  vorname:d.vorname||null, nachname:d.nachname||null,
+                  name:d.vorname&&d.nachname?`${d.vorname} ${d.nachname}`:d.name||null,
+                  email:d.email||null, telefon:d.telefon||null,
+                  beziehung:d.beziehung||null,
+                });
+                if(error) throw error;
+              } else {
+                const {error}=await sb.from("elternkontakte").update({
+                  vorname:d.vorname||null, nachname:d.nachname||null,
+                  name:d.vorname&&d.nachname?`${d.vorname} ${d.nachname}`:d.name||null,
+                  email:d.email||null, telefon:d.telefon||null,
+                  beziehung:d.beziehung||null,
+                }).eq("id",d.id);
+                if(error) throw error;
+              }
+              setElternMsg({ok:true,text:"Gespeichert ✓"});
+              setTimeout(()=>{setEditEltern(null);setElternMsg(null);if(onReload)onReload();},800);
+            }catch(e){setElternMsg({ok:false,text:e.message});}
+            setElternSaving(false);
+          }
+
+          async function deleteEltern(id){
+            if(!sb||!window.confirm("Elternkontakt wirklich löschen?")) return;
+            await sb.from("elternkontakte").delete().eq("id",id);
+            if(onReload) onReload();
+          }
+
+          const ElternForm=({data,onChange})=>(
+            <div className="cc-form-row cc-mt-12">
+              {[
+                {k:"vorname",   l:"Vorname"},
+                {k:"nachname",  l:"Nachname"},
+                {k:"beziehung", l:"Beziehung", opts:["Mutter","Vater","Elternteil","Grossmutter","Grossvater","Vormund"]},
+                {k:"email",     l:"E-Mail",    type:"email"},
+                {k:"telefon",   l:"Telefon",   type:"tel"},
+              ].map(({k,l,type="text",opts})=>(
+                <div key={k} className={k==="email"||k==="telefon"?"cc-form-full":""}>
+                  <label className="cc-label">{l}</label>
+                  {opts
+                    ?<select className="cc-input" value={data[k]||""} onChange={e=>onChange({...data,[k]:e.target.value})}>
+                      <option value="">– wählen –</option>
+                      {opts.map(o=><option key={o}>{o}</option>)}
+                    </select>
+                    :<input className="cc-input" type={type} value={data[k]||""} onChange={e=>onChange({...data,[k]:e.target.value})} placeholder={l}/>
+                  }
+                </div>
+              ))}
+            </div>
+          );
+
+          return(
+            <div className="cc-col cc-gap-8">
+              {/* Header mit Hinzufügen */}
+              {canEdit&&!editEltern&&(
+                <div className="cc-between">
+                  <div className="cc-text-sm">{eltern.length} Elternkontakt{eltern.length!==1?"e":""}</div>
+                  <Btn small variant="primary" onClick={()=>setEditEltern({mode:"new",data:{mitglied_id:raw.id}})}>
+                    <TI n="plus"/> Hinzufügen
+                  </Btn>
+                </div>
+              )}
+
+              {/* Neues Formular */}
+              {editEltern?.mode==="new"&&(
+                <Card>
+                  <div className="cc-between">
+                    <div className="cc-text-bold">Neuer Elternkontakt</div>
+                    <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>×</button>
+                  </div>
+                  <ElternForm data={editEltern.data} onChange={d=>setEditEltern(p=>({...p,data:d}))}/>
+                  {elternMsg&&<div className={`cc-badge ${elternMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{elternMsg.text}</div>}
+                  <div className="cc-save-row">
+                    <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>Abbrechen</button>
+                    <Btn variant="primary" onClick={saveEltern} disabled={elternSaving}>
+                      {elternSaving?"Speichert…":"Speichern"}
+                    </Btn>
                   </div>
                 </Card>
-              );
-            })}
-          </div>
-        )}
+              )}
+
+              {/* Eltern Liste */}
+              {eltern.length===0&&!editEltern&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
+              {eltern.map((e,i)=>{
+                const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
+                const tel=e.telefon||e.tel;
+                const isEditing=editEltern?.mode==="edit"&&editEltern?.data?.id===e.id;
+                return(
+                  <Card key={i}>
+                    {isEditing?(
+                      <>
+                        <div className="cc-between">
+                          <div className="cc-text-bold">Bearbeiten</div>
+                          <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>×</button>
+                        </div>
+                        <ElternForm data={editEltern.data} onChange={d=>setEditEltern(p=>({...p,data:d}))}/>
+                        {elternMsg&&<div className={`cc-badge ${elternMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{elternMsg.text}</div>}
+                        <div className="cc-save-row">
+                          <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>Abbrechen</button>
+                          <Btn variant="primary" onClick={saveEltern} disabled={elternSaving}>
+                            {elternSaving?"Speichert…":"Speichern"}
+                          </Btn>
+                        </div>
+                      </>
+                    ):(
+                      <div className="cc-row cc-gap-12">
+                        <Av name={name} size={48}/>
+                        <div className="cc-flex-1" style={{minWidth:0}}>
+                          <div className="cc-row cc-gap-8 cc-mb-4" style={{flexWrap:"wrap"}}>
+                            <div className="cc-text-bold" style={{fontSize:15}}>{name}</div>
+                            {e.beziehung&&<span className="cc-badge cc-badge-neutral"><TI n="users" size={10}/> {e.beziehung}</span>}
+                            {e.benutzer_id
+                              ?<span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal</span>
+                              :<span className="cc-badge cc-badge-neutral">Nicht verknüpft</span>
+                            }
+                          </div>
+                          <div className="cc-row cc-gap-16" style={{flexWrap:"wrap"}}>
+                            {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={13}/>{e.email}</a>}
+                            {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={13}/>{tel}</a>}
+                          </div>
+                        </div>
+                        {canEdit&&(
+                          <div className="cc-col cc-gap-4 cc-shrink-0">
+                            <button className="cc-btn-ghost" onClick={()=>setEditEltern({mode:"edit",data:{...e}})}><TI n="edit" size={14}/></button>
+                            <button className="cc-btn-danger" style={{padding:"4px 8px"}} onClick={()=>deleteEltern(e.id)}><TI n="trash" size={14}/></button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Tab: Portal-Zugang */}
         {tab==="portal"&&canEdit&&(
@@ -998,44 +1107,153 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
         )}
 
         {/* Tab: Eltern */}
-        {tab==="eltern"&&(
-          <div className="cc-col cc-gap-8">
-            {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
-            {eltern.map((e,i)=>{
-              const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
-              const tel=e.telefon||e.tel;
-              return(
-                <Card key={i}>
-                  <div style={{display:"flex",alignItems:"center",gap:16}}>
-                    <Av name={name} size={48}/>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,flexWrap:"wrap"}}>
-                        <div className="cc-text-bold" style={{fontSize:15}}>{name}</div>
-                        {e.beziehung&&<span className="cc-badge cc-badge-neutral"><TI n="users" size={10}/> {e.beziehung}</span>}
-                        {e.benutzer_id
-                          ?<span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal verknüpft</span>
-                          :<span className="cc-badge cc-badge-neutral" style={{color:"var(--sub)"}}>Nicht verknüpft</span>
-                        }
-                      </div>
-                      <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
-                        {e.email&&(
-                          <a href={`mailto:${e.email}`} className="cc-contact-link">
-                            <TI n="mail" size={13}/>{e.email}
-                          </a>
-                        )}
-                        {tel&&(
-                          <a href={`tel:${tel}`} className="cc-contact-link-muted">
-                            <TI n="phone" size={13}/>{tel}
-                          </a>
-                        )}
-                      </div>
-                    </div>
+        {tab==="eltern"&&(()=>{
+          const [editEltern,setEditEltern]=useState(null); // {mode:"edit"|"new", data:{}}
+          const [elternMsg,setElternMsg]=useState(null);
+          const [elternSaving,setElternSaving]=useState(false);
+
+          async function saveEltern(){
+            if(!sb) return;
+            setElternSaving(true); setElternMsg(null);
+            try{
+              const d=editEltern.data;
+              if(editEltern.mode==="new"){
+                const {error}=await sb.from("elternkontakte").insert({
+                  mitglied_id:raw.id,
+                  vorname:d.vorname||null, nachname:d.nachname||null,
+                  name:d.vorname&&d.nachname?`${d.vorname} ${d.nachname}`:d.name||null,
+                  email:d.email||null, telefon:d.telefon||null,
+                  beziehung:d.beziehung||null,
+                });
+                if(error) throw error;
+              } else {
+                const {error}=await sb.from("elternkontakte").update({
+                  vorname:d.vorname||null, nachname:d.nachname||null,
+                  name:d.vorname&&d.nachname?`${d.vorname} ${d.nachname}`:d.name||null,
+                  email:d.email||null, telefon:d.telefon||null,
+                  beziehung:d.beziehung||null,
+                }).eq("id",d.id);
+                if(error) throw error;
+              }
+              setElternMsg({ok:true,text:"Gespeichert ✓"});
+              setTimeout(()=>{setEditEltern(null);setElternMsg(null);if(onReload)onReload();},800);
+            }catch(e){setElternMsg({ok:false,text:e.message});}
+            setElternSaving(false);
+          }
+
+          async function deleteEltern(id){
+            if(!sb||!window.confirm("Elternkontakt wirklich löschen?")) return;
+            await sb.from("elternkontakte").delete().eq("id",id);
+            if(onReload) onReload();
+          }
+
+          const ElternForm=({data,onChange})=>(
+            <div className="cc-form-row cc-mt-12">
+              {[
+                {k:"vorname",   l:"Vorname"},
+                {k:"nachname",  l:"Nachname"},
+                {k:"beziehung", l:"Beziehung", opts:["Mutter","Vater","Elternteil","Grossmutter","Grossvater","Vormund"]},
+                {k:"email",     l:"E-Mail",    type:"email"},
+                {k:"telefon",   l:"Telefon",   type:"tel"},
+              ].map(({k,l,type="text",opts})=>(
+                <div key={k} className={k==="email"||k==="telefon"?"cc-form-full":""}>
+                  <label className="cc-label">{l}</label>
+                  {opts
+                    ?<select className="cc-input" value={data[k]||""} onChange={e=>onChange({...data,[k]:e.target.value})}>
+                      <option value="">– wählen –</option>
+                      {opts.map(o=><option key={o}>{o}</option>)}
+                    </select>
+                    :<input className="cc-input" type={type} value={data[k]||""} onChange={e=>onChange({...data,[k]:e.target.value})} placeholder={l}/>
+                  }
+                </div>
+              ))}
+            </div>
+          );
+
+          return(
+            <div className="cc-col cc-gap-8">
+              {/* Header mit Hinzufügen */}
+              {canEdit&&!editEltern&&(
+                <div className="cc-between">
+                  <div className="cc-text-sm">{eltern.length} Elternkontakt{eltern.length!==1?"e":""}</div>
+                  <Btn small variant="primary" onClick={()=>setEditEltern({mode:"new",data:{mitglied_id:raw.id}})}>
+                    <TI n="plus"/> Hinzufügen
+                  </Btn>
+                </div>
+              )}
+
+              {/* Neues Formular */}
+              {editEltern?.mode==="new"&&(
+                <Card>
+                  <div className="cc-between">
+                    <div className="cc-text-bold">Neuer Elternkontakt</div>
+                    <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>×</button>
+                  </div>
+                  <ElternForm data={editEltern.data} onChange={d=>setEditEltern(p=>({...p,data:d}))}/>
+                  {elternMsg&&<div className={`cc-badge ${elternMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{elternMsg.text}</div>}
+                  <div className="cc-save-row">
+                    <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>Abbrechen</button>
+                    <Btn variant="primary" onClick={saveEltern} disabled={elternSaving}>
+                      {elternSaving?"Speichert…":"Speichern"}
+                    </Btn>
                   </div>
                 </Card>
-              );
-            })}
-          </div>
-        )}
+              )}
+
+              {/* Eltern Liste */}
+              {eltern.length===0&&!editEltern&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
+              {eltern.map((e,i)=>{
+                const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
+                const tel=e.telefon||e.tel;
+                const isEditing=editEltern?.mode==="edit"&&editEltern?.data?.id===e.id;
+                return(
+                  <Card key={i}>
+                    {isEditing?(
+                      <>
+                        <div className="cc-between">
+                          <div className="cc-text-bold">Bearbeiten</div>
+                          <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>×</button>
+                        </div>
+                        <ElternForm data={editEltern.data} onChange={d=>setEditEltern(p=>({...p,data:d}))}/>
+                        {elternMsg&&<div className={`cc-badge ${elternMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{elternMsg.text}</div>}
+                        <div className="cc-save-row">
+                          <button className="cc-btn-ghost" onClick={()=>setEditEltern(null)}>Abbrechen</button>
+                          <Btn variant="primary" onClick={saveEltern} disabled={elternSaving}>
+                            {elternSaving?"Speichert…":"Speichern"}
+                          </Btn>
+                        </div>
+                      </>
+                    ):(
+                      <div className="cc-row cc-gap-12">
+                        <Av name={name} size={48}/>
+                        <div className="cc-flex-1" style={{minWidth:0}}>
+                          <div className="cc-row cc-gap-8 cc-mb-4" style={{flexWrap:"wrap"}}>
+                            <div className="cc-text-bold" style={{fontSize:15}}>{name}</div>
+                            {e.beziehung&&<span className="cc-badge cc-badge-neutral"><TI n="users" size={10}/> {e.beziehung}</span>}
+                            {e.benutzer_id
+                              ?<span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal</span>
+                              :<span className="cc-badge cc-badge-neutral">Nicht verknüpft</span>
+                            }
+                          </div>
+                          <div className="cc-row cc-gap-16" style={{flexWrap:"wrap"}}>
+                            {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={13}/>{e.email}</a>}
+                            {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={13}/>{tel}</a>}
+                          </div>
+                        </div>
+                        {canEdit&&(
+                          <div className="cc-col cc-gap-4 cc-shrink-0">
+                            <button className="cc-btn-ghost" onClick={()=>setEditEltern({mode:"edit",data:{...e}})}><TI n="edit" size={14}/></button>
+                            <button className="cc-btn-danger" style={{padding:"4px 8px"}} onClick={()=>deleteEltern(e.id)}><TI n="trash" size={14}/></button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Tab: Portal-Zugang */}
         {tab==="portal"&&canEdit&&(
