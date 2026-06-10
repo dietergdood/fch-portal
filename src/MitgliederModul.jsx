@@ -222,7 +222,7 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
           )}
 
           {/* Rollenhinweis */}
-          <div className="cc-hint-box" style={{display:"flex",alignItems:"center",gap:8}}>
+          <div className="cc-hint-box">
             <span><TI n="eye"/></span>
             <span>Feldsichtbarkeit gemäss Rolle: <strong>{getRole(role).label}</strong></span>
           </div>
@@ -417,7 +417,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             </div>
             {/* Meta */}
             <div className="cc-hero-meta">
-              <Btn variant="ghost" small onClick={onClose} style={{marginLeft:-8,marginBottom:4}}><TI n="arrow-left"/>Zurück</Btn>
+              <Btn variant="ghost" small onClick={onClose} className="cc-back-btn"><TI n="arrow-left"/>Zurück</Btn>
               <h1 className="cc-profile-name">{m.name}</h1>
               <div className="cc-chip-row">
                 <Chip text={m.role} color={R}/>
@@ -440,7 +440,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             </div>
           </div>
           {/* Tabs mit cc-seg */}
-          <div style={{padding:"0 20px"}}><Tabs mb={0}
+          <div className="cc-hero-tabs-wrap"><Tabs mb={0}
             tabs={[
               {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
               {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},
@@ -775,7 +775,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
 
         {/* Platzhalter Tabs */}
         {(tab==="stats"||tab==="comments"||tab==="ratings")&&(
-          <div className="cc-empty" style={{padding:60}}>
+          <div className="cc-empty cc-empty-lg">
             <TI n="hourglass" size={32} style={{color:"var(--border)",display:"block",margin:"0 auto 12px"}}/>
             Kommt bald
           </div>
@@ -814,7 +814,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
       {groupBy!=="none"&&(()=>{
         const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
         return(
-          <div className="cc-row cc-gap-8 cc-mb-14" style={{flexWrap:"wrap",alignItems:"center"}}>
+          <div className="cc-row cc-gap-8 cc-mb-14 cc-filter-row">
             <Btn small onClick={()=>setFilterVals([])}>Alle</Btn>
             {vals.map(v=>{
               const active=filterVals.includes(v);
@@ -1029,7 +1029,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
             </div>
             {/* Meta */}
             <div className="cc-hero-meta">
-              <Btn variant="ghost" small onClick={onClose} style={{marginLeft:-8,marginBottom:4}}><TI n="arrow-left"/>Zurück</Btn>
+              <Btn variant="ghost" small onClick={onClose} className="cc-back-btn"><TI n="arrow-left"/>Zurück</Btn>
               <h1 className="cc-profile-name">{m.name}</h1>
               <div className="cc-chip-row">
                 <Chip text={m.role} color={R}/>
@@ -1052,7 +1052,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
             </div>
           </div>
           {/* Tabs mit cc-seg */}
-          <div style={{padding:"0 20px"}}><Tabs mb={0}
+          <div className="cc-hero-tabs-wrap"><Tabs mb={0}
             tabs={[
               {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
               {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},
@@ -1387,7 +1387,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
 
         {/* Platzhalter Tabs */}
         {(tab==="stats"||tab==="comments"||tab==="ratings")&&(
-          <div className="cc-empty" style={{padding:60}}>
+          <div className="cc-empty cc-empty-lg">
             <TI n="hourglass" size={32} style={{color:"var(--border)",display:"block",margin:"0 auto 12px"}}/>
             Kommt bald
           </div>
@@ -1426,9 +1426,9 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
       {groupBy!=="none"&&(()=>{
         const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
         return(
-          <div className="cc-row cc-gap-8 cc-mb-14" style={{flexWrap:"wrap",alignItems:"center"}}>
+          <div className="cc-row cc-gap-8 cc-mb-14 cc-filter-row">
             <button onClick={()=>setFilterVals([])}
-              style={{padding:"4px 12px",borderRadius:20,border:"1px solid var(--border)",
+              className="cc-filter-pill" style={{
                 background:filterVals.length===0?BK:"var(--surface)",
                 color:filterVals.length===0?"#fff":"var(--sub)",
                 fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
@@ -1438,7 +1438,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
               const active=filterVals.includes(v);
               return(
                 <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
-                  style={{padding:"4px 12px",borderRadius:20,
+                  className="cc-filter-pill" style={{
                     border:"1px solid "+(active?BK:"var(--border)"),
                     background:active?BK:"var(--surface)",
                     color:active?"#fff":"var(--sub)",
@@ -1454,7 +1454,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
             })}
             {filterVals.length>0&&(
               <button onClick={()=>setFilterVals([])}
-                style={{padding:"4px 10px",borderRadius:20,border:"1px solid var(--border)",
+                className="cc-filter-pill" style={{
                   background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
                 × zurücksetzen
               </button>

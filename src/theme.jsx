@@ -191,7 +191,12 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-chip-row{display:flex;flex-wrap:wrap;gap:6px}
 .cc-tabs-bar{border-top:0.5px solid var(--border);padding:0 20px;display:flex;gap:0;overflow-x:auto}
 .cc-sort-arrow{margin-left:4px;font-size:11px}
-.cc-hint-box{padding:8px 12px;background:var(--surface);border-radius:8px;font-size:14px;color:var(--sub)}
+.cc-hint-box{padding:8px 12px;background:var(--surface);border-radius:8px;font-size:14px;color:var(--sub);display:flex;align-items:center;gap:8px}
+.cc-hero-tabs-wrap{padding:0 20px}
+.cc-empty-lg{padding:60px}
+.cc-filter-row{flex-wrap:wrap;align-items:center}
+.cc-filter-pill{padding:4px 12px;border-radius:20px;font-size:13px;cursor:pointer;background:none;font-family:inherit;transition:background 0.1s}
+.cc-back-btn{margin-left:-8px;margin-bottom:4px}
 .cc-section-label{padding:10px 13px 6px;background:var(--surface2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--sub)}
 .cc-border-top{border-top:0.5px solid var(--border)}
 .cc-pt-8{padding-top:8px}
