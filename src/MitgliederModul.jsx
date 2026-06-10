@@ -107,9 +107,14 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
     const {error}=await sb.from("mitglieder").update({
       vorname:editForm.vorname||null, nachname:editForm.nachname||null,
       geburtsdatum:editForm.geburtsdatum||null, geschlecht:editForm.geschlecht||null,
-      nationalitaet:editForm.nationalitaet||null, telefon:editForm.telefon||null,
+      nationalitaet:editForm.nationalitaet||null, heimatort:editForm.heimatort||null,
+      ahv_nr:editForm.ahv_nr||null, telefon:editForm.telefon||null,
       email:editForm.email||null, strasse:editForm.strasse||null,
-      plz:editForm.plz||null, ort:editForm.ort||null,
+      plz:editForm.plz||null, ort:editForm.ort||null, kanton:editForm.kanton||null,
+      mitgliedtyp:editForm.mitgliedtyp||null, funktion:editForm.funktion||null,
+      spielerpass:editForm.spielerpass||null, js_nr:editForm.js_nr||null,
+      fairgate_id:editForm.fairgate_id||null, notizen:editForm.notizen||null,
+      datenstatus:editForm.datenstatus||null,
       updated_at:new Date().toISOString(),
     }).eq("id",raw.id);
     if(error){ setEditMsg({ok:false,text:error.message}); }
@@ -164,19 +169,18 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
           </div>
           <div className="cc-modal-body">
             <div className="cc-form-row">
+              {/* Personalien */}
+              <div className="cc-form-section-title">Personalien</div>
               {[
                 {k:"vorname",      l:"Vorname"},
                 {k:"nachname",     l:"Nachname"},
                 {k:"geburtsdatum", l:"Geburtsdatum", type:"date"},
                 {k:"geschlecht",   l:"Geschlecht",   opts:[{v:"m",l:"Männlich"},{v:"w",l:"Weiblich"}]},
                 {k:"nationalitaet",l:"Nationalität"},
-                {k:"telefon",      l:"Telefon",       type:"tel"},
-                {k:"email",        l:"E-Mail",         type:"email"},
-                {k:"strasse",      l:"Strasse"},
-                {k:"plz",          l:"PLZ"},
-                {k:"ort",          l:"Ort"},
+                {k:"heimatort",    l:"Heimatort"},
+                {k:"ahv_nr",       l:"AHV-Nr."},
               ].map(({k,l,type="text",opts})=>(
-                <div key={k} className={k==="strasse"||k==="email"?"cc-form-full":""}>
+                <div key={k}>
                   <label className="cc-label">{l}</label>
                   {opts
                     ?<select className="cc-input" value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))}>
@@ -187,6 +191,47 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
                   }
                 </div>
               ))}
+              {/* Kontakt */}
+              <div className="cc-form-section-title cc-form-full">Kontakt</div>
+              {[
+                {k:"email",   l:"E-Mail",  type:"email", full:true},
+                {k:"telefon", l:"Telefon", type:"tel"},
+                {k:"strasse", l:"Strasse", full:true},
+                {k:"plz",     l:"PLZ"},
+                {k:"ort",     l:"Ort"},
+                {k:"kanton",  l:"Kanton"},
+              ].map(({k,l,type="text",full})=>(
+                <div key={k} className={full?"cc-form-full":""}>
+                  <label className="cc-label">{l}</label>
+                  <input className="cc-input" type={type} value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))} placeholder={l}/>
+                </div>
+              ))}
+              {/* Vereinsdaten */}
+              <div className="cc-form-section-title cc-form-full">Vereinsdaten</div>
+              {[
+                {k:"mitgliedtyp", l:"Mitgliedtyp", opts:["Spieler","Trainer","Assistent/in","Goalietrainer","Vorstand","Kassier","Materialwart","Platzwart","Schiedsrichter","Passivmitglied","Ehrenmitglied","Gönner"]},
+                {k:"funktion",    l:"Funktion"},
+                {k:"spielerpass", l:"Spielerpass"},
+                {k:"js_nr",       l:"J+S Nr."},
+                {k:"fairgate_id", l:"Fairgate-ID"},
+                {k:"datenstatus", l:"Datenstatus", opts:["Vollständig","Prüfung fällig","Unvollständig"]},
+              ].map(({k,l,opts})=>(
+                <div key={k}>
+                  <label className="cc-label">{l}</label>
+                  {opts
+                    ?<select className="cc-input" value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))}>
+                      <option value="">–</option>
+                      {(typeof opts[0]==="string"?opts.map(o=>({v:o,l:o})):opts).map(o=><option key={o.v} value={o.v}>{o.l}</option>)}
+                    </select>
+                    :<input className="cc-input" value={editForm[k]||""} onChange={e=>setEditForm(f=>({...f,[k]:e.target.value}))} placeholder={l}/>
+                  }
+                </div>
+              ))}
+              {/* Notizen */}
+              <div className="cc-form-full">
+                <label className="cc-label">Notizen</label>
+                <textarea className="cc-input" rows={3} value={editForm.notizen||""} onChange={e=>setEditForm(f=>({...f,notizen:e.target.value}))} placeholder="Notizen…" style={{resize:"vertical"}}/>
+              </div>
             </div>
             {editMsg&&<div className={`cc-badge ${editMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{editMsg.text}</div>}
           </div>

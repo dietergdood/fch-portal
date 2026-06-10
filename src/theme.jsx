@@ -220,6 +220,8 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 /* ── Forms ── */
 .cc-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .cc-form-full{grid-column:1/-1}
+.cc-form-section-title{grid-column:1/-1;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:0.06em;padding-top:8px;border-top:0.5px solid var(--border);margin-top:4px}
+.cc-form-section-title:first-child{border-top:none;padding-top:0;margin-top:0}
 .cc-save-row{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:0.5px solid var(--border)}
 
 /* ── Info rows ── */
