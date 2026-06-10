@@ -304,7 +304,7 @@ function AttendanceCentral(){
 /* -- TRAININGSPLÄTZE VERWALTUNG -- */
 
 
-function ProfileView({role,myRosterId,account}){
+function ProfileView({role,myRosterId,account,onProfilGeprueft}){
   const isEltern=role==="eltern";
   const player=ROSTER.find(p=>p.id===(myRosterId||1))||ROSTER.find(p=>p.id===1);
   const name=isEltern?(account?.name||"Anna Meier"):(player?`${player.firstName} ${player.lastName}`:"Luca Meier");
@@ -327,7 +327,10 @@ function ProfileView({role,myRosterId,account}){
               <span style={{fontSize:14,fontWeight:500}}>{x.v}</span>
             </div>
           ))}
-          <div className="cc-mt-12"><Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn></div>
+          <div className="cc-mt-12 cc-row cc-gap-8">
+            <Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn>
+            {onProfilGeprueft&&<Btn onClick={onProfilGeprueft}>Alles korrekt ✓</Btn>}
+          </div>
         </Card>
         {isEltern&&kinder.map((kind,ki)=>{
           const kindPlayer=ROSTER.find(p=>p.name===kind.name||p.id===kind.rosterId);

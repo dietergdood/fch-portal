@@ -303,6 +303,19 @@ function LoginScreen({onLogin, sb, appTheme}){
       const {data,error:err}=await sb.auth.signUp({email, password:pw, options:{data:{name:dbName}}});
       console.log("[FCH] signUp result:", data, err);
       if(err) throw err;
+      // Auto-Verknüpfung nach Registrierung
+      if(data.user){
+        const uid=data.user.id;
+        // Benutzer-Eintrag kurz warten (Trigger braucht einen Moment)
+        await new Promise(r=>setTimeout(r,1000));
+        const {data:bu}=await sb.from("benutzer").select("id").eq("id",uid).maybeSingle();
+        if(bu){
+          // Mitglied verknüpfen
+          if(m?.[0]) await sb.from("benutzer").update({mitglied_id:m[0].id}).eq("id",uid);
+          // Elternkontakt verknüpfen
+          if(ek?.[0]) await sb.from("elternkontakte").update({benutzer_id:uid}).eq("id",ek[0].id);
+        }
+      }
       if(data.session){ onLogin(data.session); } else { setRegDone(true); }
     }catch(err){ setError(err.message||"Fehler bei der Registrierung."); }
     setLoading(false);
@@ -889,14 +902,115 @@ function Portal({supabaseClient}){
       case "sync":              return <PortalverwaltungView initialTab="api" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
       case "audit":             return <PortalverwaltungView initialTab="audit" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
       case "datacheck":         return <PortalverwaltungView initialTab="module" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
-      case "profile":           return <ProfileView role={role} myRosterId={myRosterId} account={account}/>;
+      case "profile":           return <ProfileView role={role} myRosterId={myRosterId} account={account} sb={sb} dbUser={dbUser} dbMitglieder={dbMitglieder} onReload={loadDbMitglieder} onProfilGeprueft={markiereProfilGeprueft}/>;
       default:                  return <Dashboard role={role} setActive={setActive}/>;
     }
   };
 
+  function getProfilFehlend(){
+    if(!dbUser) return [];
+    const isEltern=role==="eltern"&&!dbMitglieder.find(m=>m.id===dbUser.mitglied_id);
+    if(isEltern){
+      const fehlend=[];
+      if(!dbUser.vorname) fehlend.push("vorname");
+      if(!dbUser.nachname) fehlend.push("nachname");
+      if(!dbUser.telefon) fehlend.push("telefon");
+      return fehlend;
+    }
+    const raw=dbMitglieder.find(m=>m.id===dbUser.mitglied_id)||{};
+    const isPassiv=["Passivmitglied","Ehrenmitglied","Gönner"].includes(raw.mitgliedtyp);
+    const fehlend=[];
+    if(!raw.vorname) fehlend.push("vorname");
+    if(!raw.nachname) fehlend.push("nachname");
+    if(!isPassiv&&!raw.geburtsdatum) fehlend.push("geburtsdatum");
+    if(!raw.telefon&&!raw.email) fehlend.push("telefon");
+    return fehlend;
+  }
+
+  function sollProfilPruefen(){
+    if(!dbUser||role==="administrator"||role==="administration") return false;
+    // Erste Login: noch nie geprüft
+    if(!dbUser.profil_geprueft_at) return true;
+    // Alle 6 Monate
+    const letzteP=new Date(dbUser.profil_geprueft_at);
+    const sechsMonate=new Date();
+    sechsMonate.setMonth(sechsMonate.getMonth()-6);
+    return letzteP<sechsMonate;
+  }
+
+  async function markiereProfilGeprueft(){
+    if(!sb||!dbUser) return;
+    await sb.from("benutzer").update({profil_geprueft_at:new Date().toISOString()}).eq("id",dbUser.id);
+    setDbUser(u=>u?{...u,profil_geprueft_at:new Date().toISOString()}:u);
+  }
+
   return(
     <ThemeCtx.Provider value={{dark,toggle:toggleDark}}>
       <div data-theme={dark?"dark":"light"} style={{display:"flex",minHeight:"100dvh",background:"var(--bg)",fontFamily:FONT,WebkitFontSmoothing:"antialiased",MozOsxFontSmoothing:"grayscale",color:"var(--text)",transition:"background 0.25s,color 0.25s"}}>
+        {/* Profil-Pflicht Modal */}
+        {(()=>{
+          if(!session||role==="administrator"||role==="administration") return null;
+          if(!sollProfilPruefen()) return null;
+          const fehlend=getProfilFehlend();
+          const LABELS={"vorname":"Vorname","nachname":"Nachname","geburtsdatum":"Geburtsdatum","telefon":"Handynummer","email":"E-Mail"};
+          return(
+            <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+              <div style={{background:"var(--surface)",borderRadius:16,padding:32,maxWidth:480,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.3)"}}>
+                <div style={{textAlign:"center",marginBottom:12}}>
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="26" cy="26" r="26" fill="var(--cc-accent,#FFBF00)" fillOpacity="0.15"/>
+                    <path d="M18 16h4.5a3.5 3.5 0 0 1 7 0H34a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" stroke="var(--cc-accent,#FFBF00)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    <path d="M22 16a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1H22v-1z" fill="var(--cc-accent,#FFBF00)" fillOpacity="0.5"/>
+                    <path d="M21 25h10M21 30h7" stroke="var(--cc-accent,#FFBF00)" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                {fehlend.length>0?(
+                  <>
+                    <h2 style={{fontSize:20,fontWeight:800,margin:"0 0 8px",textAlign:"center"}}>Profil vervollständigen</h2>
+                    <p style={{fontSize:14,color:"var(--sub)",textAlign:"center",marginBottom:20,lineHeight:1.6}}>
+                      Bitte fülle die fehlenden Pflichtfelder aus bevor du das Portal nutzen kannst.
+                    </p>
+                    <div style={{background:"var(--surface2)",borderRadius:10,padding:"12px 16px",marginBottom:20}}>
+                      <div className="cc-label" style={{marginBottom:8}}>Fehlende Angaben</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                        {fehlend.map(f=>(
+                          <span key={f} style={{fontSize:13,padding:"3px 10px",borderRadius:20,background:"#FEF3C7",color:"#92400E",fontWeight:500}}>
+                            {LABELS[f]||f}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <button onClick={()=>setActivePersist("profile")}
+                      style={{width:"100%",padding:"12px",borderRadius:10,border:"none",background:"var(--cc-accent,#FFBF00)",color:"var(--text)",fontWeight:700,fontSize:15,cursor:"pointer"}}>
+                      Jetzt ausfüllen →
+                    </button>
+                  </>
+                ):(
+                  <>
+                    <h2 style={{fontSize:20,fontWeight:800,margin:"0 0 8px",textAlign:"center"}}>Daten prüfen</h2>
+                    <p style={{fontSize:14,color:"var(--sub)",textAlign:"center",marginBottom:20,lineHeight:1.6}}>
+                      {!dbUser?.profil_geprueft_at
+                        ?"Bitte prüfe deine Daten beim ersten Login einmal kurz."
+                        :"Es ist Zeit deine Daten zu prüfen (alle 6 Monate)."}
+                    </p>
+                    <button onClick={()=>setActivePersist("profile")}
+                      style={{width:"100%",padding:"12px",borderRadius:10,border:"none",background:"var(--cc-accent,#FFBF00)",color:"var(--text)",fontWeight:700,fontSize:15,cursor:"pointer"}}>
+                      Daten jetzt prüfen →
+                    </button>
+                    <button onClick={markiereProfilGeprueft}
+                      style={{width:"100%",marginTop:10,padding:"10px",borderRadius:10,border:"0.5px solid var(--border)",background:"none",color:"var(--sub)",fontSize:13,cursor:"pointer"}}>
+                      Alles korrekt — weiter
+                    </button>
+                  </>
+                )}
+                <button onClick={handleLogout}
+                  style={{width:"100%",marginTop:10,padding:"10px",borderRadius:10,border:"0.5px solid var(--border)",background:"none",color:"var(--sub)",fontSize:13,cursor:"pointer"}}>
+                  Abmelden
+                </button>
+              </div>
+            </div>
+          );
+        })()}
         {!isMobile&&<SideNav role={role} active={active} setActive={setActivePersist} account={account} sb={sb} onNameUpdated={n=>setDbUser(u=>u?{...u,name:n}:u)} onLogout={sb&&session?handleLogout:undefined} appTheme={appTheme}/>}
         <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}}>
           {isMobile&&<TopBar role={role} active={active} setActive={setActivePersist}
