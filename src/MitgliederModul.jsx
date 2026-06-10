@@ -674,6 +674,32 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 )
               }
             </Card>
+            {/* Datenprüfung */}
+            <Card>
+              <div className="cc-between cc-mb-8">
+                <div>
+                  <div className="cc-text-bold">Datenprüfung</div>
+                  <div className="cc-text-sm">
+                    {raw.profil_geprueft_at
+                      ?`Zuletzt geprüft: ${new Date(raw.profil_geprueft_at).toLocaleDateString("de-CH")}`
+                      :"Noch nie geprüft"}
+                  </div>
+                </div>
+                <Chip
+                  text={raw.profil_geprueft_at?"Geprüft":"Ausstehend"}
+                  color={raw.profil_geprueft_at?GN:AM}
+                  bg={raw.profil_geprueft_at?"#ECFDF5":"#FFFBEB"}
+                />
+              </div>
+              <button className="cc-btn-ghost cc-w-full" onClick={async()=>{
+                if(!sb) return;
+                await sb.from("mitglieder").update({profil_geprueft_at:null}).eq("id",raw.id);
+                setPortalMsg({ok:true,text:"Datenprüfung zurückgesetzt — Mitglied wird beim nächsten Login aufgefordert."});
+                if(onReload) onReload();
+              }}>
+                <TI n="refresh"/> Datenprüfung anfordern
+              </button>
+            </Card>
             {/* Eltern Portal-Verknüpfung */}
             {eltern.length>0&&(
               <Card>
@@ -1290,6 +1316,32 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                   </div>
                 )
               }
+            </Card>
+            {/* Datenprüfung */}
+            <Card>
+              <div className="cc-between cc-mb-8">
+                <div>
+                  <div className="cc-text-bold">Datenprüfung</div>
+                  <div className="cc-text-sm">
+                    {raw.profil_geprueft_at
+                      ?`Zuletzt geprüft: ${new Date(raw.profil_geprueft_at).toLocaleDateString("de-CH")}`
+                      :"Noch nie geprüft"}
+                  </div>
+                </div>
+                <Chip
+                  text={raw.profil_geprueft_at?"Geprüft":"Ausstehend"}
+                  color={raw.profil_geprueft_at?GN:AM}
+                  bg={raw.profil_geprueft_at?"#ECFDF5":"#FFFBEB"}
+                />
+              </div>
+              <button className="cc-btn-ghost cc-w-full" onClick={async()=>{
+                if(!sb) return;
+                await sb.from("mitglieder").update({profil_geprueft_at:null}).eq("id",raw.id);
+                setPortalMsg({ok:true,text:"Datenprüfung zurückgesetzt — Mitglied wird beim nächsten Login aufgefordert."});
+                if(onReload) onReload();
+              }}>
+                <TI n="refresh"/> Datenprüfung anfordern
+              </button>
             </Card>
             {/* Eltern Portal-Verknüpfung */}
             {eltern.length>0&&(
