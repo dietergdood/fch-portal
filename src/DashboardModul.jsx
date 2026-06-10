@@ -38,7 +38,10 @@ function DashboardAdmin({setActive,account}){
   const vorname=(account?.name||"Administrator").split(" ")[0];
   return(
     <div>
-      <H1 mb={4}>{getGreeting()}, {vorname}</H1>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
+        <div style={{width:4,height:32,borderRadius:2,background:"var(--cc-accent,#FFBF00)",flexShrink:0}}/>
+        <H1>{getGreeting()}, {vorname}</H1>
+      </div>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:24}}>ClubCampus – Systemübersicht</p>
       <div className="cc-grid-stats cc-mb-20">
         <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" semantic="primary" icon="users"/>
@@ -454,7 +457,10 @@ function DashboardEltern({account,meineTeams,setActive}){
 
   return(
     <div>
-      <H1 mb={6}>{getGreeting()}, {parentName}</H1>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+        <div style={{width:4,height:32,borderRadius:2,background:"var(--cc-accent,#FFBF00)",flexShrink:0}}/>
+        <H1>{getGreeting()}, {parentName}</H1>
+      </div>
       <p className="cc-detail-label" style={{marginBottom:18}}>Elternteil · {kinder.map(k=>k.name.split(" ")[0]).join(" & ")} · {getDate()}</p>
 
       {kinder.map((kind,ki)=>{
@@ -501,7 +507,7 @@ function DashboardEltern({account,meineTeams,setActive}){
               const nextSpiel=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Spiel"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
               const nextTraining=ATT_EVENTS.filter(e=>e.team===team&&e.type==="Training"&&parseD(e.date)>=today).sort((a,b)=>parseD(a.date).localeCompare(parseD(b.date)))[0];
               return(
-                <div className="cc-grid-stats" style={{marginBottom:14}}>
+                <div className="cc-grid-stats cc-mb-20" style={{marginBottom:14}}>
                   <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={attTotal?zuCount+"/"+attTotal+" Trainings":"Noch keine"} color={attColor}/>
                   <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} semantic="success"/>
                   {(()=>{

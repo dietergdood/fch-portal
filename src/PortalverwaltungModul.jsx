@@ -206,14 +206,14 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
       ):(
         /* ── DESKTOP: Tabelle ── */
         <Card style={{padding:0,overflowX:"auto"}}>
-          <table className="cc-table">
+          <div className="cc-table-wrap"><table className="cc-table">
             <thead>
               <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
                 <th className="cc-th">
                   Team <span style={{fontWeight:400,opacity:0.6}}>({filtered.length})</span>
                 </th>
                 {TEAM_MODS.map(m=>(
-                  <th key={m.key} style={{padding:"8px 4px",textAlign:"center",minWidth:54}}>
+                  <th className="cc-th" key={m.key}>
                     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
                       <TI n={m.icon||"circle"} size={15} style={{color:"var(--sub)"}}/>
                       <span style={{fontSize:9,color:"var(--sub)",fontWeight:400,textTransform:"uppercase",letterSpacing:0.3}}>{m.label}</span>
@@ -250,7 +250,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                     <tr key={t.id} style={{borderTop:"0.5px solid var(--border)"}}
                       onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
                       onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                      <td style={{padding:"8px 16px",fontWeight:500,color:"var(--text)",position:"sticky",left:0,background:"var(--surface)",fontSize:14,zIndex:1}}>
+                      <td className="cc-td" style={{padding:"8px 16px",fontWeight:500,color:"var(--text)",position:"sticky",left:0,background:"var(--surface)",fontSize:14,zIndex:1}}>
                         <Row>
                           <div style={{width:3,height:20,borderRadius:2,background:HB_COLORS[t.hauptbereich]||"var(--border)",flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0}}>
@@ -284,7 +284,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                 return rows;
               })()}
             </tbody>
-          </table>
+          </table></div>
         </Card>
       )}
     </div>
@@ -419,7 +419,7 @@ export const BORDER = '${t.borderWidth}';`;
           rCard:     (v)=><div style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface2)',padding:'6px 10px',fontSize:11,boxShadow:'0 1px 4px rgba(0,0,0,0.06)'}}>Card</div>,
           rBadge:    (v)=><div style={{borderRadius:v,background:'var(--text)',color:'var(--bg)',padding:'2px 8px',fontSize:10,fontWeight:600,display:'inline-block'}}>Aktiv</div>,
           rModal:    (v)=><div style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface)',padding:'5px 10px',fontSize:11,boxShadow:'0 2px 8px rgba(0,0,0,0.1)'}}>Modal</div>,
-          rSeg:      (v)=><div style={{borderRadius:v,background:'var(--surface2)',padding:3,display:'flex',gap:2}}><div style={{borderRadius:Math.max(0,v-2),background:'var(--surface)',padding:'3px 8px',fontSize:10,fontWeight:600}}>Tab 1</div><div style={{padding:'3px 8px',fontSize:10,color:'var(--sub)'}}>Tab 2</div></div>,
+          rSeg:      (v)=><div style={{borderRadius:v,background:'var(--surface2)',padding:3,display:'flex',gap:2}}><div style={{borderRadius:Math.max(0,v-2),background:'var(--surface)',padding:'3px 8px',fontSize:10,fontWeight:600}}>Tab 1</div><div style={{padding:'3px 8px',fontSize:10,color:'var(--sub)'}}>Tab 2</div>,
           rIconBtn:  (v)=><button style={{borderRadius:v,border:'0.5px solid var(--border)',background:'var(--surface2)',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>⋮</button>,
           rChip:     (v)=><div style={{borderRadius:v,border:'1.5px solid var(--border)',padding:'2px 10px',fontSize:10,fontWeight:600,color:'var(--sub)',display:'inline-block'}}>Filter</div>,
           hBtn:      (v)=><button style={{height:v,padding:'0 12px',borderRadius:tok.rBtn,border:'none',background:'var(--text)',color:'var(--bg)',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>Btn</button>,
@@ -447,7 +447,7 @@ export const BORDER = '${t.borderWidth}';`;
           shModal:   (v)=><div style={{width:40,height:24,borderRadius:8,background:'var(--surface)',boxShadow:['none','0 1px 4px rgba(0,0,0,0.06)','0 2px 12px rgba(0,0,0,0.08)','0 4px 20px rgba(0,0,0,0.12)','0 8px 40px rgba(0,0,0,0.18)'][v]}}/>,
           toggleW:   (v)=><div style={{width:v,height:tok.toggleH,borderRadius:Math.round(tok.toggleH/2),background:'var(--border)',position:'relative'}}><div style={{position:'absolute',top:3,left:3,width:tok.toggleH-6,height:tok.toggleH-6,borderRadius:'50%',background:'#fff',boxShadow:'0 1px 3px rgba(0,0,0,0.2)'}}/></div>,
           toggleH:   (v)=><div style={{width:tok.toggleW,height:v,borderRadius:Math.round(v/2),background:'var(--border)',position:'relative'}}><div style={{position:'absolute',top:3,left:3,width:v-6,height:v-6,borderRadius:'50%',background:'#fff',boxShadow:'0 1px 3px rgba(0,0,0,0.2)'}}/></div>,
-          segPad:    (v)=><div style={{background:'var(--surface2)',borderRadius:tok.rSeg,padding:v,display:'flex',gap:2}}><div style={{background:'var(--surface)',borderRadius:tok.rSeg-2,padding:'3px 8px',fontSize:10,fontWeight:600}}>An</div><div style={{padding:'3px 8px',fontSize:10,color:'var(--sub)'}}>Aus</div></div>,
+          segPad:    (v)=><div style={{background:'var(--surface2)',borderRadius:tok.rSeg,padding:v,display:'flex',gap:2}}><div style={{background:'var(--surface)',borderRadius:tok.rSeg-2,padding:'3px 8px',fontSize:10,fontWeight:600}}>An</div><div style={{padding:'3px 8px',fontSize:10,color:'var(--sub)'}}>Aus</div>,
           chipPad:   (v)=><div style={{borderRadius:tok.rChip,border:'1.5px solid var(--border)',padding:`${v}px ${tok.chipPadH}px`,fontSize:10,fontWeight:600,color:'var(--sub)'}}>Chip</div>,
           chipPadH:  (v)=><div style={{borderRadius:tok.rChip,border:'1.5px solid var(--border)',padding:`${tok.chipPad}px ${v}px`,fontSize:10,fontWeight:600,color:'var(--sub)'}}>Chip</div>,
         };
@@ -1317,16 +1317,12 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           {moduleViewMode==="modul"&&(()=>{
             return(
               <Card style={{padding:0,overflowX:"auto"}}>
-                <table className="cc-table">
+                <div className="cc-table-wrap"><table className="cc-table">
                   <thead>
                     <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
                       <th className="cc-th">Modul</th>
                       {ROLLEN.map(r=>(
-                        <th key={r} style={{textAlign:"center",padding:"9px 8px",fontWeight:700,
-                          color:r==="administrator"?"var(--sub)":ROLES[r]?.color||"var(--sub)",
-                          fontSize:11,minWidth:90,
-                          background:r==="administrator"?"var(--surface2)":"transparent"
-                        }}>{ROLLEN_LABELS[r]}</th>
+                        <th className="cc-th" key={r}>{ROLLEN_LABELS[r]}</th>
                       ))}
                     </tr>
                   </thead>
@@ -1345,7 +1341,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                           const isExpanded=expandedModul===m.key;
                           return([
                             <tr key={m.key} style={{borderTop:"0.5px solid var(--border)",opacity:isAktiv?1:0.35,background:isPflicht?"#FFFBEB":"transparent"}}>
-                              <td style={{padding:"0",position:"sticky",left:0,background:isPflicht?"#FFFBEB":isExpanded?"var(--surface2)":"var(--surface)",zIndex:1}}>
+                              <td className="cc-td" style={{padding:"0",position:"sticky",left:0,background:isPflicht?"#FFFBEB":isExpanded?"var(--surface2)":"var(--surface)",zIndex:1}}>
                                 <div onClick={()=>setExpandedModul(isExpanded?null:m.key)}
                                   style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",cursor:"pointer"}}>
                                   <div onClick={e=>{e.stopPropagation();if(!isPflicht)toggleModulGlobal(m.key);}}
@@ -1427,7 +1423,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       ]);
                     })}
                   </tbody>
-                </table>
+                </table></div>
               </Card>
             );
           })()}
@@ -1446,7 +1442,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       <span style={{fontWeight:600,fontSize:14,color:roleInfo.color||"var(--text)"}}>{ROLLEN_LABELS[role]}</span>
                       <span style={{fontSize:11,color:"var(--sub)",marginLeft:4}}>{zugMods.length} Module</span>
                     </div>
-                    <table className="cc-table">
+                    <div className="cc-table-wrap"><table className="cc-table">
                       <thead>
                         <tr style={{background:"var(--surface2)"}}>
                           <th className="cc-th">Modul</th>
@@ -1461,25 +1457,25 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                           const sc=ZUGRIFF_COLORS[stufe];
                           return(
                             <tr key={m.key} style={{borderTop:"0.5px solid var(--border)"}}>
-                              <td style={{padding:"8px 14px"}}>
+                              <td className="cc-td" style={{padding:"8px 14px"}}>
                                 <div style={{display:"flex",alignItems:"center",gap:7}}>
                                   <TI n={m.icon} size={13} style={{color:"var(--sub)"}}/>
                                   <span style={{fontWeight:500,fontSize:14}}>{m.name||m.label}</span>
                                 </div>
                               </td>
-                              <td style={{padding:"8px 10px"}}>
+                              <td className="cc-td" style={{padding:"8px 10px"}}>
                                 <div onClick={()=>{const aktiv=moduleAktiv[m.key]!==false;if(aktiv&&role!=="administrator")cycleZugriff(role,m.key);}}
                                   style={{display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",borderRadius:6,background:sc+"20",border:`1px solid ${sc}50`,cursor:"pointer"}}>
                                   <TI n={ZUGRIFF_ICONS[stufe]} size={11} style={{color:sc}}/>
                                   <span style={{fontSize:10,fontWeight:600,color:sc}}>{ZUGRIFF_LABELS[stufe]}</span>
                                 </div>
                               </td>
-                              <td style={{padding:"8px 10px",fontSize:11,color:"var(--sub)"}}>{kann.length?kann.join(" · "):"Nur ansehen"}</td>
+                              <td className="cc-td" style={{padding:"8px 10px",fontSize:11,color:"var(--sub)"}}>{kann.length?kann.join(" · "):"Nur ansehen"}</td>
                             </tr>
                           );
                         })}
                       </tbody>
-                    </table>
+                    </table></div>
                   </Card>
                 );
               })}
@@ -1535,7 +1531,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           </div>
 
           {/* Gruppen als Grid */}
-          <div className="cc-grid-cards" style={{gap:12}}>
+          <div className="cc-grid-cards cc-mb-20" style={{gap:12}}>
           {(gruppen.length>0?gruppen:[
             {id:1,name:"Vereinsleben & Events",farbe:"#8B5CF6",beschreibung:"Anlässe, Helfereinsätze, Mitgliederliste",module:["events","helpers","members","news","docs"]},
             {id:2,name:"Betrieb & Infrastruktur",farbe:"#3B82F6",beschreibung:"Material, Busse, Garderoben",module:["material","buses","lockers","docs"]},
@@ -1906,7 +1902,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             <Btn variant="primary" onClick={()=>{}}>+ Benutzer einladen</Btn>
           </div>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table className="cc-table">
+            <div className="cc-table-wrap"><table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   <th className="cc-th">Name</th>
@@ -1918,19 +1914,19 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
               </thead>
               <tbody>
                 {benutzerListe.length===0&&(
-                  <tr><td colSpan={5} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Keine Benutzer gefunden</td></tr>
+                  <tr className="cc-tr"><td colSpan={5} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Keine Benutzer gefunden</td></tr>
                 )}
                 {benutzerListe.map((b,i)=>(
                   <tr key={b.id} style={{borderTop:"0.5px solid var(--border)"}}>
-                    <td style={{padding:"9px 13px",fontWeight:600,color:"var(--text)"}}>{b.name||"—"}</td>
-                    <td style={{padding:"9px 13px",color:"var(--sub)",fontSize:12}}>{b.email}</td>
-                    <td style={{padding:"9px 13px"}}>
+                    <td className="cc-td" style={{padding:"9px 13px",fontWeight:600,color:"var(--text)"}}>{b.name||"—"}</td>
+                    <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)",fontSize:12}}>{b.email}</td>
+                    <td className="cc-td" style={{padding:"9px 13px"}}>
                       <select value={b.role||"spieler"} onChange={e=>updateBenutzerRolle(b.id,e.target.value)}
                         style={{padding:"5px 8px",border:"1px solid var(--border)",borderRadius:7,fontSize:12,background:"var(--surface)",color:ROLES[b.role]?.color||"var(--text)",fontFamily:FONT,cursor:"pointer"}}>
                         {ROLLEN.map(r=><option key={r} value={r}>{ROLLEN_LABELS[r]}</option>)}
                       </select>
                     </td>
-                    <td style={{padding:"9px 13px"}}>
+                    <td className="cc-td" style={{padding:"9px 13px"}}>
                       {/* Funktionen anzeigen + zuweisen */}
                       <div style={{display:"flex",flexWrap:"wrap",gap:4,alignItems:"center"}}>
                         {(b.funktionen||[]).map(f=>(
@@ -1969,13 +1965,13 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                         </select>
                       </div>
                     </td>
-                    <td style={{padding:"9px 13px"}}>
+                    <td className="cc-td" style={{padding:"9px 13px"}}>
                       <Chip text={b.aktiv!==false?"Aktiv":"Inaktiv"} color={b.aktiv!==false?GN:R} bg={b.aktiv!==false?"#ECFDF5":RL}/>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </Card>
         </div>
       )}
@@ -1986,19 +1982,19 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <InfoBox text="Steuert welche Mitglieder-Felder pro Rolle sichtbar sind. Änderungen wirken sofort." color={BL}/>
           <div style={{height:12}}/>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table className="cc-table">
+            <div className="cc-table-wrap"><table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   <th className="cc-th">Feld</th>
                   {ROLLEN.map((r,i)=>(
-                    <th key={i} style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{ROLLEN_LABELS[r]}</th>
+                    <th className="cc-th" key={i}>{ROLLEN_LABELS[r]}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {Object.entries(felderNachKey).map(([key,data],i)=>(
                   <tr key={key} style={{borderTop:"0.5px solid var(--border)",background:i%2===0?"var(--surface)":"var(--surface2)"}}>
-                    <td style={{padding:"9px 13px",fontWeight:600}}>{data.label}</td>
+                    <td className="cc-td" style={{padding:"9px 13px",fontWeight:600}}>{data.label}</td>
                     {ROLLEN.map(rolle=>{
                       const sichtbar=data.rollen[rolle]||false;
                       const isAdmin=rolle==="administrator";
@@ -2014,12 +2010,12 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </tr>
                 ))}
                 {Object.keys(felderNachKey).length===0&&(
-                  <tr><td colSpan={7} style={{padding:20,textAlign:"center",color:"var(--sub)",fontSize:14}}>
+                  <tr className="cc-tr"><td colSpan={7} style={{padding:20,textAlign:"center",color:"var(--sub)",fontSize:14}}>
                     Noch keine Felder konfiguriert — SQL-Schema importieren
                   </td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </Card>
         </div>
       )}
@@ -2170,7 +2166,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
         <div>
           <InfoBox text="API-Keys werden aus Sicherheitsgründen nicht in der Datenbank gespeichert. Sie werden als Vercel Environment Variables konfiguriert." color={AM}/>
           <div style={{height:16}}/>
-          <div className="cc-grid-cards" style={{gap:14}}>
+          <div className="cc-grid-cards cc-mb-20" style={{gap:14}}>
             {(apiVerbindungen.length>0?apiVerbindungen:Object.entries(API_INFOS).map(([key,info])=>({key,label:key,active:false,konfiguriert:false,sync_status:"deaktiviert",...info}))).map(api=>{
               const info=API_INFOS[api.key]||{};
               const statusColor=api.sync_status==="ok"?GN:api.sync_status==="fehler"?R:api.sync_status==="ausstehend"?AM:"#aaa";
@@ -2215,33 +2211,33 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {!loading&&(!isMobile||mobileKachel!==null)&&tab==="audit"&&(
         <div>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table className="cc-table">
+            <div className="cc-table-wrap"><table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Zeit","API / System","Status","Neu","Aktualisiert","Fehler","Details"].map((h,i)=>(
-                    <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                    <th className="cc-th" key={i}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {auditLogs.length===0&&(
-                  <tr><td colSpan={7} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Noch keine Sync-Logs vorhanden</td></tr>
+                  <tr className="cc-tr"><td colSpan={7} style={{padding:"20px",textAlign:"center",color:"var(--sub)",fontSize:14}}>Noch keine Sync-Logs vorhanden</td></tr>
                 )}
                 {auditLogs.map((log,i)=>(
                   <tr key={log.id} style={{borderTop:"0.5px solid var(--border)",background:i%2===0?"var(--surface)":"var(--surface2)"}}>
-                    <td style={{padding:"9px 13px",color:"var(--sub)",whiteSpace:"nowrap",fontSize:14}}>
+                    <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)",whiteSpace:"nowrap",fontSize:14}}>
                       {log.gestartet_am?new Date(log.gestartet_am).toLocaleString("de-CH",{dateStyle:"short",timeStyle:"short"}):"—"}
                     </td>
-                    <td style={{padding:"9px 13px",fontWeight:600}}>{log.api_verbindungen?.label||"System"}</td>
-                    <td style={{padding:"9px 13px"}}><Chip text={log.status||"—"} color={log.status==="ok"?GN:log.status==="fehler"?R:AM} bg={log.status==="ok"?"#ECFDF5":log.status==="fehler"?RL:"#FFFBEB"}/></td>
-                    <td style={{padding:"9px 13px",color:GN,fontWeight:600}}>{log.datensaetze_neu||0}</td>
-                    <td style={{padding:"9px 13px",color:BL,fontWeight:600}}>{log.datensaetze_aktualisiert||0}</td>
-                    <td style={{padding:"9px 13px",color:log.datensaetze_fehler>0?R:"#aaa",fontWeight:600}}>{log.datensaetze_fehler||0}</td>
-                    <td style={{padding:"9px 13px",color:"var(--sub)",fontSize:14,maxWidth:200,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{log.meldung||"—"}</td>
+                    <td className="cc-td" style={{padding:"9px 13px",fontWeight:600}}>{log.api_verbindungen?.label||"System"}</td>
+                    <td className="cc-td" style={{padding:"9px 13px"}}><Chip text={log.status||"—"} color={log.status==="ok"?GN:log.status==="fehler"?R:AM} bg={log.status==="ok"?"#ECFDF5":log.status==="fehler"?RL:"#FFFBEB"}/></td>
+                    <td className="cc-td" style={{padding:"9px 13px",color:GN,fontWeight:600}}>{log.datensaetze_neu||0}</td>
+                    <td className="cc-td" style={{padding:"9px 13px",color:BL,fontWeight:600}}>{log.datensaetze_aktualisiert||0}</td>
+                    <td className="cc-td" style={{padding:"9px 13px",color:log.datensaetze_fehler>0?R:"#aaa",fontWeight:600}}>{log.datensaetze_fehler||0}</td>
+                    <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)",fontSize:14,maxWidth:200,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{log.meldung||"—"}</td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </Card>
         </div>
       )}

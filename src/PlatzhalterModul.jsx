@@ -72,27 +72,27 @@ function MaterialView(){
         </Card>
       )}
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table className="cc-table">
+        <div className="cc-table-wrap"><table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Team","Art","Material","von","Datum","Status"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th className="cc-th" key={i}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {MATERIAL.map((m,i)=>(
               <tr key={m.id} style={{borderTop:"0.5px solid var(--border)"}}>
-                <td style={{padding:"9px 13px"}}><Chip text={m.team} color={R}/></td>
-                <td style={{padding:"9px 13px"}}><Chip text={m.type} color={TC[m.type]||"#888"} bg={(TC[m.type]||"#888")+"18"}/></td>
-                <td style={{padding:"9px 13px",fontWeight:600}}>{m.item}</td>
-                <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.by}</td>
-                <td style={{padding:"9px 13px",color:"var(--sub)"}}>{m.date}</td>
-                <td style={{padding:"9px 13px"}}><Chip text={m.status} color={m.status==="Erledigt"?GN:m.status==="In Bearbeitung"?BL:AM} bg={m.status==="Erledigt"?"#ECFDF5":m.status==="In Bearbeitung"?"#EFF6FF":"#FFFBEB"}/></td>
+                <td className="cc-td" style={{padding:"9px 13px"}}><Chip text={m.team} color={R}/></td>
+                <td className="cc-td" style={{padding:"9px 13px"}}><Chip text={m.type} color={TC[m.type]||"#888"} bg={(TC[m.type]||"#888")+"18"}/></td>
+                <td className="cc-td" style={{padding:"9px 13px",fontWeight:600}}>{m.item}</td>
+                <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)"}}>{m.by}</td>
+                <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)"}}>{m.date}</td>
+                <td className="cc-td" style={{padding:"9px 13px"}}><Chip text={m.status} color={m.status==="Erledigt"?GN:m.status==="In Bearbeitung"?BL:AM} bg={m.status==="Erledigt"?"#ECFDF5":m.status==="In Bearbeitung"?"#EFF6FF":"#FFFBEB"}/></td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </Card>
     </div>
   );
@@ -173,7 +173,7 @@ function WikiView(){
   return(
     <div>
       <H1 mb={18}>Wiki</H1>
-      <div className="cc-grid-cards" style={{gap:12}}>
+      <div className="cc-grid-cards cc-mb-20" style={{gap:12}}>
         {WIKI.map((a,i)=>(
           <Card key={i} style={{cursor:"pointer"}}>
             <Chip text={a.cat} color={CC[a.cat]||"#888"} bg={(CC[a.cat]||"#888")+"18"}/>
@@ -270,11 +270,11 @@ function AttendanceCentral(){
         <Stat label="Teams total" value="8"   color={BK}/>
       </div>
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table className="cc-table">
+        <div className="cc-table-wrap"><table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Team","Ø Total","Ø Training","Ø Spiele","Spieler"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:i>0?"center":"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th className="cc-th" key={i}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -287,15 +287,15 @@ function AttendanceCentral(){
               {t:"Aktive 1",  tot:75,tr:72,sp:90,n:22},
             ].map((r,i)=>(
               <tr key={i} style={{borderTop:"0.5px solid var(--border)",background:i%2===0?"var(--surface)":"var(--surface2)"}}>
-                <td style={{padding:"9px 13px",fontWeight:600}}>{r.t}</td>
-                <td style={{padding:"9px 13px",textAlign:"center",fontWeight:700,color:r.tot>=75?GN:r.tot>=65?AM:R}}>{r.tot}%</td>
-                <td style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.tr}%</td>
-                <td style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.sp}%</td>
-                <td style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.n}</td>
+                <td className="cc-td" style={{padding:"9px 13px",fontWeight:600}}>{r.t}</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",fontWeight:700,color:r.tot>=75?GN:r.tot>=65?AM:R}}>{r.tot}%</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.tr}%</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.sp}%</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.n}</td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </Card>
     </div>
   );
@@ -404,11 +404,11 @@ function DataCheckView(){
         <Stat label="Sync-Fehler"    value="5"  color="#888"/>
       </div>
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table className="cc-table">
+        <div className="cc-table-wrap"><table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Mitglied","Problem","Zuletzt geprüft","Aktion"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th className="cc-th" key={i}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -420,14 +420,14 @@ function DataCheckView(){
               {n:"Beat Keller",  p:"Prüfung fällig",   d:"Okt 2024"},
             ].map((r,i)=>(
               <tr key={i} style={{borderTop:"0.5px solid var(--border)"}}>
-                <td style={{padding:"9px 13px",fontWeight:600}}>{r.n}</td>
-                <td style={{padding:"9px 13px"}}><Chip text={r.p} color={r.p.includes("Sync")?R:AM} bg={r.p.includes("Sync")?RL:"#FFFBEB"}/></td>
-                <td style={{padding:"9px 13px",color:"var(--sub)"}}>{r.d}</td>
-                <td style={{padding:"9px 13px"}}><Btn small>Erinnerung</Btn></td>
+                <td className="cc-td" style={{padding:"9px 13px",fontWeight:600}}>{r.n}</td>
+                <td className="cc-td" style={{padding:"9px 13px"}}><Chip text={r.p} color={r.p.includes("Sync")?R:AM} bg={r.p.includes("Sync")?RL:"#FFFBEB"}/></td>
+                <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)"}}>{r.d}</td>
+                <td className="cc-td" style={{padding:"9px 13px"}}><Btn small>Erinnerung</Btn></td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </Card>
     </div>
   );

@@ -464,11 +464,11 @@ function SpielplanModul({role,team,initialSelected}){
     <>
       {selected&&<SpielDetail spiel={selected} onClose={()=>setSelected(null)} canEdit={canEdit} motmAll={motmAll} setMotmAll={setMotmAll}/>}
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table className="cc-table">
+        <div className="cc-table-wrap"><table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["Datum","Zeit","Gegner","H/A","Ort","Wettbewerb","Resultat",""].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4,whiteSpace:"nowrap"}}>{h}</th>
+                <th className="cc-th" key={i}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -479,18 +479,18 @@ function SpielplanModul({role,team,initialSelected}){
                 onClick={()=>setSelected(g)}
                 className="hov-row"
                 style={{borderTop:"0.5px solid var(--border)",background:g.result?"var(--surface2)":"var(--surface)",cursor:"pointer",height:isMobile?52:40}}>
-                <td style={{padding:"11px 13px",fontWeight:600,whiteSpace:"nowrap"}}>{g.date}</td>
-                {!isMobile&&<td style={{padding:"9px 13px"}}>{g.time+" Uhr"}</td>}
-                <td style={{padding:"9px 13px",fontWeight:600}}>{g.opponent}</td>
-                <td style={{padding:"9px 13px"}}><Chip text={g.home?"H":"A"} color={g.home?"#16A34A":"#6B7280"}/></td>
-                {!isMobile&&<><td style={{padding:"9px 13px",color:"var(--sub)",fontSize:14}}>{g.venue.split(",")[0]}</td>
-                <td style={{padding:"9px 13px",color:"var(--sub)",fontSize:14}}>{g.comp}</td></>}
-                <td style={{padding:"9px 13px"}}>{g.result?<span style={{fontWeight:600,fontSize:14,color:"var(--text)"}}>{g.result}{g.htResult&&<span style={{fontWeight:400,fontSize:14,color:"var(--sub)",marginLeft:5}}>({g.htResult})</span>}</span>:<Chip text="Ausstehend" color="#999"/>}</td>
-                <td style={{padding:"9px 13px",color:"var(--sub)",fontSize:14}}>›</td>
+                <td className="cc-td" style={{padding:"11px 13px",fontWeight:600,whiteSpace:"nowrap"}}>{g.date}</td>
+                {!isMobile&&<td className="cc-td" style={{padding:"9px 13px"}}>{g.time+" Uhr"}</td>}
+                <td className="cc-td" style={{padding:"9px 13px",fontWeight:600}}>{g.opponent}</td>
+                <td className="cc-td" style={{padding:"9px 13px"}}><Chip text={g.home?"H":"A"} color={g.home?"#16A34A":"#6B7280"}/></td>
+                {!isMobile&&<><td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)",fontSize:14}}>{g.venue.split(",")[0]}</td>
+                <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)",fontSize:14}}>{g.comp}</td></>}
+                <td className="cc-td" style={{padding:"9px 13px"}}>{g.result?<span style={{fontWeight:600,fontSize:14,color:"var(--text)"}}>{g.result}{g.htResult&&<span style={{fontWeight:400,fontSize:14,color:"var(--sub)",marginLeft:5}}>({g.htResult})</span>}</span>:<Chip text="Ausstehend" color="#999"/>}</td>
+                <td className="cc-td" style={{padding:"9px 13px",color:"var(--sub)",fontSize:14}}>›</td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </Card>
     </>
   );
@@ -503,30 +503,30 @@ function TableTab({team}){
     <div>
 
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table className="cc-table">
+        <div className="cc-table-wrap"><table className="cc-table">
           <thead>
             <tr style={{background:"var(--surface2)"}}>
               {["#","Mannschaft","Sp","S","U","N","Tore","+/-","Pts"].map((h,i)=>(
-                <th key={i} style={{padding:"9px 13px",textAlign:i>1?"center":"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                <th className="cc-th" key={i}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((r,i)=>(
               <tr key={i} style={{borderTop:"0.5px solid var(--border)",background:r.me?ACCENT20:i%2===0?"var(--surface)":"var(--surface2)"}}>
-                <td style={{padding:"9px 13px",fontWeight:700,color:"var(--sub)"}}>{r.rank}</td>
-                <td style={{padding:"9px 13px",fontWeight:r.me?700:400,color:r.me?BK:BK}}>
+                <td className="cc-td" style={{padding:"9px 13px",fontWeight:700,color:"var(--sub)"}}>{r.rank}</td>
+                <td className="cc-td" style={{padding:"9px 13px",fontWeight:r.me?700:400,color:r.me?BK:BK}}>
                   {r.team}
                   {r.me&&<span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:ACCENT,marginLeft:6,verticalAlign:"middle"}}/>}
                 </td>
                 {[r.sp,r.s,r.u,r.n].map((v,j)=><td key={j} style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{v}</td>)}
-                <td style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.tore}</td>
-                <td style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:r.diff>0?GN:r.diff<0?R:"#555"}}>{r.diff>0?"+":""}{r.diff}</td>
-                <td style={{padding:"9px 13px",textAlign:"center",fontWeight:800}}>{r.pts}</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",color:"var(--sub)"}}>{r.tore}</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",fontWeight:600,color:r.diff>0?GN:r.diff<0?R:"#555"}}>{r.diff>0?"+":""}{r.diff}</td>
+                <td className="cc-td" style={{padding:"9px 13px",textAlign:"center",fontWeight:800}}>{r.pts}</td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </Card>
     </div>
   );
@@ -1008,7 +1008,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
           </div>
         )}
         {/* Statistik-Header */}
-        <div className="cc-grid-stats" style={{marginBottom:14}}>
+        <div className="cc-grid-stats cc-mb-20" style={{marginBottom:14}}>
           {(()=>{
             const rsvpEvs=teamEvents.filter(e=>!(e.subtype==="Vereinsanlass"&&e.rsvp===false));
             const spielTrainEvs=rsvpEvs.filter(e=>e.type==="Training"||e.type==="Spiel");

@@ -350,7 +350,7 @@ function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRo
   const termine=allTermine;
 
   return(
-    <div className="cc-grid-cards" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
+    <div className="cc-grid-cards cc-mb-20" style={{gridTemplateColumns:isMobile?"1fr":undefined}}>
       {/* Team Übersicht */}
       <Card>
         <STitle>Info</STitle>
@@ -582,7 +582,7 @@ function StatsTab({team="Cc-Junioren", dbMitglieder=[]}){
   }).sort((a,b)=>b.tore-a.tore);
   if(stats.length===0) return <Card><div className="cc-empty">Keine Spielerstatistiken verfügbar.</div></Card>;
   return(
-    <Card style={{padding:0,overflowX:"auto"}}>      <table className="cc-table">
+    <Card style={{padding:0,overflowX:"auto"}}>      <div className="cc-table-wrap"><table className="cc-table">
         <thead>
           <tr className="cc-tr" style={{background:"var(--bg)"}}>
             {["Spieler","Spiele","Tore","Assists","Gelb","Rot"].map((h,i)=>(
@@ -604,7 +604,7 @@ function StatsTab({team="Cc-Junioren", dbMitglieder=[]}){
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </Card>
   );
 }
@@ -637,7 +637,7 @@ function FieldVisView(){
       <H1 mb={8}>Feldsichtbarkeit</H1>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:18}}>Konfigurierbar pro Rolle (Kap. 6.1)</p>
       <Card style={{padding:0,overflowX:"auto"}}>
-        <table className="cc-table">
+        <div className="cc-table-wrap"><table className="cc-table">
           <thead>
             <tr className="cc-tr" style={{background:"var(--bg)"}}>
               <th className="cc-th">Feld</th>
@@ -657,7 +657,7 @@ function FieldVisView(){
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </Card>
     </div>
   );

@@ -1117,11 +1117,11 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
           </div>
 
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table className="cc-table">
+            <div className="cc-table-wrap"><table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Mitglied","Gruppe","Soll","Geleistet","Geplant","Offen","Status",""].map((h,i)=>(
-                    <th key={i} style={{padding:"9px 12px",textAlign:i>1?"center":"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                    <th className="cc-th" key={i}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -1135,19 +1135,19 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                     <tr key={m.id} onClick={()=>setExpandedMember(expandedMember===m.id?null:m.id)}
                       style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"var(--cc-hover)":"#fff",cursor:"pointer"}}
                       className="hov-row">
-                      <td style={{padding:"9px 12px"}}>
+                      <td className="cc-td" style={{padding:"9px 12px"}}>
                         <Row>
                           <Av name={m.name} size={22} bg={SC[m.status]?.c||"#6B7280"}/>
                           <span style={{fontWeight:600}}>{m.name}</span>
                         </Row>
                       </td>
-                      <td style={{padding:"9px 12px"}}><Chip text={m.gruppe} color="#6B7280"/></td>
-                      <td style={{padding:"9px 12px",textAlign:"center",fontWeight:700}}>{m.soll}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:GN,fontWeight:600}}>{m.geleistet}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:AM,fontWeight:600}}>{m.geplant}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:m.offen>0?R:"#aaa",fontWeight:m.offen>0?700:400}}>{m.offen}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center"}}><Chip text={m.status} color={SC[m.status]?.c||"#888"} bg={SC[m.status]?.bg}/></td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:"var(--sub)",fontSize:14}}>{expandedMember===m.id?"▲":"▼"}</td>
+                      <td className="cc-td" style={{padding:"9px 12px"}}><Chip text={m.gruppe} color="#6B7280"/></td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",fontWeight:700}}>{m.soll}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:GN,fontWeight:600}}>{m.geleistet}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:AM,fontWeight:600}}>{m.geplant}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:m.offen>0?R:"#aaa",fontWeight:m.offen>0?700:400}}>{m.offen}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center"}}><Chip text={m.status} color={SC[m.status]?.c||"#888"} bg={SC[m.status]?.bg}/></td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:"var(--sub)",fontSize:14}}>{expandedMember===m.id?"▲":"▼"}</td>
                     </tr>
                     {expandedMember===m.id&&(
                       <tr key={`d${m.id}`} style={{borderTop:"0.5px solid var(--border)"}}>
@@ -1155,7 +1155,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                           {m.schichten.length===0?(
                             <span className="cc-text-sm">Keine Schichten übernommen.</span>
                           ):(
-                            <div className="cc-grid-cards" style={{gap:8,marginBottom:10}}>
+                            <div className="cc-grid-cards cc-mb-20" style={{gap:8,marginBottom:10}}>
                               {m.schichten.map((sid,si)=>{
                                 const anfrage=freigabeAnfragen[sid];
                                 for(const ev of HELPER_EVENTS) for(const e of ev.einsaetze){
@@ -1211,7 +1211,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   </>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </Card>
         </div>
       )}
@@ -1220,7 +1220,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
       {helperTab==="erstellen"&&canErstellen&&(
         <Card>
           <div style={{fontWeight:700,fontSize:14,marginBottom:16}}>Neuen Einsatz erfassen</div>
-          <div className="cc-grid-cards" style={{gap:12}}>
+          <div className="cc-grid-cards cc-mb-20" style={{gap:12}}>
             {[
               {l:"Event",            type:"select",opts:["Grümpelturnier 2026","Generalversammlung 2026","+ Neuer Event…"]},
               {l:"Einsatzname",      type:"text",  ph:"z.B. Grill"},
@@ -1972,11 +1972,11 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
           </div>
 
           <Card style={{padding:0,overflowX:"auto"}}>
-            <table className="cc-table">
+            <div className="cc-table-wrap"><table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Mitglied","Gruppe","Soll","Geleistet","Geplant","Offen","Status",""].map((h,i)=>(
-                    <th key={i} style={{padding:"9px 12px",textAlign:i>1?"center":"left",fontWeight:600,color:"var(--sub)",fontSize:14,textTransform:"uppercase",letterSpacing:0.4}}>{h}</th>
+                    <th className="cc-th" key={i}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -1990,19 +1990,19 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                     <tr key={m.id} onClick={()=>setExpandedMember(expandedMember===m.id?null:m.id)}
                       style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"var(--cc-hover)":"#fff",cursor:"pointer"}}
                       className="hov-row">
-                      <td style={{padding:"9px 12px"}}>
+                      <td className="cc-td" style={{padding:"9px 12px"}}>
                         <div className="cc-row">
                           <Av name={m.name} size={22} bg={SC[m.status]?.c||"#6B7280"}/>
                           <span style={{fontWeight:600}}>{m.name}</span>
                         </div>
                       </td>
-                      <td style={{padding:"9px 12px"}}><Chip text={m.gruppe} color="#6B7280"/></td>
-                      <td style={{padding:"9px 12px",textAlign:"center",fontWeight:700}}>{m.soll}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:GN,fontWeight:600}}>{m.geleistet}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:AM,fontWeight:600}}>{m.geplant}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:m.offen>0?R:"#aaa",fontWeight:m.offen>0?700:400}}>{m.offen}</td>
-                      <td style={{padding:"9px 12px",textAlign:"center"}}><Chip text={m.status} color={SC[m.status]?.c||"#888"} bg={SC[m.status]?.bg}/></td>
-                      <td style={{padding:"9px 12px",textAlign:"center",color:"var(--sub)",fontSize:14}}>{expandedMember===m.id?"▲":"▼"}</td>
+                      <td className="cc-td" style={{padding:"9px 12px"}}><Chip text={m.gruppe} color="#6B7280"/></td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",fontWeight:700}}>{m.soll}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:GN,fontWeight:600}}>{m.geleistet}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:AM,fontWeight:600}}>{m.geplant}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:m.offen>0?R:"#aaa",fontWeight:m.offen>0?700:400}}>{m.offen}</td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center"}}><Chip text={m.status} color={SC[m.status]?.c||"#888"} bg={SC[m.status]?.bg}/></td>
+                      <td className="cc-td" style={{padding:"9px 12px",textAlign:"center",color:"var(--sub)",fontSize:14}}>{expandedMember===m.id?"▲":"▼"}</td>
                     </tr>
                     {expandedMember===m.id&&(
                       <tr key={`d${m.id}`} style={{borderTop:"0.5px solid var(--border)"}}>
@@ -2010,7 +2010,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                           {m.schichten.length===0?(
                             <span className="cc-text-sm">Keine Schichten übernommen.</span>
                           ):(
-                            <div className="cc-grid-cards" style={{gap:8,marginBottom:10}}>
+                            <div className="cc-grid-cards cc-mb-20" style={{gap:8,marginBottom:10}}>
                               {m.schichten.map((sid,si)=>{
                                 const anfrage=freigabeAnfragen[sid];
                                 for(const ev of HELPER_EVENTS) for(const e of ev.einsaetze){
@@ -2066,7 +2066,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   </>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </Card>
         </div>
       )}
@@ -2075,7 +2075,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
       {helperTab==="erstellen"&&canErstellen&&(
         <Card>
           <div style={{fontWeight:700,fontSize:14,marginBottom:16}}>Neuen Einsatz erfassen</div>
-          <div className="cc-grid-cards" style={{gap:12}}>
+          <div className="cc-grid-cards cc-mb-20" style={{gap:12}}>
             {[
               {l:"Event",            type:"select",opts:["Grümpelturnier 2026","Generalversammlung 2026","+ Neuer Event…"]},
               {l:"Einsatzname",      type:"text",  ph:"z.B. Grill"},
