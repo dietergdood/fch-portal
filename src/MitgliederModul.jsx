@@ -828,8 +828,6 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           );
         })()}
 
-        })()}
-
         {/* Tab: Portal-Zugang */}
         {tab==="portal"&&canEdit&&(
           <div className="cc-col cc-gap-16">
@@ -1482,8 +1480,6 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
               )}
             </div>
           );
-        })()}
-
         })()}
 
         {/* Tab: Portal-Zugang */}
