@@ -48,6 +48,19 @@ const TI_PATHS={
     "chevron-right":"<polyline points=\"9 18 15 12 9 6\"/>",
     "chevrons-left":"<polyline points=\"11 17 6 12 11 7\"/><polyline points=\"18 17 13 12 18 7\"/>",
     "chevrons-right":"<polyline points=\"13 17 18 12 13 7\"/><polyline points=\"6 17 11 12 6 7\"/>",
+    "arrow-left":"<path d=\"M5 12h14\"/><path d=\"M5 12l6 6\"/><path d=\"M5 12l6-6\"/>",
+    "address-book":"<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/><path d=\"M9.5 17h5\"/>",
+    "circle-check":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9 12l2 2l4-4\"/>",
+    "hourglass":"<path d=\"M6.5 7h11\"/><path d=\"M6.5 17h11\"/><path d=\"M6 7l6 5l6-5\"/><path d=\"M6 17l6-5l6 5\"/>",
+    "id-badge-2":"<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><path d=\"M9 7h6\"/><path d=\"M9 11h6\"/><path d=\"M9 15h4\"/>",
+    "logout":"<path d=\"M14 8v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2\"/><path d=\"M9 12h12\"/><path d=\"M17 9l3 3l-3 3\"/>",
+    "mail":"<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"M3 7l9 6l9-6\"/>",
+    "notes":"<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M9 7h6\"/><path d=\"M9 11h6\"/><path d=\"M9 15h4\"/>",
+    "phone":"<path d=\"M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5-2.5l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2\"/>",
+    "photo":"<rect x=\"3\" y=\"6\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M3 16l5-5l4 4l3-3l4 4\"/><circle cx=\"15\" cy=\"10\" r=\"1\"/>",
+    "plus":"<path d=\"M12 5v14\"/><path d=\"M5 12h14\"/>",
+    "shirt":"<path d=\"M15 3l3 3l-2 2l4 4l-4 1v8H8v-8l-4-1l4-4l-2-2l3-3c0 0 1 2 4 2s4-2 4-2z\"/>",
+    "x":"<path d=\"M18 6L6 18\"/><path d=\"M6 6l12 12\"/>",
 };
 function TI({n, size=16, style={}}){
   const p = TI_PATHS[n];
