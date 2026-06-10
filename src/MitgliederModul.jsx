@@ -467,7 +467,9 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
                 ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
                 {l:"Nationalität", v:raw.nationalitaet||"-"},
+                {l:"Heimatort",    v:raw.heimatort||"-"},
                 {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":"-"},
+                ...(fv.showAhv?[{l:"AHV-Nr.",v:raw.ahv_nr||"-"}]:[]),
               ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                 <div key={i} className="cc-info-row">
                   <span className="cc-info-key">{r.l}</span>
@@ -1069,7 +1071,9 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                 {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
                 ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
                 {l:"Nationalität", v:raw.nationalitaet||"-"},
+                {l:"Heimatort",    v:raw.heimatort||"-"},
                 {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":"-"},
+                ...(fv.showAhv?[{l:"AHV-Nr.",v:raw.ahv_nr||"-"}]:[]),
               ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                 <div key={i} className="cc-info-row">
                   <span className="cc-info-key">{r.l}</span>
