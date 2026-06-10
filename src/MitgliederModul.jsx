@@ -215,8 +215,8 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
       {editOpen&&(
         <ModalOrSheet open={true} onClose={()=>setEditOpen(false)} maxWidth={560}>
           <div className="cc-modal-hdr">
-            <div className="cc-text-bold" style={{fontSize:15}}>{m.name} bearbeiten</div>
-            <button className="cc-icon-btn" onClick={()=>setEditOpen(false)}><TI n="x" size={14}/></button>
+            <div className="cc-modal-title">{m.name} bearbeiten</div>
+            <Btn variant="ghost" small onClick={()=>setEditOpen(false)}><TI n="x" size={14}/></Btn>
           </div>
           <div className="cc-modal-body">
             <div className="cc-form-row">
@@ -286,7 +286,7 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
               {/* Notizen */}
               <div className="cc-form-full">
                 <label className="cc-label">Notizen</label>
-                <textarea className="cc-input" rows={3} value={editForm.notizen||""} onChange={e=>setEditForm(f=>({...f,notizen:e.target.value}))} placeholder="Notizen…" style={{resize:"vertical"}}/>
+                <textarea className="cc-input cc-textarea" rows={3} value={editForm.notizen||""} onChange={e=>setEditForm(f=>({...f,notizen:e.target.value}))} placeholder="Notizen…"/>
               </div>
             </div>
             {editMsg&&<div className={`cc-badge ${editMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{editMsg.text}</div>}

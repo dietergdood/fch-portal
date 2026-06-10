@@ -149,6 +149,8 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-sheet-box{position:relative;background:var(--surface);border-radius:20px 20px 0 0;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 -4px 32px rgba(0,0,0,0.18)}
 .cc-sheet-handle{display:flex;justify-content:center;padding:12px 0 4px}
 .cc-sheet-handle-bar{width:40px;height:4px;border-radius:2px;background:var(--border)}
+.cc-modal-hdr{padding:16px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cc-modal-title{font-size:16px;font-weight:700;color:var(--text)}
 .cc-modal-body{padding:16px 20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1}
 .cc-modal-ftr{padding:12px 20px;border-top:0.5px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
 
@@ -230,7 +232,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 /* ── Forms ── */
 .cc-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .cc-form-full{grid-column:1/-1}
-.cc-form-section-title{grid-column:1/-1;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:0.06em;padding-top:8px;border-top:0.5px solid var(--border);margin-top:4px}
+.cc-textarea{resize:vertical;min-height:80px}
 .cc-form-section-title:first-child{border-top:none;padding-top:0;margin-top:0}
 .cc-save-row{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:0.5px solid var(--border)}
 
