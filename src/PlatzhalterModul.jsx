@@ -304,77 +304,183 @@ function AttendanceCentral(){
 /* -- TRAININGSPLÄTZE VERWALTUNG -- */
 
 
-function ProfileView({role,myRosterId,account,onProfilGeprueft}){
+function ProfileView({role,myRosterId,account,sb,dbUser,dbMitglieder=[],onReload,onProfilGeprueft}){
   const isEltern=role==="eltern";
-  const player=ROSTER.find(p=>p.id===(myRosterId||1))||ROSTER.find(p=>p.id===1);
-  const name=isEltern?(account?.name||"Anna Meier"):(player?`${player.firstName} ${player.lastName}`:"Luca Meier");
-  const kinder=account?.kinder||[];
+  const [saving,setSaving]=useState(false);
+  const [msg,setMsg]=useState(null);
+
+  // Mein Mitglied-Eintrag (falls vorhanden)
+  const meinMitglied=dbMitglieder.find(m=>m.id===dbUser?.mitglied_id)||null;
+
+  // Kinder (bei Eltern): alle Mitglieder wo ich als Elternteil verknüpft bin
+  const kinder=isEltern
+    ?dbMitglieder.filter(m=>(m.eltern||[]).some(e=>e.benutzer_id===dbUser?.id))
+    :[];
+
+  // Formular-State für Kinder-Bearbeitung
+  const [kindForms,setKindForms]=useState({});
+  const [kindEdit,setKindEdit]=useState(null); // mitglied_id
+
+  function getKindForm(k){
+    return kindForms[k.id]||{
+      geburtsdatum:k.geburtsdatum||"",
+      nationalitaet:k.nationalitaet||"",
+      strasse:k.strasse||"",
+      plz:k.plz||"",
+      ort:k.ort||"",
+      telefon:k.telefon||"",
+      email:k.email||"",
+    };
+  }
+
+  async function saveKind(kindId){
+    if(!sb) return;
+    setSaving(true); setMsg(null);
+    const form=kindForms[kindId]||{};
+    const {error}=await sb.from("mitglieder").update({
+      geburtsdatum:form.geburtsdatum||null,
+      nationalitaet:form.nationalitaet||null,
+      strasse:form.strasse||null,
+      plz:form.plz||null,
+      ort:form.ort||null,
+      telefon:form.telefon||null,
+      email:form.email||null,
+      datenstatus:"Geprüft",
+      updated_at:new Date().toISOString(),
+    }).eq("id",kindId);
+    if(error){ setMsg({ok:false,text:error.message}); }
+    else {
+      setMsg({ok:true,text:"Gespeichert ✓"});
+      setKindEdit(null);
+      if(onReload) onReload();
+      setTimeout(()=>setMsg(null),2000);
+    }
+    setSaving(false);
+  }
+
+  const PFLICHT_FELDER=[
+    {k:"geburtsdatum",l:"Geburtsdatum",type:"date"},
+    {k:"nationalitaet",l:"Nationalität",type:"text"},
+    {k:"strasse",l:"Strasse",type:"text"},
+    {k:"plz",l:"PLZ",type:"text"},
+    {k:"ort",l:"Ort",type:"text"},
+    {k:"telefon",l:"Telefon",type:"tel"},
+    {k:"email",l:"E-Mail",type:"email"},
+  ];
+
   return(
     <div>
-      <H1 mb={18}>{isEltern?"Profil / Daten prüfen":"Mein Profil"}</H1>
-      <div style={{display:"flex",flexDirection:"column",gap:14}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:12}}>
+        <H1 mb={0}>{isEltern?"Profil & Kinder prüfen":"Mein Profil"}</H1>
+        {onProfilGeprueft&&(
+          <Btn variant="primary" onClick={onProfilGeprueft}>
+            <TI n="circle-check"/> Alles geprüft ✓
+          </Btn>
+        )}
+      </div>
+
+      {msg&&<div className={`cc-badge ${msg.ok?"cc-badge-success":"cc-badge-danger"} cc-mb-12`}>{msg.text}</div>}
+
+      <div style={{display:"flex",flexDirection:"column",gap:16}}>
+
+        {/* Meine eigenen Daten */}
         <Card>
-          <STitle>Persönliche Daten</STitle>
+          <STitle>Meine Kontaktdaten</STitle>
           {[
-            {l:"Name",v:name},
-            {l:"Geburtsdatum",v:player?.dob||"-"},
-            {l:"Adresse",v:player?.address||"-"},
-            {l:"E-Mail",v:player?.email||"-"},
-            {l:"Telefon",v:player?.tel||"-"},
-          ].map((x,i)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<4?`0.5px solid ${GB}`:"none"}}>
-              <span className="cc-text-sm">{x.l}</span>
-              <span style={{fontSize:14,fontWeight:500}}>{x.v}</span>
+            {l:"Name",    v:dbUser?.name||account?.name||"-"},
+            {l:"E-Mail",  v:dbUser?.email||"-"},
+            {l:"Telefon", v:dbUser?.telefon||"-"},
+          ].map((x,i,arr)=>(
+            <div key={i} className="cc-info-row">
+              <span className="cc-info-key">{x.l}</span>
+              <span className="cc-info-val">{x.v}</span>
             </div>
           ))}
-          <div className="cc-mt-12 cc-row cc-gap-8">
-            <Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn>
-            {onProfilGeprueft&&<Btn onClick={onProfilGeprueft}>Alles korrekt ✓</Btn>}
+          <div className="cc-mt-12 cc-text-sm">
+            Kontaktdaten können unter Einstellungen → Konto geändert werden.
           </div>
         </Card>
-        {isEltern&&kinder.map((kind,ki)=>{
-          const kindPlayer=ROSTER.find(p=>p.name===kind.name||p.id===kind.rosterId);
-          const kp=kindPlayer||{};
-          const rows=[
-            {l:"Name",              v:`${kp.firstName||""} ${kp.lastName||""}`.trim()||kind.name,     ok:!!(kp.firstName&&kp.lastName)},
-            {l:"Team",              v:kind.team,                                                        ok:true},
-            {l:"Geburtsdatum",      v:kp.dob||"-",                                                     ok:!!kp.dob},
-            {l:"Nationalität",      v:kp.nat||"-",                                                     ok:!!kp.nat},
-            {l:"AHV-Nummer",        v:kp.ahv||"-",                                                     ok:!!kp.ahv},
-            {l:"Spielerpass",       v:kp.pass||"-",                                                    ok:!!kp.pass},
-            {l:"Strasse",           v:kp.street||"-",                                                  ok:!!kp.street},
-            {l:"PLZ / Ort",         v:kp.plz&&kp.city?`${kp.plz} ${kp.city}`:"-",                   ok:!!(kp.plz&&kp.city)},
-            {l:"E-Mail",            v:kp.email||"-",                                                   ok:!!kp.email},
-            {l:"Telefon",           v:kp.tel||"-",                                                     ok:!!kp.tel},
-            {l:"Elternteil 1",      v:kp.p1First?`${kp.p1First} ${kp.p1Last}`:"-",                  ok:!!(kp.p1First&&kp.p1Last)},
-            {l:"E-Mail Elternteil 1",v:kp.p1Email||"-",                                               ok:!!kp.p1Email},
-            {l:"Tel. Elternteil 1", v:kp.p1Tel||"-",                                                  ok:!!kp.p1Tel},
-            {l:"Elternteil 2",      v:kp.p2First?`${kp.p2First} ${kp.p2Last}`:"-",                  ok:!!(kp.p2First&&kp.p2Last)},
-            {l:"E-Mail Elternteil 2",v:kp.p2Email||"-",                                               ok:!!kp.p2Email},
-            {l:"Tel. Elternteil 2", v:kp.p2Tel||"-",                                                  ok:!!kp.p2Tel},
-          ];
-          const allOk=rows.every(r=>r.ok);
+
+        {/* Kinder (für Eltern) */}
+        {kinder.map((k)=>{
+          const isEditing=kindEdit===k.id;
+          const form=getKindForm(k);
+          const fehlend=PFLICHT_FELDER.filter(f=>!k[f.k]);
+          const vollstaendig=fehlend.length===0;
           return(
-            <Card key={ki}>
-              <STitle action={<Chip text={allOk?"✓ Vollständig":"Prüfung fällig"} color={allOk?GN:AM} bg={allOk?"#ECFDF5":"#FFFBEB"}/>}>
-                {kind.name.split(" ")[0]} - Daten prüfen
-              </STitle>
-              {!allOk&&<InfoBox text="Halbjährliche Datenprüfung fällig. Bitte alle Felder bestätigen oder korrigieren." color={AM}/>}
-              <div style={{marginTop:8}}>
-                {rows.map((x,i)=>(
-                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:i<rows.length-1?`0.5px solid ${GB}`:"none"}}>
-                    <div style={{minWidth:140}}>
-                      <div className="cc-text-sm">{x.l}</div>
-                      <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginTop:1,wordBreak:"break-all"}}>{x.v}</div>
-                    </div>
-                    <Chip text={x.ok?"✓ OK":"Prüfen"} color={x.ok?GN:R} bg={x.ok?"#ECFDF5":RL}/>
-                  </div>
-                ))}
+            <Card key={k.id}>
+              <div className="cc-between cc-mb-12">
+                <div>
+                  <div className="cc-text-bold" style={{fontSize:16}}>{k.vorname} {k.nachname}</div>
+                  <div className="cc-text-sm">{(k.teams||[]).join(", ")||"-"} · {k.funktion||"Spieler"}</div>
+                </div>
+                <div className="cc-row cc-gap-8">
+                  <Chip
+                    text={vollstaendig?"✓ Vollständig":"Prüfung fällig"}
+                    color={vollstaendig?GN:AM}
+                    bg={vollstaendig?"#ECFDF5":"#FFFBEB"}
+                  />
+                  {!isEditing&&<Btn small onClick={()=>setKindEdit(k.id)}><TI n="edit"/> Bearbeiten</Btn>}
+                </div>
               </div>
-              <div style={{marginTop:14}}><Btn variant="primary" color={GN}>Daten bestätigen</Btn></div>
+
+              {!vollstaendig&&!isEditing&&(
+                <div className="cc-badge cc-badge-warning cc-mb-12">
+                  Fehlende Angaben: {fehlend.map(f=>f.l).join(", ")}
+                </div>
+              )}
+
+              {isEditing?(
+                <>
+                  <div className="cc-form-row">
+                    {PFLICHT_FELDER.map(({k:fk,l,type})=>(
+                      <div key={fk} className={fk==="strasse"||fk==="email"?"cc-form-full":""}>
+                        <label className="cc-label">{l}</label>
+                        <input className="cc-input" type={type}
+                          value={form[fk]||""}
+                          onChange={e=>setKindForms(prev=>({...prev,[k.id]:{...form,[fk]:e.target.value}}))}
+                          placeholder={l}/>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="cc-save-row">
+                    <button className="cc-btn-ghost" onClick={()=>setKindEdit(null)}>Abbrechen</button>
+                    <Btn variant="primary" onClick={()=>saveKind(k.id)} disabled={saving}>
+                      {saving?"Speichert…":"Speichern & bestätigen"}
+                    </Btn>
+                  </div>
+                </>
+              ):(
+                <div>
+                  {PFLICHT_FELDER.map(({k:fk,l},i)=>(
+                    <div key={fk} className="cc-info-row">
+                      <span className="cc-info-key">{l}</span>
+                      <span className={k[fk]?"cc-info-val":"cc-info-val-empty"}>{k[fk]||"—"}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           );
         })}
+
+        {/* Mein Mitglied-Eintrag (falls Elternteil auch Mitglied) */}
+        {meinMitglied&&(
+          <Card>
+            <STitle>Meine Vereinsdaten</STitle>
+            {[
+              {l:"Funktion",    v:meinMitglied.funktion||"-"},
+              {l:"Team(s)",     v:(meinMitglied.teams||[]).join(", ")||"-"},
+              {l:"Mitgliedtyp", v:meinMitglied.mitgliedtyp||"-"},
+            ].map((x,i)=>(
+              <div key={i} className="cc-info-row">
+                <span className="cc-info-key">{x.l}</span>
+                <span className="cc-info-val">{x.v}</span>
+              </div>
+            ))}
+          </Card>
+        )}
+
       </div>
     </div>
   );

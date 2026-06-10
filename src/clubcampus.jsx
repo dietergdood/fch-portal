@@ -912,9 +912,19 @@ function Portal({supabaseClient}){
     const isEltern=role==="eltern"&&!dbMitglieder.find(m=>m.id===dbUser.mitglied_id);
     if(isEltern){
       const fehlend=[];
+      // Eigene Daten
       if(!dbUser.vorname) fehlend.push("vorname");
       if(!dbUser.nachname) fehlend.push("nachname");
       if(!dbUser.telefon) fehlend.push("telefon");
+      // Kinder-Daten: alle verknüpften Kinder prüfen
+      const kinder=dbMitglieder.filter(m=>
+        (m.eltern||[]).some(e=>e.benutzer_id===dbUser.id)
+      );
+      kinder.forEach(kind=>{
+        if(!kind.geburtsdatum) fehlend.push(`${kind.vorname}: Geburtsdatum`);
+        if(!kind.nationalitaet) fehlend.push(`${kind.vorname}: Nationalität`);
+        if(!kind.strasse) fehlend.push(`${kind.vorname}: Adresse`);
+      });
       return fehlend;
     }
     const raw=dbMitglieder.find(m=>m.id===dbUser.mitglied_id)||{};
