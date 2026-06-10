@@ -230,6 +230,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-land-option-name{flex:1}
 .cc-land-option-active{background:var(--surface2);font-weight:600}
 .cc-land-empty{padding:12px;font-size:13px;color:var(--sub);text-align:center}
+.cc-team-position-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border)}
 .cc-team-position-row:last-child{border-bottom:none}
 .cc-team-nr{width:34px;height:34px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;border:0.5px solid var(--border)}
 .cc-team-nr-empty{color:var(--sub);font-weight:400;border-style:dashed}
