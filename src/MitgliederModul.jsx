@@ -234,6 +234,47 @@ function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
 
 /* -- Kaderliste mit Feldsichtbarkeit -- */
 
+/* ── Eltern Portal-Verknüpfungs-Zeile ── */
+function ElternPortalRow({e,sb,onReload}){
+  const [lEmail,setLEmail]=useState(e.email||"");
+  const [lMsg,setLMsg]=useState(null);
+  const [lLoading,setLLoading]=useState(false);
+  async function link(){
+    if(!sb||!lEmail) return;
+    setLLoading(true); setLMsg(null);
+    const {data:bu}=await sb.from("benutzer").select("id").eq("email",lEmail).maybeSingle();
+    if(bu){
+      await sb.from("elternkontakte").update({benutzer_id:bu.id}).eq("id",e.id);
+      setLMsg({ok:true,text:"Verknüpft ✓"});
+      if(onReload) onReload();
+    } else { setLMsg({ok:false,text:"Kein Benutzer mit dieser E-Mail"}); }
+    setLLoading(false);
+  }
+  async function unlink(){
+    if(!sb) return;
+    await sb.from("elternkontakte").update({benutzer_id:null}).eq("id",e.id);
+    if(onReload) onReload();
+  }
+  return(
+    <div className="cc-mt-8" style={{borderTop:"0.5px solid var(--border)",paddingTop:8}}>
+      {lMsg&&<div className={`cc-badge ${lMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mb-8`}>{lMsg.text}</div>}
+      {e.benutzer_id?(
+        <div className="cc-between">
+          <span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal verknüpft</span>
+          <button className="cc-btn-danger" style={{padding:"3px 10px",fontSize:12}} onClick={unlink}>Aufheben</button>
+        </div>
+      ):(
+        <div className="cc-row cc-gap-8">
+          <input className="cc-input cc-flex-1" style={{height:32,fontSize:13}} value={lEmail} onChange={ev=>setLEmail(ev.target.value)} placeholder="E-Mail für Verknüpfung"/>
+          <button className="cc-btn-success cc-shrink-0" style={{padding:"4px 12px",fontSize:13}} onClick={link} disabled={!lEmail||lLoading}>
+            {lLoading?"…":"Verknüpfen"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
@@ -317,48 +358,6 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
   const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
 
   /* ── Detail-Modal ── */
-  /* ── Eltern Portal-Verknüpfungs-Zeile (eigene Komponente wegen Hook-Regeln) ── */
-  function ElternPortalRow({e,sb,onReload}){
-    const [lEmail,setLEmail]=useState(e.email||"");
-    const [lMsg,setLMsg]=useState(null);
-    const [lLoading,setLLoading]=useState(false);
-
-    async function link(){
-      if(!sb||!lEmail) return;
-      setLLoading(true); setLMsg(null);
-      const {data:bu}=await sb.from("benutzer").select("id").eq("email",lEmail).maybeSingle();
-      if(bu){
-        await sb.from("elternkontakte").update({benutzer_id:bu.id}).eq("id",e.id);
-        setLMsg({ok:true,text:"Verknüpft ✓"});
-        if(onReload) onReload();
-      } else { setLMsg({ok:false,text:"Kein Benutzer mit dieser E-Mail"}); }
-      setLLoading(false);
-    }
-    async function unlink(){
-      if(!sb) return;
-      await sb.from("elternkontakte").update({benutzer_id:null}).eq("id",e.id);
-      if(onReload) onReload();
-    }
-    return(
-      <div className="cc-mt-8" style={{borderTop:"0.5px solid var(--border)",paddingTop:8}}>
-        {lMsg&&<div className={`cc-badge ${lMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mb-8`}>{lMsg.text}</div>}
-        {e.benutzer_id?(
-          <div className="cc-between">
-            <span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal verknüpft</span>
-            <button className="cc-btn-danger" style={{padding:"3px 10px",fontSize:12}} onClick={unlink}>Aufheben</button>
-          </div>
-        ):(
-          <div className="cc-row cc-gap-8">
-            <input className="cc-input cc-flex-1" style={{height:32,fontSize:13}} value={lEmail} onChange={ev=>setLEmail(ev.target.value)} placeholder="E-Mail für Verknüpfung"/>
-            <button className="cc-btn-success cc-shrink-0" style={{padding:"4px 12px",fontSize:13}} onClick={link} disabled={!lEmail||lLoading}>
-              {lLoading?"…":"Verknüpfen"}
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
   const MemberDetail=({m,onClose})=>{
     const raw=dbMitglieder.find(d=>d.id===m.id)||{};
     const eltern=raw.eltern||[];
