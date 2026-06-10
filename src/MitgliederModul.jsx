@@ -94,144 +94,6 @@ function getFieldVisibility(role){
   };
 }
 
-function MitgliedDetail({person,role,onClose,nr,onUpdateNr}){
-  const isMobile=useIsMobile();
-  const vis=FIELD_VIS[role]||[];
-  const can=(field)=>vis.includes(field);
-  const canEdit=["trainer","administrator","administration"].includes(role);
-  const [editingNr,setEditingNr]=useState(false);
-  const [nrVal,setNrVal]=useState(nr||"");
-
-  const Row=({label,value,mono,blue})=>(
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",padding:"9px 14px",borderBottom:"0.5px solid var(--border)",gap:12}}>
-      <span className="cc-info-key">{label}</span>
-      <span style={{fontSize:14,fontWeight:600,color:blue?BL:mono?"#666":BK,textAlign:"right",wordBreak:"break-word",fontFamily:mono?"monospace":"inherit"}}>{value||"-"}</span>
-    </div>
-  );
-
-  const NrRow=()=>(
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 14px",borderBottom:"0.5px solid var(--border)",gap:12}}>
-      <span className="cc-info-key">{"Rückennummer"}</span>
-      {canEdit&&editingNr?(
-        <input autoFocus type="number" min="1" max="99" value={nrVal}
-          onChange={e=>setNrVal(e.target.value)}
-          onBlur={()=>{setEditingNr(false);if(onUpdateNr)onUpdateNr(nrVal);}}
-          onKeyDown={e=>{if(e.key==="Enter"){setEditingNr(false);if(onUpdateNr)onUpdateNr(nrVal);}}}
-          style={{width:60,padding:"3px 7px",border:`1.5px solid ${R}`,borderRadius:6,fontSize:14,fontWeight:700,textAlign:"right",color:R,outline:"none"}}
-        />
-      ):(
-        <div onClick={canEdit?()=>setEditingNr(true):undefined}
-          style={{display:"flex",alignItems:"center",gap:8,cursor:canEdit?"pointer":"default"}}>
-          <span style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{nrVal||"-"}</span>
-          {canEdit&&<span className="cc-text-sm"><TI n="edit"/></span>}
-        </div>
-      )}
-    </div>
-  );
-
-  return(
-    <div onClick={onClose} style={isMobile?{position:"fixed",inset:0,zIndex:2000,display:"flex",flexDirection:"column",justifyContent:"flex-end",background:"rgba(0,0,0,0.5)"}:{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",backdropFilter:"blur(6px)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-      <div onClick={e=>e.stopPropagation()} style={isMobile?{position:"relative",background:"var(--surface)",borderRadius:"20px 20px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",overflowY:"auto",boxShadow:"0 -4px 32px rgba(0,0,0,0.18)"}:{background:"var(--surface)",borderRadius:20,width:"100%",maxWidth:660,maxHeight:"90vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 8px 40px rgba(0,0,0,0.18)"}}>
-
-        {/* Header */}
-        <div style={{background:R,borderRadius:"16px 16px 0 0",padding:"20px 22px",display:"flex",alignItems:"center",gap:16,position:"sticky",top:0,zIndex:1}}>
-          <div style={{width:52,height:52,borderRadius:"50%",background:"rgba(255,255,255,0.25)",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:800,fontSize:18,flexShrink:0}}>
-            {(person.firstName[0]||"")+(person.lastName[0]||"")}
-          </div>
-          <div className="cc-flex-1">
-            <div style={{color:"#fff",fontWeight:800,fontSize:18,lineHeight:1.2}}>{person.firstName} {person.lastName}</div>
-            <div style={{color:"rgba(255,255,255,0.8)",fontSize:14,marginTop:4,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-              <Chip text={person.pos||"-"} color="#fff" bg="rgba(255,255,255,0.25)"/>
-              {(person.teams||["Cc-Junioren"]).map((t,i)=>(
-                <span key={i} style={{color:"rgba(255,255,255,0.85)",fontSize:14}}>{i>0&&<span style={{opacity:0.5,margin:"0 3px"}}>·</span>}{t}</span>
-              ))}
-              <span style={{color:"rgba(255,255,255,0.6)",fontSize:14}}>Saison 2024/25</span>
-            </div>
-          </div>
-          <Btn onClick={onClose} style={{ width:32,height:32 }}>×</Btn>
-        </div>
-
-        <div style={{padding:"18px 22px",display:"flex",flexDirection:"column",gap:16}}>
-
-          {/* PERSONALIEN */}
-          <div>
-            <SectionLabel>Personalien</SectionLabel>
-            <div className="cc-surface-card">
-              <Row label="Name"          value={person.lastName}/>
-              <Row label="Vorname"       value={person.firstName}/>
-              <Row label="Team(s)"       value={(person.teams||["Cc-Junioren"]).join(" · ")}/>
-              {can("dob")      &&<Row label="Geburtsdatum"      value={person.dob}/>}
-              {can("nat")      &&<Row label="Nationalität"       value={person.nat}/>}
-              {can("heimatort")&&<Row label="Heimatort / Geburtsort" value={person.heimatort}/>}
-              {can("ahv")      &&<Row label="AHV-Nummer"        value="••••••••••" mono/>}
-              {can("pass")     &&<Row label="Spielerpass"        value={person.pass}/>}
-              {can("js")       &&<Row label="J+S Nummer"         value={person.js}/>}
-              {can("fairgate") &&<Row label="Fairgate-ID"        value={person.fairgate} mono/>}
-            </div>
-          </div>
-
-          {/* ADRESSE */}
-          {(can("street")||can("plz")||can("city")||can("canton")||can("country"))&&(
-            <div>
-              <SectionLabel>Adresse</SectionLabel>
-              <div className="cc-surface-card">
-                {can("street") &&<Row label="Strasse"  value={person.street}/>}
-                {can("plz")    &&<Row label="PLZ"      value={person.plz}/>}
-                {can("city")   &&<Row label="Ort"      value={person.city}/>}
-                {can("canton") &&<Row label="Kanton"   value={person.canton}/>}
-                {can("country")&&<Row label="Land"     value={person.country}/>}
-              </div>
-            </div>
-          )}
-
-          {/* KOMMUNIKATION PERSÖNLICH */}
-          {(can("email")||can("tel"))&&(
-            <div>
-              <SectionLabel>Kommunikation Persönlich</SectionLabel>
-              <div className="cc-surface-card">
-                {can("email")&&<Row label="E-Mail"  value={person.email} blue/>}
-                {can("tel")  &&<Row label="Telefon" value={person.tel}/>}
-              </div>
-            </div>
-          )}
-
-          {/* ERZIEHUNGSBERECHTIGTE PERSON 1 */}
-          {can("parent1")&&(
-            <div>
-              <SectionLabel>Erziehungsberechtigte Person 1</SectionLabel>
-              <div className="cc-surface-card">
-                <Row label="Name"    value={person.p1Last}/>
-                <Row label="Vorname" value={person.p1First}/>
-                <Row label="E-Mail"  value={person.p1Email} blue/>
-                <Row label="Telefon" value={person.p1Tel}/>
-              </div>
-            </div>
-          )}
-
-          {/* ERZIEHUNGSBERECHTIGTE PERSON 2 */}
-          {can("parent2")&&(
-            <div>
-              <SectionLabel>Erziehungsberechtigte Person 2</SectionLabel>
-              <div className="cc-surface-card">
-                <Row label="Name"    value={person.p2Last}/>
-                <Row label="Vorname" value={person.p2First}/>
-                <Row label="E-Mail"  value={person.p2Email} blue/>
-                <Row label="Telefon" value={person.p2Tel}/>
-              </div>
-            </div>
-          )}
-
-          {/* Rollenhinweis */}
-          <div className="cc-hint-box">
-            <span><TI n="eye"/></span>
-            <span>Feldsichtbarkeit gemäss Rolle: <strong>{getRole(role).label}</strong></span>
-          </div>
-        </div>
-      </div>
-      </div>
-  );
-}
-
 /* -- Kaderliste mit Feldsichtbarkeit -- */
 
 /* ── Eltern Portal-Verknüpfungs-Zeile ── */
@@ -405,9 +267,9 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     }
 
     return(
-      <div>
+      <div className="cc-col cc-gap-16">
         {/* Hero Header */}
-        <Card className="cc-card-flush cc-mb-24">
+        <Card className="cc-card-flush">
           <div className="cc-hero-stripe"/>
           <div className="cc-hero-body">
             {/* Avatar */}
@@ -887,13 +749,30 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
   );
 }
 
-function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,onReload}){
+function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,onReload,navToMember=null,onNavToMemberDone=null}){
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
   const [sortDir,setSortDir]=useState("asc");
   const [groupBy,setGroupBy]=useState("none");
   const [filterVals,setFilterVals]=useState([]);
   const [selectedMember,setSelectedMember]=useState(null);
+
+  // Direkte Navigation vom Kader-Modul
+  useEffect(()=>{
+    if(navToMember&&dbMitglieder.length>0){
+      const m=dbMitglieder.find(x=>x.id===navToMember);
+      if(m) setSelectedMember({
+        id:m.id,
+        name:`${m.vorname||""} ${m.nachname||""}`.trim(),
+        role:m.funktion||m.rolle||"-",
+        type:m.mitgliedtyp||"-",
+        status:m.datenstatus||"-",
+        team:(m.teams||[])[0]||"-",
+        hat_portal_zugang:m.hat_portal_zugang,
+      });
+      if(onNavToMemberDone) onNavToMemberDone();
+    }
+  },[navToMember,dbMitglieder]);
   const canExport=role==="administrator"||role==="administration";
 
   /* Mitglieder: aus Supabase wenn geladen, sonst MEMBERS Fallback */
@@ -1017,9 +896,9 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
     }
 
     return(
-      <div>
+      <div className="cc-col cc-gap-16">
         {/* Hero Header */}
-        <Card className="cc-card-flush cc-mb-24">
+        <Card className="cc-card-flush">
           <div className="cc-hero-stripe"/>
           <div className="cc-hero-body">
             {/* Avatar */}

@@ -53,7 +53,7 @@ function normFunktion(s){
   return s;
 }
 
-function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
+function KaderModul({role, team, initialSelected=null, teamRosterData=null, onSelectMember=null}){
   const isMobile = useIsMobile();
   const vis = FIELD_VIS[role]||[];
   const canEdit = ["trainer","administrator","administration"].includes(role);
@@ -147,7 +147,7 @@ function KaderModul({role, team, initialSelected=null, teamRosterData=null}){
     const nr  = rueckennrn[p.id];
     const funktion = p.role ? normFunktion(p.role) : "Spieler/in";
     return(
-      <div onClick={()=>setSelected(p)} className="cc-list-row">
+      <div onClick={()=>onSelectMember?onSelectMember(p):setSelected(p)} className="cc-list-row">
         <Av name={p.name} size="md" bg="var(--cc-hover,rgba(255,191,0,0.19))"/>
         <div style={{flex:1,minWidth:0}}>
           <div className="cc-list-name">{p.lastName} {p.firstName}</div>
