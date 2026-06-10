@@ -340,58 +340,55 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
       ...(fv.showNotizen?[{l:"Notizen",    v:raw.notizen||"-"}]:[]),
     ];
     return(
-      <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
-        <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
-          <Row gap={12}>
+      <div>
+        <div className="cc-page-hdr" style={{marginBottom:16}}>
+          <div className="cc-row cc-gap-12">
+            <Btn onClick={onClose}><TI n="arrow-left"/> Zurück</Btn>
             <Av name={m.name} size={44}/>
             <div>
-              <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{m.name}</div>
-              <div style={{display:"flex",gap:8,marginTop:4,flexWrap:"wrap"}}>
+              <div style={{fontWeight:700,fontSize:18,color:"var(--text)"}}>{m.name}</div>
+              <div className="cc-row" style={{marginTop:4}}>
                 <Chip text={m.role} color={R}/>
                 <Chip text={m.type} color={BL}/>
                 <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
               </div>
             </div>
-          </Row>
-          <Btn variant="ghost" onClick={onClose} style={{fontSize:20,padding:"4px 6px",color:"var(--sub)"}}>×</Btn>
+          </div>
         </div>
-        <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px"}}>
-          <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
-          {(selectedMember?._tab||"info")==="info"&&(
-            <div>
-              {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
-                <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
-                  <span style={{fontSize:14,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
-                  <span style={{fontSize:14,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
-                </div>
-              ))}
-              {m.hat_portal_zugang&&(
-                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:14,color:GN,fontWeight:600}}>
-                  ✓ Hat Portal-Zugang
-                </div>
-              )}
-            </div>
-          )}
-          {(selectedMember?._tab||"info")==="eltern"&&(
-            <Col gap={12}>
-              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
-              {eltern.map((e,i)=>(
-                <div key={i} className="cc-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px"}}>
-                  <div style={{fontWeight:600,fontSize:14,color:"var(--text)",marginBottom:8}}>{e.vorname} {e.nachname}</div>
-                  {e.email&&<div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
-                  {e.telefon&&<div className="cc-text-sm">📞 {e.telefon}</div>}
-                </div>
-              ))}
-            </Col>
-          )}
-        </div>
-      </ModalOrSheet>
+        <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
+        {(selectedMember?._tab||"info")==="info"&&(
+          <Card style={{marginTop:12}}>
+            {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
+              <div key={i} className="cc-info-row">
+                <span className="cc-info-key">{r.l}</span>
+                <span className="cc-info-val">{r.v}</span>
+              </div>
+            ))}
+            {m.hat_portal_zugang&&(
+              <div className="cc-badge cc-badge-success" style={{marginTop:12}}>✓ Hat Portal-Zugang</div>
+            )}
+          </Card>
+        )}
+        {(selectedMember?._tab||"info")==="eltern"&&(
+          <div className="cc-col cc-gap-8 cc-mt-12">
+            {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
+            {eltern.map((e,i)=>(
+              <Card key={i}>
+                <div className="cc-text-bold cc-mb-8">{e.vorname||e.name} {e.nachname||""}</div>
+                {e.email&&<div className="cc-text-sm">✉ {e.email}</div>}
+                {e.telefon&&<div className="cc-text-sm">📞 {e.telefon}</div>}
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     );
   };
 
+  if(selectedMember) return <MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>;
+
   return(
     <div>
-      {selectedMember&&<MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>}
       {/* Header */}
       <div className="cc-page-hdr">
         <h1 style={{fontSize:21,fontWeight:800,margin:0,color:"var(--text)"}}>Mitglieder</h1>
@@ -599,58 +596,55 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
       ...(fv.showNotizen?[{l:"Notizen",    v:raw.notizen||"-"}]:[]),
     ];
     return(
-      <ModalOrSheet open={true} onClose={onClose} maxWidth={540}>
-        <div style={{padding:"20px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
+      <div>
+        <div className="cc-page-hdr" style={{marginBottom:16}}>
           <div className="cc-row cc-gap-12">
+            <Btn onClick={onClose}><TI n="arrow-left"/> Zurück</Btn>
             <Av name={m.name} size={44}/>
             <div>
-              <div style={{fontWeight:700,fontSize:16,color:"var(--text)"}}>{m.name}</div>
-              <div style={{display:"flex",gap:8,marginTop:4,flexWrap:"wrap"}}>
+              <div style={{fontWeight:700,fontSize:18,color:"var(--text)"}}>{m.name}</div>
+              <div className="cc-row" style={{marginTop:4}}>
                 <Chip text={m.role} color={R}/>
                 <Chip text={m.type} color={BL}/>
                 <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
               </div>
             </div>
           </div>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:21,cursor:"pointer",color:"var(--sub)"}}>×</button>
         </div>
-        <div style={{overflowY:"auto",flex:1,padding:"16px 20px 20px"}}>
-          <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
-          {(selectedMember?._tab||"info")==="info"&&(
-            <div>
-              {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
-                <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid var(--border)":"none",gap:12}}>
-                  <span style={{fontSize:14,color:"var(--sub)",minWidth:110,flexShrink:0}}>{r.l}</span>
-                  <span style={{fontSize:14,color:"var(--text)",fontWeight:600,textAlign:"right"}}>{r.v}</span>
-                </div>
-              ))}
-              {m.hat_portal_zugang&&(
-                <div style={{marginTop:14,padding:"10px 14px",background:"var(--surface)",borderRadius:8,border:"1px solid "+GN,fontSize:14,color:GN,fontWeight:600}}>
-                  ✓ Hat Portal-Zugang
-                </div>
-              )}
-            </div>
-          )}
-          {(selectedMember?._tab||"info")==="eltern"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:12}}>
-              {eltern.length===0&&<div style={{color:"var(--sub)",fontSize:14,textAlign:"center",padding:24}}>Keine Elternkontakte erfasst.</div>}
-              {eltern.map((e,i)=>(
-                <div key={i} className="cc-card" style={{borderRadius:12,border:"0.5px solid",padding:"14px 16px"}}>
-                  <div style={{fontWeight:600,fontSize:14,color:"var(--text)",marginBottom:8}}>{e.vorname} {e.nachname}</div>
-                  {e.email&&<div style={{fontSize:14,color:"var(--sub)",marginBottom:4}}>✉ {e.email}</div>}
-                  {e.telefon&&<div className="cc-text-sm">📞 {e.telefon}</div>}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </ModalOrSheet>
+        <Tabs tabs={[{key:"info",label:"Infos"},{key:"eltern",label:`Eltern (${eltern.length})`}]} active={selectedMember?._tab||"info"} setActive={t=>setSelectedMember(prev=>({...prev,_tab:t}))}/>
+        {(selectedMember?._tab||"info")==="info"&&(
+          <Card style={{marginTop:12}}>
+            {rows.filter(r=>r.v&&r.v!=="-").map((r,i,arr)=>(
+              <div key={i} className="cc-info-row">
+                <span className="cc-info-key">{r.l}</span>
+                <span className="cc-info-val">{r.v}</span>
+              </div>
+            ))}
+            {m.hat_portal_zugang&&(
+              <div className="cc-badge cc-badge-success" style={{marginTop:12}}>✓ Hat Portal-Zugang</div>
+            )}
+          </Card>
+        )}
+        {(selectedMember?._tab||"info")==="eltern"&&(
+          <div className="cc-col cc-gap-8 cc-mt-12">
+            {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
+            {eltern.map((e,i)=>(
+              <Card key={i}>
+                <div className="cc-text-bold cc-mb-8">{e.vorname||e.name} {e.nachname||""}</div>
+                {e.email&&<div className="cc-text-sm">✉ {e.email}</div>}
+                {e.telefon&&<div className="cc-text-sm">📞 {e.telefon}</div>}
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     );
   };
 
+  if(selectedMember) return <MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>;
+
   return(
     <div>
-      {selectedMember&&<MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>}
       {/* Header */}
       <div className="cc-page-hdr">
         <h1 style={{fontSize:21,fontWeight:800,margin:0,color:"var(--text)"}}>Mitglieder</h1>
