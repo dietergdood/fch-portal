@@ -236,6 +236,16 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-eltern-badge[data-rel="vater"],.cc-eltern-badge[data-rel="grossvater"]{background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF}
 .cc-eltern-portal-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;margin-top:8px;border-top:0.5px solid var(--border)}
 .cc-flex-wrap{flex-wrap:wrap}
+/* ── Dropdown Menu ── */
+.cc-menu-wrap{position:relative;flex-shrink:0}
+.cc-menu-trigger{width:28px;height:28px;border-radius:7px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--sub)}
+.cc-menu-trigger:hover{background:var(--surface2)}
+.cc-menu{position:absolute;right:0;top:32px;background:var(--surface);border:0.5px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);min-width:160px;overflow:hidden;z-index:100}
+.cc-menu-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:inherit}
+.cc-menu-item:hover{background:var(--surface2)}
+.cc-menu-item-danger{color:var(--r,#DC2626)}
+.cc-menu-item-danger:hover{background:var(--rl,#FEF2F2)}
+.cc-menu-sep{height:0.5px;background:var(--border)}
 .cc-team-position-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border)}
 .cc-team-position-row:last-child{border-bottom:none}
 .cc-team-nr{width:34px;height:34px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;border:0.5px solid var(--border)}
@@ -637,6 +647,38 @@ function Truncate({children, lines=1, style={}}){
   return <div style={{...s,...style}}>{children}</div>;
 }
 
+/* ── DropMenu: Dreipunkt-Menü ── */
+function DropMenu({items}){
+  const [open,setOpen]=useState(false);
+  const wrapRef=useRef(null);
+  useEffect(()=>{
+    function handleClick(e){ if(wrapRef.current&&!wrapRef.current.contains(e.target)) setOpen(false); }
+    document.addEventListener("mousedown",handleClick);
+    return()=>document.removeEventListener("mousedown",handleClick);
+  },[]);
+  return(
+    <div className="cc-menu-wrap" ref={wrapRef}>
+      <button className="cc-menu-trigger" onClick={()=>setOpen(o=>!o)}>
+        <TI n="dots" size={16}/>
+      </button>
+      {open&&(
+        <div className="cc-menu">
+          {items.map((item,i)=>item==="sep"
+            ?<div key={i} className="cc-menu-sep"/>
+            :<button key={i}
+                className={`cc-menu-item${item.danger?" cc-menu-item-danger":""}`}
+                onClick={()=>{setOpen(false);item.onClick();}}
+              >
+                {item.icon&&<TI n={item.icon} size={13}/>}
+                {item.label}
+              </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LandSelect({value,onChange,laender,placeholder="–"}){
   const [open,setOpen]=useState(false);
   const [search,setSearch]=useState("");
@@ -699,4 +741,4 @@ function LandSelect({value,onChange,laender,placeholder="–"}){
 
 
 
-export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate, LandSelect };
+export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate, LandSelect, DropMenu };

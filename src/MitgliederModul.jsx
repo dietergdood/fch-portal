@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile, avColor, LandSelect } from "./theme.jsx";
+import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile, avColor, LandSelect, DropMenu } from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
@@ -809,10 +809,11 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                           </div>
                         </div>
                         {canEdit&&(
-                          <div className="cc-col cc-gap-4 cc-shrink-0">
-                            <Btn small variant="ghost" onClick={()=>setEditEltern({mode:"edit",data:{...e}})}><TI n="edit" size={13}/></Btn>
-                            <Btn small variant="ghost" onClick={()=>deleteEltern(e.id)} className="cc-btn-danger-ghost"><TI n="trash" size={13}/></Btn>
-                          </div>
+                          <DropMenu items={[
+                            {label:"Bearbeiten", icon:"edit",  onClick:()=>setEditEltern({mode:"edit",data:{...e}})},
+                            "sep",
+                            {label:"Löschen",    icon:"trash", danger:true, onClick:()=>deleteEltern(e.id)},
+                          ]}/>
                         )}
                       </div>
                     )}
@@ -1458,10 +1459,11 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                           </div>
                         </div>
                         {canEdit&&(
-                          <div className="cc-col cc-gap-4 cc-shrink-0">
-                            <Btn small variant="ghost" onClick={()=>setEditEltern({mode:"edit",data:{...e}})}><TI n="edit" size={13}/></Btn>
-                            <Btn small variant="ghost" onClick={()=>deleteEltern(e.id)} className="cc-btn-danger-ghost"><TI n="trash" size={13}/></Btn>
-                          </div>
+                          <DropMenu items={[
+                            {label:"Bearbeiten", icon:"edit",  onClick:()=>setEditEltern({mode:"edit",data:{...e}})},
+                            "sep",
+                            {label:"Löschen",    icon:"trash", danger:true, onClick:()=>deleteEltern(e.id)},
+                          ]}/>
                         )}
                       </div>
                     )}
