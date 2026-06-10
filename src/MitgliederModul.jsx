@@ -364,7 +364,7 @@ function ElternPortalSection({e,sb,onReload}){
     const {data:bu}=await sb.from("benutzer").select("id").eq("email",e.email).maybeSingle();
     if(bu){
       await sb.from("elternkontakte").update({benutzer_id:bu.id}).eq("id",e.id);
-      setLMsg({ok:true,text:"Portal-Zugang eingerichtet ✓"});
+      setLMsg({ok:true,text:"Zugang eingerichtet ✓"});
       if(onReload) onReload();
     } else { setLMsg({ok:false,text:"Kein Konto für "+e.email+" gefunden"}); }
     setLLoading(false);
@@ -378,15 +378,17 @@ function ElternPortalSection({e,sb,onReload}){
     <div className="cc-eltern-portal-row">
       <div>
         <div className="cc-text-bold" style={{fontSize:13}}>Portal-Zugang</div>
-        <div className="cc-text-sm">{e.benutzer_id?"Aktiv":"Kein Zugang"}</div>
+        <div className={e.benutzer_id?"cc-status-active":"cc-status-inactive"}>
+          {e.benutzer_id?"Aktiv":"Kein Zugang"}
+        </div>
       </div>
       <div className="cc-col cc-gap-4">
         {lMsg&&<div className={`cc-badge ${lMsg.ok?"cc-badge-success":"cc-badge-danger"}`}>{lMsg.text}</div>}
         {e.benutzer_id
-          ?<Btn small onClick={unlink}>Zugang entfernen</Btn>
-          :<Btn small onClick={link} disabled={!e.email||lLoading} variant="primary">
-            {lLoading?"…":"Portal-Zugang einrichten"}
-          </Btn>
+          ?<button className="cc-btn-danger" onClick={unlink}>Zugang entfernen</button>
+          :<button className="cc-btn-success" onClick={link} disabled={!e.email||lLoading}>
+            {lLoading?"…":"Zugang einrichten"}
+          </button>
         }
       </div>
     </div>
