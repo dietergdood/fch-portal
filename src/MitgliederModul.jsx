@@ -468,10 +468,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
                 {l:"Nationalität", v:raw.nationalitaet||"-"},
                 {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":"-"},
-              ].filter(r=>r.v&&r.v!=="-").map((r,i)=>(
+              ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                 <div key={i} className="cc-info-row">
                   <span className="cc-info-key">{r.l}</span>
-                  <span className="cc-info-val">{r.v}</span>
+                  <span className={r.v&&r.v!=="-"?"cc-info-val":"cc-info-val cc-text-sub"}>{r.v&&r.v!=="-"?r.v:"—"}</span>
                 </div>
               ))}
             </Card>
@@ -486,7 +486,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                     {l:"Strasse",v:raw.strasse||"-"},
                     {l:"PLZ/Ort",v:raw.plz&&raw.ort?`${raw.plz} ${raw.ort}`:"-"},
                   ]:[]),
-                ].filter(r=>r.v&&r.v!=="-").map((r,i)=>(
+                ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                   <div key={i} className="cc-info-row">
                     <span className="cc-info-key">{r.l}</span>
                     <span className="cc-info-val">{r.v}</span>
@@ -506,10 +506,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                 ...(fv.showPass?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
                 ...(fv.showPass?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
                 ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
-              ].filter(r=>r.v&&r.v!=="-").map((r,i)=>(
+              ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                 <div key={i} className="cc-info-row">
                   <span className="cc-info-key">{r.l}</span>
-                  <span className="cc-info-val">{r.v}</span>
+                  <span className={r.v&&r.v!=="-"?"cc-info-val":"cc-info-val cc-text-sub"}>{r.v&&r.v!=="-"?r.v:"—"}</span>
                 </div>
               ))}
             </Card>
@@ -1070,10 +1070,10 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                 ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
                 {l:"Nationalität", v:raw.nationalitaet||"-"},
                 {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":"-"},
-              ].filter(r=>r.v&&r.v!=="-").map((r,i)=>(
+              ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                 <div key={i} className="cc-info-row">
                   <span className="cc-info-key">{r.l}</span>
-                  <span className="cc-info-val">{r.v}</span>
+                  <span className={r.v&&r.v!=="-"?"cc-info-val":"cc-info-val cc-text-sub"}>{r.v&&r.v!=="-"?r.v:"—"}</span>
                 </div>
               ))}
             </Card>
@@ -1088,7 +1088,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                     {l:"Strasse",v:raw.strasse||"-"},
                     {l:"PLZ/Ort",v:raw.plz&&raw.ort?`${raw.plz} ${raw.ort}`:"-"},
                   ]:[]),
-                ].filter(r=>r.v&&r.v!=="-").map((r,i)=>(
+                ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                   <div key={i} className="cc-info-row">
                     <span className="cc-info-key">{r.l}</span>
                     <span className="cc-info-val">{r.v}</span>
@@ -1108,10 +1108,10 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                 ...(fv.showPass?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
                 ...(fv.showPass?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
                 ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
-              ].filter(r=>r.v&&r.v!=="-").map((r,i)=>(
+              ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
                 <div key={i} className="cc-info-row">
                   <span className="cc-info-key">{r.l}</span>
-                  <span className="cc-info-val">{r.v}</span>
+                  <span className={r.v&&r.v!=="-"?"cc-info-val":"cc-info-val cc-text-sub"}>{r.v&&r.v!=="-"?r.v:"—"}</span>
                 </div>
               ))}
             </Card>
