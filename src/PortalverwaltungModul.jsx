@@ -206,7 +206,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
       ):(
         /* ── DESKTOP: Tabelle ── */
         <Card style={{padding:0,overflowX:"auto"}}>
-          <div className="cc-table-wrap"><table className="cc-table">
+          <table className="cc-table">
             <thead>
               <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
                 <th className="cc-th">
@@ -284,7 +284,7 @@ function TeamModuleMatrix({supabase,setSaveMsg}){
                 return rows;
               })()}
             </tbody>
-          </table></div>
+          </table>
         </Card>
       )}
     </div>
@@ -1317,7 +1317,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           {moduleViewMode==="modul"&&(()=>{
             return(
               <Card style={{padding:0,overflowX:"auto"}}>
-                <div className="cc-table-wrap"><table className="cc-table">
+                <table className="cc-table">
                   <thead>
                     <tr style={{background:"var(--surface2)",borderBottom:"1px solid var(--border)"}}>
                       <th className="cc-th">Modul</th>
@@ -1423,7 +1423,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       ]);
                     })}
                   </tbody>
-                </table></div>
+                </table>
               </Card>
             );
           })()}
@@ -1442,7 +1442,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                       <span style={{fontWeight:600,fontSize:14,color:roleInfo.color||"var(--text)"}}>{ROLLEN_LABELS[role]}</span>
                       <span style={{fontSize:11,color:"var(--sub)",marginLeft:4}}>{zugMods.length} Module</span>
                     </div>
-                    <div className="cc-table-wrap"><table className="cc-table">
+                    <table className="cc-table">
                       <thead>
                         <tr style={{background:"var(--surface2)"}}>
                           <th className="cc-th">Modul</th>
@@ -1475,7 +1475,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                           );
                         })}
                       </tbody>
-                    </table></div>
+                    </table>
                   </Card>
                 );
               })}
@@ -1902,7 +1902,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
             <Btn variant="primary" onClick={()=>{}}>+ Benutzer einladen</Btn>
           </div>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <div className="cc-table-wrap"><table className="cc-table">
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   <th className="cc-th">Name</th>
@@ -1971,7 +1971,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </tr>
                 ))}
               </tbody>
-            </table></div>
+            </table>
           </Card>
         </div>
       )}
@@ -1982,7 +1982,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <InfoBox text="Steuert welche Mitglieder-Felder pro Rolle sichtbar sind. Änderungen wirken sofort." color={BL}/>
           <div style={{height:12}}/>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <div className="cc-table-wrap"><table className="cc-table">
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   <th className="cc-th">Feld</th>
@@ -2015,7 +2015,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </td></tr>
                 )}
               </tbody>
-            </table></div>
+            </table>
           </Card>
         </div>
       )}
@@ -2211,7 +2211,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {!loading&&(!isMobile||mobileKachel!==null)&&tab==="audit"&&(
         <div>
           <Card style={{padding:0,overflowX:"auto"}}>
-            <div className="cc-table-wrap"><table className="cc-table">
+            <table className="cc-table">
               <thead>
                 <tr style={{background:"var(--surface2)"}}>
                   {["Zeit","API / System","Status","Neu","Aktualisiert","Fehler","Details"].map((h,i)=>(
@@ -2237,7 +2237,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </tr>
                 ))}
               </tbody>
-            </table></div>
+            </table>
           </Card>
         </div>
       )}
