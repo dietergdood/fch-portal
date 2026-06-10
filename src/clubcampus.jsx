@@ -940,21 +940,43 @@ function Portal({supabaseClient}){
   function sollProfilPruefen(){
     if(!dbUser||role==="administrator"||role==="administration") return false;
     const raw=dbMitglieder.find(m=>m.id===dbUser.mitglied_id)||null;
-    // Mitglied: profil_geprueft_at aus mitglieder Tabelle nehmen
-    const geprueftAt=raw?.profil_geprueft_at||dbUser.profil_geprueft_at;
-    // Erste Login: noch nie geprüft
-    if(!geprueftAt) return true;
-    // Alle 6 Monate
-    const letzteP=new Date(geprueftAt);
     const sechsMonate=new Date();
     sechsMonate.setMonth(sechsMonate.getMonth()-6);
-    return letzteP<sechsMonate;
+
+    // Eigenes geprueft_at (aus mitglieder oder benutzer)
+    const eigenesGeprueft=raw?.profil_geprueft_at||dbUser.profil_geprueft_at;
+    if(!eigenesGeprueft) return true;
+    if(new Date(eigenesGeprueft)<sechsMonate) return true;
+
+    // Für Eltern: auch Kinder prüfen
+    if(role==="eltern"){
+      const kinder=dbMitglieder.filter(m=>
+        (m.eltern||[]).some(e=>e.benutzer_id===dbUser.id)
+      );
+      for(const kind of kinder){
+        if(!kind.profil_geprueft_at) return true;
+        if(new Date(kind.profil_geprueft_at)<sechsMonate) return true;
+      }
+    }
+
+    return false;
   }
 
   async function markiereProfilGeprueft(){
     if(!sb||!dbUser) return;
-    await sb.from("benutzer").update({profil_geprueft_at:new Date().toISOString()}).eq("id",dbUser.id);
-    setDbUser(u=>u?{...u,profil_geprueft_at:new Date().toISOString()}:u);
+    const now=new Date().toISOString();
+    // Eigenes benutzer-Eintrag
+    await sb.from("benutzer").update({profil_geprueft_at:now}).eq("id",dbUser.id);
+    // Für Eltern: alle Kinder ebenfalls markieren
+    if(role==="eltern"){
+      const kinder=dbMitglieder.filter(m=>
+        (m.eltern||[]).some(e=>e.benutzer_id===dbUser.id)
+      );
+      for(const kind of kinder){
+        await sb.from("mitglieder").update({profil_geprueft_at:now}).eq("id",kind.id);
+      }
+    }
+    setDbUser(u=>u?{...u,profil_geprueft_at:now}:u);
   }
 
   return(
