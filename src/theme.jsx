@@ -2,7 +2,7 @@
    ClubCampus Theme — theme.jsx
    Theme-System, Logo, CSS-Variablen, Default-Farben
    ═══════════════════════════════════════════════════════════════ */
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { TI } from "./icons.jsx";
 import { ACCENT, ACCENT2, ACCENT20, BK, BL, BP_MOBILE, BP_TABLET, BTN_COLOR as BTN, BTN_TXT, FONT, R } from "./constants.js";
 
@@ -207,7 +207,22 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-filter-pill{padding:4px 12px;border-radius:20px;font-size:13px;cursor:pointer;background:none;font-family:inherit;transition:background 0.1s}
 .cc-back-btn{margin-left:-8px;margin-bottom:4px}
 .cc-section-label{padding:10px 13px 6px;background:var(--surface2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--sub)}
-.cc-team-position-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.cc-land-wrap{position:relative;width:100%}
+.cc-land-trigger{display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--border);border-radius:8px;background:var(--surface2);cursor:pointer;font-size:14px;color:var(--text);width:100%;text-align:left;font-family:inherit}
+.cc-land-trigger:focus{outline:2px solid var(--cc-accent,#FFBF00);outline-offset:1px}
+.cc-land-flag{font-size:18px;flex-shrink:0;line-height:1}
+.cc-land-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-land-chevron{flex-shrink:0;color:var(--sub);font-size:12px}
+.cc-land-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:500;overflow:hidden}
+.cc-land-search{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--border)}
+.cc-land-search-input{border:none;background:transparent;font-size:13px;color:var(--text);outline:none;flex:1;font-family:inherit}
+.cc-land-list{max-height:220px;overflow-y:auto;overscroll-behavior:contain}
+.cc-land-option{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text)}
+.cc-land-option:hover{background:var(--surface2)}
+.cc-land-option-flag{font-size:18px;flex-shrink:0;line-height:1}
+.cc-land-option-name{flex:1}
+.cc-land-option-active{background:var(--surface2);font-weight:600}
+.cc-land-empty{padding:12px;font-size:13px;color:var(--sub);text-align:center}
 .cc-team-position-row:last-child{border-bottom:none}
 .cc-team-nr{width:34px;height:34px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;border:0.5px solid var(--border)}
 .cc-team-nr-empty{color:var(--sub);font-weight:400;border-style:dashed}
@@ -602,9 +617,66 @@ function Truncate({children, lines=1, style={}}){
   return <div style={{...s,...style}}>{children}</div>;
 }
 
+function LandSelect({value,onChange,laender,getFlag,placeholder="–"}){
+  const [open,setOpen]=useState(false);
+  const [search,setSearch]=useState("");
+  const wrapRef=useRef(null);
+
+  useEffect(()=>{
+    function handleClick(e){
+      if(wrapRef.current&&!wrapRef.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown",handleClick);
+    return()=>document.removeEventListener("mousedown",handleClick);
+  },[]);
+
+  const filtered=laender.filter(l=>
+    !search||l.n.toLowerCase().includes(search.toLowerCase())||l.c.toLowerCase().includes(search.toLowerCase())
+  );
+  const selected=value?laender.find(l=>l.c===value):null;
+
+  function select(code){ onChange(code); setOpen(false); setSearch(""); }
+
+  return(
+    <div className="cc-land-wrap" ref={wrapRef}>
+      <button type="button" className="cc-land-trigger" onClick={()=>setOpen(o=>!o)}>
+        {selected?(
+          <>
+            <span className="cc-land-flag">{getFlag(selected.c)}</span>
+            <span className="cc-land-name">{selected.n}</span>
+          </>
+        ):(
+          <span className="cc-land-name cc-text-sub">{placeholder}</span>
+        )}
+        <span className="cc-land-chevron">{open?"▲":"▼"}</span>
+      </button>
+      {open&&(
+        <div className="cc-land-dropdown">
+          <div className="cc-land-search">
+            <span className="cc-text-sub" style={{fontSize:13}}>🔍</span>
+            <input className="cc-land-search-input" autoFocus placeholder="Suchen…" value={search} onChange={e=>setSearch(e.target.value)}/>
+          </div>
+          <div className="cc-land-list">
+            <div className="cc-land-option" onClick={()=>select("")}>
+              <span className="cc-land-option-name cc-text-sub">– Keine Angabe</span>
+            </div>
+            {filtered.length===0&&<div className="cc-land-empty">Kein Ergebnis</div>}
+            {filtered.map(l=>(
+              <div key={l.c} className={`cc-land-option${value===l.c?" cc-land-option-active":""}`} onClick={()=>select(l.c)}>
+                <span className="cc-land-option-flag">{getFlag(l.c)}</span>
+                <span className="cc-land-option-name">{l.n}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 
 
 
 
-export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate };
+
+export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate, LandSelect };
