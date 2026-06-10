@@ -554,6 +554,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           ]}
           active={tab}
           setActive={t=>!(["stats","comments","ratings"].includes(t))&&setTab(t)}
+          mb={0}
         />
 
         {/* Tab: Profil */}
@@ -819,7 +820,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
 
         {/* Tab: Portal-Zugang */}
         {tab==="portal"&&canEdit&&(
-          <div className="cc-col cc-gap-12">
+          <div className="cc-col cc-gap-16">
             <Card>
               <div className="cc-between cc-mb-12">
                 <div className="cc-text-bold cc-text-lg">Portal-Zugang</div>
@@ -860,7 +861,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
 
         {/* Tab: Datenprüfung */}
         {tab==="datenpruefung"&&canEdit&&(
-          <div className="cc-col cc-gap-12">
+          <div className="cc-col cc-gap-16">
             <Card>
               <div className="cc-between cc-mb-12">
                 <div>
@@ -1203,6 +1204,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
           ]}
           active={tab}
           setActive={t=>!(["stats","comments","ratings"].includes(t))&&setTab(t)}
+          mb={0}
         />
 
         {/* Tab: Profil */}
@@ -1468,7 +1470,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
 
         {/* Tab: Portal-Zugang */}
         {tab==="portal"&&canEdit&&(
-          <div className="cc-col cc-gap-12">
+          <div className="cc-col cc-gap-16">
             <Card>
               <div className="cc-between cc-mb-12">
                 <div className="cc-text-bold cc-text-lg">Portal-Zugang</div>
@@ -1509,7 +1511,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
 
         {/* Tab: Datenprüfung */}
         {tab==="datenpruefung"&&canEdit&&(
-          <div className="cc-col cc-gap-12">
+          <div className="cc-col cc-gap-16">
             <Card>
               <div className="cc-between cc-mb-12">
                 <div>
