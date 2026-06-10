@@ -217,6 +217,12 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-btn-ghost{padding:8px 16px;border-radius:8px;border:0.5px solid var(--border);background:var(--surface);color:var(--sub);font-size:14px;cursor:pointer;font-family:inherit;font-weight:400;transition:background 0.1s}
 .cc-btn-ghost:hover{background:var(--surface2);color:var(--text)}
 
+/* ── Profil-spezifisch (minimale Ergänzungen) ── */
+.cc-profile-name{font-size:24px;font-weight:800;margin:0 0 6px;color:var(--text);letter-spacing:-0.3px}
+.cc-profile-nr{position:absolute;bottom:-8px;right:-8px;background:var(--text);color:var(--bg);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;line-height:1.4}
+.cc-contact-link{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--cc-accent,#FFBF00);text-decoration:none;font-weight:500}
+.cc-contact-link-muted{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--sub);text-decoration:none}
+
 /* ── Mobile responsive ── */
 @media(max-width:680px){
   .cc-form-row,.cc-grid-2,.cc-grid-3{grid-template-columns:1fr!important}

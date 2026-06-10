@@ -330,64 +330,60 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     return(
       <div>
         {/* Hero Header */}
-        <div style={{background:"var(--surface)",borderRadius:16,overflow:"hidden",marginBottom:20,boxShadow:"0 2px 8px rgba(0,0,0,0.06)"}}>
-          {/* Accent Bar */}
+        <Card style={{padding:0,overflow:"hidden",marginBottom:20}}>
           <div style={{height:6,background:"var(--cc-accent,#FFBF00)"}}/>
-          <div style={{padding:"24px 28px"}}>
-            <div style={{display:"flex",alignItems:"flex-start",gap:20,flexWrap:"wrap"}}>
-              {/* Avatar gross */}
-              <div style={{width:80,height:80,borderRadius:16,background:"var(--cc-accent,#FFBF00)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--cc-avatar-text,#000)",flexShrink:0,position:"relative"}}>
-                {initials}
-                {raw.rueckennr&&<div style={{position:"absolute",bottom:-8,right:-8,background:"var(--text)",color:"var(--bg)",fontSize:11,fontWeight:700,padding:"2px 7px",borderRadius:20,lineHeight:1.4}}>#{raw.rueckennr}</div>}
-              </div>
-              {/* Name + Meta */}
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
-                  <Btn variant="ghost" small onClick={onClose} style={{padding:"4px 8px",marginLeft:-8}}><TI n="arrow-left"/>Zurück</Btn>
-                </div>
-                <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 6px",color:"var(--text)",letterSpacing:"-0.3px"}}>{m.name}</h1>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                  <Chip text={m.role} color={R}/>
-                  {raw.position&&<Chip text={raw.position} color={BL}/>}
-                  <Chip text={m.type} color={"#7C3AED"}/>
-                  <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-                  {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
-                </div>
-              </div>
-              {/* Quick Stats */}
-              <div style={{display:"flex",gap:16,flexShrink:0}}>
-                {m.team&&<div style={{textAlign:"center"}}>
-                  <div style={{fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:2}}>Team</div>
-                  <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{m.team}</div>
-                </div>}
-                {age&&<div style={{textAlign:"center"}}>
-                  <div style={{fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:2}}>Alter</div>
-                  <div style={{fontSize:22,fontWeight:700,color:"var(--text)",lineHeight:1}}>{age}</div>
-                </div>}
+          <div className="cc-row" style={{padding:"24px 28px",alignItems:"flex-start",gap:20,flexWrap:"wrap"}}>
+            {/* Avatar */}
+            <div style={{width:80,height:80,borderRadius:16,background:"var(--avatar-bg,var(--cc-accent,#FFBF00))",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--cc-avatar-text,#000)",flexShrink:0,position:"relative"}}>
+              {initials}
+              {raw.rueckennr&&<div className="cc-profile-nr">#{raw.rueckennr}</div>}
+            </div>
+            {/* Meta */}
+            <div style={{flex:1,minWidth:0}}>
+              <Btn variant="ghost" small onClick={onClose} style={{marginLeft:-8,marginBottom:4}}><TI n="arrow-left"/>Zurück</Btn>
+              <h1 className="cc-profile-name">{m.name}</h1>
+              <div className="cc-row" style={{flexWrap:"wrap",gap:6}}>
+                <Chip text={m.role} color={R}/>
+                {raw.position&&<Chip text={raw.position} color={BL}/>}
+                <Chip text={m.type} color={"#7C3AED"}/>
+                <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+                {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
               </div>
             </div>
+            {/* Quick Stats */}
+            <div className="cc-row" style={{gap:20,flexShrink:0,alignItems:"flex-start"}}>
+              {m.team&&<div style={{textAlign:"center"}}>
+                <div className="cc-label" style={{marginBottom:2}}>Team</div>
+                <div className="cc-text-bold">{m.team}</div>
+              </div>}
+              {age&&<div style={{textAlign:"center"}}>
+                <div className="cc-label" style={{marginBottom:2}}>Alter</div>
+                <div style={{fontSize:22,fontWeight:700,color:"var(--text)",lineHeight:1}}>{age}</div>
+              </div>}
+            </div>
           </div>
-          {/* Tabs */}
-          <div style={{borderTop:"0.5px solid var(--border)",display:"flex",gap:0,padding:"0 20px"}}>
+          {/* Tabs mit cc-seg */}
+          <div style={{borderTop:"0.5px solid var(--border)",padding:"0 20px",display:"flex",gap:0,overflowX:"auto"}}>
             {[
-              {key:"info",    label:"Profil",       icon:"user"},
-              {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart"},
-              {key:"stats",   label:"Statistik",    icon:"chart-bar", soon:true},
-              {key:"comments",label:"Kommentare",   icon:"message",   soon:true},
-              {key:"ratings", label:"Bewertungen",  icon:"star",      soon:true},
+              {key:"info",    label:"Profil",     icon:"user"},
+              {key:"eltern",  label:`Eltern (${eltern.length})`,icon:"heart"},
+              {key:"stats",   label:"Statistik",  icon:"chart-bar",soon:true},
+              {key:"comments",label:"Kommentare", icon:"message",  soon:true},
+              {key:"ratings", label:"Bewertungen",icon:"star",     soon:true},
             ].map(t=>(
               <button key={t.key} onClick={()=>!t.soon&&setTab(t.key)}
-                style={{padding:"12px 16px",border:"none",background:"none",cursor:t.soon?"default":"pointer",
+                style={{padding:"12px 16px",border:"none",background:"none",
+                  cursor:t.soon?"default":"pointer",fontFamily:"inherit",
                   fontSize:13,fontWeight:tab===t.key?600:400,
                   color:tab===t.key?"var(--text)":t.soon?"var(--border)":"var(--sub)",
                   borderBottom:tab===t.key?"2px solid var(--cc-accent,#FFBF00)":"2px solid transparent",
-                  display:"flex",alignItems:"center",gap:5,transition:"all 0.1s",whiteSpace:"nowrap",fontFamily:"inherit"}}>
+                  display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap",transition:"color 0.1s"}}>
                 <TI n={t.icon} size={14}/>{t.label}
                 {t.soon&&<span style={{fontSize:9,background:"var(--surface2)",color:"var(--sub)",padding:"1px 5px",borderRadius:8,marginLeft:2}}>bald</span>}
               </button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Tab: Profil */}
         {tab==="info"&&(
@@ -460,20 +456,39 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         {tab==="eltern"&&(
           <div className="cc-col cc-gap-8">
             {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
-            {eltern.map((e,i)=>(
-              <Card key={i} style={{display:"flex",alignItems:"center",gap:16}}>
-                <Av name={e.name||`${e.vorname} ${e.nachname}`} size={44}/>
-                <div style={{flex:1}}>
-                  <div className="cc-text-bold" style={{fontSize:15,marginBottom:4}}>{e.vorname||e.name} {e.nachname||""}</div>
-                  <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-                    {e.email&&<div className="cc-text-sm"><TI n="mail" size={12}/> {e.email}</div>}
-                    {(e.telefon||e.tel)&&<div className="cc-text-sm"><TI n="phone" size={12}/> {e.telefon||e.tel}</div>}
-                    {e.beziehung&&<div className="cc-text-sm"><TI n="users" size={12}/> {e.beziehung}</div>}
+            {eltern.map((e,i)=>{
+              const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
+              const tel=e.telefon||e.tel;
+              return(
+                <Card key={i}>
+                  <div style={{display:"flex",alignItems:"center",gap:16}}>
+                    <Av name={name} size={48}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,flexWrap:"wrap"}}>
+                        <div className="cc-text-bold" style={{fontSize:15}}>{name}</div>
+                        {e.beziehung&&<span className="cc-badge cc-badge-neutral"><TI n="users" size={10}/> {e.beziehung}</span>}
+                        {e.benutzer_id
+                          ?<span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal verknüpft</span>
+                          :<span className="cc-badge cc-badge-neutral" style={{color:"var(--sub)"}}>Nicht verknüpft</span>
+                        }
+                      </div>
+                      <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+                        {e.email&&(
+                          <a href={`mailto:${e.email}`} className="cc-contact-link">
+                            <TI n="mail" size={13}/>{e.email}
+                          </a>
+                        )}
+                        {tel&&(
+                          <a href={`tel:${tel}`} className="cc-contact-link-muted">
+                            <TI n="phone" size={13}/>{tel}
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                {e.benutzer_id&&<span className="cc-badge cc-badge-success">Portal ✓</span>}
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
         )}
 
@@ -687,64 +702,60 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
     return(
       <div>
         {/* Hero Header */}
-        <div style={{background:"var(--surface)",borderRadius:16,overflow:"hidden",marginBottom:20,boxShadow:"0 2px 8px rgba(0,0,0,0.06)"}}>
-          {/* Accent Bar */}
+        <Card style={{padding:0,overflow:"hidden",marginBottom:20}}>
           <div style={{height:6,background:"var(--cc-accent,#FFBF00)"}}/>
-          <div style={{padding:"24px 28px"}}>
-            <div style={{display:"flex",alignItems:"flex-start",gap:20,flexWrap:"wrap"}}>
-              {/* Avatar gross */}
-              <div style={{width:80,height:80,borderRadius:16,background:"var(--cc-accent,#FFBF00)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--cc-avatar-text,#000)",flexShrink:0,position:"relative"}}>
-                {initials}
-                {raw.rueckennr&&<div style={{position:"absolute",bottom:-8,right:-8,background:"var(--text)",color:"var(--bg)",fontSize:11,fontWeight:700,padding:"2px 7px",borderRadius:20,lineHeight:1.4}}>#{raw.rueckennr}</div>}
-              </div>
-              {/* Name + Meta */}
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
-                  <Btn variant="ghost" small onClick={onClose} style={{padding:"4px 8px",marginLeft:-8}}><TI n="arrow-left"/>Zurück</Btn>
-                </div>
-                <h1 style={{fontSize:24,fontWeight:800,margin:"0 0 6px",color:"var(--text)",letterSpacing:"-0.3px"}}>{m.name}</h1>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                  <Chip text={m.role} color={R}/>
-                  {raw.position&&<Chip text={raw.position} color={BL}/>}
-                  <Chip text={m.type} color={"#7C3AED"}/>
-                  <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-                  {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
-                </div>
-              </div>
-              {/* Quick Stats */}
-              <div style={{display:"flex",gap:16,flexShrink:0}}>
-                {m.team&&<div style={{textAlign:"center"}}>
-                  <div style={{fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:2}}>Team</div>
-                  <div style={{fontSize:14,fontWeight:600,color:"var(--text)"}}>{m.team}</div>
-                </div>}
-                {age&&<div style={{textAlign:"center"}}>
-                  <div style={{fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:2}}>Alter</div>
-                  <div style={{fontSize:22,fontWeight:700,color:"var(--text)",lineHeight:1}}>{age}</div>
-                </div>}
+          <div className="cc-row" style={{padding:"24px 28px",alignItems:"flex-start",gap:20,flexWrap:"wrap"}}>
+            {/* Avatar */}
+            <div style={{width:80,height:80,borderRadius:16,background:"var(--avatar-bg,var(--cc-accent,#FFBF00))",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--cc-avatar-text,#000)",flexShrink:0,position:"relative"}}>
+              {initials}
+              {raw.rueckennr&&<div className="cc-profile-nr">#{raw.rueckennr}</div>}
+            </div>
+            {/* Meta */}
+            <div style={{flex:1,minWidth:0}}>
+              <Btn variant="ghost" small onClick={onClose} style={{marginLeft:-8,marginBottom:4}}><TI n="arrow-left"/>Zurück</Btn>
+              <h1 className="cc-profile-name">{m.name}</h1>
+              <div className="cc-row" style={{flexWrap:"wrap",gap:6}}>
+                <Chip text={m.role} color={R}/>
+                {raw.position&&<Chip text={raw.position} color={BL}/>}
+                <Chip text={m.type} color={"#7C3AED"}/>
+                <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+                {m.hat_portal_zugang&&<span className="cc-badge cc-badge-success"><TI n="circle-check" size={11}/> Portal</span>}
               </div>
             </div>
+            {/* Quick Stats */}
+            <div className="cc-row" style={{gap:20,flexShrink:0,alignItems:"flex-start"}}>
+              {m.team&&<div style={{textAlign:"center"}}>
+                <div className="cc-label" style={{marginBottom:2}}>Team</div>
+                <div className="cc-text-bold">{m.team}</div>
+              </div>}
+              {age&&<div style={{textAlign:"center"}}>
+                <div className="cc-label" style={{marginBottom:2}}>Alter</div>
+                <div style={{fontSize:22,fontWeight:700,color:"var(--text)",lineHeight:1}}>{age}</div>
+              </div>}
+            </div>
           </div>
-          {/* Tabs */}
-          <div style={{borderTop:"0.5px solid var(--border)",display:"flex",gap:0,padding:"0 20px"}}>
+          {/* Tabs mit cc-seg */}
+          <div style={{borderTop:"0.5px solid var(--border)",padding:"0 20px",display:"flex",gap:0,overflowX:"auto"}}>
             {[
-              {key:"info",    label:"Profil",       icon:"user"},
-              {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart"},
-              {key:"stats",   label:"Statistik",    icon:"chart-bar", soon:true},
-              {key:"comments",label:"Kommentare",   icon:"message",   soon:true},
-              {key:"ratings", label:"Bewertungen",  icon:"star",      soon:true},
+              {key:"info",    label:"Profil",     icon:"user"},
+              {key:"eltern",  label:`Eltern (${eltern.length})`,icon:"heart"},
+              {key:"stats",   label:"Statistik",  icon:"chart-bar",soon:true},
+              {key:"comments",label:"Kommentare", icon:"message",  soon:true},
+              {key:"ratings", label:"Bewertungen",icon:"star",     soon:true},
             ].map(t=>(
               <button key={t.key} onClick={()=>!t.soon&&setTab(t.key)}
-                style={{padding:"12px 16px",border:"none",background:"none",cursor:t.soon?"default":"pointer",
+                style={{padding:"12px 16px",border:"none",background:"none",
+                  cursor:t.soon?"default":"pointer",fontFamily:"inherit",
                   fontSize:13,fontWeight:tab===t.key?600:400,
                   color:tab===t.key?"var(--text)":t.soon?"var(--border)":"var(--sub)",
                   borderBottom:tab===t.key?"2px solid var(--cc-accent,#FFBF00)":"2px solid transparent",
-                  display:"flex",alignItems:"center",gap:5,transition:"all 0.1s",whiteSpace:"nowrap",fontFamily:"inherit"}}>
+                  display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap",transition:"color 0.1s"}}>
                 <TI n={t.icon} size={14}/>{t.label}
                 {t.soon&&<span style={{fontSize:9,background:"var(--surface2)",color:"var(--sub)",padding:"1px 5px",borderRadius:8,marginLeft:2}}>bald</span>}
               </button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Tab: Profil */}
         {tab==="info"&&(
@@ -817,20 +828,39 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
         {tab==="eltern"&&(
           <div className="cc-col cc-gap-8">
             {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
-            {eltern.map((e,i)=>(
-              <Card key={i} style={{display:"flex",alignItems:"center",gap:16}}>
-                <Av name={e.name||`${e.vorname} ${e.nachname}`} size={44}/>
-                <div style={{flex:1}}>
-                  <div className="cc-text-bold" style={{fontSize:15,marginBottom:4}}>{e.vorname||e.name} {e.nachname||""}</div>
-                  <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-                    {e.email&&<div className="cc-text-sm"><TI n="mail" size={12}/> {e.email}</div>}
-                    {(e.telefon||e.tel)&&<div className="cc-text-sm"><TI n="phone" size={12}/> {e.telefon||e.tel}</div>}
-                    {e.beziehung&&<div className="cc-text-sm"><TI n="users" size={12}/> {e.beziehung}</div>}
+            {eltern.map((e,i)=>{
+              const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
+              const tel=e.telefon||e.tel;
+              return(
+                <Card key={i}>
+                  <div style={{display:"flex",alignItems:"center",gap:16}}>
+                    <Av name={name} size={48}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,flexWrap:"wrap"}}>
+                        <div className="cc-text-bold" style={{fontSize:15}}>{name}</div>
+                        {e.beziehung&&<span className="cc-badge cc-badge-neutral"><TI n="users" size={10}/> {e.beziehung}</span>}
+                        {e.benutzer_id
+                          ?<span className="cc-badge cc-badge-success"><TI n="circle-check" size={10}/> Portal verknüpft</span>
+                          :<span className="cc-badge cc-badge-neutral" style={{color:"var(--sub)"}}>Nicht verknüpft</span>
+                        }
+                      </div>
+                      <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+                        {e.email&&(
+                          <a href={`mailto:${e.email}`} className="cc-contact-link">
+                            <TI n="mail" size={13}/>{e.email}
+                          </a>
+                        )}
+                        {tel&&(
+                          <a href={`tel:${tel}`} className="cc-contact-link-muted">
+                            <TI n="phone" size={13}/>{tel}
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                {e.benutzer_id&&<span className="cc-badge cc-badge-success">Portal ✓</span>}
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
         )}
 
