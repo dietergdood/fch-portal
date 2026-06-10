@@ -3,7 +3,7 @@
    Dashboard-Ansichten für alle Rollen
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect } from "react";
-import { FONT, BTN_COLOR as BTN, BTN_TXT, ACCENT, GN, R, RL, BL, AM, BK, GB } from "./constants.js";
+import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK, GB } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { Card, Chip, H1, InfoBox, Row, Between, STitle, Stat, useIsMobile, Btn, H2, Col } from "./theme.jsx";
 import { ATT_EVENTS, ATT_INITIAL, ATT_LOG, BUSES, EVENTS, HELPERS, HELPER_EVENTS, POLLS, ROSTER, TABLES } from "./demoData.js";
@@ -23,9 +23,9 @@ function getDate(){
   return new Date().toLocaleDateString("de-CH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 }
 
-function Dashboard({role,setActive,account,meineTeams,myRosterId,dbMitglieder=[]}){
-  if(role==="administrator")  return <DashboardAdmin setActive={setActive} account={account} dbMitglieder={dbMitglieder}/>;
-  if(role==="administration") return <DashboardAdministration setActive={setActive} account={account} dbMitglieder={dbMitglieder}/>;
+function Dashboard({role,setActive,account,meineTeams,myRosterId}){
+  if(role==="administrator")  return <DashboardAdmin setActive={setActive} account={account}/>;
+  if(role==="administration") return <DashboardAdministration setActive={setActive} account={account}/>;
   if(role==="funktionaer")    return <DashboardFunktionaer setActive={setActive} account={account}/>;
   if(role==="trainer")        return <DashboardTrainer setActive={setActive} account={account} trainerTeams={meineTeams} myRosterId={myRosterId}/>;
   if(role==="spieler")        return <DashboardSpieler account={account} meineTeams={meineTeams} myRosterId={myRosterId} setActive={setActive}/>;
@@ -33,25 +33,18 @@ function Dashboard({role,setActive,account,meineTeams,myRosterId,dbMitglieder=[]
   return null;
 }
 
-function DashboardAdmin({setActive,account,dbMitglieder=[]}){
+function DashboardAdmin({setActive,account}){
   const isMobile=useIsMobile();
   const vorname=(account?.name||"Administrator").split(" ")[0];
-
-  // Zahlen aus dbMitglieder berechnen
-  const totalMitglieder=dbMitglieder.length;
-  const countByFunktion=(fn)=>dbMitglieder.filter(m=>m.aktiv!==false&&(m.funktion||"").toLowerCase().includes(fn.toLowerCase())).length;
-  const spielerCount=dbMitglieder.filter(m=>m.aktiv!==false&&(!m.funktion||m.funktion.toLowerCase()==="spieler")).length;
-  const trainerCount=countByFunktion("trainer");
-  const elternCount=dbMitglieder.filter(m=>m.aktiv!==false&&m.eltern&&Array.isArray(m.eltern)&&m.eltern.length>0).length;
   return(
     <div>
       <H1 mb={4}>{getGreeting()}, {vorname}</H1>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:24}}>ClubCampus – Systemübersicht</p>
       <div className="cc-grid-stats" style={{marginBottom:24}}>
-        <Stat label="Mitglieder total" value={totalMitglieder||"–"} sub="aus Supabase" semantic="primary" icon="users"/>
-        <Stat label="Aktive Benutzer" value="–" sub="noch nicht verbunden" semantic="info" icon="user"/>
-        <Stat label="Sync-Fehler" value="–" sub="Fairgate / FVRZ" semantic="danger" icon="refresh"/>
-        <Stat label="Offene Datenprüfungen" value="–" sub="Mitglieder fällig" semantic="warning" icon="clipboard-list"/>
+        <Stat label="Mitglieder total" value="187" sub="Fairgate synchronisiert" semantic="primary" icon="users"/>
+        <Stat label="Aktive Benutzer" value="134" sub="in den letzten 30 Tagen" semantic="info" icon="user"/>
+        <Stat label="Sync-Fehler" value="2" sub="Fairgate / FVRZ" semantic="danger" icon="refresh"/>
+        <Stat label="Offene Datenprüfungen" value="12" sub="Mitglieder fällig" semantic="warning" icon="clipboard-list"/>
       </div>
       <div className="cc-grid-cards" >
         <Card>
@@ -65,21 +58,19 @@ function DashboardAdmin({setActive,account,dbMitglieder=[]}){
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
               <span style={{fontSize:14,fontWeight:600}}>{s.label}</span>
               <Row>
-                <span style={{fontSize:14,color:"var(--sub)"}}>{s.last}</span>
+                <span className="cc-text-sm">{s.last}</span>
                 <Chip text={s.status} color={s.ok?GN:R} bg={s.ok?"#ECFDF5":RL}/>
               </Row>
             </div>
           ))}
         </Card>
         <Card>
-          <STitle>Mitglieder &amp; Funktionen</STitle>
+          <STitle>Benutzer &amp; Rollen</STitle>
           {[
-            {r:"Spieler",         n:spielerCount},
-            {r:"Trainer",         n:trainerCount},
-            {r:"Eltern (mit Kind)",n:elternCount},
-            {r:"Total aktiv",     n:totalMitglieder},
+            {r:"Administrator",n:2},{r:"Administration",n:3},{r:"Trainer",n:8},
+            {r:"Funktionäre/Vorstand",n:6},{r:"Spieler",n:112},{r:"Eltern",n:56},
           ].map((x,i)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<3?`0.5px solid ${GB}`:"none"}}>
+            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<5?`0.5px solid ${GB}`:"none"}}>
               <span style={{fontSize:14}}>{x.r}</span>
               <span style={{fontWeight:700,fontSize:14}}>{x.n}</span>
             </div>
@@ -93,7 +84,7 @@ function DashboardAdmin({setActive,account,dbMitglieder=[]}){
           ].map((c,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div className="cc-list-name">{c.member} · {c.field}</div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>{c.conflict}</div>
+              <div className="cc-text-sm">{c.conflict}</div>
             </div>
           ))}
           <InfoBox text="2 Konflikte müssen manuell aufgelöst werden." semantic="danger"/>
@@ -107,7 +98,7 @@ function DashboardAdmin({setActive,account,dbMitglieder=[]}){
           ].map((a,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div style={{fontSize:14,fontWeight:600}}>{a.action}</div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>{a.user} · {a.time+" Uhr"}</div>
+              <div className="cc-text-sm">{a.user} · {a.time+" Uhr"}</div>
             </div>
           ))}
         </Card>
@@ -123,7 +114,7 @@ function DashboardAdministration({setActive,account}){
       <H1 mb={4}>{getGreeting()}, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:24}}>ClubCampus – Übersicht</p>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:18}}>Administration · {getDate()}</p>
-      <div className="cc-grid-stats" style={{marginBottom:20}}>
+      <div className="cc-grid-stats" className="cc-mb-20">
         <Stat label="Mitglieder total" value="187" semantic="info"/>
         <Stat label="Datenprüfung fällig" value="12" semantic="danger" sub="halbjährliche Prüfung"/>
         <Stat label="Sync-Fehler" value="2" semantic="warning"/>
@@ -188,7 +179,7 @@ function DashboardFunktionaer({setActive,account}){
       <H1 mb={4}>{getGreeting()}, {(account?.name||"Nutzer").split(" ")[0]}</H1>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:24}}>ClubCampus – Übersicht</p>
       <p className="cc-detail-label" style={{minWidth:"auto",marginBottom:18}}>Funktionär / Vorstand · {getDate()}</p>
-      <div className="cc-grid-stats" style={{marginBottom:20}}>
+      <div className="cc-grid-stats" className="cc-mb-20">
         <Stat label="Offene Rückmeldungen" value="22" semantic="danger"/>
         <Stat label="Helfer-Soll erfüllt" value="61%" semantic="warning"/>
         <Stat label="Vereinsbusse heute" value="1" semantic="info" sub="Bus A reserviert"/>
@@ -203,7 +194,7 @@ function DashboardFunktionaer({setActive,account}){
                 <span className="cc-list-name">{e.title}</span>
                 <Chip text={e.type==="Vereinsanlass"?"Verein":"Team"} color={e.type==="Vereinsanlass"?R:BL}/>
               </div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>{e.date} · {e.time+" Uhr"}</div>
+              <div className="cc-text-sm">{e.date} · {e.time+" Uhr"}</div>
             </div>
           ))}
         </Card>
@@ -244,7 +235,7 @@ function DashboardFunktionaer({setActive,account}){
           {BUSES.flatMap(b=>b.reservations.map(r=>({...r,bus:b.name}))).map((r,i)=>(
             <div key={i} className="cc-list-row" style={{borderBottom:"none"}}>
               <div className="cc-list-name">{r.date} · {r.time+" Uhr"}</div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>{r.bus} · {r.purpose}</div>
+              <div className="cc-text-sm">{r.bus} · {r.purpose}</div>
             </div>
           ))}
         </Card>
@@ -274,7 +265,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
     <div>
       <H1 mb={6}>{getGreeting()}, {firstName}</H1>
       <p className="cc-detail-label" style={{marginBottom:18}}>Trainer · {trainerTeams.join(" & ")} · {getDate()}</p>
-      <div className="cc-grid-stats" style={{marginBottom:20}}>
+      <div className="cc-grid-stats" className="cc-mb-20">
         <Stat label="Nächstes Training" value={nextTrain?nextTrain.date.replace(/^\w+\s/,""):"-"} sub={nextTrain?`${nextTrain.time} Uhr · ${nextTrain.location}`:"Kein Training"} semantic="success"/>
         <Stat label="Nächstes Spiel"    value={nextSpiel?nextSpiel.date.replace(/^\w+\s/,""):"-"} sub={nextSpiel?`${nextSpiel.time} Uhr · vs. ${nextSpiel.opponent}`:"Kein Spiel"} semantic="info"/>
         <Stat label="Ø Anwesenheit"     value="77%"      sub="letzte 5 Trainings"   semantic="success"/>
@@ -303,7 +294,7 @@ function DashboardTrainer({setActive,account,trainerTeams=[],myRosterId}){
             return(
               <div key={i} style={{marginBottom:i<2?10:0}}>
                 <Between mb={3}>
-                  <span className="cc-list-name">{e.name} <span style={{color:"var(--sub)"}}>{e.time+" Uhr"}</span></span>
+                  <span className="cc-list-name">{e.name} <span className="cc-text-sub">{e.time+" Uhr"}</span></span>
                   <span style={{color:filled<max?R:GN,fontWeight:700}}>{filled}/{max}</span>
                 </Between>
                 <div style={{height:5,background:GB,borderRadius:4}}>
@@ -389,7 +380,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
     <div>
       <H1 mb={6}>{getGreeting()}, {firstName}</H1>
       <p className="cc-detail-label" style={{marginBottom:18}}>Spieler · {team} · {getDate()}</p>
-      <div className="cc-grid-stats" style={{marginBottom:20}}>
+      <div className="cc-grid-stats" className="cc-mb-20">
         <Stat label="Ø Anwesenheit Trainings" value={attPct!==null?attPct+"%":"-"} sub={pastEvs.length?zuCount+"/"+pastEvs.length+" Trainings":"Noch keine vergangenen"} color={attColor}/>
         <Stat label="Nächstes Training" value={nextTraining?nextTraining.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextTraining?`${nextTraining.time.slice(0,5)} Uhr · ${nextTraining.location}`:"Kein Training geplant"} semantic="success"/>
         <Stat label="Nächstes Spiel" value={nextSpiel?nextSpiel.date.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim():"-"} sub={nextSpiel?`${(nextSpiel.time||"").slice(0,5)} Uhr · ${nextSpielAufgebotStatus}`:nextSpielAufgebotStatus} color={nextSpielImAufgebot?"#4F46E5":nextSpiel?BL:"#aaa"}/>
@@ -400,7 +391,7 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
         <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.openEvId=nextAufgebot.id;setActive("team");}:undefined}
           style={{background:"var(--surface)",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:18,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
           <span><TI n="ball-football" size={24}/></span>
-          <Col style={{flex:1}}>
+          <Col className="cc-flex-1">
             <div className="cc-list-name" style={{color:"var(--cc-accent)"}}>Du bist im Aufgebot!</div>
             <div className="cc-detail-label" style={{marginTop:2}}>
               {`vs. ${nextAufgebot.opponent} · ${nextAufgebot.date} · ${nextAufgebot.time} Uhr`}
@@ -438,9 +429,12 @@ function DashboardSpieler({account,meineTeams,myRosterId,setActive}){
 function DashboardEltern({account,meineTeams,setActive}){
   const isMobile=useIsMobile();
   const parentName=account?.name?.split(" ")[0]||"Elternteil";
+  /* Stufen-Checks */
+  const darfAnmelden=kannSchreiben?kannSchreiben("events"):true;
+  const darfVerwalten=kannVerwalten?kannVerwalten("events"):isTrainer||isAdmin;
   const kinder=account?.kinder||[];
-  const today=new Date().toISOString().split("T")[0];
-  const parseD=(d)=>{const c=(d||"").replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim();const p=c.split(".");return p.length>=2?`${new Date().getFullYear()}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`:""};
+  const today="2026-05-23";
+  const parseD=(d)=>{const c=(d||"").replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim();const p=c.split(".");return p.length>=2?`2026-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`:""};
   const [aufgebotState,setAufgebotState]=useState({});
   useEffect(()=>{
     (async()=>{try{const r=await window.storage.get("aufgebot_state");if(r)setAufgebotState(JSON.parse(r.value));}catch(e){}})();
@@ -449,15 +443,7 @@ function DashboardEltern({account,meineTeams,setActive}){
   return(
     <div>
       <H1 mb={6}>{getGreeting()}, {parentName}</H1>
-      <p className="cc-detail-label" style={{marginBottom:18}}>Elternteil{kinder.length>0?` · ${kinder.map(k=>k.name.split(" ")[0]).join(" & ")}`:""} · {getDate()}</p>
-
-      {kinder.length===0&&(
-        <div style={{background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:12,padding:"32px 24px",textAlign:"center",marginBottom:24}}>
-          <div style={{fontSize:40,marginBottom:12}}>👤</div>
-          <div style={{fontWeight:600,fontSize:16,marginBottom:8}}>Keine Kinder verknüpft</div>
-          <div className="cc-detail-label">Dein Account ist noch nicht mit einem Mitglied verknüpft.<br/>Bitte wende dich an die Vereinsadministration.</div>
-        </div>
-      )}
+      <p className="cc-detail-label" style={{marginBottom:18}}>Elternteil · {kinder.map(k=>k.name.split(" ")[0]).join(" & ")} · {getDate()}</p>
 
       {kinder.map((kind,ki)=>{
         const team=kind.team||"Cc-Junioren";
@@ -525,7 +511,7 @@ function DashboardEltern({account,meineTeams,setActive}){
               <div onClick={setActive?()=>{NAV_TARGET.tab="attendance";NAV_TARGET.filter=["training","spiele"];NAV_TARGET.kindTeam=team;NAV_TARGET.openEvId=nextAufgebotSpiel.id;setActive("team");}:undefined}
                 style={{background:"var(--surface)",border:"1.5px solid #818CF8",borderRadius:12,padding:"14px 18px",marginBottom:14,display:"flex",alignItems:"center",gap:12,cursor:setActive?"pointer":"default"}}>
                 <span><TI n="ball-football" size={24}/></span>
-                <Col style={{flex:1}}>
+                <Col className="cc-flex-1">
                   <div className="cc-list-name" style={{color:"var(--cc-accent)"}}>{vorname} ist im Aufgebot!</div>
                   <div className="cc-detail-label" style={{marginTop:2}}>
                     {`vs. ${nextAufgebotSpiel.opponent} · ${nextAufgebotSpiel.date} · ${nextAufgebotSpiel.time} Uhr`}

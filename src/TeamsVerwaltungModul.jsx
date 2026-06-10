@@ -401,12 +401,12 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
   return(
     <div>
       {/* Header */}
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
+      <div className="cc-page-hdr">
         <div>
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
-          <div style={{fontSize:14,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
+          <div className="cc-text-sm">{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
         </div>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+        <div className="cc-row">
           {/* View Toggle */}
           <div className="cc-btn-group">
             {["list","grid"].map(m=>(
@@ -437,7 +437,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
         <div style={{padding:"24px 20px"}}>
           <h2 style={{margin:"0 0 6px",fontSize:16,fontWeight:700,color:"var(--text)"}}>Saison wechseln</h2>
           <p style={{margin:"0 0 18px",fontSize:14,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
-          <div style={{marginBottom:16}}>
+          <div className="cc-mb-16">
             <label className="cc-label">Neue Saison</label>
             <input value={saisonDraft} onChange={e=>setSaisonDraft(e.target.value)}
               placeholder="z.B. 2025/26" autoFocus
@@ -509,7 +509,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
             const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const sp=getStufePath(team);
-            const spielerCount=dbMitglieder.length>0?dbMitglieder.filter(m=>(m.teams||[]).includes(team.name)&&m.aktiv!==false).length:ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
+            const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
             const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             const menuOpen=openMenuId===team.id;
             const openMenu=()=>setOpenMenuId(menuOpen?null:team.id);
@@ -563,7 +563,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                       <TI n="ball-football" size={18} style={{color:katColor}}/>
                     </div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                      <div className="cc-row">
                         <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</span>
                         {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
                         {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
@@ -728,7 +728,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
                       value={val}
                       onChange={v=>setForm(p=>({...p,[key]:p[key].map((x,j)=>j===i?v:x)}))}
                       placeholder={placeholder}
-                      style={{flex:1}}/>
+                      className="cc-flex-1"/>
                     <Btn onClick={()=>setForm(p=>({...p,[key]:p[key].filter((_,j)=>j!==i)}))} style={{ width:36,height:38 }}>×</Btn>
                   </div>
                 ))}
@@ -1099,12 +1099,12 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
   return(
     <div>
       {/* Header */}
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
+      <div className="cc-page-hdr">
         <div>
           <h1 style={{fontSize:21,fontWeight:800,margin:"0 0 4px",color:"var(--text)"}}>Teams</h1>
-          <div style={{fontSize:14,color:"var(--sub)"}}>{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
+          <div className="cc-text-sm">{teams.filter(t=>t.aktiv!==false).length} aktive Teams · {teams.filter(t=>t.aktiv===false).length} inaktiv</div>
         </div>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+        <div className="cc-row">
           {/* View Toggle */}
           <div style={{display:"flex",border:"1px solid var(--border)",borderRadius:8,overflow:"hidden"}}>
             {["list","grid"].map(m=>(
@@ -1151,7 +1151,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
         <div style={{padding:"24px 20px"}}>
           <h2 style={{margin:"0 0 6px",fontSize:16,fontWeight:700,color:"var(--text)"}}>Saison wechseln</h2>
           <p style={{margin:"0 0 18px",fontSize:14,color:"var(--sub)"}}>Die neue Saison wird für <strong>alle {teams.length} Teams</strong> gleichzeitig gesetzt.</p>
-          <div style={{marginBottom:16}}>
+          <div className="cc-mb-16">
             <label className="cc-label">Neue Saison</label>
             <input value={saisonDraft} onChange={e=>setSaisonDraft(e.target.value)}
               placeholder="z.B. 2025/26" autoFocus
@@ -1252,7 +1252,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
             const katColor=KAT_COLORS[team.hauptbereich]||KAT_COLORS[team.kategorie]||BL;
             const isInaktiv=team.aktiv===false;
             const sp=getStufePath(team);
-            const spielerCount=dbMitglieder.length>0?dbMitglieder.filter(m=>(m.teams||[]).includes(team.name)&&m.aktiv!==false).length:ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
+            const spielerCount=ROSTER.filter(p=>(p.teams||[]).includes(team.name)).length;
             const haupttrainerArr=team.haupttrainer||(team.trainer?[team.trainer]:[]);const coArr=team.co_trainers||(team.trainer2?[team.trainer2]:[]);const staffArr=team.staff||[];const trainerCount=haupttrainerArr.length+coArr.length;
             const menuOpen=openMenuId===team.id;
             const openMenu=()=>setOpenMenuId(menuOpen?null:team.id);
@@ -1265,7 +1265,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                   /* ── KACHEL-LAYOUT ── */
                   <div style={{display:"flex",flexDirection:"column",gap:12}}>
                     <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
-                      <div style={{display:"flex",alignItems:"center",gap:12}}>
+                      <div className="cc-row cc-gap-12">
                         <div style={{width:40,height:40,borderRadius:10,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                           <TI n="ball-football" size={18} style={{color:katColor}}/>
                         </div>
@@ -1307,12 +1307,12 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                   </div>
                 ):(
                   /* ── LISTEN-LAYOUT ── */
-                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                  <div className="cc-row cc-gap-12">
                     <div style={{width:42,height:42,borderRadius:10,background:katColor+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                       <TI n="ball-football" size={18} style={{color:katColor}}/>
                     </div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                      <div className="cc-row">
                         <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{team.name}</span>
                         {team.kurzname&&<span style={{fontSize:11,fontWeight:700,color:katColor,background:katColor+"15",padding:"2px 7px",borderRadius:6}}>{team.kurzname}</span>}
                         {isInaktiv&&<Chip text="Inaktiv" color="#9ca3af"/>}
@@ -1496,7 +1496,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
                       value={val}
                       onChange={v=>setForm(p=>({...p,[key]:p[key].map((x,j)=>j===i?v:x)}))}
                       placeholder={placeholder}
-                      style={{flex:1}}/>
+                      className="cc-flex-1"/>
                     <button onClick={()=>setForm(p=>({...p,[key]:p[key].filter((_,j)=>j!==i)}))}
                       style={{width:36,height:38,borderRadius:8,border:"1px solid var(--border)",background:"var(--surface2)",cursor:"pointer",color:R,flexShrink:0,fontSize:16}}>×</button>
                   </div>

@@ -626,7 +626,7 @@ export const BORDER = '${t.borderWidth}';`;
                 ].map((p,i,a)=>(
                   <div key={i} style={{padding:`${tok.padInputV}px ${tok.padCard}px`,display:'flex',alignItems:'center',gap:tok.gapSm,borderBottom:i<a.length-1?`${tok.borderWidth} solid var(--border)`:'none'}}>
                     <div style={{width:tok.hIconBtn,height:tok.hIconBtn,borderRadius:tok.rIconBtn,background:p.bg,display:'flex',alignItems:'center',justifyContent:'center',fontSize:tok.fsXs+1,fontWeight:tok.fwTitle,color:p.tc,flexShrink:0}}>{p.init}</div>
-                    <div style={{flex:1}}>
+                    <div className="cc-flex-1">
                       <div style={{fontSize:tok.fsBase,fontWeight:tok.fwLabel}}>{p.name}</div>
                       <div style={{fontSize:tok.fsSm,color:'var(--sub)'}}>{p.sub}</div>
                     </div>
@@ -1184,7 +1184,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {isMobile&&mobileKachel!==null&&(()=>{
         const kat=KATEGORIEN_NAV.find(k=>k.key===mobileKachel)||KATEGORIEN_NAV[0];
         return(
-          <div style={{marginBottom:16}}>
+          <div className="cc-mb-16">
             <button onClick={()=>setMobileKachel(null)}
               style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",
                 cursor:"pointer",color:"var(--sub)",fontSize:14,padding:"0 0 12px",fontFamily:"inherit"}}>
@@ -1209,7 +1209,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
 
       {/* ── DESKTOP: Zweistufige Navigation ── */}
       {!isMobile&&(
-        <div style={{marginBottom:20}}>
+        <div className="cc-mb-20">
           {/* Ebene 1: Hauptkategorien */}
           <div style={{display:"flex",gap:2,borderBottom:"1px solid var(--border)",marginBottom:0}}>
             {KATEGORIEN_NAV.map(k=>{
@@ -1405,12 +1405,12 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                               <tr key={m.key+"-detail"} style={{borderTop:"0.5px solid var(--border)"}}>
                                 <td colSpan={ROLLEN.length+1} style={{padding:"10px 14px",background:"var(--surface2)"}}>
                                   <div style={{fontSize:11,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,display:"flex",alignItems:"center",gap:8}}>
-                                    <span style={{flex:1}}>Aktionen</span>
+                                    <span className="cc-flex-1">Aktionen</span>
                                     <span style={{minWidth:80,textAlign:"right"}}>Minimalstufe</span>
                                   </div>
                                   {(MODUL_AKTIONEN[m.key]||[]).map((a,ai)=>(
                                     <div key={ai} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"6px 0",borderTop:ai>0?"0.5px solid var(--border)":"none"}}>
-                                      <div style={{flex:1}}>
+                                      <div className="cc-flex-1">
                                         <span style={{fontSize:12,color:"var(--text)"}}>{a.label}</span>
                                         {a.spez&&<div style={{fontSize:10,color:"var(--sub)",marginTop:2,fontStyle:"italic"}}>{a.spez}</div>}
                                         {a.note&&<div style={{fontSize:10,color:"var(--sub)",marginTop:2}}>ℹ {a.note}</div>}
@@ -1902,7 +1902,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
       {!loading&&(!isMobile||mobileKachel!==null)&&tab==="users"&&(
         <div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-            <div style={{fontSize:14,color:"var(--sub)"}}>{benutzerListe.length} Benutzer</div>
+            <div className="cc-text-sm">{benutzerListe.length} Benutzer</div>
             <Btn variant="primary" onClick={()=>{}}>+ Benutzer einladen</Btn>
           </div>
           <Card style={{padding:0,overflowX:"auto"}}>
@@ -2059,7 +2059,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           <Card style={{marginTop:12,padding:16}}>
             <div style={{display:"flex",alignItems:"center",gap:14}}>
               <TI n="building-community" size={18} style={{color:"var(--sub)",flexShrink:0}}/>
-              <div style={{flex:1}}>
+              <div className="cc-flex-1">
                 <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginBottom:4}}>Vereinsname</div>
                 <input value={theme.vereinsname||""} onChange={e=>updateTheme("vereinsname",e.target.value)}
                   style={{width:"100%",padding:"6px 10px",border:"0.5px solid var(--border)",borderRadius:8,fontSize:14,background:"var(--surface)",color:"var(--text)",outline:"none",fontFamily:FONT}}/>
@@ -2079,7 +2079,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   :<TI n="photo" size={28} style={{color:"var(--sub)"}}/>
                 }
               </div>
-              <div style={{flex:1}}>
+              <div className="cc-flex-1">
                 <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginBottom:6}}>Logo hochladen</div>
                 <div style={{fontSize:11,color:"var(--sub)",marginBottom:10}}>SVG oder PNG, empfohlen mind. 200×200px</div>
                 <Row align="flex-start">
@@ -2186,7 +2186,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                   </div>
                   <p style={{fontSize:14,color:"var(--sub)",margin:"0 0 10px",lineHeight:1.5}}>{info.description||"Externe API-Verbindung"}</p>
                   {info.felder&&(
-                    <div style={{marginBottom:12}}>
+                    <div className="cc-mb-12">
                       <div style={{fontSize:14,color:"var(--sub)",fontWeight:600,marginBottom:4}}>Synchronisierte Daten:</div>
                       {info.felder.map((f,i)=>(
                         <div key={i} style={{display:"flex",alignItems:"center",gap:6,fontSize:14,color:"var(--sub)",padding:"2px 0"}}>
@@ -2260,9 +2260,9 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
           {(()=>{
             const Section=({title,desc,children})=>(
               <div>
-                <div style={{marginBottom:16}}>
+                <div className="cc-mb-16">
                   <div style={{fontSize:16,fontWeight:800,color:"var(--text)",letterSpacing:-0.3,marginBottom:4}}>{title}</div>
-                  {desc&&<div style={{fontSize:14,color:"var(--sub)"}}>{desc}</div>}
+                  {desc&&<div className="cc-text-sm">{desc}</div>}
                 </div>
                 <Card style={{padding:20}}>
                   <div style={{display:"flex",flexDirection:"column",gap:16}}>{children}</div>
@@ -2479,7 +2479,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                 {/* Avatar */}
                 <Section title="Avatare" desc="Benutzer-Darstellungen">
                   <Row2 label="Av" code="<Av>">
-                    <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                    <div className="cc-row">
                       <Av name="Dieter Good" size={36}/>
                       <Av name="Thomas Müller" size={36}/>
                       <Av name="Anna Keller" size={28}/>
@@ -2512,7 +2512,7 @@ function PortalverwaltungView({initialTab="module",moduleAktiv={},setModuleAktiv
                     <div key={v.name} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:"0.5px solid var(--border)"}}>
                       <div style={{width:32,height:32,borderRadius:8,background:`var(${v.name})`,border:"0.5px solid var(--border)",flexShrink:0}}/>
                       <code style={{fontSize:12,color:"var(--text)",background:"var(--surface2)",padding:"3px 8px",borderRadius:6,width:160,flexShrink:0}}>{v.name}</code>
-                      <span style={{fontSize:14,color:"var(--sub)"}}>{v.desc}</span>
+                      <span className="cc-text-sm">{v.desc}</span>
                     </div>
                   ))}
                 </Section>

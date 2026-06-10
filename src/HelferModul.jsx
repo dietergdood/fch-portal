@@ -14,7 +14,7 @@ function Tabs({tabs,active,setActive}){
   return(
     <div style={{display:"flex",gap:4,background:"var(--surface2)",borderRadius:10,padding:3,marginBottom:18,overflowX:"auto",flexWrap:"nowrap",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
       {tabs.map(t=>(
-        <Btn onClick={()=>setActive(t.key)}>{isMobile&&t.icon&&<TI n={t.icon} size={13} style={{flexShrink:0}}/>} {isMobile&&t.short?t.short:t.label}</Btn>
+        <Btn onClick={()=>setActive(t.key)}>{isMobile&&t.icon&&<TI n={t.icon} size={13} className="cc-shrink-0"/>} {isMobile&&t.short?t.short:t.label}</Btn>
       ))}
     </div>
   );
@@ -143,7 +143,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
             {Array.from({length:max-filled},(_,i)=>(
               <div key={`f${i}`} style={{display:"flex",alignItems:"center",gap:8,background:"var(--surface)",border:"1px dashed #D1D5DB",borderRadius:6,padding:"4px 8px"}}>
                 <div style={{width:16,height:16,borderRadius:"50%",background:"#E5E7EB",flexShrink:0}}/>
-                <span style={{fontSize:14,color:"var(--sub)"}}>Freier Platz</span>
+                <span className="cc-text-sm">Freier Platz</span>
               </div>
             ))}
           </div>
@@ -169,7 +169,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
           {anfragePending&&!showAnfrageOk&&(
             <div style={{background:AM+"12",border:`0.5px solid ${AM}`,borderRadius:6,padding:"8px 10px"}}>
               <div style={{fontSize:14,color:AM,fontWeight:700,marginBottom:3}}>⏳ Freigabe ausstehend</div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>Begründung: <em>{"\"" + (anfrageData?.begruendung||"") + "\""}</em></div>
+              <div className="cc-text-sm">Begründung: <em>{"\"" + (anfrageData?.begruendung||"") + "\""}</em></div>
             </div>
           )}
 
@@ -218,7 +218,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                       const info=h?.gruppe||h?.role||"";
                       const selected=transferTarget===n;
                       return(
-                        <Btn onClick={()=>setTransferTarget(selected?"":n)}><Av name={n} size={20} bg={selected?"#0891B2":"#9CA3AF"}/> <div style={{flex:1,minWidth:0}}> <div style={{fontSize:14,fontWeight:selected?700:400,color:selected?"#0891B2":"#374151"}}>{n}</div> {info&&<div style={{fontSize:14,color:"var(--sub)"}}>{info}</div>} </div> {selected&&<span style={{fontSize:14,color:"#0891B2",flexShrink:0}}>✓</span>}</Btn>
+                        <Btn onClick={()=>setTransferTarget(selected?"":n)}><Av name={n} size={20} bg={selected?"#0891B2":"#9CA3AF"}/> <div style={{flex:1,minWidth:0}}> <div style={{fontSize:14,fontWeight:selected?700:400,color:selected?"#0891B2":"#374151"}}>{n}</div> {info&&<div className="cc-text-sm">{info}</div>} </div> {selected&&<span style={{fontSize:14,color:"#0891B2",flexShrink:0}}>✓</span>}</Btn>
                       );
                     })}
                   </div>
@@ -266,7 +266,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
                       const gruppe=HELPERS.find(m=>m.name===n)?.gruppe||"";
                       const selected=zuteilTarget===n;
                       return(
-                        <Btn onClick={()=>setZuteilTarget(selected?"":n)}><Av name={n} size={20} bg={selected?GN:"#bbb"}/> <div style={{flex:1}}> <div style={{fontSize:14,fontWeight:selected?700:400,color:selected?GN:BK}}> {n}{n===meinName&&<span style={{fontSize:14,color:GN,marginLeft:5}}>(ich)</span>} </div> {gruppe&&<div style={{fontSize:14,color:"var(--sub)",marginTop:1}}>{gruppe}</div>} </div> {selected&&<span style={{fontSize:14,color:GN,flexShrink:0}}>✓</span>}</Btn>
+                        <Btn onClick={()=>setZuteilTarget(selected?"":n)}><Av name={n} size={20} bg={selected?GN:"#bbb"}/> <div className="cc-flex-1"> <div style={{fontSize:14,fontWeight:selected?700:400,color:selected?GN:BK}}> {n}{n===meinName&&<span style={{fontSize:14,color:GN,marginLeft:5}}>(ich)</span>} </div> {gruppe&&<div style={{fontSize:14,color:"var(--sub)",marginTop:1}}>{gruppe}</div>} </div> {selected&&<span style={{fontSize:14,color:GN,flexShrink:0}}>✓</span>}</Btn>
                       );
                     })}
                   </div>
@@ -291,7 +291,7 @@ function SchichtKarte({schicht,einsatz,meinName,canEdit,canFreigeben,canZuteilen
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
             <div>
               <div style={{fontSize:14,color:AM,fontWeight:700,marginBottom:2}}>Freigabe-Anfrage von {anfrageData?.name}</div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>Begründung: <em>{"\"" + (anfrageData?.begruendung||"") + "\""}</em></div>
+              <div className="cc-text-sm">Begründung: <em>{"\"" + (anfrageData?.begruendung||"") + "\""}</em></div>
             </div>
             <Btn variant="primary" color={AM} small onClick={()=>onFreigeben(schicht.id,null)}>Freigeben ✓</Btn>
           </div>
@@ -346,7 +346,7 @@ function MeinSchichtEintrag({schicht,anfragePending,anfrageData,meinName,onÜber
             {schicht.einsatzOrt&&<><span style={{opacity:0.4}}>{"|"}</span><span>{""+schicht.einsatzOrt}</span></>}
           </div>
         </div>
-        <div style={{flexShrink:0}}>
+        <div className="cc-shrink-0">
           {anfragePending
             ?<Chip text="⏳ Freigabe ausstehend" color={AM}/>
             :<Chip text="Geplant ⏳" color={AM}/>
@@ -625,7 +625,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
 
       {/* KPI-Leiste - nur für Admin/Administration/Funktionär */}
       {canFreigeben&&(
-      <div className="cc-grid-stats" style={{marginBottom:16}}>
+      <div className="cc-grid-stats" className="cc-mb-16">
         <Stat label="Mitglieder" value={HELPERS.length}/>
         <Stat label="Soll erfüllt" value={mitgliederCalc.filter(m=>["Erfüllt","Geplant erfüllt"].includes(m.status)).length} color={GN}/>
         <Stat label="Noch offen" value={mitgliederCalc.filter(m=>m.status==="Offen").length} color={R}/>
@@ -804,7 +804,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                               )}
                               {/* Bemerkung Edit */}
                               {canEdit&&(editingBemerkung===`e${einsatz.id}`?(
-                                <div onClick={e=>e.stopPropagation()} style={{display:"flex",gap:8,alignItems:"center"}}>
+                                <div onClick={e=>e.stopPropagation()} className="cc-row">
                                   <input autoFocus value={bemerkungDraft} onChange={e=>setBemerkungDraft(e.target.value)}
                                     placeholder="Bemerkung…"
                                     style={{padding:"3px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14,outline:"none",width:160}}/>
@@ -862,7 +862,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
       {helperTab==="mein"&&(
         <div>
           {/* Status-Kacheln */}
-          <div className="cc-grid-stats" style={{marginBottom:20}}>
+          <div className="cc-grid-stats" className="cc-mb-20">
             {[{l:"Soll",v:mich.soll,c:BK,bg:"#fff"},{l:"Geleistet",v:mich.geleistet,c:GN,bg:"#F0FDF4"},{l:"Geplant",v:mich.geplant,c:AM,bg:"#FFFBEB"},{l:"Offen",v:mich.offen,c:mich.offen>0?R:"#aaa",bg:mich.offen>0?"#FEF2F2":"#fff"}].map((s,i)=>(
               <div key={i} style={{background:s.bg,border:"0.5px solid var(--border)",borderRadius:14,padding:"14px 16px",textAlign:"center",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}>
                 <div style={{fontSize:24,fontWeight:800,color:s.c,lineHeight:1,marginBottom:4}}>{s.v}</div>
@@ -896,7 +896,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   <div style={{marginBottom:18}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
                       <span style={{background:"var(--surface)",color:AM,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:20,border:`0.5px solid #FDE68A`}}>⏳ Geplant</span>
-                      <span style={{color:"var(--sub)",fontSize:14}}>{geplant.length+" Schicht"+(geplant.length!==1?"en":"")}</span>
+                      <span className="cc-text-sm">{geplant.length+" Schicht"+(geplant.length!==1?"en":"")}</span>
                     </div>
                     <Col>
                       {geplant.map((s,i)=>{
@@ -908,10 +908,10 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   </div>
                 )}
                 {geleistet.length>0&&(
-                  <div style={{marginBottom:16}}>
+                  <div className="cc-mb-16">
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
                       <span style={{background:"var(--surface)",color:GN,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:20,border:`0.5px solid #BBF7D0`}}>✓ Geleistet</span>
-                      <span style={{color:"var(--sub)",fontSize:14}}>{geleistet.length+" Schicht"+(geleistet.length!==1?"en":"")}</span>
+                      <span className="cc-text-sm">{geleistet.length+" Schicht"+(geleistet.length!==1?"en":"")}</span>
                     </div>
                     <Col>
                       {geleistet.map((s,i)=>(
@@ -1083,7 +1083,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
             const offen=relevant.filter(m=>m.status==="Offen").length;
             const befreit=relevant.filter(m=>m.status==="Befreit").length;
             return(
-              <div className="cc-grid-stats" style={{marginBottom:20}}>
+              <div className="cc-grid-stats" className="cc-mb-20">
                 {[{l:"Erfüllt",v:erfuellt,c:GN,bg:"#F0FDF4"},{l:"Offen",v:offen,c:AM,bg:"#FFFBEB"},{l:"Befreit",v:befreit,c:BK,bg:"#fff"}].map((s,i)=>(
                   <div key={i} style={{background:s.bg,border:"0.5px solid var(--border)",borderRadius:14,padding:"14px 16px",textAlign:"center",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}>
                     <div style={{fontSize:24,fontWeight:800,color:s.c,lineHeight:1,marginBottom:4}}>{s.v}</div>
@@ -1153,7 +1153,7 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                       <tr key={`d${m.id}`} style={{borderTop:"0.5px solid var(--border)"}}>
                         <td colSpan={8} style={{padding:"10px 20px 14px",background:"var(--surface2)"}}>
                           {m.schichten.length===0?(
-                            <span style={{fontSize:14,color:"var(--sub)"}}>Keine Schichten übernommen.</span>
+                            <span className="cc-text-sm">Keine Schichten übernommen.</span>
                           ):(
                             <div className="cc-grid-cards" style={{gap:8,marginBottom:10}}>
                               {m.schichten.map((sid,si)=>{
@@ -1253,13 +1253,13 @@ function HelferModul({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
               </div>
             ))}
           </div>
-          <div style={{marginTop:16}}>
+          <div className="cc-mt-16">
             <div style={{fontWeight:600,fontSize:14,marginBottom:8}}>Schichten</div>
             {[1,2,3].map(n=>(
               <div key={n} style={{display:"flex",gap:8,marginBottom:7,alignItems:"center"}}>
                 <input placeholder={`Schicht ${n}: z.B. Grill 10:00-14:00`} style={{flex:1,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14}}/>
                 <input type="number" placeholder="Max" style={{width:55,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14}}/>
-                <span style={{fontSize:14,color:"var(--sub)"}}>Plätze</span>
+                <span className="cc-text-sm">Plätze</span>
               </div>
             ))}
             <Btn variant="ghost">+ Schicht hinzufügen</Btn>
@@ -1476,7 +1476,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
 
       {/* KPI-Leiste - nur für Admin/Administration/Funktionär */}
       {canFreigeben&&(
-      <div className="cc-grid-stats" style={{marginBottom:16}}>
+      <div className="cc-grid-stats" className="cc-mb-16">
         <Stat label="Mitglieder" value={HELPERS.length}/>
         <Stat label="Soll erfüllt" value={mitgliederCalc.filter(m=>["Erfüllt","Geplant erfüllt"].includes(m.status)).length} color={GN}/>
         <Stat label="Noch offen" value={mitgliederCalc.filter(m=>m.status==="Offen").length} color={R}/>
@@ -1615,7 +1615,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                         <div key={einsatz.id} style={{borderTop:ei>0?`0.5px solid ${GB}`:"none"}}>
                           {/* Einsatz-Zeile */}
                           <div onClick={()=>toggleEinsatz(einsatz.id)} style={{padding:"10px 18px",display:"flex",justifyContent:"space-between",alignItems:"center",background:"var(--surface)",borderBottom:"0.5px solid var(--border)",cursor:"pointer",userSelect:"none"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:12}}>
+                            <div className="cc-row cc-gap-12">
                               <div style={{width:3,height:32,borderRadius:2,background:eBarColor,flexShrink:0}}/>
                               <div>
                                 <div style={{fontWeight:700,fontSize:14,color:"var(--text)",display:"flex",alignItems:"center",gap:8}}>
@@ -1658,7 +1658,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                               )}
                               {/* Bemerkung Edit */}
                               {canEdit&&(editingBemerkung===`e${einsatz.id}`?(
-                                <div onClick={e=>e.stopPropagation()} style={{display:"flex",gap:8,alignItems:"center"}}>
+                                <div onClick={e=>e.stopPropagation()} className="cc-row">
                                   <input autoFocus value={bemerkungDraft} onChange={e=>setBemerkungDraft(e.target.value)}
                                     placeholder="Bemerkung…"
                                     style={{padding:"3px 8px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14,outline:"none",width:160}}/>
@@ -1717,7 +1717,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
       {helperTab==="mein"&&(
         <div>
           {/* Status-Kacheln */}
-          <div className="cc-grid-stats" style={{marginBottom:20}}>
+          <div className="cc-grid-stats" className="cc-mb-20">
             {[{l:"Soll",v:mich.soll,c:BK,bg:"#fff"},{l:"Geleistet",v:mich.geleistet,c:GN,bg:"#F0FDF4"},{l:"Geplant",v:mich.geplant,c:AM,bg:"#FFFBEB"},{l:"Offen",v:mich.offen,c:mich.offen>0?R:"#aaa",bg:mich.offen>0?"#FEF2F2":"#fff"}].map((s,i)=>(
               <div key={i} style={{background:s.bg,border:"0.5px solid var(--border)",borderRadius:14,padding:"14px 16px",textAlign:"center",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}>
                 <div style={{fontSize:24,fontWeight:800,color:s.c,lineHeight:1,marginBottom:4}}>{s.v}</div>
@@ -1751,7 +1751,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   <div style={{marginBottom:18}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
                       <span style={{background:"var(--surface)",color:AM,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:20,border:`0.5px solid #FDE68A`}}>⏳ Geplant</span>
-                      <span style={{color:"var(--sub)",fontSize:14}}>{geplant.length+" Schicht"+(geplant.length!==1?"en":"")}</span>
+                      <span className="cc-text-sm">{geplant.length+" Schicht"+(geplant.length!==1?"en":"")}</span>
                     </div>
                     <div style={{display:"flex",flexDirection:"column",gap:8}}>
                       {geplant.map((s,i)=>{
@@ -1763,10 +1763,10 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                   </div>
                 )}
                 {geleistet.length>0&&(
-                  <div style={{marginBottom:16}}>
+                  <div className="cc-mb-16">
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
                       <span style={{background:"var(--surface)",color:GN,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:20,border:`0.5px solid #BBF7D0`}}>✓ Geleistet</span>
-                      <span style={{color:"var(--sub)",fontSize:14}}>{geleistet.length+" Schicht"+(geleistet.length!==1?"en":"")}</span>
+                      <span className="cc-text-sm">{geleistet.length+" Schicht"+(geleistet.length!==1?"en":"")}</span>
                     </div>
                     <div style={{display:"flex",flexDirection:"column",gap:8}}>
                       {geleistet.map((s,i)=>(
@@ -1873,7 +1873,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                         return(
                           <div key={einsatz.id} style={{borderTop:ei>0?`0.5px solid ${GB}`:"none"}}>
                             <div onClick={()=>toggleEinsatz(einsatz.id)} style={{padding:"10px 18px",display:"flex",justifyContent:"space-between",alignItems:"center",background:"var(--surface)",borderBottom:"0.5px solid var(--border)",cursor:"pointer",userSelect:"none"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:12}}>
+                              <div className="cc-row cc-gap-12">
                                 <div style={{width:3,height:32,borderRadius:2,background:eBarColor,flexShrink:0}}/>
                                 <div>
                                   <div style={{fontWeight:700,fontSize:14,color:"var(--text)",display:"flex",alignItems:"center",gap:8}}>
@@ -1938,7 +1938,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
             const offen=relevant.filter(m=>m.status==="Offen").length;
             const befreit=relevant.filter(m=>m.status==="Befreit").length;
             return(
-              <div className="cc-grid-stats" style={{marginBottom:20}}>
+              <div className="cc-grid-stats" className="cc-mb-20">
                 {[{l:"Erfüllt",v:erfuellt,c:GN,bg:"#F0FDF4"},{l:"Offen",v:offen,c:AM,bg:"#FFFBEB"},{l:"Befreit",v:befreit,c:BK,bg:"#fff"}].map((s,i)=>(
                   <div key={i} style={{background:s.bg,border:"0.5px solid var(--border)",borderRadius:14,padding:"14px 16px",textAlign:"center",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}>
                     <div style={{fontSize:24,fontWeight:800,color:s.c,lineHeight:1,marginBottom:4}}>{s.v}</div>
@@ -1991,7 +1991,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                       style={{borderTop:"0.5px solid var(--border)",background:expandedMember===m.id?"var(--cc-hover)":"#fff",cursor:"pointer"}}
                       className="hov-row">
                       <td style={{padding:"9px 12px"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                        <div className="cc-row">
                           <Av name={m.name} size={22} bg={SC[m.status]?.c||"#6B7280"}/>
                           <span style={{fontWeight:600}}>{m.name}</span>
                         </div>
@@ -2008,7 +2008,7 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
                       <tr key={`d${m.id}`} style={{borderTop:"0.5px solid var(--border)"}}>
                         <td colSpan={8} style={{padding:"10px 20px 14px",background:"var(--surface2)"}}>
                           {m.schichten.length===0?(
-                            <span style={{fontSize:14,color:"var(--sub)"}}>Keine Schichten übernommen.</span>
+                            <span className="cc-text-sm">Keine Schichten übernommen.</span>
                           ):(
                             <div className="cc-grid-cards" style={{gap:8,marginBottom:10}}>
                               {m.schichten.map((sid,si)=>{
@@ -2108,13 +2108,13 @@ function HelpersList({teamOnly,role,meineTeams=[],account,kannSchreiben,kannVerw
               </div>
             ))}
           </div>
-          <div style={{marginTop:16}}>
+          <div className="cc-mt-16">
             <div style={{fontWeight:600,fontSize:14,marginBottom:8}}>Schichten</div>
             {[1,2,3].map(n=>(
               <div key={n} style={{display:"flex",gap:8,marginBottom:7,alignItems:"center"}}>
                 <input placeholder={`Schicht ${n}: z.B. Grill 10:00-14:00`} style={{flex:1,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14}}/>
                 <input type="number" placeholder="Max" style={{width:55,padding:"6px 9px",border:"0.5px solid var(--border)",borderRadius:6,fontSize:14}}/>
-                <span style={{fontSize:14,color:"var(--sub)"}}>Plätze</span>
+                <span className="cc-text-sm">Plätze</span>
               </div>
             ))}
             <button style={{fontSize:14,color:BL,background:"none",border:"none",cursor:"pointer",fontWeight:600,padding:0}}>+ Schicht hinzufügen</button>

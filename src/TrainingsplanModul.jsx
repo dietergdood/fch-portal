@@ -142,13 +142,13 @@ function PlaetzeView({sb}){
                     <Input value={editHaelften} onChange={function(e){setEditHaelften(e.target.value);}} placeholder="leer = keine Hälften" style={{width:"100%",boxSizing:"border-box"}}/>
                   </div>
                   <Row gap={8}>
-                    <Btn style={{flex:1}} onClick={function(){handleRename(p.id);}}>Speichern</Btn>
+                    <Btn className="cc-flex-1" onClick={function(){handleRename(p.id);}}>Speichern</Btn>
                     <Btn variant="ghost" onClick={function(){setEditId(null);setEditName("");setEditHaelften("");}}>Abbrechen</Btn>
                   </Row>
                 </Col>
               ) : (
                 <Row gap={12} style={{padding:"11px 14px"}}>
-                  <Col gap={4} style={{flexShrink:0}}>
+                  <Col gap={4} className="cc-shrink-0">
                     <button onClick={function(){moveUp(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===0}
                       style={{width:18,height:18,border:"0.5px solid "+GB,borderRadius:4,background:"var(--surface)",cursor:"pointer",fontSize:12,color:"var(--sub)",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>▲</button>
                     <button onClick={function(){moveDown(i);}} disabled={plaetze.filter(function(x){return x.active;}).indexOf(p)===plaetze.filter(function(x){return x.active;}).length-1}
@@ -161,7 +161,7 @@ function PlaetzeView({sb}){
                       <div style={{fontSize:14,color:"var(--sub)",marginTop:1}}>{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
-                  <Row gap={6} style={{flexShrink:0}}>
+                  <Row gap={6} className="cc-shrink-0">
                     <button onClick={function(){setEditId(p.id);setEditName(p.name);setEditHaelften((p.halfn||[]).join(", "));}} title="Bearbeiten"
                       style={{width:28,height:28,borderRadius:6,border:"0.5px solid "+GB,background:"var(--surface)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><TI n="edit"/></button>
                     <button onClick={function(){handleToggle(p.id);}} title="Deaktivieren"
@@ -190,10 +190,10 @@ function PlaetzeView({sb}){
               return(
                 <Row key={p.id} gap={12} style={{padding:"10px 14px",borderBottom:i<plaetze.length-1?"0.5px solid "+GB:"none"}}>
                   <div style={{width:10,height:10,borderRadius:"50%",background:"var(--border)",flexShrink:0,marginTop:2}}/>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:14,color:"var(--sub)"}}>{p.name}</div>
+                  <div className="cc-flex-1">
+                    <div className="cc-text-sm">{p.name}</div>
                     {p.halfn&&p.halfn.length>0&&(
-                      <div style={{fontSize:14,color:"var(--sub)"}}>{p.halfn.join("  ·  ")}</div>
+                      <div className="cc-text-sm">{p.halfn.join("  ·  ")}</div>
                     )}
                   </div>
                   <Btn variant="ghost" onClick={function(){handleToggle(p.id);}}>Aktivieren</Btn>
@@ -216,7 +216,7 @@ function PlaetzeView({sb}){
             <Input value={newHaelften} onChange={function(e){setNewHaelften(e.target.value);}} placeholder="z.B. Nordseite, Südseite" style={{width:"100%",boxSizing:"border-box"}}/>
           </div>
           <Row gap={8}>
-            <Btn style={{flex:1}} onClick={handleAdd}>Hinzufügen</Btn>
+            <Btn className="cc-flex-1" onClick={handleAdd}>Hinzufügen</Btn>
             <Btn variant="ghost" onClick={function(){setShowAdd(false);setNewName("");setNewHaelften("");}}>Abbrechen</Btn>
           </Row>
         </div>
@@ -1127,7 +1127,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
           )}
         </div>
 
-        <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+        <div className="cc-row">
           <Row>
             <button onClick={function(){
               if(ansicht==="tag"){ setSelectedDay(function(d){return d===0?6:d-1;}); }
@@ -1179,7 +1179,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
               return <option key={t} value={t}>{t}</option>;
             })}
           </select>
-          <div style={{flex:1}}/>
+          <div className="cc-flex-1"/>
           {/* Ansicht-Toggle */}
           <div style={{display:"flex",background:"var(--surface2)",borderRadius:20,padding:3,gap:4}}>
             {[{v:"woche",l:"Woche"},{v:"tag",l:"Tag"}].map(function(a){
@@ -1296,7 +1296,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                           <div style={{width:16,height:16,borderRadius:4,border:"1.5px solid "+(selected?R:"#ccc"),background:selected?R:"#fff",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
                             {selected && <span style={{color:"#fff",fontSize:14,fontWeight:700}}>v</span>}
                           </div>
-                          <div style={{flex:1}}>
+                          <div className="cc-flex-1">
                             <div style={S_BOLD}>{e.date}</div>
                             <div style={S_SUB}>{e.time} Uhr</div>
                           </div>
@@ -1456,13 +1456,13 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                 </select>
               </div>
               <div style={S_08_MODAL}>
-                <div style={{flex:1}}>
+                <div className="cc-flex-1">
                   <div style={S_FIELD_LABEL}>Von</div>
                   <select value={form.start} onChange={e=>{const v=parseFloat(e.target.value);setForm(f=>({...f,start:v,end:f.end>v?f.end:v+1.5,wechsel_zeit:f.wechsel_zeit&&f.wechsel_zeit>v&&f.wechsel_zeit<(f.end>v?f.end:v+1.5)?f.wechsel_zeit:"",end_ort:"",end_half:""}));}} style={S_INPUT_MODAL}>
                     {TIMES.map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
                   </select>
                 </div>
-                <div style={{flex:1}}>
+                <div className="cc-flex-1">
                   <div style={S_FIELD_LABEL}>Bis</div>
                   <select value={form.end} onChange={e=>{const v=parseFloat(e.target.value);setForm(f=>({...f,end:v,wechsel_zeit:f.wechsel_zeit&&f.wechsel_zeit<v?f.wechsel_zeit:"",end_ort:f.wechsel_zeit&&f.wechsel_zeit<v?f.end_ort:"",end_half:f.wechsel_zeit&&f.wechsel_zeit<v?f.end_half:""}));}} style={S_INPUT_MODAL}>
                     {TIMES.filter(t=>t>form.start).map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
@@ -1475,7 +1475,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                   <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",marginBottom:10}}>
                     Phase 1 <span style={{fontWeight:400,marginLeft:6}}>{fmtT(form.start)} – {form.wechsel_zeit?fmtT(form.wechsel_zeit):fmtT(form.end)}</span>
                   </div>
-                  <div style={{marginBottom:8}}>
+                  <div className="cc-mb-8">
                     <div style={S_SUB_MODAL}>Platz</div>
                     <select value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value,half:""}))}
                       style={{...S_SELECT_MODAL,border:`1.5px solid ${form.location?GB:R+"80"}`}}>
@@ -1520,7 +1520,7 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
                     <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",marginBottom:10}}>
                       Phase 2 <span style={{fontWeight:400,marginLeft:6}}>{fmtT(form.wechsel_zeit)} – {fmtT(form.end)}</span>
                     </div>
-                    <div style={{marginBottom:8}}>
+                    <div className="cc-mb-8">
                       <div style={S_SUB_MODAL}>Platz</div>
                       <select value={form.end_ort} onChange={e=>setForm(f=>({...f,end_ort:e.target.value,end_half:""}))} style={S_SELECT_MODAL}>
                         <option value="">– gleich wie Phase 1 ({form.location}) –</option>
@@ -1621,13 +1621,13 @@ function SlotModal({slot, prefill, plan, teams, kwKey, kw, monday, ausnahmen, on
               </div>
               {ausnahmeTyp==="verschiebung"&&(
                 <div style={S_08_MODAL}>
-                  <div style={{flex:1}}>
+                  <div className="cc-flex-1">
                     <div style={S_FIELD_LABEL}>Von</div>
                     <select value={verschiebungStart} onChange={e=>setVerschiebungStart(parseFloat(e.target.value))} style={S_INPUT_MODAL}>
                       {TIMES.map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
                     </select>
                   </div>
-                  <div style={{flex:1}}>
+                  <div className="cc-flex-1">
                     <div style={S_FIELD_LABEL}>Bis</div>
                     <select value={verschiebungEnd} onChange={e=>setVerschiebungEnd(parseFloat(e.target.value))} style={S_INPUT_MODAL}>
                       {TIMES.filter(t=>t>verschiebungStart).map(t=><option key={t} value={t}>{fmtT(t)}</option>)}
@@ -1698,11 +1698,11 @@ function PlanEditorModal({plan, plaene, onSave, onClose}){
             <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} style={S_INPUT_MODAL}/>
           </div>
           <div style={S_08_MODAL}>
-            <div style={{flex:1}}>
+            <div className="cc-flex-1">
               <div style={S_FIELD_LABEL}>Gültig ab</div>
               <input type="date" value={form.valid_from} onChange={e=>setForm(f=>({...f,valid_from:e.target.value}))} style={S_INPUT_MODAL}/>
             </div>
-            <div style={{flex:1}}>
+            <div className="cc-flex-1">
               <div style={S_FIELD_LABEL}>Gültig bis</div>
               <input type="date" value={form.valid_until} onChange={e=>setForm(f=>({...f,valid_until:e.target.value}))} style={S_INPUT_MODAL}/>
             </div>

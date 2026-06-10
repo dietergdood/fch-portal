@@ -39,7 +39,7 @@ function SkelList({rows=4}){
       {Array.from({length:rows},(_,i)=>(
         <div key={i} className="cc-card" style={{borderRadius:12,padding:"14px 18px",border:"0.5px solid",display:"flex",alignItems:"center",gap:16}}>
           <div style={{width:38,height:38,borderRadius:"50%",background:"var(--border)",animation:"cc-shimmer 1.5s infinite",flexShrink:0}}/>
-          <div style={{flex:1}}><Skel h={11} w="60%" br={4} mb={7}/><Skel h={9} w="40%" br={4}/></div>
+          <div className="cc-flex-1"><Skel h={11} w="60%" br={4} mb={7}/><Skel h={9} w="40%" br={4}/></div>
         </div>
       ))}
     </div>
@@ -343,7 +343,7 @@ function LoginScreen({onLogin, sb, appTheme}){
                   <label style={S_LABEL}>E-Mail</label>
                   <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required style={S_INPUT} placeholder="name@mail.ch" autoComplete="email"/>
                 </div>
-                <div style={{marginBottom:20}}>
+                <div className="cc-mb-20">
                   <label style={S_LABEL}>Passwort</label>
                   <div style={{position:"relative"}}>
                     <input type={showPw?"text":"password"} value={pw} onChange={e=>setPw(e.target.value)} required
@@ -366,7 +366,7 @@ function LoginScreen({onLogin, sb, appTheme}){
                   Passwort vergessen?
                 </button>
                 <div style={{width:"100%",height:"0.5px",background:"var(--border)"}}/>
-                <div style={{fontSize:14,color:"var(--sub)"}}>Noch kein Konto?</div>
+                <div className="cc-text-sm">Noch kein Konto?</div>
                 <button onClick={()=>{setMode("register");setError("");setPw("");}}
                   style={{width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid var(--border)",background:"var(--surface2)",color:"var(--text)",fontWeight:600,fontSize:14,cursor:"pointer"}}>
                   Registrieren
@@ -391,7 +391,7 @@ function LoginScreen({onLogin, sb, appTheme}){
                   <label style={S_LABEL}>Passwort</label>
                   <input type="password" value={pw} onChange={e=>setPw(e.target.value)} required style={S_INPUT} placeholder="Mindestens 6 Zeichen" autoComplete="new-password"/>
                 </div>
-                <div style={{marginBottom:20}}>
+                <div className="cc-mb-20">
                   <label style={S_LABEL}>Passwort bestätigen</label>
                   <input type="password" value={pw2} onChange={e=>setPw2(e.target.value)} required style={S_INPUT} placeholder="••••••••" autoComplete="new-password"/>
                 </div>
@@ -781,7 +781,7 @@ function Portal({supabaseClient}){
           <div style={{width:64,height:64,borderRadius:16,overflow:"hidden",display:"inline-flex",marginBottom:12}}>
             <img src={appTheme?.logo||LOGO_B64} style={{width:64,height:64,objectFit:"cover"}} alt="Logo"/>
           </div>
-          <div style={{fontSize:14,color:"var(--sub)"}}>Wird geladen…</div>
+          <div className="cc-text-sm">Wird geladen…</div>
         </div>
       </div>
     );

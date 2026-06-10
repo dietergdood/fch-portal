@@ -22,11 +22,11 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
         <Card style={{marginTop:14,background:"var(--surface)",border:`0.5px solid ${AM}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Reservation</h3>
           <div className="cc-grid-3">
-            <div><label style={{fontSize:14,color:"var(--sub)"}}>Bus</label><br/><Select ><option>Bus A (9-Plätzer)</option><option>Bus B (15-Plätzer)</option></Select></div>
-            <div><label style={{fontSize:14,color:"var(--sub)"}}>Datum</label><br/><input type="date" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14}}/></div>
-            <div><label style={{fontSize:14,color:"var(--sub)"}}>Zeit</label><br/><input type="text" placeholder="09:00-14:00" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14}}/></div>
+            <div><label className="cc-text-sm">Bus</label><br/><Select ><option>Bus A (9-Plätzer)</option><option>Bus B (15-Plätzer)</option></Select></div>
+            <div><label className="cc-text-sm">Datum</label><br/><input type="date" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14}}/></div>
+            <div><label className="cc-text-sm">Zeit</label><br/><input type="text" placeholder="09:00-14:00" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14}}/></div>
           </div>
-          <div style={{marginTop:10}}><label style={{fontSize:14,color:"var(--sub)"}}>Zweck</label><br/><input type="text" placeholder="z.B. Auswärtsspiel vs. FC Küsnacht" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14,boxSizing:"border-box"}}/></div>
+          <div style={{marginTop:10}}><label className="cc-text-sm">Zweck</label><br/><input type="text" placeholder="z.B. Auswärtsspiel vs. FC Küsnacht" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14,boxSizing:"border-box"}}/></div>
           <div style={{marginTop:10,display:"flex",gap:8}}><Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(false)}>Reservieren</Btn><Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn></div>
         </Card>
       )}
@@ -41,7 +41,7 @@ function BusesView({role,kannSchreiben,kannVerwalten}){
                   <Chip text="Reserviert" color={BL}/>
                 </div>
                 <div style={{fontSize:14,color:"var(--sub)",marginTop:2}}>{r.purpose}</div>
-                <div style={{fontSize:14,color:"var(--sub)"}}>von {r.by} · {r.team}</div>
+                <div className="cc-text-sm">von {r.by} · {r.team}</div>
               </div>
             ))}
           </Card>
@@ -64,10 +64,10 @@ function MaterialView(){
         <Card style={{marginBottom:16,background:"var(--surface)",border:`0.5px solid ${BL}`}}>
           <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700}}>Neue Materialanfrage</h3>
           <div className="cc-grid-form" style={{gap:10}}>
-            <div><label style={{fontSize:14,color:"var(--sub)"}}>Art</label><br/><Select >{["Bestellung","Ersatzmaterial","Tenüs","Mangel","Defekt","Verlust","Neue Anforderung"].map(t=><option key={t}>{t}</option>)}</Select></div>
-            <div><label style={{fontSize:14,color:"var(--sub)"}}>Team</label><br/><Select ><option>Cc-Junioren</option><option>D-Junioren</option></Select></div>
+            <div><label className="cc-text-sm">Art</label><br/><Select >{["Bestellung","Ersatzmaterial","Tenüs","Mangel","Defekt","Verlust","Neue Anforderung"].map(t=><option key={t}>{t}</option>)}</Select></div>
+            <div><label className="cc-text-sm">Team</label><br/><Select ><option>Cc-Junioren</option><option>D-Junioren</option></Select></div>
           </div>
-          <div style={{marginTop:10}}><label style={{fontSize:14,color:"var(--sub)"}}>Beschreibung</label><br/><input type="text" placeholder="z.B. Neue Bälle Grösse 4" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14,boxSizing:"border-box"}}/></div>
+          <div style={{marginTop:10}}><label className="cc-text-sm">Beschreibung</label><br/><input type="text" placeholder="z.B. Neue Bälle Grösse 4" style={{width:"100%",padding:"6px 8px",border:"0.5px solid var(--border)",borderRadius:7,fontSize:14,boxSizing:"border-box"}}/></div>
           <div style={{marginTop:10,display:"flex",gap:8}}><Btn variant="primary" color="#F3F4F6" onClick={()=>setShowForm(false)}>Einreichen</Btn><Btn onClick={()=>setShowForm(false)}>Abbrechen</Btn></div>
         </Card>
       )}
@@ -150,7 +150,7 @@ function MediaView(){
         <Btn variant="primary" color="#F3F4F6">+ Beitrag einreichen</Btn>
       </Between>
       {MEDIA.map((m,i)=>(
-        <Card key={i} style={{marginBottom:12}}>
+        <Card key={i} className="cc-mb-12">
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div>
               <div style={{display:"flex",gap:6,marginBottom:5,flexWrap:"wrap"}}>
@@ -158,7 +158,7 @@ function MediaView(){
                 {m.area.map((a,j)=><Chip key={j} text={a} color={BL}/>)}
               </div>
               <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700}}>{m.title}</h3>
-              <div style={{fontSize:14,color:"var(--sub)"}}>{m.team} · {m.date} · {m.author}</div>
+              <div className="cc-text-sm">{m.team} · {m.date} · {m.author}</div>
             </div>
             <Chip text={m.status} color={SC[m.status]||"#888"} bg={(SC[m.status]||"#888")+"18"}/>
           </div>
@@ -178,7 +178,7 @@ function WikiView(){
           <Card key={i} style={{cursor:"pointer"}}>
             <Chip text={a.cat} color={CC[a.cat]||"#888"} bg={(CC[a.cat]||"#888")+"18"}/>
             <h3 style={{margin:"6px 0 3px",fontSize:14,fontWeight:700}}>{a.title}</h3>
-            <div style={{fontSize:14,color:"var(--sub)"}}>Aktualisiert {a.updated}</div>
+            <div className="cc-text-sm">Aktualisiert {a.updated}</div>
           </Card>
         ))}
       </div>
@@ -204,9 +204,9 @@ function DocsView(){
             <div style={{width:34,height:34,borderRadius:8,background:(TC[d.type]||"#888")+"20",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <span style={{fontSize:14,fontWeight:800,color:TC[d.type]||"#888"}}>{d.type}</span>
             </div>
-            <div style={{flex:1}}>
+            <div className="cc-flex-1">
               <div style={{fontWeight:600,fontSize:14}}>{d.name}</div>
-              <div style={{fontSize:14,color:"var(--sub)"}}>{d.size} · {d.updated}</div>
+              <div className="cc-text-sm">{d.size} · {d.updated}</div>
             </div>
             <Chip text={d.area} color="#666"/>
             <Btn>↓ Download</Btn>
@@ -245,11 +245,11 @@ function NewsView({role,meineTeams,kannVerwalten}){
         {canCreate&&<Btn variant="primary" color="#F3F4F6">+ Beitrag</Btn>}
       </Between>
       {visible.map((n,i)=>(
-        <Card key={i} style={{marginBottom:12}}>
+        <Card key={i} className="cc-mb-12">
           <div style={{display:"flex",gap:7,marginBottom:6,flexWrap:"wrap",alignItems:"center"}}>
             <Chip text={n.target} color={R}/>
             <Chip text={n.channel} color={BL}/>
-            <span style={{fontSize:14,color:"var(--sub)"}}>{n.date} · {n.author}</span>
+            <span className="cc-text-sm">{n.date} · {n.author}</span>
           </div>
           <h3 style={{margin:"0 0 6px",fontSize:15,fontWeight:700}}>{n.title}</h3>
           <p style={{margin:0,fontSize:14,color:"var(--sub)",lineHeight:1.65}}>{n.content}</p>
@@ -263,7 +263,7 @@ function AttendanceCentral(){
   return(
     <div>
       <H1 mb={18}>Zentrale Anwesenheitsstatistik</H1>
-      <div className="cc-grid-stats" style={{marginBottom:20}}>
+      <div className="cc-grid-stats" className="cc-mb-20">
         <Stat label="Ø Alle Teams" value="75%" color={GN}/>
         <Stat label="Ø Trainings" value="72%" color={BL}/>
         <Stat label="Ø Spiele"    value="90%" color={R}/>
@@ -323,11 +323,11 @@ function ProfileView({role,myRosterId,account}){
             {l:"Telefon",v:player?.tel||"-"},
           ].map((x,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<4?`0.5px solid ${GB}`:"none"}}>
-              <span style={{fontSize:14,color:"var(--sub)"}}>{x.l}</span>
+              <span className="cc-text-sm">{x.l}</span>
               <span style={{fontSize:14,fontWeight:500}}>{x.v}</span>
             </div>
           ))}
-          <div style={{marginTop:12}}><Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn></div>
+          <div className="cc-mt-12"><Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn></div>
         </Card>
         {isEltern&&kinder.map((kind,ki)=>{
           const kindPlayer=ROSTER.find(p=>p.name===kind.name||p.id===kind.rosterId);
@@ -361,7 +361,7 @@ function ProfileView({role,myRosterId,account}){
                 {rows.map((x,i)=>(
                   <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:i<rows.length-1?`0.5px solid ${GB}`:"none"}}>
                     <div style={{minWidth:140}}>
-                      <div style={{fontSize:14,color:"var(--sub)"}}>{x.l}</div>
+                      <div className="cc-text-sm">{x.l}</div>
                       <div style={{fontSize:14,fontWeight:500,color:"var(--text)",marginTop:1,wordBreak:"break-all"}}>{x.v}</div>
                     </div>
                     <Chip text={x.ok?"✓ OK":"Prüfen"} color={x.ok?GN:R} bg={x.ok?"#ECFDF5":RL}/>

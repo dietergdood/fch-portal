@@ -274,7 +274,7 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
       })():(
         <Tabs tabs={tabs} active={tab} setActive={setTab}/>
       )}
-      {tab==="overview"&&<TeamOverview role={role} team={activeTeam} setTab={setTab} setAttFilter={setAttFilter} responses={responses} setRosterInitial={setRosterInitial} dbMitglieder={dbMitglieder}/>}
+      {tab==="overview"&&<TeamOverview role={role} team={activeTeam} setTab={setTab} setAttFilter={setAttFilter} responses={responses} setRosterInitial={setRosterInitial}/>}
       {tab==="roster"&&<KaderModulProp role={role} team={activeTeam} initialSelected={rosterInitial} teamRosterData={getMitgliederForTeam(activeTeam)}/>}
       {tab==="training"&&!limited&&<TrainingsplanModulProp team={activeTeam} sb={sb} dbTeams={dbTeams}/>}
       {tab==="spielplan"&&(
@@ -312,21 +312,10 @@ function TeamView({role,trainerTeams=["Cc-Junioren"],setActive,myRosterId,accoun
   );
 }
 
-function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRosterInitial,dbMitglieder=[]}){
+function TeamOverview({role,team,setTab,setAttFilter,responses=ATT_INITIAL,setRosterInitial}){
   const isMobile=useIsMobile();
   const isEltern=role==="eltern";
   const today="2026-05-23";
-  const getMitgliederForTeam=(teamName)=>{
-    if(dbMitglieder.length>0){
-      return dbMitglieder.filter(m=>(m.teams||[]).includes(teamName)&&m.aktiv!==false).map(m=>({
-        id:m.id, name:`${m.vorname} ${m.nachname}`,
-        firstName:m.vorname||"", lastName:m.nachname||"",
-        pos:m.position||"-", role:m.funktion||"",
-        email:m.email||"", tel:m.telefon||"",
-      }));
-    }
-    return ROSTER.filter(p=>(p.teams||[]).includes(teamName));
-  };
   const parseEvDate=(d)=>{
     if(!d) return "";
     const clean=d.replace(/^[A-Za-zÄÖÜäöü]{2,3}\s+/,"").trim();
@@ -542,7 +531,7 @@ function PollsTab({role}){
       {!canCreate&&<InfoBox text="Spieler und Eltern können an Abstimmungen teilnehmen, aber keine erstellen." color={BL}/>}
       <div style={{marginTop:14}}>
         {POLLS.map((p,i)=>(
-          <Card key={i} style={{marginBottom:12}}>
+          <Card key={i} className="cc-mb-12">
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
               <div>
                 <h3 className="cc-list-name" style={{marginBottom:4}}>{p.title}</h3>
@@ -698,7 +687,7 @@ function ProfileView({role,myRosterId,account}){
               <span className="cc-list-name">{x.v}</span>
             </div>
           ))}
-          <div style={{marginTop:12}}><Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn></div>
+          <div className="cc-mt-12"><Btn variant="primary" color="#F3F4F6">Daten aktualisieren</Btn></div>
         </Card>
         {isEltern&&kinder.map((kind,ki)=>{
           const kindPlayer=ROSTER.find(p=>p.name===kind.name||p.id===kind.rosterId);

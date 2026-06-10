@@ -190,7 +190,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {/* Ergebnis-Banner für gespielte Spiele */}
               {played&&(
                 <div style={{background:"linear-gradient(135deg,#3B82F6 0%,#60A5FA 100%)",borderRadius:14,padding:"16px 20px",display:"flex",alignItems:"center",gap:16}}>
-                  <div style={{flex:1}}>
+                  <div className="cc-flex-1">
                     <div style={{fontSize:14,color:"rgba(255,255,255,0.4)",fontWeight:700,textTransform:"uppercase",letterSpacing:0.6,marginBottom:4}}>Endergebnis</div>
                     <div style={{fontSize:24,fontWeight:800,color:"#fff",letterSpacing:3,lineHeight:1}}>{spiel.result}</div>
                     {spiel.htResult&&<div style={{fontSize:14,color:"rgba(255,255,255,0.4)",marginTop:4}}>Halbzeit: {spiel.htResult}</div>}
@@ -344,7 +344,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
               {stats.wechsel.length===0&&!editMode&&<div style={S_SUB}>Keine Wechsel erfasst.</div>}
               {stats.wechsel.map((w,i)=>{
                 const wText=(
-                  <span style={{display:"flex",gap:8,alignItems:"center"}}>
+                  <span className="cc-row">
                     <span style={{color:R}}>{"Raus: "+w.raus}</span>
                     <span style={{color:"var(--sub)"}}>{"/"}</span>
                     <span style={{color:GN}}>{"Rein: "+w.rein}</span>
@@ -384,7 +384,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
             return(
               <div>
                 {/* Podium */}
-                <div style={{marginBottom:16}}>
+                <div className="cc-mb-16">
                   {topGroups.length===0&&<div style={{fontSize:14,color:"var(--sub)",padding:"12px",background:"var(--surface2)",borderRadius:8,textAlign:"center",marginBottom:12}}>Noch keine Stimmen abgegeben</div>}
                   {topGroups.map((grp,gi)=>(
                     <div key={gi} style={{background:gradients[gi],border:`1px solid ${borders[gi]}`,borderRadius:10,padding:"11px 16px",marginBottom:6}}>
@@ -392,7 +392,7 @@ function SpielDetail({spiel,onClose,canEdit,motmAll:motmAllProp,setMotmAll:setMo
                       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap"}}>
                         <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
                           {grp.players.map(pl=>(
-                            <div key={pl.id} style={{display:"flex",alignItems:"center",gap:8}}>
+                            <div key={pl.id} className="cc-row">
                               <Av name={pl.name} size={24} bg={gi===0?AM:"#9CA3AF"}/>
                               <span style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{pl.firstName} {pl.lastName}</span>
                             </div>
@@ -968,13 +968,13 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                     const alleAufgebotene=[...(isInAufgebot(selEv.id,myId)&&ichSelbst?[{...ichSelbst,ich:true}]:[]),...mitspieler];
                     if(alleAufgebotene.length===0) return null;
                     return(
-                      <div style={{marginBottom:12}}>
+                      <div className="cc-mb-12">
                         <div style={{fontSize:14,fontWeight:700,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8}}>Aufgebot ({alleAufgebotene.length})</div>
                         <div style={S_10}>
                           {alleAufgebotene.map(p=>(
                             <div key={p.id} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",background:p.ich?"#4F46E5":"#EEF2FF",borderRadius:8}}>
                               <Av name={p.name} size={26} bg={p.ich?"rgba(255,255,255,0.3)":"#6366F1"}/>
-                              <div style={{flex:1}}>
+                              <div className="cc-flex-1">
                                 <div style={{fontSize:14,fontWeight:700,color:p.ich?"#fff":"#4F46E5"}}>{p.firstName} {p.lastName}{p.ich?" (Du)":""}</div>
                                 {p.pos&&p.pos!=="-"&&<div style={{fontSize:14,color:p.ich?"rgba(255,255,255,0.7)":"#818CF8"}}>{p.pos}</div>}
                               </div>
@@ -1129,7 +1129,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                   </div>
                   {/* Text */}
                   <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:4}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                    <div className="cc-row">
                       <div style={{fontWeight:600,fontSize:14,color:isCancelled?"#aaa":"#1A1A1A",textDecoration:isCancelled?"line-through":"none"}}>
                         {ev.opponent?"vs. "+ev.opponent:ev.type==="Training"?"Training · "+ev.team:ev.title||ev.type}
                       </div>
@@ -1249,7 +1249,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                     <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",paddingTop:10,borderTop:"0.5px solid rgba(0,0,0,0.1)"}}>
                       <span style={{color:hTxtSub,fontSize:14,fontWeight:700,letterSpacing:0.5}}>⏰ DEADLINE</span>
                       {editingDeadline?(
-                        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                        <div className="cc-row">
                           <input type="date"
                             defaultValue={(()=>{const d=deadlines[selEv.id];if(!d)return"";try{const p=d.split(",")[0].trim().replace(/^\S+\s+/,"").split(".");return `2026-${p[1]?.padStart(2,"0")}-${p[0]?.padStart(2,"0")}`;}catch(e){return "";}})()}
                             onBlur={e=>{const d=e.target.value;if(d){const[y,m,day]=d.split("-");const days=["So","Mo","Di","Mi","Do","Fr","Sa"];const wd=days[new Date(d).getDay()];const time=(deadlines[selEv.id]||"").split(",")[1]?.trim()||"18:00";setDeadlines(prev=>({...prev,[selEv.id]:`${wd} ${day}.${m}.${y}, ${time}`}));}setEditingDeadline(false);}}
@@ -1547,7 +1547,7 @@ function TermineModul({role,team,setActive,onNavigateToSpiel,myRosterId:myRoster
                     <div style={{fontSize:14,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:0.5,marginTop:2}}>{monName}</div>
                   </div>
                   <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:4}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                    <div className="cc-row">
                       <div style={{fontWeight:600,fontSize:14,color:isCancelled?"#aaa":"#1A1A1A",textDecoration:isCancelled?"line-through":"none"}}>
                         {ev.type==="Training"?"Training · "+ev.team:ev.title||ev.type}
                       </div>
