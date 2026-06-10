@@ -440,28 +440,19 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
             </div>
           </div>
           {/* Tabs mit cc-seg */}
-          <div className="cc-tabs-bar">
-            {[
-              {key:"info",    label:"Profil",     icon:"user"},
-              {key:"eltern",  label:`Eltern (${eltern.length})`,icon:"heart"},
-              ...(canEdit?[{key:"portal",label:"Portal-Zugang",icon:"key"}]:[]),
-              ...(canEdit?[{key:"datenpruefung",label:"Datenprüfung",icon:"shield-check"}]:[]),
-              {key:"stats",   label:"Statistik",  icon:"chart-bar",soon:true},
-              {key:"comments",label:"Kommentare", icon:"message",  soon:true},
-              {key:"ratings", label:"Bewertungen",icon:"star",     soon:true},
-            ].map(t=>(
-              <button key={t.key} onClick={()=>!t.soon&&setTab(t.key)}
-                style={{padding:"12px 16px",border:"none",background:"none",
-                  cursor:t.soon?"default":"pointer",fontFamily:"inherit",
-                  fontSize:13,fontWeight:tab===t.key?600:400,
-                  color:tab===t.key?"var(--text)":t.soon?"var(--border)":"var(--sub)",
-                  borderBottom:tab===t.key?"2px solid var(--cc-accent,#FFBF00)":"2px solid transparent",
-                  display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap",transition:"color 0.1s"}}>
-                <TI n={t.icon} size={14}/>{t.label}
-                {t.soon&&<span style={{fontSize:9,background:"var(--surface2)",color:"var(--sub)",padding:"1px 5px",borderRadius:8,marginLeft:2}}>bald</span>}
-              </button>
-            ))}
-          </div>
+          <Tabs
+            tabs={[
+              {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
+              {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},
+              ...(canEdit?[{key:"portal",       label:"Portal-Zugang", icon:"key",          short:"Portal"}]:[]),
+              ...(canEdit?[{key:"datenpruefung",label:"Datenprüfung",  icon:"shield-check", short:"Daten"}]:[]),
+              {key:"stats",   label:"Statistik",   icon:"chart-bar",short:"Stats",  soon:true},
+              {key:"comments",label:"Kommentare",  icon:"message",  short:"Komm.",  soon:true},
+              {key:"ratings", label:"Bewertungen", icon:"star",     short:"Bewert.",soon:true},
+            ]}
+            active={tab}
+            setActive={t=>!(["stats","comments","ratings"].includes(t))&&setTab(t)}
+          />
         </Card>
 
         {/* Tab: Profil */}
@@ -1061,28 +1052,19 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
             </div>
           </div>
           {/* Tabs mit cc-seg */}
-          <div className="cc-tabs-bar">
-            {[
-              {key:"info",    label:"Profil",     icon:"user"},
-              {key:"eltern",  label:`Eltern (${eltern.length})`,icon:"heart"},
-              ...(canEdit?[{key:"portal",label:"Portal-Zugang",icon:"key"}]:[]),
-              ...(canEdit?[{key:"datenpruefung",label:"Datenprüfung",icon:"shield-check"}]:[]),
-              {key:"stats",   label:"Statistik",  icon:"chart-bar",soon:true},
-              {key:"comments",label:"Kommentare", icon:"message",  soon:true},
-              {key:"ratings", label:"Bewertungen",icon:"star",     soon:true},
-            ].map(t=>(
-              <button key={t.key} onClick={()=>!t.soon&&setTab(t.key)}
-                style={{padding:"12px 16px",border:"none",background:"none",
-                  cursor:t.soon?"default":"pointer",fontFamily:"inherit",
-                  fontSize:13,fontWeight:tab===t.key?600:400,
-                  color:tab===t.key?"var(--text)":t.soon?"var(--border)":"var(--sub)",
-                  borderBottom:tab===t.key?"2px solid var(--cc-accent,#FFBF00)":"2px solid transparent",
-                  display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap",transition:"color 0.1s"}}>
-                <TI n={t.icon} size={14}/>{t.label}
-                {t.soon&&<span style={{fontSize:9,background:"var(--surface2)",color:"var(--sub)",padding:"1px 5px",borderRadius:8,marginLeft:2}}>bald</span>}
-              </button>
-            ))}
-          </div>
+          <Tabs
+            tabs={[
+              {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
+              {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},
+              ...(canEdit?[{key:"portal",       label:"Portal-Zugang", icon:"key",          short:"Portal"}]:[]),
+              ...(canEdit?[{key:"datenpruefung",label:"Datenprüfung",  icon:"shield-check", short:"Daten"}]:[]),
+              {key:"stats",   label:"Statistik",   icon:"chart-bar",short:"Stats",  soon:true},
+              {key:"comments",label:"Kommentare",  icon:"message",  short:"Komm.",  soon:true},
+              {key:"ratings", label:"Bewertungen", icon:"star",     short:"Bewert.",soon:true},
+            ]}
+            active={tab}
+            setActive={t=>!(["stats","comments","ratings"].includes(t))&&setTab(t)}
+          />
         </Card>
 
         {/* Tab: Profil */}
