@@ -622,7 +622,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
               {[
                 {l:"Vorname",      v:raw.vorname||m.name.split(" ")[0]},
                 {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
-                ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
+                ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum?new Date(raw.geburtsdatum).toLocaleDateString("de-CH"):"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
                 {l:"Nationalität", v:raw.nationalitaet||"-", flag:raw.nationalitaet?raw.nationalitaet.toUpperCase():null, flagName:raw.nationalitaet?getLandName(raw.nationalitaet):null},
                 {l:"Heimatort",    v:raw.heimatort||"-"},
                 {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":"-"},
@@ -1161,7 +1161,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                       {visibleCols.includes("location")&&<td className="cc-members-td cc-members-td-sub">{m.location||"—"}</td>}
                       {visibleCols.includes("spielerpass")&&<td className="cc-members-td cc-members-td-sub">{m.spielerpass||"—"}</td>}
                       {visibleCols.includes("fairgate_id")&&<td className="cc-members-td cc-members-td-sub">{m.fairgate_id||"—"}</td>}
-                      {visibleCols.includes("geburtsdatum")&&<td className="cc-members-td cc-members-td-sub">{m.geburtsdatum||"—"}</td>}
+                      {visibleCols.includes("geburtsdatum")&&<td className="cc-members-td cc-members-td-sub">{m.geburtsdatum?new Date(m.geburtsdatum).toLocaleDateString("de-CH"):"—"}</td>}
                     </tr>
                   ))}
                 </React.Fragment>
