@@ -118,6 +118,8 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-td{padding:9px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
 .cc-tr:hover .cc-td{background:var(--cc-hover,rgba(255,191,0,0.19));cursor:pointer}
 .cc-tr:last-child .cc-td{border-bottom:none}
+.cc-tr-zebra:nth-child(even) .cc-td{background:var(--surface2)}
+.cc-tr-zebra:nth-child(odd) .cc-td{background:var(--surface)}
 
 /* ── Listen ── */
 .cc-list{border:0.5px solid var(--border);border-radius:10px;overflow:hidden}

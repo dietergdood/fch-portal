@@ -2055,10 +2055,6 @@ function PortalverwaltungView(props){
           if(data) setMitgliedtypPflichtfelder(data);
         }
 
-        const thStyle={padding:"6px 10px",background:"var(--surface2)",color:"var(--sub)",fontWeight:600,fontSize:11,textTransform:"uppercase",letterSpacing:"0.04em",borderBottom:"0.5px solid var(--border)",textAlign:"center"};
-        const thFirstStyle={...thStyle,textAlign:"left",minWidth:130};
-        const tdStyle={padding:"8px 10px",borderBottom:"0.5px solid var(--border)",verticalAlign:"middle",textAlign:"center"};
-        const tdFirstStyle={...tdStyle,textAlign:"left",fontSize:13,color:"var(--text)"};
 
         return(
           <div style={{display:"flex",flexDirection:"column",gap:16}}>
@@ -2086,17 +2082,17 @@ function PortalverwaltungView(props){
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",borderCollapse:"collapse"}}>
                   <thead><tr>
-                    <th style={thFirstStyle}>Feld</th>
-                    {MITGLIEDTYPEN_PF.map(t=><th key={t} style={thStyle}>{MITGLIEDTYPEN_SHORT[t]}</th>)}
+                    <th className="cc-th" style={{textAlign:"left",minWidth:160}}>Feld</th>
+                    {MITGLIEDTYPEN_PF.map(t=><th key={t} className="cc-th cc-th-center">{MITGLIEDTYPEN_SHORT[t]}</th>)}
                   </tr></thead>
                   <tbody>
                     {FELDER_TYP.map(feld=>(
-                      <tr key={feld}>
-                        <td style={tdFirstStyle}>{FELDER_TYP_LABELS[feld]}</td>
+                      <tr key={feld} className="cc-tr cc-tr-zebra">
+                        <td className="cc-td">{FELDER_TYP_LABELS[feld]}</td>
                         {MITGLIEDTYPEN_PF.map(typ=>{
                           const on=isPflichtTyp(typ,feld);
                           return(
-                            <td key={typ} style={tdStyle}>
+                            <td key={typ} className="cc-td" style={{textAlign:"center"}}>
                               <div onClick={()=>toggleTyp(typ,feld,on)}
                                 style={{width:20,height:20,borderRadius:5,border:`0.5px solid ${on?"#22c55e":"var(--border)"}`,background:on?"#ECFDF5":"transparent",display:"inline-flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
                                 {on&&<TI n="check" size={11} style={{color:"#15803d"}}/>}
@@ -2118,17 +2114,17 @@ function PortalverwaltungView(props){
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",borderCollapse:"collapse"}}>
                   <thead><tr>
-                    <th style={thFirstStyle}>Feld</th>
-                    {ROLLEN_PF.map(r=><th key={r} style={thStyle}>{ROLLEN_PF_LABELS[r]}</th>)}
+                    <th className="cc-th" style={{textAlign:"left",minWidth:160}}>Feld</th>
+                    {ROLLEN_PF.map(r=><th key={r} className="cc-th cc-th-center">{ROLLEN_PF_LABELS[r]}</th>)}
                   </tr></thead>
                   <tbody>
                     {FELDER_ROLLE.map(feld=>(
-                      <tr key={feld}>
-                        <td style={tdFirstStyle}>{FELDER_ROLLE_LABELS[feld]}</td>
+                      <tr key={feld} className="cc-tr cc-tr-zebra">
+                        <td className="cc-td">{FELDER_ROLLE_LABELS[feld]}</td>
                         {ROLLEN_PF.map(rolle=>{
                           const on=isPflichtRolle(rolle,feld);
                           return(
-                            <td key={rolle} style={tdStyle}>
+                            <td key={rolle} className="cc-td" style={{textAlign:"center"}}>
                               <div onClick={()=>toggleRolle(rolle,feld,on)}
                                 style={{width:20,height:20,borderRadius:5,border:`0.5px solid ${on?"#22c55e":"var(--border)"}`,background:on?"#ECFDF5":"transparent",display:"inline-flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
                                 {on&&<TI n="check" size={11} style={{color:"#15803d"}}/>}
