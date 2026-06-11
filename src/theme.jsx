@@ -256,7 +256,24 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-status-active::before{content:"";width:7px;height:7px;border-radius:50%;background:#16A34A;flex-shrink:0;display:inline-block}
 .cc-status-inactive{font-size:12px;color:#DC2626;font-weight:600;display:flex;align-items:center;gap:4px}
 .cc-status-inactive::before{content:"";width:7px;height:7px;border-radius:50%;background:#DC2626;flex-shrink:0;display:inline-block}
-.cc-team-position-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.cc-members-table{width:100%;border-collapse:collapse}
+.cc-members-th{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;border-bottom:0.5px solid var(--border);text-align:left;cursor:pointer;white-space:nowrap}
+.cc-members-th:hover{color:var(--text)}
+.cc-members-tr{border-bottom:0.5px solid var(--border);cursor:pointer}
+.cc-members-tr:last-child{border-bottom:none}
+.cc-members-tr:hover{background:var(--surface2)}
+.cc-members-td{padding:9px 12px;font-size:13px;color:var(--text);white-space:nowrap}
+.cc-members-td-sub{font-size:12px;color:var(--sub)}
+.cc-members-group{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:0.05em;padding:10px 12px 4px;border-top:0.5px solid var(--border)}
+.cc-members-group:first-child{border-top:none}
+/* Mobile Liste */
+.cc-members-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:0.5px solid var(--border);cursor:pointer}
+.cc-members-item:last-child{border-bottom:none}
+.cc-members-item:hover{background:var(--surface2)}
+.cc-members-item-meta{flex:1;min-width:0}
+.cc-members-item-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+.cc-members-item-sub{font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-members-item-chevron{color:var(--border);flex-shrink:0}
 .cc-team-position-row:last-child{border-bottom:none}
 .cc-team-nr{width:34px;height:34px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0;border:0.5px solid var(--border)}
 .cc-team-nr-empty{color:var(--sub);font-weight:400;border-style:dashed}

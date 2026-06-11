@@ -3,6 +3,7 @@
    Mitgliederverwaltung und -liste
    ═══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useRef } from "react";
+import React from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants.js";
 import { TI } from "./icons.jsx";
 import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile, avColor, LandSelect, DropMenu } from "./theme.jsx";
@@ -408,6 +409,7 @@ function elternAvColor(beziehung){
 }
 
 function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
+  const isMobile=useIsMobile();
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
   const [sortDir,setSortDir]=useState("asc");
@@ -991,60 +993,73 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
           </div>
         );
       })()}
-      {/* Tabelle */}
+      {/* Liste / Tabelle */}
       <Card className="cc-card-table">
-        <div className="cc-table-wrap"><table className="cc-table">
-          <thead>
-            <tr className="cc-surface2">
-              {COLS.map(c=>(
-                <th className="cc-th" key={c.key} onClick={()=>handleSort(c.key)}
-                  className="cc-clickable"
-                  onMouseEnter={e=>e.currentTarget.style.color="var(--text)"}
-                  onMouseLeave={e=>e.currentTarget.style.color="var(--sub)"}>
-                  {c.label}<SortIcon col={c.key}/>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
+        {filtered.length===0&&<div className="cc-empty">Keine Mitglieder gefunden.</div>}
+        {filtered.length>0&&(isMobile?(
+          /* Mobile: einfache Liste */
+          <div>
             {groups.map(({key,members})=>(
-              <>
-                {groupBy!=="none"&&(
-                  <tr key={"g-"+key}>
-                    <td colSpan={6} className="cc-td cc-section-label" style={{
-                      fontWeight:700,fontSize:14,color:"var(--sub)",textTransform:"uppercase",
-                      letterSpacing:0.6,borderTop:"1px solid var(--border)"}}>
-                      {key} <span className="cc-text-muted">({members.length})</span>
-                    </td>
-                  </tr>
-                )}
-                {members.map((m,i)=>(
-                  <tr key={m.id} onClick={()=>setSelectedMember({...m,_tab:"info"})}
-                    className="cc-tr">
-                    <td className="cc-td" className="cc-td">
-                      <Row>
-                        <Av name={m.name} size={28}/>
-                        <span className="cc-text-bold">{m.name}</span>
-                      </Row>
-                    </td>
-                    <td className="cc-td" className="cc-td"><RolleChip rolle={m.role}/></td>
-                    <td className="cc-td cc-text-sub">{m.team}</td>
-                    <td className="cc-td" className="cc-td"><Chip text={m.type} color={BL}/></td>
-                    <td className="cc-td cc-text-sub">{m.location}</td>
-                    <td className="cc-td" className="cc-td">
-                      <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-                    </td>
-                  </tr>
+              <div key={key}>
+                {groupBy!=="none"&&<div className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></div>}
+                {members.map(m=>(
+                  <div key={m.id} className="cc-members-item" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
+                    <Av name={m.name} size={36}/>
+                    <div className="cc-members-item-meta">
+                      <div className="cc-members-item-name">{m.name}</div>
+                      <div className="cc-members-item-sub">{m.role}{m.team?" · "+m.team:""}</div>
+                    </div>
+                    <TI n="chevron-right" size={16} className="cc-members-item-chevron"/>
+                  </div>
                 ))}
-              </>
+              </div>
             ))}
-          </tbody>
-        </table></div>
-        {filtered.length===0&&(
-          <div className="cc-empty">
-            Keine Mitglieder gefunden.
           </div>
-        )}
+        ):(
+          /* Desktop/Tablet: Tabelle */
+          <div className="cc-table-wrap"><table className="cc-members-table">
+            <thead>
+              <tr className="cc-surface2">
+                {[
+                  {key:"name",   label:"Name"},
+                  {key:"type",   label:"Mitgliedtyp"},
+                  {key:"role",   label:"Rolle"},
+                  {key:"status", label:"Status"},
+                  {key:"team",   label:"Team"},
+                ].map(col=>(
+                  <th key={col.key} className="cc-members-th" onClick={()=>handleSort(col.key)}>
+                    {col.label}<SortIcon col={col.key}/>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {groups.map(({key,members})=>(
+                <React.Fragment key={key}>
+                  {groupBy!=="none"&&(
+                    <tr><td colSpan={5} className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></td></tr>
+                  )}
+                  {members.map(m=>(
+                    <tr key={m.id} className="cc-members-tr" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
+                      <td className="cc-members-td">
+                        <div className="cc-row cc-gap-8">
+                          <Av name={m.name} size={28}/>
+                          <span className="cc-text-bold">{m.name}</span>
+                        </div>
+                      </td>
+                      <td className="cc-members-td cc-members-td-sub">{m.type||"—"}</td>
+                      <td className="cc-members-td"><RolleChip rolle={m.role}/></td>
+                      <td className="cc-members-td">
+                        <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
+                      </td>
+                      <td className="cc-members-td cc-members-td-sub">{m.team||"—"}</td>
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table></div>
+        ))}
       </Card>
     </div>
   );
