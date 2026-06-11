@@ -175,7 +175,7 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
       ahv_nr:editForm.ahv_nr||null, telefon:editForm.telefon||null,
       email:editForm.email||null, strasse:editForm.strasse||null,
       plz:editForm.plz||null, ort:editForm.ort||null, kanton:editForm.kanton||null,
-      mitgliedtypen:editForm.mitgliedtypen||[], funktionen:editForm.funktionen||[],
+      mitgliedtyp:editForm.mitgliedtyp||null, funktionen:editForm.funktionen||[],
       spielerpass:editForm.spielerpass||null, js_nr:editForm.js_nr||null,
       fairgate_id:editForm.fairgate_id||null, notizen:editForm.notizen||null,
       updated_at:new Date().toISOString(),
@@ -271,20 +271,13 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
               ))}
               {/* Vereinsdaten */}
               <div className="cc-form-section-title cc-form-full" data-label="Vereinsdaten"/>
-              {/* Mitgliedtypen Multi-Select */}
-              <div className="cc-form-full">
-                <label className="cc-label">Mitgliedtyp(en)</label>
-                <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:4}}>
-                  {MITGLIEDTYPEN.map(t=>{
-                    const sel=(editForm.mitgliedtypen||[]).includes(t);
-                    return(
-                      <button key={t} type="button" onClick={()=>setEditForm(f=>({...f,mitgliedtypen:sel?(f.mitgliedtypen||[]).filter(x=>x!==t):[...(f.mitgliedtypen||[]),t]}))}
-                        className={`cc-chip-toggle${sel?" cc-chip-toggle-on":""}`}>
-                        {t}
-                      </button>
-                    );
-                  })}
-                </div>
+              {/* Mitgliedtyp Single-Select */}
+              <div>
+                <label className="cc-label">Mitgliedtyp</label>
+                <select className="cc-input" value={editForm.mitgliedtyp||""} onChange={e=>setEditForm(f=>({...f,mitgliedtyp:e.target.value}))}>
+                  <option value="">– wählen –</option>
+                  {MITGLIEDTYPEN.map(t=><option key={t} value={t}>{t}</option>)}
+                </select>
               </div>
               {/* Funktionen Multi-Select */}
               <div className="cc-form-full">
@@ -490,7 +483,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
         fairgate_id:m.fairgate_id,
         hat_portal_zugang:m.hat_portal_zugang,
         foto_url:m.foto_url||null,
-        mitgliedtypen:m.mitgliedtypen||[],
+        mitgliedtyp:m.mitgliedtyp||"-",
         funktionen:m.funktionen||[],
       }))
     :MEMBERS;
@@ -533,9 +526,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
     m.role.toLowerCase().includes(search.toLowerCase())||
     m.team.toLowerCase().includes(search.toLowerCase()))
     &&(filterVals.length===0||(
-      groupBy==="type"
-        ?(m.mitgliedtypen||[m.type]).some(t=>filterVals.includes(t))
-        :filterVals.includes(m[groupBy]||"-")
+      filterVals.includes(m[groupBy]||"-")
     ))
   );
 
@@ -706,15 +697,11 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
             {/* Vereinsdaten */}
             <Card>
               <div className="cc-section-title"><TI n="shirt" size={14}/> Vereinsdaten</div>
-              {/* Mitgliedtypen als Tags */}
-              {(raw.mitgliedtypen||[]).length>0&&(
+              {/* Mitgliedtyp */}
+              {(raw.mitgliedtyp||m.type)&&(
                 <div className="cc-info-row">
-                  <span className="cc-info-key">Mitgliedtyp(en)</span>
-                  <div className="cc-row cc-gap-4 cc-flex-wrap">
-                    {(raw.mitgliedtypen||[]).map(t=>(
-                      <span key={t} className="cc-badge cc-badge-neutral">{t}</span>
-                    ))}
-                  </div>
+                  <span className="cc-info-key">Mitgliedtyp</span>
+                  <span className="cc-info-val">{raw.mitgliedtyp||m.type}</span>
                 </div>
               )}
               {/* Funktionen als Tags */}
@@ -1120,7 +1107,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
               {[
                 {label:"Rolle", vals:[...new Set(allMembers.map(m=>m.role).filter(Boolean))]},
                 {label:"Status", vals:[...new Set(allMembers.map(m=>m.status).filter(Boolean))]},
-                {label:"Mitgliedtyp", vals:[...new Set(allMembers.flatMap(m=>m.mitgliedtypen||[m.type]).filter(Boolean))]},
+                {label:"Mitgliedtyp", vals:[...new Set(allMembers.map(m=>m.mitgliedtyp||m.type).filter(Boolean))]},
               ].map(({label,vals})=>(
                 <div key={label}>
                   <div className="cc-ml-dropdown-section-lbl">{label}</div>
