@@ -995,13 +995,16 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
         <Stat label="Aktivmitglieder" value={allMembers.filter(m=>m.type==="Aktivmitglied").length} color={GN}/>
         <Stat label="Datenprüfung fällig" value={allMembers.filter(m=>m.status!=="Vollständig").length} color={AM}/>
       </div>
-      {/* Filter-Zeile */}
-      <div className="cc-filter-toolbar">
-        <input className="cc-input cc-filter-search" value={search} onChange={e=>setSearch(e.target.value)}
-          placeholder="Suchen nach Name, Rolle, Team…"/>
-        <select className="cc-input cc-filter-select" value={groupBy} onChange={e=>{setGroupBy(e.target.value);setFilterVals([]);}}>
-          {GROUP_OPTIONS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
-        </select>
+      {/* Integrated Search+Filter Bar */}
+      <div className="cc-members-bar">
+        <div className="cc-members-search">
+          <TI n="search" size={15} style={{color:"var(--sub)",flexShrink:0}}/>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Suchen nach Name, Team, Rolle…"/>
+        </div>
+        <button className={`cc-members-bar-btn${groupBy==="none"?" cc-active":""}`} onClick={()=>{setGroupBy("none");setFilterVals([])}}>Alle</button>
+        <button className={`cc-members-bar-btn${groupBy==="role"?" cc-active":""}`} onClick={()=>{setGroupBy(g=>g==="role"?"none":"role");setFilterVals([])}}>Rolle</button>
+        <button className={`cc-members-bar-btn${groupBy==="team"?" cc-active":""}`} onClick={()=>{setGroupBy(g=>g==="team"?"none":"team");setFilterVals([])}}>Team</button>
+        <button className={`cc-members-bar-btn${groupBy==="type"?" cc-active":""}`} onClick={()=>{setGroupBy(g=>g==="type"?"none":"type");setFilterVals([])}}>Typ</button>
         {!isMobile&&(
           <div className="cc-col-menu-wrap" ref={colMenuRef}>
             <button className={`cc-col-menu-btn${colMenuOpen?" cc-col-menu-btn-active":""}`} onClick={()=>setColMenuOpen(o=>!o)}>
@@ -1029,60 +1032,36 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
           </div>
         )}
       </div>
-      {/* Gruppen-Filter Chips */}
-      {groupBy!=="none"&&(()=>{
-        const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
-        return(
-          <div className="cc-row cc-gap-8 cc-mb-14 cc-filter-row">
-            <Btn small onClick={()=>setFilterVals([])}>Alle</Btn>
-            {vals.map(v=>{
-              const active=filterVals.includes(v);
-              return(
-                <Btn small onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}>{active&&<span className="cc-text-xs">✓</span>} {v} <span className="cc-text-muted"> {allMembers.filter(m=>(m[groupBy]||"-")===v).length} </span></Btn>
-              );
-            })}
-            {filterVals.length>0&&(
-              <Btn variant="ghost" small onClick={()=>setFilterVals([])}>× zurücksetzen</Btn>
-            )}
-          </div>
-        );
-      })()}
       {/* Liste / Tabelle */}
       <Card className="cc-card-table">
         {filtered.length===0&&<div className="cc-empty">Keine Mitglieder gefunden.</div>}
         {filtered.length>0&&(isMobile?(
-          /* Mobile: einfache Liste */
+          /* Mobile: C-style iOS Liste */
           <div>
             {groups.map(({key,members})=>(
               <div key={key}>
-                {groupBy!=="none"&&<div className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></div>}
+                {groupBy!=="none"&&<div className="cc-members-list-group-hdr">{key} <span className="cc-text-muted">({members.length})</span></div>}
                 {members.map(m=>(
                   <div key={m.id} className="cc-members-item" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
                     <Av name={m.name} size={36}/>
                     <div className="cc-members-item-meta">
                       <div className="cc-members-item-name">{m.name}</div>
-                      <div className="cc-members-item-sub">{m.role}{m.team?" · "+m.team:""}</div>
+                      <div className="cc-members-item-sub">{m.role&&m.role!=="-"?m.role:m.type}{m.team&&m.team!=="-"?" · "+m.team:""}</div>
                     </div>
-                    <TI n="chevron-right" size={16} className="cc-members-item-chevron"/>
+                    <TI n="chevron-right" size={14} className="cc-members-item-chevron"/>
                   </div>
                 ))}
               </div>
             ))}
           </div>
         ):(
-          /* Desktop/Tablet: Tabelle */
+          /* Desktop: A-style kompakte Tabelle */
           <div className="cc-table-wrap"><table className="cc-members-table">
             <thead>
-              <tr className="cc-surface2">
-                {[
-                  {key:"name",   label:"Name"},
-                  {key:"type",   label:"Mitgliedtyp"},
-                  {key:"role",   label:"Rolle"},
-                  {key:"status", label:"Status"},
-                  {key:"team",   label:"Team"},
-                ].map(col=>(
+              <tr>
+                {COLS.map(col=>(
                   <th key={col.key} className="cc-members-th" onClick={()=>handleSort(col.key)}>
-                    {col.label}<SortIcon col={col.key}/>
+                    {col.label}<span className="cc-sort-arrow">{sortCol===col.key?(sortDir==="asc"?"▲":"▼"):"↕"}</span>
                   </th>
                 ))}
               </tr>
@@ -1091,14 +1070,17 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
               {groups.map(({key,members})=>(
                 <React.Fragment key={key}>
                   {groupBy!=="none"&&(
-                    <tr><td colSpan={5} className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></td></tr>
+                    <tr className="cc-members-group-hdr"><td colSpan={COLS.length}>{key} <span className="cc-text-muted">({members.length})</span></td></tr>
                   )}
                   {members.map(m=>(
                     <tr key={m.id} className="cc-members-tr" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
-                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={28}/><span className="cc-text-bold">{m.name}</span></div></td>}
+                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={26}/><span style={{fontWeight:500}}>{m.name}</span></div></td>}
                       {visibleCols.includes("type")&&<td className="cc-members-td cc-members-td-sub">{m.type||"—"}</td>}
                       {visibleCols.includes("role")&&<td className="cc-members-td"><RolleChip rolle={m.role}/></td>}
-                      {visibleCols.includes("status")&&<td className="cc-members-td"><Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/></td>}
+                      {visibleCols.includes("status")&&<td className="cc-members-td">
+                        <span className="cc-members-dot" style={{background:statusColor(m.status)}}/>
+                        <span className="cc-members-td-sub">{m.status}</span>
+                      </td>}
                       {visibleCols.includes("team")&&<td className="cc-members-td cc-members-td-sub">{m.team||"—"}</td>}
                       {visibleCols.includes("location")&&<td className="cc-members-td cc-members-td-sub">{m.location||"—"}</td>}
                       {visibleCols.includes("spielerpass")&&<td className="cc-members-td cc-members-td-sub">{m.spielerpass||"—"}</td>}
