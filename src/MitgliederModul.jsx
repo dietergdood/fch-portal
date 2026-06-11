@@ -772,19 +772,17 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                           {name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase()}
                         </div>
                       );})()}
-                      <div className="cc-flex-1">
-                        <div className="cc-mb-2"><div className="cc-text-bold cc-text-lg">{name}</div></div>
-                        <div className="cc-row cc-gap-8 cc-mb-4 cc-flex-wrap">
+                      <div className="cc-flex-1 cc-col cc-gap-5">
+                        <div className="cc-text-bold cc-text-lg">{name}</div>
+                        <div className="cc-row cc-gap-8 cc-flex-wrap">
                           {e.beziehung&&<span className="cc-text-sm">{e.beziehung}</span>}
                           {e.benutzer_id
                             ?<span className="cc-status-active">Portal: Aktiv</span>
                             :<span className="cc-status-inactive">Portal: Inaktiv</span>
                           }
                         </div>
-                        <div className="cc-col cc-gap-2">
-                          {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={12}/>{e.email}</a>}
-                          {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={12}/>{tel}</a>}
-                        </div>
+                        {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={12}/>{e.email}</a>}
+                        {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={12}/>{tel}</a>}
                       </div>
                       {canEdit&&(
                         <DropMenu items={[
@@ -1434,19 +1432,17 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                           {name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase()}
                         </div>
                       );})()}
-                      <div className="cc-flex-1">
-                        <div className="cc-mb-2"><div className="cc-text-bold cc-text-lg">{name}</div></div>
-                        <div className="cc-row cc-gap-8 cc-mb-4 cc-flex-wrap">
+                      <div className="cc-flex-1 cc-col cc-gap-5">
+                        <div className="cc-text-bold cc-text-lg">{name}</div>
+                        <div className="cc-row cc-gap-8 cc-flex-wrap">
                           {e.beziehung&&<span className="cc-text-sm">{e.beziehung}</span>}
                           {e.benutzer_id
                             ?<span className="cc-status-active">Portal: Aktiv</span>
                             :<span className="cc-status-inactive">Portal: Inaktiv</span>
                           }
                         </div>
-                        <div className="cc-col cc-gap-2">
-                          {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={12}/>{e.email}</a>}
-                          {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={12}/>{tel}</a>}
-                        </div>
+                        {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={12}/>{e.email}</a>}
+                        {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={12}/>{tel}</a>}
                       </div>
                       {canEdit&&(
                         <DropMenu items={[
