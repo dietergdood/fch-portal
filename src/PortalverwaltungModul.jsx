@@ -784,7 +784,7 @@ function PortalverwaltungView(props){
       ]
     },
     {
-      key:"design", label:"Design-System", icon:"palette", color:"#EC4899", bg:"#FDF2F8",
+      key:"design", label:"Design-System", icon:"layout-2", color:"#EC4899", bg:"#FDF2F8",
       tabs:[
         {key:"designsystem", label:"CSS-Klassen", icon:"code"},
       ]
