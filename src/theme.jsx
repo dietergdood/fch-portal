@@ -274,6 +274,23 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-ml-dropdown-clear{font-size:12px;color:var(--sub);background:none;border:none;cursor:pointer;font-family:inherit}
 .cc-ml-dropdown-clear:hover{color:var(--text)}
 .cc-ml-dropdown-apply{font-size:12px;font-weight:600;color:var(--surface);background:var(--text);border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
+.cc-multiselect{position:relative;width:100%}
+.cc-multiselect-trigger{width:100%;padding:8px 12px;border:0.5px solid var(--border);border-radius:8px;background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--text);text-align:left;font-family:inherit}
+.cc-multiselect-chips{display:flex;gap:4px;flex-wrap:wrap;flex:1;min-width:0}
+.cc-multiselect-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--surface);border:0.5px solid var(--border);color:var(--text);white-space:nowrap}
+.cc-multiselect-chip-x{cursor:pointer;color:var(--sub);font-size:13px;line-height:1}
+.cc-multiselect-chip-x:hover{color:var(--text)}
+.cc-multiselect-placeholder{color:var(--sub);font-size:13px}
+.cc-multiselect-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:300;overflow:hidden}
+.cc-multiselect-search{width:100%;padding:8px 12px;border:none;border-bottom:0.5px solid var(--border);font-size:13px;background:var(--surface2);color:var(--text);outline:none;font-family:inherit}
+.cc-multiselect-list{max-height:260px;overflow-y:auto}
+.cc-multiselect-group{padding:5px 12px 2px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--sub);background:var(--surface2);border-top:0.5px solid var(--border)}
+.cc-multiselect-group:first-child{border-top:none}
+.cc-multiselect-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text)}
+.cc-multiselect-item:hover{background:var(--surface2)}
+.cc-multiselect-cb{width:16px;height:16px;border-radius:4px;border:0.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface)}
+.cc-multiselect-cb-on{width:16px;height:16px;border-radius:4px;border:0.5px solid #22c55e;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#ECFDF5}
+.cc-multiselect-footer{padding:8px 12px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sub)}
 .cc-ml-srch{flex:1;display:flex;align-items:center;gap:8px;padding:0 12px;height:36px;border:0.5px solid var(--border);border-radius:8px;background:var(--surface)}
 .cc-ml-srch input{border:none;outline:none;background:transparent;font-size:14px;color:var(--text);flex:1;font-family:inherit}
 .cc-ml-srch input::placeholder{color:var(--sub)}
@@ -827,4 +844,77 @@ function LandSelect({value,onChange,laender,placeholder="–"}){
 
 
 
-export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate, LandSelect, DropMenu };
+function FunktionenMultiSelect({funktionen=[],selected=[],onChange}){
+  const [open,setOpen]=useState(false);
+  const [search,setSearch]=useState("");
+  const ref=useRef(null);
+
+  useEffect(()=>{
+    function handleClick(e){ if(ref.current&&!ref.current.contains(e.target)) setOpen(false); }
+    document.addEventListener("mousedown",handleClick);
+    return()=>document.removeEventListener("mousedown",handleClick);
+  },[]);
+
+  // Gruppieren
+  const filtered=funktionen.filter(f=>f.name.toLowerCase().includes(search.toLowerCase())||
+    (f.portal_gruppen?.name||"").toLowerCase().includes(search.toLowerCase()));
+  const groups=[...new Set(filtered.map(f=>f.portal_gruppen?.name||"Weitere"))];
+
+  function toggle(name){
+    const next=selected.includes(name)?selected.filter(x=>x!==name):[...selected,name];
+    onChange(next);
+  }
+
+  return(
+    <div className="cc-multiselect" ref={ref}>
+      <button type="button" className="cc-multiselect-trigger" onClick={()=>setOpen(o=>!o)}>
+        <div className="cc-multiselect-chips">
+          {selected.length===0
+            ?<span className="cc-multiselect-placeholder">+ Funktion wählen</span>
+            :selected.slice(0,3).map(s=>(
+              <span key={s} className="cc-multiselect-chip">
+                {s}
+                <span className="cc-multiselect-chip-x" onMouseDown={e=>{e.stopPropagation();toggle(s);}}>×</span>
+              </span>
+            ))
+          }
+          {selected.length>3&&<span className="cc-multiselect-chip" style={{color:"var(--sub)"}}>+{selected.length-3} weitere</span>}
+        </div>
+        <TI n={open?"chevron-up":"chevron-down"} size={14} style={{color:"var(--sub)",flexShrink:0}}/>
+      </button>
+      {open&&(
+        <div className="cc-multiselect-dropdown">
+          <input className="cc-multiselect-search" placeholder="Funktion suchen…" value={search}
+            onChange={e=>setSearch(e.target.value)} autoFocus/>
+          <div className="cc-multiselect-list">
+            {filtered.length===0&&<div style={{padding:"12px",fontSize:13,color:"var(--sub)",textAlign:"center"}}>Keine Funktionen gefunden</div>}
+            {groups.map(g=>(
+              <div key={g}>
+                <div className="cc-multiselect-group">{g}</div>
+                {filtered.filter(f=>(f.portal_gruppen?.name||"Weitere")===g).map(f=>{
+                  const on=selected.includes(f.name);
+                  return(
+                    <div key={f.id} className="cc-multiselect-item" onClick={()=>toggle(f.name)}>
+                      <div className={on?"cc-multiselect-cb-on":"cc-multiselect-cb"}>
+                        {on&&<TI n="check" size={10} style={{color:"#15803d"}}/>}
+                      </div>
+                      <span>{f.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+          {selected.length>0&&(
+            <div className="cc-multiselect-footer">
+              <span>{selected.length} ausgewählt</span>
+              <button className="cc-ml-dropdown-clear" onClick={()=>onChange([])}>Alle entfernen</button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export { LOGO_B64, ThemeCtx, useTheme, PWA_CSS, hexToRgba, darkenHex, THEME_DEFAULT_STATIC, useBreakpoint, useIsMobile, ModalOrSheet, InfoBox, Btn, Card, Chip, Stat, Av, Tabs, STitle, Row, Col, Between, Sub, Label, H1, H2, PageHeader, Input, Select, Textarea, SectionLabel, Empty, ModalTitle, Truncate, LandSelect, DropMenu, FunktionenMultiSelect };

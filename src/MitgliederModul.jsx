@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import React from "react";
 import { FONT, BTN_COLOR as BTN, BTN_TXT, GN, R, RL, BL, AM, BK } from "./constants.js";
 import { TI } from "./icons.jsx";
-import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile, avColor, LandSelect, DropMenu } from "./theme.jsx";
+import { Av, Btn, Card, Chip, Col, ModalOrSheet, Row, SectionLabel, Stat, Tabs, useIsMobile, avColor, LandSelect, DropMenu, FunktionenMultiSelect } from "./theme.jsx";
 import { MEMBERS } from "./demoData.js";
 import { getRole } from "./NavigationModul.jsx";
 
@@ -281,21 +281,11 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
               {/* Funktionen Multi-Select */}
               <div className="cc-form-full">
                 <label className="cc-label">Funktion(en)</label>
-                {portalFunktionen.length===0
-                  ?<div className="cc-text-sm" style={{color:"var(--sub)"}}>Lade Funktionen…</div>
-                  :<div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:4}}>
-                    {portalFunktionen.map(f=>{
-                      const sel=(editForm.funktionen||[]).includes(f.name);
-                      const farbe=f.portal_gruppen?.farbe||"#6B7280";
-                      return(
-                        <button key={f.id} type="button" onClick={()=>setEditForm(ff=>({...ff,funktionen:sel?(ff.funktionen||[]).filter(x=>x!==f.name):[...(ff.funktionen||[]),f.name]}))}
-                          style={{padding:"3px 10px",borderRadius:6,border:`1px solid ${sel?farbe:"var(--border)"}`,background:sel?farbe+"20":"transparent",color:sel?farbe:"var(--sub)",fontSize:12,fontWeight:sel?600:400,cursor:"pointer",fontFamily:"inherit"}}>
-                          {f.portal_gruppen?.name?`${f.portal_gruppen.name} · `:""}{f.name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                }
+                <FunktionenMultiSelect
+                  funktionen={portalFunktionen}
+                  selected={editForm.funktionen||[]}
+                  onChange={val=>setEditForm(f=>({...f,funktionen:val}))}
+                />
               </div>
               {[
                 {k:"spielerpass", l:"Spielerpass"},
