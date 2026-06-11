@@ -141,12 +141,16 @@ function getFieldVisibility(role){
 }
 
 /* ── MemberHero: Hero-Header mit Edit-Modal ── */
-function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,statusBg}){
+function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,statusBg,dbMitgliedtypen=[]}){
   const [editOpen,setEditOpen]=useState(false);
   const [editForm,setEditForm]=useState({...raw});
   const [editSaving,setEditSaving]=useState(false);
   const [editMsg,setEditMsg]=useState(null);
   const [portalFunktionen,setPortalFunktionen]=useState([]);
+
+  const MITGLIEDTYPEN=dbMitgliedtypen.length>0
+    ?dbMitgliedtypen.map(t=>t.name)
+    :["Aktivmitglied","Juniormitglied","Funktionär","Passivmitglied","Ehrenmitglied","Freimitglied"];
 
   useEffect(()=>{
     if(sb&&editOpen&&portalFunktionen.length===0){
@@ -154,8 +158,6 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
         .then(({data})=>setPortalFunktionen(data||[]));
     }
   },[editOpen]);
-
-  const MITGLIEDTYPEN=["Aktivmitglied","Juniormitglied","Funktionär","Passivmitglied","Ehrenmitglied","Freimitglied"];
 
   async function deleteMitglied(){
     if(!sb||!window.confirm(`${m.name} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`)) return;
@@ -426,7 +428,7 @@ function elternAvColor(beziehung){
   return {bg:"var(--surface2)",text:"var(--sub)"};
 }
 
-function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,onReload,navToMember=null,onNavToMemberDone=null}){
+function MitgliederModul({role,dbMitglieder=[],dbMitgliedtypen=[],kannSchreiben,kannVerwalten,sb=null,onReload,navToMember=null,onNavToMemberDone=null}){
   const isMobile=useIsMobile();
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
@@ -617,6 +619,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
         <MemberHero m={m} raw={raw} initials={initials} age={age} canEdit={canEdit}
           sb={sb} onReload={onReload} onClose={onClose}
           statusColor={statusColor} statusBg={statusBg}
+          dbMitgliedtypen={dbMitgliedtypen}
         />
         {/* Tabs ausserhalb Hero */}
         <Tabs

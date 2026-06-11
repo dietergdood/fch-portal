@@ -481,6 +481,7 @@ function Portal({supabaseClient}){
   const [dbStufen,setDbStufen]=useState([]);
   const [dbMitglieder,setDbMitglieder]=useState([]);
   const [dbFunktionen,setDbFunktionen]=useState([]); // portal_funktionen des eingeloggten Benutzers
+  const [dbMitgliedtypen,setDbMitgliedtypen]=useState([]);
   /* Globale Modul-Konfiguration (aus Portalverwaltung) */
   const [moduleAktiv,setModuleAktiv]=useState(()=>{
     try{const s=localStorage.getItem("cc-module-aktiv");return s?JSON.parse(s):{};}catch{return {};}
@@ -614,11 +615,11 @@ function Portal({supabaseClient}){
     if(!sb){ setSession(null); return; }
     sb.auth.getSession().then(({data:{session}})=>{
       setSession(session||null);
-      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); loadDbMitglieder(); loadDbFunktionen(session?.user?.id); loadModuleConfig(); loadTheme(); }
+      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); loadDbMitglieder(); loadDbMitgliedtypen(); loadDbFunktionen(session?.user?.id); loadModuleConfig(); loadTheme(); }
     });
     const {data:{subscription}}=sb.auth.onAuthStateChange(function(_,session){
       setSession(session||null);
-      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); loadDbMitglieder(); loadTheme(); }
+      if(session){ loadDbUser(session.user.id, session.user.email); loadDbTeams(); loadDbStufen(); loadDbMitglieder(); loadDbMitgliedtypen(); loadTheme(); }
       else setDbUser(null);
     });
 
@@ -785,6 +786,14 @@ function Portal({supabaseClient}){
     }catch(e){ console.warn("[FCH] loadDbMitglieder:", e.message); }
   }
 
+  async function loadDbMitgliedtypen(){
+    if(!sb) return;
+    try{
+      const{data}=await sb.from("mitgliedtypen").select("*").eq("aktiv",true).order("sort_order");
+      if(data) setDbMitgliedtypen(data);
+    }catch(e){ console.warn("[FCH] loadDbMitgliedtypen:", e.message); }
+  }
+
   async function handleLogout(){
     if(sb) await sb.auth.signOut();
     setSession(null); setDbUser(null); setActive("dashboard");
@@ -850,7 +859,6 @@ function Portal({supabaseClient}){
   /* ── App-Level Zugriffstufen-Hilfsfunktionen ── */
   const APP_ZUGRIFF_DEFAULT={
     administrator:  {_all:"verwalten"},
-    vorstand:       {_all:"lesen"},
     administration: {_all:"verwalten",dashboard:"lesen"},
     funktionaer:    {_all:"lesen"},
     trainer:        {_all:"lesen",team:"verwalten",training:"verwalten",events:"verwalten",attendance_central:"schreiben",helpers:"verwalten",buses:"schreiben",material:"schreiben",media:"schreiben",wiki:"schreiben",members:"schreiben",schedule:"lesen"},
@@ -885,8 +893,9 @@ function Portal({supabaseClient}){
     switch(active){
       case "dashboard":         return <Dashboard role={role} setActive={setActive} account={account} meineTeams={meineTeams} myRosterId={myRosterId}/>;
       case "team":              return role==="administrator"||role==="administration"?<TeamsVerwaltungModul sb={sb} dbTeams={dbTeams} setDbTeams={setDbTeams} dbStufen={dbStufen} setDbStufen={setDbStufen} setCustomBack={setCustomBackAndRef} dbMitglieder={dbMitglieder} TeamViewComponent={TeamView} KaderModulComponent={KaderModul} TrainingsplanModulComponent={TrainingsplanModul} TermineModulComponent={TermineModul} SpielplanModulComponent={SpielplanModul} TableTabComponent={TableTab} HelferModulComponent={HelferModul}/>:<TeamView role={role} trainerTeams={trainerTeams} setActive={setActive} myRosterId={myRosterId} account={account} dbTeams={dbTeams} isModuleVisible={isModuleVisible} dbMitglieder={dbMitglieder} KaderModul={KaderModul} TrainingsplanModul={TrainingsplanModul} TermineModul={TermineModul} SpielplanModul={SpielplanModul} TableTab={TableTab} HelferModul={HelferModul} onSelectMember={m=>{setNavToMember(m.id||m.mitglied_id);setActivePersist("members");}}/>;
-      case "members":           return <MembersView role={role} dbMitglieder={dbMitglieder} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} sb={sb} onReload={loadDbMitglieder} navToMember={navToMember} onNavToMemberDone={()=>setNavToMember(null)}/>;
+      case "members":           return <MembersView role={role} dbMitglieder={dbMitglieder} dbMitgliedtypen={dbMitgliedtypen} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} sb={sb} onReload={loadDbMitglieder} navToMember={navToMember} onNavToMemberDone={()=>setNavToMember(null)}/>;
       case "users":             return <PortalverwaltungView initialTab="users" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
+      case "mitglieder_config": return <PortalverwaltungView initialTab="mitglieder_config" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
       case "fieldvis":          return <PortalverwaltungView initialTab="feldvis" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
       case "portal":            return <PortalverwaltungView initialTab="module" moduleAktiv={moduleAktiv} setModuleAktiv={setModuleAktiv} moduleRechte={moduleRechte} setModuleRechte={setModuleRechte} sb={sb} appTheme={appTheme} setAppTheme={setAppTheme} applyThemeCss={applyThemeCss} vereinId={tenant?.id}/>;
       case "training":          return <TrainingsplanModul role={role} team={role==="trainer"?meineTeams?.[0]:undefined} kannSchreiben={kannSchreiben} kannVerwalten={kannVerwalten} sb={sb} dbTeams={dbTeams}/>;
