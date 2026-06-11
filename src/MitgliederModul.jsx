@@ -415,6 +415,8 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
   const [sortDir,setSortDir]=useState("asc");
   const [groupBy,setGroupBy]=useState("none");
   const [filterVals,setFilterVals]=useState([]);
+  const [filterOpen,setFilterOpen]=useState(false);
+  const [groupOpen,setGroupOpen]=useState(false);
   const [selectedMember,setSelectedMember]=useState(null);
 
   // Direkte Navigation vom Kader-Modul
@@ -995,43 +997,80 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
         <Stat label="Aktivmitglieder" value={allMembers.filter(m=>m.type==="Aktivmitglied").length} color={GN}/>
         <Stat label="Datenprüfung fällig" value={allMembers.filter(m=>m.status!=="Vollständig").length} color={AM}/>
       </div>
-      {/* Integrated Search+Filter Bar */}
-      <div className="cc-members-bar">
-        <div className="cc-members-search">
+      {/* Toolbar */}
+      <div className="cc-ml-toolbar">
+        <div className="cc-ml-srch">
           <TI n="search" size={15} style={{color:"var(--sub)",flexShrink:0}}/>
           <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Suchen nach Name, Team, Rolle…"/>
         </div>
-        <button className={`cc-members-bar-btn${groupBy==="none"?" cc-active":""}`} onClick={()=>{setGroupBy("none");setFilterVals([])}}>Alle</button>
-        <button className={`cc-members-bar-btn${groupBy==="role"?" cc-active":""}`} onClick={()=>{setGroupBy(g=>g==="role"?"none":"role");setFilterVals([])}}>Rolle</button>
-        <button className={`cc-members-bar-btn${groupBy==="team"?" cc-active":""}`} onClick={()=>{setGroupBy(g=>g==="team"?"none":"team");setFilterVals([])}}>Team</button>
-        <button className={`cc-members-bar-btn${groupBy==="type"?" cc-active":""}`} onClick={()=>{setGroupBy(g=>g==="type"?"none":"type");setFilterVals([])}}>Typ</button>
-        {!isMobile&&(
-          <div className="cc-col-menu-wrap" ref={colMenuRef}>
-            <button className={`cc-col-menu-btn${colMenuOpen?" cc-col-menu-btn-active":""}`} onClick={()=>setColMenuOpen(o=>!o)}>
-              <TI n="columns" size={13}/>
-              Spalten
-              <span className="cc-col-menu-badge">{visibleCols.length}</span>
-            </button>
-            {colMenuOpen&&(
-              <div className="cc-col-menu-dropdown">
-                <div className="cc-col-menu-hdr">Spalten anzeigen</div>
-                {ALL_COLS.map(col=>(
-                  <div key={col.key} className="cc-col-menu-item" onClick={()=>setVisibleCols(prev=>
-                    prev.includes(col.key)
-                      ?prev.length>1?prev.filter(k=>k!==col.key):prev
-                      :[...prev,col.key]
-                  )}>
-                    <div className={`cc-col-menu-check${visibleCols.includes(col.key)?" cc-col-menu-check-on":""}`}>
-                      {visibleCols.includes(col.key)&&<TI n="check" size={10}/>}
+        <button className={`cc-ml-btn${filterVals.length>0?" cc-active":""}`} onClick={()=>setFilterOpen(o=>!o)} style={{position:"relative"}}>
+          <TI n="filter" size={15}/>
+          {!isMobile&&"Filter"}
+          {filterVals.length>0&&<span className="cc-ml-filter-dot"/>}
+        </button>
+        <button className={`cc-ml-btn${groupBy!=="none"?" cc-active":""}`} onClick={()=>setGroupOpen(o=>!o)}>
+          <TI n="layout-rows" size={15}/>
+          {!isMobile&&"Gruppieren"}
+        </button>
+      </div>
+      {/* Aktive Filter Chips */}
+      {filterVals.length>0&&(
+        <div className="cc-ml-chips">
+          {filterVals.map(v=>(
+            <div key={v} className="cc-ml-chip" onClick={()=>setFilterVals(prev=>prev.filter(x=>x!==v))}>
+              {v} <span style={{fontSize:13,color:"var(--sub)"}}>×</span>
+            </div>
+          ))}
+          <div className="cc-ml-chip" onClick={()=>setFilterVals([])} style={{color:"var(--sub)"}}>
+            Alle zurücksetzen ×
+          </div>
+        </div>
+      )}
+      {/* Filter Dropdown */}
+      {filterOpen&&(
+        <div style={{position:"relative",zIndex:100,marginBottom:8}}>
+          <div style={{position:"absolute",top:0,left:0,background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,0.12)",minWidth:220,overflow:"hidden"}}>
+            <div className="cc-col-menu-hdr">Filter</div>
+            {[
+              {label:"Rolle", vals:[...new Set(allMembers.map(m=>m.role).filter(Boolean))]},
+              {label:"Status", vals:[...new Set(allMembers.map(m=>m.status).filter(Boolean))]},
+              {label:"Mitgliedtyp", vals:[...new Set(allMembers.map(m=>m.type).filter(Boolean))]},
+            ].map(({label,vals})=>(
+              <div key={label}>
+                <div style={{padding:"6px 12px 2px",fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",borderTop:"0.5px solid var(--border)"}}>{label}</div>
+                {vals.sort().map(v=>(
+                  <div key={v} className="cc-col-menu-item" onClick={()=>setFilterVals(prev=>prev.includes(v)?prev.filter(x=>x!==v):[...prev,v])}>
+                    <div className={`cc-col-menu-check${filterVals.includes(v)?" cc-col-menu-check-on":""}`}>
+                      {filterVals.includes(v)&&<TI n="check" size={10}/>}
                     </div>
-                    {col.label}
+                    {v}
                   </div>
                 ))}
               </div>
-            )}
+            ))}
+            <div style={{padding:"8px 12px",borderTop:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <button style={{fontSize:12,color:"var(--sub)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}} onClick={()=>setFilterVals([])}>Zurücksetzen</button>
+              <button style={{fontSize:12,fontWeight:600,color:"var(--surface)",background:"var(--text)",border:"none",padding:"5px 12px",borderRadius:6,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>setFilterOpen(false)}>Fertig</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+      {/* Gruppieren Dropdown */}
+      {groupOpen&&(
+        <div style={{position:"relative",zIndex:100,marginBottom:8}}>
+          <div style={{position:"absolute",top:0,left:0,background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,0.12)",minWidth:200,overflow:"hidden"}}>
+            <div className="cc-col-menu-hdr">Gruppieren nach</div>
+            {GROUP_OPTIONS.map(o=>(
+              <div key={o.val} className="cc-col-menu-item" onClick={()=>{setGroupBy(o.val);setFilterVals([]);setGroupOpen(false)}}>
+                <div className={`cc-col-menu-check${groupBy===o.val?" cc-col-menu-check-on":""}`}>
+                  {groupBy===o.val&&<TI n="check" size={10}/>}
+                </div>
+                {o.label}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {/* Liste / Tabelle */}
       <Card className="cc-card-table">
         {filtered.length===0&&<div className="cc-empty">Keine Mitglieder gefunden.</div>}
@@ -1048,7 +1087,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                       <div className="cc-members-item-name">{m.name}</div>
                       <div className="cc-members-item-sub">{m.role&&m.role!=="-"?m.role:m.type}{m.team&&m.team!=="-"?" · "+m.team:""}</div>
                     </div>
-                    <TI n="chevron-right" size={14} className="cc-members-item-chevron"/>
+                    <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+                      <span className={`cc-members-dot ${m.status==="Vollständig"||m.status==="geprüft"?"cc-members-dot-ok":m.status==="ausstehend"?"cc-members-dot-warn":"cc-members-dot-err"}`}/>
+                      <TI n="chevron-right" size={14} className="cc-members-item-chevron"/>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1059,9 +1101,37 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
           <div className="cc-table-wrap"><table className="cc-members-table">
             <thead>
               <tr>
-                {COLS.map(col=>(
+                {COLS.map((col,i)=>(
                   <th key={col.key} className="cc-members-th" onClick={()=>handleSort(col.key)}>
-                    {col.label}<span className="cc-sort-arrow">{sortCol===col.key?(sortDir==="asc"?"▲":"▼"):"↕"}</span>
+                    {i===COLS.length-1?(
+                      <div className="cc-members-th-last">
+                        <span>{col.label}<span className="cc-sort-arrow">{sortCol===col.key?(sortDir==="asc"?"▲":"▼"):"↕"}</span></span>
+                        <div className="cc-col-menu-wrap" ref={colMenuRef}>
+                          <button className={`cc-col-icon-btn${colMenuOpen?" cc-col-menu-check-on":""}`}
+                            onClick={e=>{e.stopPropagation();setColMenuOpen(o=>!o)}}
+                            title="Spalten auswählen">
+                            <TI n="layout-columns" size={12}/>
+                          </button>
+                          {colMenuOpen&&(
+                            <div className="cc-col-menu-dropdown">
+                              <div className="cc-col-menu-hdr">Spalten anzeigen</div>
+                              {ALL_COLS.map(c=>(
+                                <div key={c.key} className="cc-col-menu-item" onClick={e=>{e.stopPropagation();setVisibleCols(prev=>
+                                  prev.includes(c.key)?prev.length>1?prev.filter(k=>k!==c.key):prev:[...prev,c.key]
+                                )}}>
+                                  <div className={`cc-col-menu-check${visibleCols.includes(c.key)?" cc-col-menu-check-on":""}`}>
+                                    {visibleCols.includes(c.key)&&<TI n="check" size={10}/>}
+                                  </div>
+                                  {c.label}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ):(
+                      <span>{col.label}<span className="cc-sort-arrow">{sortCol===col.key?(sortDir==="asc"?"▲":"▼"):"↕"}</span></span>
+                    )}
                   </th>
                 ))}
               </tr>
