@@ -240,7 +240,7 @@ function TeamsVerwaltungModul({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,
           <span style={{fontWeight:800,fontSize:18,color:"var(--text)",letterSpacing:-0.3}}>{selectedTeam.name}</span>
           {selectedTeam.kategorie&&<Chip text={selectedTeam.kategorie} color={BL}/>}
         </div>
-        <TeamViewComponent role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} dbTeams={dbTeams} dbMitglieder={dbMitglieder} KaderModul={KaderModulComponent} TrainingsplanModul={TrainingsplanModulComponent} TermineModul={TermineModulComponent} SpielplanModul={SpielplanModulComponent} TableTab={TableTabComponent} HelferModul={HelferModulComponent}/>
+        <TeamViewComponent role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} sb={sb} dbTeams={dbTeams} dbMitglieder={dbMitglieder} KaderModul={KaderModulComponent} TrainingsplanModul={TrainingsplanModulComponent} TermineModul={TermineModulComponent} SpielplanModul={SpielplanModulComponent} TableTab={TableTabComponent} HelferModul={HelferModulComponent}/>
       </div>
     );
   }
@@ -938,7 +938,7 @@ function TeamsAdminView({sb,dbTeams=[],setDbTeams,dbStufen=[],setDbStufen,setCus
           <span style={{fontWeight:800,fontSize:18,color:"var(--text)",letterSpacing:-0.3}}>{selectedTeam.name}</span>
           {selectedTeam.kategorie&&<Chip text={selectedTeam.kategorie} color={BL}/>}
         </div>
-        {TeamViewComponent && <TeamViewComponent role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} dbTeams={dbTeams} dbMitglieder={dbMitglieder} KaderModul={KaderModulComponent} TrainingsplanModul={TrainingsplanModulComponent} TermineModul={TermineModulComponent} SpielplanModul={SpielplanModulComponent} TableTab={TableTabComponent} HelferModul={HelferModulComponent}/>}
+        {TeamViewComponent && <TeamViewComponent role="trainer" trainerTeams={[selectedTeam.name]} setActive={()=>{}} myRosterId={null} account={null} sb={sb} dbTeams={dbTeams} dbMitglieder={dbMitglieder} KaderModul={KaderModulComponent} TrainingsplanModul={TrainingsplanModulComponent} TermineModul={TermineModulComponent} SpielplanModul={SpielplanModulComponent} TableTab={TableTabComponent} HelferModul={HelferModulComponent}/>}
       </div>
     );
   }
