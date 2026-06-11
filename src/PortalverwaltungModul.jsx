@@ -2087,7 +2087,7 @@ function PortalverwaltungView(props){
                   </tr></thead>
                   <tbody>
                     {FELDER_TYP.map(feld=>(
-                      <tr key={feld} className="cc-tr cc-tr-zebra">
+                      <tr key={feld} className="cc-tr">
                         <td className="cc-td">{FELDER_TYP_LABELS[feld]}</td>
                         {MITGLIEDTYPEN_PF.map(typ=>{
                           const on=isPflichtTyp(typ,feld);
@@ -2119,7 +2119,7 @@ function PortalverwaltungView(props){
                   </tr></thead>
                   <tbody>
                     {FELDER_ROLLE.map(feld=>(
-                      <tr key={feld} className="cc-tr cc-tr-zebra">
+                      <tr key={feld} className="cc-tr">
                         <td className="cc-td">{FELDER_ROLLE_LABELS[feld]}</td>
                         {ROLLEN_PF.map(rolle=>{
                           const on=isPflichtRolle(rolle,feld);
