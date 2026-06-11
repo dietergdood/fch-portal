@@ -285,7 +285,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-ml-chip:hover{border-color:var(--sub)}
 .cc-ml-chip-x{font-size:13px;color:var(--sub)}
 /* Spalten-Icon im Tabellen-Header */
-.cc-col-icon-btn{width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:0.5px solid var(--border);background:transparent;color:var(--sub);cursor:pointer;flex-shrink:0}
+.cc-col-icon-btn{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:5px;border:0.5px solid var(--border);background:transparent;color:var(--sub);cursor:pointer;flex-shrink:0}
 .cc-col-icon-btn:hover{background:var(--surface);color:var(--text);border-color:var(--sub)}
 .cc-col-menu-wrap{position:relative;flex-shrink:0}
 .cc-col-menu-dropdown{position:absolute;top:calc(100% + 4px);right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);min-width:180px;overflow:hidden;z-index:200}

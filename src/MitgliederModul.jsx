@@ -1116,7 +1116,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                           <button className={`cc-col-icon-btn${colMenuOpen?" cc-col-menu-check-on":""}`}
                             onClick={e=>{e.stopPropagation();setColMenuOpen(o=>!o)}}
                             title="Spalten auswählen">
-                            <TI n="layout-columns" size={12}/>
+                            <TI n="layout-columns" size={14}/>
                           </button>
                           {colMenuOpen&&(
                             <div className="cc-col-menu-dropdown">
