@@ -1000,18 +1000,18 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
       {/* Toolbar */}
       <div className="cc-ml-toolbar">
         <div className="cc-ml-srch">
-          <TI n="search" size={15} style={{color:"var(--sub)",flexShrink:0}}/>
+          <TI n="search" size={15} className="cc-input-icon"/>
           <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Suchen nach Name, Team, Rolle…"/>
         </div>
         {/* Filter Button + Dropdown */}
-        <div style={{position:"relative",flexShrink:0}}>
+        <div className="cc-ml-dropdown-wrap">
           <button className={`cc-ml-btn${filterVals.length>0?" cc-active":""}`} onClick={()=>{setFilterOpen(o=>!o);setGroupOpen(false)}}>
             <TI n="filter" size={15}/>
             {!isMobile&&"Filter"}
             {filterVals.length>0&&<span className="cc-ml-filter-dot"/>}
           </button>
           {filterOpen&&(
-            <div style={{position:"absolute",top:"calc(100% + 4px)",right:0,background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,0.12)",minWidth:220,overflow:"hidden",zIndex:200}}>
+            <div className="cc-ml-dropdown" style={{minWidth:220}}>
               <div className="cc-col-menu-hdr">Filter</div>
               {[
                 {label:"Rolle", vals:[...new Set(allMembers.map(m=>m.role).filter(Boolean))]},
@@ -1019,7 +1019,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                 {label:"Mitgliedtyp", vals:[...new Set(allMembers.map(m=>m.type).filter(Boolean))]},
               ].map(({label,vals})=>(
                 <div key={label}>
-                  <div style={{padding:"6px 12px 2px",fontSize:11,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:"0.05em",borderTop:"0.5px solid var(--border)"}}>{label}</div>
+                  <div className="cc-ml-dropdown-section-lbl">{label}</div>
                   {vals.sort().map(v=>(
                     <div key={v} className="cc-col-menu-item" onClick={()=>setFilterVals(prev=>prev.includes(v)?prev.filter(x=>x!==v):[...prev,v])}>
                       <div className={`cc-col-menu-check${filterVals.includes(v)?" cc-col-menu-check-on":""}`}>
@@ -1030,21 +1030,21 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                   ))}
                 </div>
               ))}
-              <div style={{padding:"8px 12px",borderTop:"0.5px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <button style={{fontSize:12,color:"var(--sub)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}} onClick={()=>setFilterVals([])}>Zurücksetzen</button>
-                <button style={{fontSize:12,fontWeight:600,color:"var(--surface)",background:"var(--text)",border:"none",padding:"5px 12px",borderRadius:6,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>setFilterOpen(false)}>Fertig</button>
+              <div className="cc-ml-dropdown-footer">
+                <button className="cc-ml-dropdown-clear" onClick={()=>setFilterVals([])}>Zurücksetzen</button>
+                <button className="cc-ml-dropdown-apply" onClick={()=>setFilterOpen(false)}>Fertig</button>
               </div>
             </div>
           )}
         </div>
         {/* Gruppieren Button + Dropdown */}
-        <div style={{position:"relative",flexShrink:0}}>
+        <div className="cc-ml-dropdown-wrap">
           <button className={`cc-ml-btn${groupBy!=="none"?" cc-active":""}`} onClick={()=>{setGroupOpen(o=>!o);setFilterOpen(false)}}>
             <TI n="layout-rows" size={15}/>
             {!isMobile&&"Gruppieren"}
           </button>
           {groupOpen&&(
-            <div style={{position:"absolute",top:"calc(100% + 4px)",right:0,background:"var(--surface)",border:"0.5px solid var(--border)",borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,0.12)",minWidth:200,overflow:"hidden",zIndex:200}}>
+            <div className="cc-ml-dropdown" style={{minWidth:200}}>
               <div className="cc-col-menu-hdr">Gruppieren nach</div>
               {GROUP_OPTIONS.map(o=>(
                 <div key={o.val} className="cc-col-menu-item" onClick={()=>{setGroupBy(o.val);setFilterVals([]);setGroupOpen(false)}}>
@@ -1063,10 +1063,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
         <div className="cc-ml-chips">
           {filterVals.map(v=>(
             <div key={v} className="cc-ml-chip" onClick={()=>setFilterVals(prev=>prev.filter(x=>x!==v))}>
-              {v} <span style={{fontSize:13,color:"var(--sub)"}}>×</span>
+              {v} <span className="cc-ml-chip-x">×</span>
             </div>
           ))}
-          <div className="cc-ml-chip" onClick={()=>setFilterVals([])} style={{color:"var(--sub)"}}>
+          <div className="cc-ml-chip cc-text-sub" onClick={()=>setFilterVals([])}>
             Alle zurücksetzen ×
           </div>
         </div>
@@ -1150,7 +1150,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                   )}
                   {members.map(m=>(
                     <tr key={m.id} className="cc-members-tr" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
-                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={26}/><span style={{fontWeight:500}}>{m.name}</span></div></td>}
+                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={26}/><span className="cc-text-bold">{m.name}</span></div></td>}
                       {visibleCols.includes("type")&&<td className="cc-members-td cc-members-td-sub">{m.type||"—"}</td>}
                       {visibleCols.includes("role")&&<td className="cc-members-td"><RolleChip rolle={m.role}/></td>}
                       {visibleCols.includes("status")&&<td className="cc-members-td">

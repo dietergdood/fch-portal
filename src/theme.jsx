@@ -52,6 +52,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-icon-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.1s,border-color 0.1s,color 0.1s;color:var(--sub);padding:0}
 .cc-icon-btn:hover{background:var(--surface2)!important;border-color:var(--border)!important;color:var(--text)!important}
 .cc-icon-btn:active{transform:scale(0.95)}
+.cc-input-icon{color:var(--sub);flex-shrink:0}
 
 /* ── Button Group ── */
 .cc-btn-group{display:flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--surface2)}
@@ -257,6 +258,13 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-status-inactive{font-size:12px;color:#DC2626;font-weight:600;display:flex;align-items:center;gap:4px}
 .cc-status-inactive::before{content:"";width:7px;height:7px;border-radius:50%;background:#DC2626;flex-shrink:0;display:inline-block}
 .cc-ml-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cc-ml-dropdown-wrap{position:relative;flex-shrink:0}
+.cc-ml-dropdown{position:absolute;top:calc(100% + 4px);right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);overflow:hidden;z-index:200}
+.cc-ml-dropdown-section-lbl{padding:6px 12px 2px;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:0.05em;border-top:0.5px solid var(--border)}
+.cc-ml-dropdown-footer{padding:8px 12px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cc-ml-dropdown-clear{font-size:12px;color:var(--sub);background:none;border:none;cursor:pointer;font-family:inherit}
+.cc-ml-dropdown-clear:hover{color:var(--text)}
+.cc-ml-dropdown-apply{font-size:12px;font-weight:600;color:var(--surface);background:var(--text);border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
 .cc-ml-srch{flex:1;display:flex;align-items:center;gap:8px;padding:0 12px;height:36px;border:0.5px solid var(--border);border-radius:8px;background:var(--surface)}
 .cc-ml-srch input{border:none;outline:none;background:transparent;font-size:14px;color:var(--text);flex:1;font-family:inherit}
 .cc-ml-srch input::placeholder{color:var(--sub)}
@@ -269,6 +277,7 @@ body{font-size:14px;font-family:inherit;margin:0;padding:0}
 .cc-ml-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .cc-ml-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 8px 3px 10px;border-radius:6px;font-size:12px;font-weight:500;background:var(--surface2);border:0.5px solid var(--border);color:var(--text);cursor:pointer}
 .cc-ml-chip:hover{border-color:var(--sub)}
+.cc-ml-chip-x{font-size:13px;color:var(--sub)}
 /* Spalten-Icon im Tabellen-Header */
 .cc-col-icon-btn{width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:0.5px solid var(--border);background:transparent;color:var(--sub);cursor:pointer;flex-shrink:0}
 .cc-col-icon-btn:hover{background:var(--surface);color:var(--text);border-color:var(--sub)}
