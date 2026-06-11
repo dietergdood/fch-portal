@@ -2030,7 +2030,7 @@ function PortalverwaltungView(props){
         const ROLLEN_PF=["spieler","trainer","funktionaer","eltern"];
         const ROLLEN_PF_LABELS={spieler:"Spieler",trainer:"Trainer",funktionaer:"Funktionär",eltern:"Eltern"};
         const MITGLIEDTYPEN_PF=["Aktivmitglied","Juniormitglied","Funktionär","Passivmitglied","Ehrenmitglied","Freimitglied"];
-        const MITGLIEDTYPEN_SHORT={Aktivmitglied:"Aktiv",Juniormitglied:"Junior",Funktionär:"Funk.",Passivmitglied:"Passiv",Ehrenmitglied:"Ehren",Freimitglied:"Frei"};
+        const MITGLIEDTYPEN_SHORT={Aktivmitglied:"Aktivmitglied",Juniormitglied:"Juniormitglied",Funktionär:"Funktionär",Passivmitglied:"Passivmitglied",Ehrenmitglied:"Ehrenmitglied",Freimitglied:"Freimitglied"};
         const FELDER_ROLLE=["geburtsdatum","adresse","telefon","ahv_nr","spielerpass","js_nr","fairgate_id"];
         const FELDER_ROLLE_LABELS={geburtsdatum:"Geburtsdatum",adresse:"Adresse",telefon:"Telefon",ahv_nr:"AHV-Nr.",spielerpass:"Spielerpass",js_nr:"J+S Nr.",fairgate_id:"Fairgate-ID"};
         const FELDER_TYP=["vorname_nachname","geburtsdatum","adresse","telefon","email"];
