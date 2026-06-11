@@ -408,697 +408,7 @@ function elternAvColor(beziehung){
   return {bg:"var(--surface2)",text:"var(--sub)"};
 }
 
-function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
-  const isMobile=useIsMobile();
-  const [search,setSearch]=useState("");
-  const [sortCol,setSortCol]=useState("name");
-  const [sortDir,setSortDir]=useState("asc");
-  const [groupBy,setGroupBy]=useState("none");
-  const [filterVals,setFilterVals]=useState([]);
-  const [selectedMember,setSelectedMember]=useState(null);
-  const canExport=role==="administrator"||role==="administration";
-
-  /* Mitglieder: aus Supabase wenn geladen, sonst MEMBERS Fallback */
-  const allMembers=dbMitglieder.length>0
-    ?dbMitglieder.map(m=>({
-        id:m.id,
-        name:`${m.vorname} ${m.nachname}`,
-        vorname:m.vorname, nachname:m.nachname,
-        role:m.rolle||"-",
-        team:(m.teams||[]).join(", ")||"-",
-        type:m.mitgliedtyp||"-",
-        location:m.ort||"-",
-        status:m.datenstatus||"Vollständig",
-        email:m.email, telefon:m.telefon,
-        geburtsdatum:m.geburtsdatum, position:m.position,
-        fairgate_id:m.fairgate_id,
-        hat_portal_zugang:m.hat_portal_zugang,
-      }))
-    :MEMBERS;
-
-  const ALL_COLS=[
-    {key:"name",        label:"Name",         default:true},
-    {key:"type",        label:"Mitgliedtyp",  default:true},
-    {key:"role",        label:"Rolle",        default:true},
-    {key:"status",      label:"Status",       default:true},
-    {key:"team",        label:"Team",         default:true},
-    {key:"location",    label:"Wohnort",      default:false},
-    {key:"spielerpass", label:"Spielerpass",  default:false},
-    {key:"fairgate_id", label:"Fairgate-ID",  default:false},
-    {key:"geburtsdatum",label:"Geburtsdatum", default:false},
-  ];
-  const [visibleCols,setVisibleCols]=useState(()=>ALL_COLS.filter(c=>c.default).map(c=>c.key));
-  const [colMenuOpen,setColMenuOpen]=useState(false);
-  const colMenuRef=useRef(null);
-  useEffect(()=>{
-    function h(e){if(colMenuRef.current&&!colMenuRef.current.contains(e.target))setColMenuOpen(false);}
-    document.addEventListener("mousedown",h);
-    return()=>document.removeEventListener("mousedown",h);
-  },[]);
-  const COLS=ALL_COLS.filter(c=>visibleCols.includes(c.key));
-  const GROUP_OPTIONS=[
-    {val:"none",  label:"Keine Gruppierung"},
-    {val:"role",  label:"Nach Rolle"},
-    {val:"team",  label:"Nach Team"},
-    {val:"type",  label:"Nach Mitgliedtyp"},
-    {val:"status",label:"Nach Datenstatus"},
-  ];
-
-  function handleSort(key){
-    if(sortCol===key) setSortDir(d=>d==="asc"?"desc":"asc");
-    else{ setSortCol(key); setSortDir("asc"); }
-  }
-
-  const filtered=allMembers.filter(m=>
-    (!search||m.name.toLowerCase().includes(search.toLowerCase())||
-    m.role.toLowerCase().includes(search.toLowerCase())||
-    m.team.toLowerCase().includes(search.toLowerCase()))
-    &&(filterVals.length===0||filterVals.includes(m[groupBy]||"-"))
-  );
-
-  const sorted=[...filtered].sort((a,b)=>{
-    const av=String(a[sortCol]??""); const bv=String(b[sortCol]??"");
-    return sortDir==="asc"?String(av||'').localeCompare(String(bv||'')):String(bv||'').localeCompare(String(av||''));
-  });
-
-  /* Gruppierung */
-  let groups=[];
-  if(groupBy==="none"){
-    groups=[{key:"",members:sorted}];
-  }else{
-    const map={};
-    sorted.forEach(m=>{
-      const k=m[groupBy]||"-";
-      if(!map[k]) map[k]=[];
-      map[k].push(m);
-    });
-    groups=Object.entries(map).sort(([a],[b])=>String(a||'').localeCompare(String(b||''))).map(([k,members])=>({key:k,members}));
-  }
-
-  const statusColor=s=>s==="Vollständig"?GN:s==="Prüfung fällig"?AM:R;
-  const statusBg=s=>s==="Vollständig"?"#ECFDF5":s==="Prüfung fällig"?"#FFFBEB":RL;
-  const SortIcon=({col})=>sortCol===col
-    ?<span className="cc-sort-arrow">{sortDir==="asc"?"▲":"▼"}</span>
-    :<span className="cc-sort-arrow cc-text-muted">↕</span>;
-
-  const inputStyle={padding:"7px 12px",border:"1px solid var(--border)",borderRadius:8,fontSize:14,outline:"none",background:"var(--surface2)",color:"var(--text)",fontFamily:FONT};
-
-  /* ── Detail-Modal ── */
-  const MemberDetail=({m,onClose})=>{
-    const raw=dbMitglieder.find(d=>d.id===m.id)||{};
-    const fv=getFieldVisibility(role);
-    const tab=selectedMember?._tab||"info";
-    const setTab=t=>setSelectedMember(prev=>({...prev,_tab:t}));
-    const canEdit=kannVerwalten("members");
-    const [portalLoading,setPortalLoading]=useState(false);
-    const [benutzer,setBenutzer]=useState(null);
-    const [portalMsg,setPortalMsg]=useState(null);
-    const [linkEmail,setLinkEmail]=useState(raw.email||"");
-    const [teamDetails,setTeamDetails]=useState(null);
-    const [elternLoaded,setElternLoaded]=useState(null);
-    const eltern=elternLoaded!==null?elternLoaded:(raw.eltern||[]);
-
-    useEffect(()=>{
-      if(tab==="eltern"&&sb&&raw.id&&elternLoaded===null){
-        sb.from("elternkontakte").select("*").eq("mitglied_id",raw.id)
-          .then(({data})=>setElternLoaded(data||[]));
-      }
-    },[tab,raw.id]);
-
-    useEffect(()=>{
-      if(tab==="info"&&sb&&raw.id&&teamDetails===null){
-        sb.from("mitglieder_team_details")
-          .select("*")
-          .eq("mitglied_id",raw.id)
-          .then(({data})=>setTeamDetails(data||[]));
-      }
-    },[tab,raw.id]);
-
-    const age=raw.geburtsdatum?Math.floor((new Date()-new Date(raw.geburtsdatum))/31557600000):null;
-    const initials=m.name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
-
-    useEffect(()=>{
-      if(tab==="portal"&&sb&&raw.id){
-        setPortalLoading(true);
-        sb.from("benutzer").select("*").eq("mitglied_id",raw.id).maybeSingle()
-          .then(({data})=>{setBenutzer(data);setPortalLoading(false);});
-      }
-    },[tab,raw.id]);
-
-    async function handleLink(){
-      if(!sb||!linkEmail) return;
-      setPortalLoading(true); setPortalMsg(null);
-      const {data:existing}=await sb.from("benutzer").select("id,email").eq("email",linkEmail).maybeSingle();
-      if(existing){
-        await sb.from("mitglieder").update({hat_portal_zugang:true}).eq("id",raw.id);
-        await sb.from("benutzer").update({mitglied_id:raw.id}).eq("id",existing.id);
-        setPortalMsg({ok:true,text:"Verknüpft ✓"});
-        if(onReload) onReload();
-      } else {
-        setPortalMsg({ok:false,text:"Kein Benutzer mit dieser E-Mail gefunden."});
-      }
-      setPortalLoading(false);
-    }
-
-    async function handleUnlink(){
-      if(!sb) return;
-      await sb.from("mitglieder").update({hat_portal_zugang:false}).eq("id",raw.id);
-      await sb.from("benutzer").update({mitglied_id:null}).eq("mitglied_id",raw.id);
-      setBenutzer(null); setPortalMsg({ok:true,text:"Verknüpfung aufgehoben"});
-      if(onReload) onReload();
-    }
-
-    return(
-      <div className="cc-col cc-gap-16">
-        {/* Hero Header */}
-        <MemberHero m={m} raw={raw} initials={initials} age={age} canEdit={canEdit}
-          sb={sb} onReload={onReload} onClose={onClose}
-          statusColor={statusColor} statusBg={statusBg}
-        />
-        {/* Tabs ausserhalb Hero */}
-        <Tabs
-          tabs={[
-            {key:"info",    label:"Profil",      icon:"user",    short:"Profil"},
-            {key:"eltern",  label:`Eltern (${eltern.length})`, icon:"heart", short:"Eltern"},
-            ...(canEdit?[{key:"portal",       label:"Portal-Zugang", icon:"key",          short:"Portal"}]:[]),
-            ...(canEdit?[{key:"datenpruefung",label:"Datenprüfung",  icon:"shield-check", short:"Daten"}]:[]),
-            {key:"stats",   label:"Statistik",   icon:"chart-bar",short:"Stats",  soon:true},
-            {key:"comments",label:"Kommentare",  icon:"message",  short:"Komm.",  soon:true},
-            {key:"ratings", label:"Bewertungen", icon:"star",     short:"Bewert.",soon:true},
-          ]}
-          active={tab}
-          setActive={t=>!(["stats","comments","ratings"].includes(t))&&setTab(t)}
-          mb={0}
-        />
-
-        {/* Tab: Profil */}
-        {tab==="info"&&(
-          <div className="cc-grid-2">
-            {/* Personalien */}
-            <Card>
-              <div className="cc-section-title"><TI n="id-badge-2" size={14}/> Personalien</div>
-              {/* Foto */}
-              <FotoUpload raw={raw} canUpload={kannSchreiben("members")} sb={sb} onReload={onReload}/>
-              {[
-                {l:"Vorname",      v:raw.vorname||m.name.split(" ")[0]},
-                {l:"Nachname",     v:raw.nachname||m.name.split(" ").slice(1).join(" ")},
-                ...(fv.showGebdat?[{l:"Geburtsdatum",v:raw.geburtsdatum||"-"},{l:"Alter",v:age?age+" Jahre":"-"}]:[]),
-                {l:"Nationalität", v:raw.nationalitaet||"-", flag:raw.nationalitaet?raw.nationalitaet.toUpperCase():null, flagName:raw.nationalitaet?getLandName(raw.nationalitaet):null},
-                {l:"Heimatort",    v:raw.heimatort||"-"},
-                {l:"Geschlecht",   v:raw.geschlecht==="m"?"Männlich":raw.geschlecht==="w"?"Weiblich":"-"},
-                ...(fv.showAhv?[{l:"AHV-Nr.",v:raw.ahv_nr||"-"}]:[]),
-              ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
-                <div key={i} className="cc-info-row">
-                  <span className="cc-info-key">{r.l}</span>
-                  {r.flag?(
-                    <span className="cc-info-val cc-row cc-gap-6">
-                      <span className="cc-land-badge">{r.flag}</span>
-                      <span>{r.flagName}</span>
-                    </span>
-                  ):(
-                    <span className={r.v&&r.v!=="-"?"cc-info-val":"cc-info-val cc-text-sub"}>{r.v&&r.v!=="-"?r.v:"—"}</span>
-                  )}
-                </div>
-              ))}
-            </Card>
-            {/* Kontakt */}
-            {fv.showEmail||fv.showTelefon||fv.showAdresse?(
-              <Card>
-                <div className="cc-section-title"><TI n="address-book" size={14}/> Kontakt</div>
-                {[
-                  ...(fv.showEmail  ?[{l:"E-Mail",  v:raw.email||"-"}]:[]),
-                  ...(fv.showTelefon?[{l:"Telefon", v:raw.telefon||"-"}]:[]),
-                  ...(fv.showAdresse?[
-                    {l:"Strasse",v:raw.strasse||"-"},
-                    {l:"PLZ/Ort",v:raw.plz&&raw.ort?`${raw.plz} ${raw.ort}`:"-"},
-                  ]:[]),
-                ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
-                  <div key={i} className="cc-info-row">
-                    <span className="cc-info-key">{r.l}</span>
-                    <span className="cc-info-val">{r.v}</span>
-                  </div>
-                ))}
-              </Card>
-            ):null}
-            {/* Vereinsdaten */}
-            <Card>
-              <div className="cc-section-title"><TI n="shirt" size={14}/> Vereinsdaten</div>
-              {[
-                {l:"Mitgliedtyp",  v:raw.mitgliedtyp||m.type},
-                {l:"Funktion",     v:raw.funktion||m.role},
-                ...(fv.showPass?[{l:"Spielerpass",v:raw.spielerpass||"-"}]:[]),
-                ...(fv.showPass?[{l:"J+S Nr.",    v:raw.js_nr||"-"}]:[]),
-                ...(fv.showFairgateId?[{l:"Fairgate-ID",v:raw.fairgate_id||"-"}]:[]),
-              ].filter(r=>canEdit||(r.v&&r.v!=="-")).map((r,i)=>(
-                <div key={i} className="cc-info-row">
-                  <span className="cc-info-key">{r.l}</span>
-                  {r.flag?(
-                    <span className="cc-info-val cc-row cc-gap-6">
-                      <span className="cc-land-badge">{r.flag}</span>
-                      <span>{r.flagName}</span>
-                    </span>
-                  ):(
-                    <span className={r.v&&r.v!=="-"?"cc-info-val":"cc-info-val cc-text-sub"}>{r.v&&r.v!=="-"?r.v:"—"}</span>
-                  )}
-                </div>
-              ))}
-            </Card>
-            {/* Teams & Positionen */}
-            <Card>
-              <div className="cc-section-title"><TI n="users" size={14}/> Teams</div>
-              {(raw.teams||[]).length===0&&<div className="cc-text-sm cc-text-sub">Keinem Team zugewiesen.</div>}
-              {(raw.teams||[]).map((teamName,i)=>{
-                const detail=(teamDetails||[]).find(d=>d.team_name===teamName)||{};
-                const nr=detail.rueckennr||raw.rueckennr||null;
-                const pos=detail.position||raw.position||null;
-                return(
-                  <div key={i} className="cc-team-position-row">
-                    <div className={nr?"cc-team-nr":"cc-team-nr cc-team-nr-empty"}>
-                      {nr||"—"}
-                    </div>
-                    <div className="cc-flex-1">
-                      <div className="cc-text-bold">{teamName}</div>
-                      <div className="cc-text-sm">{pos||"—"}</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </Card>
-            {/* Notizen */}
-            {fv.showNotizen&&(
-              <Card>
-                <div className="cc-section-title"><TI n="notes" size={14}/> Notizen</div>
-                {raw.notizen
-                  ?<div className="cc-text-body">{raw.notizen}</div>
-                  :<div className="cc-text-sm cc-text-sub">Keine Notizen.</div>
-                }
-              </Card>
-            )}
-          </div>
-        )}
-
-        {/* Tab: Eltern */}
-        {tab==="eltern"&&(()=>{
-          const [editEltern,setEditEltern]=useState(null); // {mode:"edit"|"new", data:{}}
-          const [elternMsg,setElternMsg]=useState(null);
-          const [elternSaving,setElternSaving]=useState(false);
-
-          async function saveEltern(){
-            if(!sb) return;
-            setElternSaving(true); setElternMsg(null);
-            try{
-              const d=editEltern.data;
-              if(editEltern.mode==="new"){
-                const {error}=await sb.from("elternkontakte").insert({
-                  mitglied_id:raw.id,
-                  vorname:d.vorname||null, nachname:d.nachname||null,
-                  name:d.vorname&&d.nachname?`${d.vorname} ${d.nachname}`:d.name||null,
-                  email:d.email||null, telefon:d.telefon||null,
-                  beziehung:d.beziehung||null,
-                });
-                if(error) throw error;
-              } else {
-                const {error}=await sb.from("elternkontakte").update({
-                  vorname:d.vorname||null, nachname:d.nachname||null,
-                  name:d.vorname&&d.nachname?`${d.vorname} ${d.nachname}`:d.name||null,
-                  email:d.email||null, telefon:d.telefon||null,
-                  beziehung:d.beziehung||null,
-                }).eq("id",d.id);
-                if(error) throw error;
-              }
-              setElternMsg({ok:true,text:"Gespeichert ✓"});
-              setTimeout(()=>{setEditEltern(null);setElternMsg(null);if(onReload)onReload();},800);
-            }catch(e){setElternMsg({ok:false,text:e.message});}
-            setElternSaving(false);
-          }
-
-          async function deleteEltern(id){
-            if(!sb||!window.confirm("Elternkontakt wirklich löschen?")) return;
-            await sb.from("elternkontakte").delete().eq("id",id);
-            if(onReload) onReload();
-          }
-
-          const ElternForm=({data,onChange})=>(
-            <div className="cc-form-row cc-mt-12">
-              {[
-                {k:"vorname",   l:"Vorname"},
-                {k:"nachname",  l:"Nachname"},
-                {k:"beziehung", l:"Beziehung", opts:["Mutter","Vater","Elternteil","Grossmutter","Grossvater","Vormund"]},
-                {k:"email",     l:"E-Mail",    type:"email"},
-                {k:"telefon",   l:"Telefon",   type:"tel"},
-              ].map(({k,l,type="text",opts})=>(
-                <div key={k} className={k==="email"||k==="telefon"?"cc-form-full":""}>
-                  <label className="cc-label">{l}</label>
-                  {opts
-                    ?<select className="cc-input" value={data[k]||""} onChange={e=>onChange({...data,[k]:e.target.value})}>
-                      <option value="">– wählen –</option>
-                      {opts.map(o=><option key={o}>{o}</option>)}
-                    </select>
-                    :<input className="cc-input" type={type} value={data[k]||""} onChange={e=>onChange({...data,[k]:e.target.value})} placeholder={l}/>
-                  }
-                </div>
-              ))}
-            </div>
-          );
-
-          return(
-            <div className="cc-col cc-gap-8">
-              {/* Header mit Hinzufügen */}
-              {canEdit&&!editEltern&&(
-                <div className="cc-between">
-                  <div className="cc-text-sm">{eltern.length} Elternkontakt{eltern.length!==1?"e":""}</div>
-                  <Btn small onClick={()=>setEditEltern({mode:"new",data:{mitglied_id:raw.id}})}>
-                    <TI n="plus"/> Hinzufügen
-                  </Btn>
-                </div>
-              )}
-
-              {/* Eltern Liste */}
-              {eltern.length===0&&<div className="cc-empty">Keine Elternkontakte erfasst.</div>}
-              {eltern.map((e,i)=>{
-                const name=e.name||`${e.vorname||""} ${e.nachname||""}`.trim()||"?";
-                const tel=e.telefon||e.tel;
-                return(
-                  <Card key={i}>
-                    <div className="cc-row cc-gap-12 cc-items-center">
-                      {(()=>{const ac=elternAvColor(e.beziehung);return(
-                        <div className="cc-eltern-av" style={{background:ac.bg,color:ac.text}}>
-                          {name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase()}
-                        </div>
-                      );})()}
-                      <div className="cc-flex-1 cc-col cc-gap-5">
-                        <div className="cc-text-bold cc-text-lg">{name}</div>
-                        <div className="cc-row cc-gap-8 cc-flex-wrap">
-                          {e.beziehung&&<span className="cc-text-sm">{e.beziehung}</span>}
-                          {e.benutzer_id
-                            ?<span className="cc-status-active">Portal: Aktiv</span>
-                            :<span className="cc-status-inactive">Portal: Inaktiv</span>
-                          }
-                        </div>
-                        {e.email&&<a href={`mailto:${e.email}`} className="cc-contact-link"><TI n="mail" size={12}/>{e.email}</a>}
-                        {tel&&<a href={`tel:${tel}`} className="cc-contact-link-muted"><TI n="phone" size={12}/>{tel}</a>}
-                      </div>
-                      {canEdit&&(
-                        <DropMenu items={[
-                          {label:"Bearbeiten", icon:"edit",  onClick:()=>setEditEltern({mode:"edit",data:{...e}})},
-                          "sep",
-                          {label:"Löschen",    icon:"trash", danger:true, onClick:()=>deleteEltern(e.id)},
-                        ]}/>
-                      )}
-                    </div>
-                  </Card>
-                );
-              })}
-
-              {/* Modal für Neu/Bearbeiten */}
-              {editEltern&&(
-                <ModalOrSheet open={true} onClose={()=>{setEditEltern(null);setElternMsg(null);}} maxWidth={480}>
-                  <div className="cc-modal-hdr">
-                    <div className="cc-modal-title">{editEltern.mode==="new"?"Neuer Elternkontakt":"Elternkontakt bearbeiten"}</div>
-                    <Btn variant="ghost" small onClick={()=>setEditEltern(null)}><TI n="x" size={14}/></Btn>
-                  </div>
-                  <div className="cc-modal-body">
-                    <div className="cc-form-row">
-                      <div className="cc-form-section-title" data-label="Personalien"/>
-                      {[
-                        {k:"vorname",   l:"Vorname"},
-                        {k:"nachname",  l:"Nachname"},
-                        {k:"beziehung", l:"Beziehung", opts:["Mutter","Vater","Elternteil","Grossmutter","Grossvater","Vormund"]},
-                        {k:"email",     l:"E-Mail",    type:"email"},
-                        {k:"telefon",   l:"Telefon",   type:"tel"},
-                      ].map(({k,l,type="text",opts})=>(
-                        <div key={k} className={k==="email"||k==="telefon"?"cc-form-full":""}>
-                          <label className="cc-label">{l}</label>
-                          {opts
-                            ?<select className="cc-input" value={editEltern.data[k]||""} onChange={ev=>setEditEltern(p=>({...p,data:{...p.data,[k]:ev.target.value}}))}>
-                              <option value="">– wählen –</option>
-                              {opts.map(o=><option key={o}>{o}</option>)}
-                            </select>
-                            :<input className="cc-input" type={type} value={editEltern.data[k]||""} onChange={ev=>setEditEltern(p=>({...p,data:{...p.data,[k]:ev.target.value}}))} placeholder={l}/>
-                          }
-                        </div>
-                      ))}
-                    </div>
-                    {editEltern.mode==="edit"&&<ElternPortalSection e={editEltern.data} sb={sb} onReload={onReload}/>}
-                    {elternMsg&&<div className={`cc-badge ${elternMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{elternMsg.text}</div>}
-                  </div>
-                  <div className="cc-modal-ftr">
-                    <Btn onClick={()=>setEditEltern(null)}>Abbrechen</Btn>
-                    <Btn variant="primary" onClick={saveEltern} disabled={elternSaving}>
-                      {elternSaving?"Speichert…":"Speichern"}
-                    </Btn>
-                  </div>
-                </ModalOrSheet>
-              )}
-            </div>
-          );
-        })()}
-
-        {/* Tab: Portal-Zugang */}
-        {tab==="portal"&&canEdit&&(
-          <div className="cc-col cc-gap-16">
-            <Card>
-              <div className="cc-between cc-mb-12">
-                <div className="cc-text-bold cc-text-lg">Portal-Zugang</div>
-                <Chip text={raw.hat_portal_zugang?"Aktiv":"Kein Zugang"} color={raw.hat_portal_zugang?GN:R} bg={raw.hat_portal_zugang?"#ECFDF5":RL}/>
-              </div>
-              {raw.hat_portal_zugang&&benutzer&&(
-                <div className="cc-col cc-gap-8 cc-mb-12">
-                  {[
-                    {l:"E-Mail",   v:benutzer.email||"-"},
-                    {l:"Rolle",    v:benutzer.role||"-"},
-                    {l:"Erstellt", v:benutzer.created_at?new Date(benutzer.created_at).toLocaleDateString("de-CH"):"-"},
-                  ].map((r,i)=>(
-                    <div key={i} className="cc-info-row">
-                      <span className="cc-info-key">{r.l}</span>
-                      <span className="cc-info-val">{r.v}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {portalMsg&&<div className={`cc-badge ${portalMsg.ok?"cc-badge-success":"cc-badge-danger"}`} className="cc-mb-12">{portalMsg.text}</div>}
-              {raw.hat_portal_zugang
-                ?<button className="cc-btn-danger cc-w-full" onClick={handleUnlink}>Verknüpfung aufheben</button>
-                :(
-                  <div className="cc-col cc-gap-8">
-                    <label className="cc-label">E-Mail des Benutzers</label>
-                    <input className="cc-input" value={linkEmail} onChange={e=>setLinkEmail(e.target.value)} placeholder="email@example.com"/>
-                    <button className="cc-btn-success cc-w-full" onClick={handleLink} disabled={!linkEmail||portalLoading}>
-                      {portalLoading?"Wird verknüpft…":"Mit Portal verknüpfen"}
-                    </button>
-                  </div>
-                )
-              }
-            </Card>
-            {/* Datenprüfung */}
-
-          </div>
-        )}
-
-        {/* Tab: Datenprüfung */}
-        {tab==="datenpruefung"&&canEdit&&(
-          <div className="cc-col cc-gap-16">
-            <Card>
-              <div className="cc-between cc-mb-12">
-                <div>
-                  <div className="cc-text-bold cc-text-lg">Profil-Status</div>
-                  <div className="cc-text-sm cc-mt-4">
-                    {raw.profil_geprueft_at
-                      ?`Zuletzt geprüft am ${new Date(raw.profil_geprueft_at).toLocaleDateString("de-CH")}`
-                      :"Noch nie geprüft"}
-                  </div>
-                </div>
-                <Chip
-                  text={raw.profil_geprueft_at?"Geprüft":"Ausstehend"}
-                  color={raw.profil_geprueft_at?GN:AM}
-                  bg={raw.profil_geprueft_at?"#ECFDF5":"#FFFBEB"}
-                />
-              </div>
-              <div className="cc-col cc-gap-8">
-                {[
-                  {l:"Vorname",      ok:!!raw.vorname},
-                  {l:"Nachname",     ok:!!raw.nachname},
-                  {l:"Geburtsdatum", ok:!!raw.geburtsdatum},
-                  {l:"Nationalität", ok:!!raw.nationalitaet},
-                  {l:"Adresse",      ok:!!(raw.strasse&&raw.plz&&raw.ort)},
-                  {l:"E-Mail",       ok:!!raw.email},
-                  {l:"Telefon",      ok:!!raw.telefon},
-                ].map((f,i)=>(
-                  <div key={i} className="cc-info-row">
-                    <span className="cc-info-key">{f.l}</span>
-                    <span>{f.ok
-                      ?<span className="cc-badge cc-badge-success"><TI n="check" size={10}/> OK</span>
-                      :<span className="cc-badge cc-badge-warning">Fehlt</span>
-                    }</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
-            <Card>
-              <div className="cc-text-bold cc-mb-4">Datenprüfung anfordern</div>
-              <div className="cc-text-sm cc-mb-12">Das Mitglied wird beim nächsten Login aufgefordert, seine Daten zu prüfen und zu bestätigen.</div>
-              <button className="cc-btn-ghost cc-w-full" onClick={async()=>{
-                if(!sb) return;
-                await sb.from("mitglieder").update({profil_geprueft_at:null}).eq("id",raw.id);
-                setPortalMsg({ok:true,text:"Datenprüfung angefordert ✓"});
-                if(onReload) setTimeout(onReload,500);
-              }}>
-                <TI n="refresh"/> Datenprüfung anfordern
-              </button>
-              {portalMsg&&<div className={`cc-badge ${portalMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mt-8`}>{portalMsg.text}</div>}
-            </Card>
-          </div>
-        )}
-
-        {/* Platzhalter Tabs */}
-        {(tab==="stats"||tab==="comments"||tab==="ratings")&&(
-          <div className="cc-empty cc-empty-lg">
-            <TI n="hourglass" size={32} style={{color:"var(--border)",display:"block",margin:"0 auto 12px"}}/>
-            Kommt bald
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  if(selectedMember) return <MemberDetail m={selectedMember} onClose={()=>setSelectedMember(null)}/>;
-
-  return(
-    <div>
-      {/* Header */}
-      <div className="cc-page-hdr">
-        <h1 className="cc-page-title">Mitglieder</h1>
-        {canExport&&<Row align="flex-start"><Btn>Export CSV</Btn><Btn>Export Excel</Btn></Row>}
-      </div>
-      {/* Stats */}
-      <div className="cc-grid-stats cc-mb-20">
-        <Stat label="Total" value={allMembers.length} color={BL}/>
-        <Stat label="Trainer" value={allMembers.filter(m=>m.role==="Trainer").length} color={R}/>
-        <Stat label="Aktivmitglieder" value={allMembers.filter(m=>m.type==="Aktivmitglied").length} color={GN}/>
-        <Stat label="Datenprüfung fällig" value={allMembers.filter(m=>m.status!=="Vollständig").length} color={AM}/>
-      </div>
-      {/* Filter-Zeile */}
-      <div className="cc-filter-toolbar">
-        <input className="cc-input cc-filter-search" value={search} onChange={e=>setSearch(e.target.value)}
-          placeholder="Suchen nach Name, Rolle, Team…"/>
-        <select className="cc-input cc-filter-select" value={groupBy} onChange={e=>{setGroupBy(e.target.value);setFilterVals([]);}}>
-          {GROUP_OPTIONS.map(o=><option key={o.val} value={o.val}>{o.label}</option>)}
-        </select>
-        {!isMobile&&(
-          <div className="cc-col-menu-wrap" ref={colMenuRef}>
-            <button className={`cc-col-menu-btn${colMenuOpen?" cc-col-menu-btn-active":""}`} onClick={()=>setColMenuOpen(o=>!o)}>
-              <TI n="columns" size={13}/>
-              Spalten
-              <span className="cc-col-menu-badge">{visibleCols.length}</span>
-            </button>
-            {colMenuOpen&&(
-              <div className="cc-col-menu-dropdown">
-                <div className="cc-col-menu-hdr">Spalten anzeigen</div>
-                {ALL_COLS.map(col=>(
-                  <div key={col.key} className="cc-col-menu-item" onClick={()=>setVisibleCols(prev=>
-                    prev.includes(col.key)
-                      ?prev.length>1?prev.filter(k=>k!==col.key):prev
-                      :[...prev,col.key]
-                  )}>
-                    <div className={`cc-col-menu-check${visibleCols.includes(col.key)?" cc-col-menu-check-on":""}`}>
-                      {visibleCols.includes(col.key)&&<TI n="check" size={10}/>}
-                    </div>
-                    {col.label}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-      {/* Gruppen-Filter Chips */}
-      {groupBy!=="none"&&(()=>{
-        const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
-        return(
-          <div className="cc-row cc-gap-8 cc-mb-14 cc-filter-row">
-            <Btn small onClick={()=>setFilterVals([])}>Alle</Btn>
-            {vals.map(v=>{
-              const active=filterVals.includes(v);
-              return(
-                <Btn small onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}>{active&&<span className="cc-text-xs">✓</span>} {v} <span className="cc-text-muted"> {allMembers.filter(m=>(m[groupBy]||"-")===v).length} </span></Btn>
-              );
-            })}
-            {filterVals.length>0&&(
-              <Btn variant="ghost" small onClick={()=>setFilterVals([])}>× zurücksetzen</Btn>
-            )}
-          </div>
-        );
-      })()}
-      {/* Liste / Tabelle */}
-      <Card className="cc-card-table">
-        {filtered.length===0&&<div className="cc-empty">Keine Mitglieder gefunden.</div>}
-        {filtered.length>0&&(isMobile?(
-          /* Mobile: einfache Liste */
-          <div>
-            {groups.map(({key,members})=>(
-              <div key={key}>
-                {groupBy!=="none"&&<div className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></div>}
-                {members.map(m=>(
-                  <div key={m.id} className="cc-members-item" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
-                    <Av name={m.name} size={36}/>
-                    <div className="cc-members-item-meta">
-                      <div className="cc-members-item-name">{m.name}</div>
-                      <div className="cc-members-item-sub">{m.role}{m.team?" · "+m.team:""}</div>
-                    </div>
-                    <TI n="chevron-right" size={16} className="cc-members-item-chevron"/>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        ):(
-          /* Desktop/Tablet: Tabelle */
-          <div className="cc-table-wrap"><table className="cc-members-table">
-            <thead>
-              <tr className="cc-surface2">
-                {[
-                  {key:"name",   label:"Name"},
-                  {key:"type",   label:"Mitgliedtyp"},
-                  {key:"role",   label:"Rolle"},
-                  {key:"status", label:"Status"},
-                  {key:"team",   label:"Team"},
-                ].map(col=>(
-                  <th key={col.key} className="cc-members-th" onClick={()=>handleSort(col.key)}>
-                    {col.label}<SortIcon col={col.key}/>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {groups.map(({key,members})=>(
-                <React.Fragment key={key}>
-                  {groupBy!=="none"&&(
-                    <tr><td colSpan={5} className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></td></tr>
-                  )}
-                  {members.map(m=>(
-                    <tr key={m.id} className="cc-members-tr" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
-                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={28}/><span className="cc-text-bold">{m.name}</span></div></td>}
-                      {visibleCols.includes("type")&&<td className="cc-members-td cc-members-td-sub">{m.type||"—"}</td>}
-                      {visibleCols.includes("role")&&<td className="cc-members-td"><RolleChip rolle={m.role}/></td>}
-                      {visibleCols.includes("status")&&<td className="cc-members-td"><Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/></td>}
-                      {visibleCols.includes("team")&&<td className="cc-members-td cc-members-td-sub">{m.team||"—"}</td>}
-                      {visibleCols.includes("location")&&<td className="cc-members-td cc-members-td-sub">{m.location||"—"}</td>}
-                      {visibleCols.includes("spielerpass")&&<td className="cc-members-td cc-members-td-sub">{m.spielerpass||"—"}</td>}
-                      {visibleCols.includes("fairgate_id")&&<td className="cc-members-td cc-members-td-sub">{m.fairgate_id||"—"}</td>}
-                      {visibleCols.includes("geburtsdatum")&&<td className="cc-members-td cc-members-td-sub">{m.geburtsdatum||"—"}</td>}
-                    </tr>
-                  ))}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table></div>
-        ))}
-      </Card>
-    </div>
-  );
-}
-
-function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,onReload,navToMember=null,onNavToMemberDone=null}){
+function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,onReload,navToMember=null,onNavToMemberDone=null}){
   const isMobile=useIsMobile();
   const [search,setSearch]=useState("");
   const [sortCol,setSortCol]=useState("name");
@@ -1119,6 +429,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
         status:m.datenstatus||"-",
         team:(m.teams||[])[0]||"-",
         hat_portal_zugang:m.hat_portal_zugang,
+        _tab:"info",
       });
       if(onNavToMemberDone) onNavToMemberDone();
     }
@@ -1583,7 +894,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                   ))}
                 </div>
               )}
-              {portalMsg&&<div className={`cc-badge ${portalMsg.ok?"cc-badge-success":"cc-badge-danger"}`} className="cc-mb-12">{portalMsg.text}</div>}
+              {portalMsg&&<div className={`cc-badge ${portalMsg.ok?"cc-badge-success":"cc-badge-danger"} cc-mb-12`}>{portalMsg.text}</div>}
               {raw.hat_portal_zugang
                 ?<button className="cc-btn-danger cc-w-full" onClick={handleUnlink}>Verknüpfung aufheben</button>
                 :(
@@ -1675,7 +986,7 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
       {/* Header */}
       <div className="cc-page-hdr">
         <h1 className="cc-page-title">Mitglieder</h1>
-        {canExport&&<div className="cc-row cc-gap-8"><Btn>Export CSV</Btn><Btn>Export Excel</Btn></div>}
+        {canExport&&<Row align="flex-start"><Btn>Export CSV</Btn><Btn>Export Excel</Btn></Row>}
       </div>
       {/* Stats */}
       <div className="cc-grid-stats cc-mb-20">
@@ -1723,101 +1034,90 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
         const vals=[...new Set(MEMBERS.map(m=>m[groupBy]||"-"))].sort();
         return(
           <div className="cc-row cc-gap-8 cc-mb-14 cc-filter-row">
-            <button onClick={()=>setFilterVals([])}
-              className="cc-filter-pill" style={{
-                background:filterVals.length===0?BK:"var(--surface)",
-                color:filterVals.length===0?"#fff":"var(--sub)",
-                fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s"}}>
-              Alle
-            </button>
+            <Btn small onClick={()=>setFilterVals([])}>Alle</Btn>
             {vals.map(v=>{
               const active=filterVals.includes(v);
               return(
-                <button key={v} onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}
-                  className="cc-filter-pill" style={{
-                    border:"1px solid "+(active?BK:"var(--border)"),
-                    background:active?BK:"var(--surface)",
-                    color:active?"#fff":"var(--sub)",
-                    fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:FONT,transition:"all 0.15s",
-                    display:"flex",alignItems:"center",gap:8}}>
-                  {active&&<span className="cc-text-xs">✓</span>}
-                  {v}
-                  <span className="cc-text-muted">
-                    {allMembers.filter(m=>(m[groupBy]||"-")===v).length}
-                  </span>
-                </button>
+                <Btn small onClick={()=>setFilterVals(prev=>active?prev.filter(x=>x!==v):[...prev,v])}>{active&&<span className="cc-text-xs">✓</span>} {v} <span className="cc-text-muted"> {allMembers.filter(m=>(m[groupBy]||"-")===v).length} </span></Btn>
               );
             })}
             {filterVals.length>0&&(
-              <button onClick={()=>setFilterVals([])}
-                className="cc-filter-pill" style={{
-                  background:"none",color:R,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:FONT}}>
-                × zurücksetzen
-              </button>
+              <Btn variant="ghost" small onClick={()=>setFilterVals([])}>× zurücksetzen</Btn>
             )}
           </div>
         );
       })()}
-      {/* Tabelle */}
+      {/* Liste / Tabelle */}
       <Card className="cc-card-table">
-        <div className="cc-table-wrap"><table className="cc-table">
-          <thead>
-            <tr className="cc-surface2">
-              {COLS.map(c=>(
-                <th className="cc-th" key={c.key} onClick={()=>handleSort(c.key)}
-                  className="cc-clickable"
-                  onMouseEnter={e=>e.currentTarget.style.color="var(--text)"}
-                  onMouseLeave={e=>e.currentTarget.style.color="var(--sub)"}>
-                  {c.label}<SortIcon col={c.key}/>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
+        {filtered.length===0&&<div className="cc-empty">Keine Mitglieder gefunden.</div>}
+        {filtered.length>0&&(isMobile?(
+          /* Mobile: einfache Liste */
+          <div>
             {groups.map(({key,members})=>(
-              <>
-                {groupBy!=="none"&&(
-                  <tr key={"g-"+key}>
-                    <td colSpan={6} className="cc-td cc-section-label" style={{
-                      fontWeight:700,fontSize:14,color:"var(--sub)",textTransform:"uppercase",
-                      letterSpacing:0.6,borderTop:"1px solid var(--border)"}}>
-                      {key} <span className="cc-text-muted">({members.length})</span>
-                    </td>
-                  </tr>
-                )}
-                {members.map((m,i)=>(
-                  <tr key={m.id} onClick={()=>setSelectedMember({...m,_tab:"info"})}
-                    className="cc-tr"
-                    onMouseEnter={e=>e.currentTarget.style.background="var(--surface2)"}
-                    onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                    <td className="cc-td" className="cc-td">
-                      <div className="cc-row">
-                        <Av name={m.name} size={28}/>
-                        <span className="cc-text-bold">{m.name}</span>
-                      </div>
-                    </td>
-                    <td className="cc-td" className="cc-td"><RolleChip rolle={m.role}/></td>
-                    <td className="cc-td cc-text-sub">{m.team}</td>
-                    <td className="cc-td" className="cc-td"><Chip text={m.type} color={BL}/></td>
-                    <td className="cc-td cc-text-sub">{m.location}</td>
-                    <td className="cc-td" className="cc-td">
-                      <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
-                    </td>
-                  </tr>
+              <div key={key}>
+                {groupBy!=="none"&&<div className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></div>}
+                {members.map(m=>(
+                  <div key={m.id} className="cc-members-item" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
+                    <Av name={m.name} size={36}/>
+                    <div className="cc-members-item-meta">
+                      <div className="cc-members-item-name">{m.name}</div>
+                      <div className="cc-members-item-sub">{m.role}{m.team?" · "+m.team:""}</div>
+                    </div>
+                    <TI n="chevron-right" size={16} className="cc-members-item-chevron"/>
+                  </div>
                 ))}
-              </>
+              </div>
             ))}
-          </tbody>
-        </table></div>
-        {filtered.length===0&&(
-          <div className="cc-empty">
-            Keine Mitglieder gefunden.
           </div>
-        )}
+        ):(
+          /* Desktop/Tablet: Tabelle */
+          <div className="cc-table-wrap"><table className="cc-members-table">
+            <thead>
+              <tr className="cc-surface2">
+                {[
+                  {key:"name",   label:"Name"},
+                  {key:"type",   label:"Mitgliedtyp"},
+                  {key:"role",   label:"Rolle"},
+                  {key:"status", label:"Status"},
+                  {key:"team",   label:"Team"},
+                ].map(col=>(
+                  <th key={col.key} className="cc-members-th" onClick={()=>handleSort(col.key)}>
+                    {col.label}<SortIcon col={col.key}/>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {groups.map(({key,members})=>(
+                <React.Fragment key={key}>
+                  {groupBy!=="none"&&(
+                    <tr><td colSpan={5} className="cc-members-group">{key} <span className="cc-text-muted">({members.length})</span></td></tr>
+                  )}
+                  {members.map(m=>(
+                    <tr key={m.id} className="cc-members-tr" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
+                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={28}/><span className="cc-text-bold">{m.name}</span></div></td>}
+                      {visibleCols.includes("type")&&<td className="cc-members-td cc-members-td-sub">{m.type||"—"}</td>}
+                      {visibleCols.includes("role")&&<td className="cc-members-td"><RolleChip rolle={m.role}/></td>}
+                      {visibleCols.includes("status")&&<td className="cc-members-td"><Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/></td>}
+                      {visibleCols.includes("team")&&<td className="cc-members-td cc-members-td-sub">{m.team||"—"}</td>}
+                      {visibleCols.includes("location")&&<td className="cc-members-td cc-members-td-sub">{m.location||"—"}</td>}
+                      {visibleCols.includes("spielerpass")&&<td className="cc-members-td cc-members-td-sub">{m.spielerpass||"—"}</td>}
+                      {visibleCols.includes("fairgate_id")&&<td className="cc-members-td cc-members-td-sub">{m.fairgate_id||"—"}</td>}
+                      {visibleCols.includes("geburtsdatum")&&<td className="cc-members-td cc-members-td-sub">{m.geburtsdatum||"—"}</td>}
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table></div>
+        ))}
       </Card>
     </div>
   );
 }
+
+// MembersView = MitgliederModul (mit sb/onReload/navToMember Props)
+const MembersView = MitgliederModul;
 
 export { MembersView };
 export default MitgliederModul;
