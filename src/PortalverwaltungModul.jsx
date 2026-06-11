@@ -2437,21 +2437,33 @@ function PortalverwaltungView(props){
   "cc-btn-group-item": "height:32px; min-width:32px; padding:0 8px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--sub); transition:background 0.15s,color 0.15s; flex-shrink:0",
   "cc-btn-group-sep": "width:1px; height:20px; background:var(--border); flex-shrink:0",
   "cc-card": "background:var(--surface)!important; border-color:var(--border)!important; box-shadow:var(--card-shadow)!important",
-  "cc-chip-active": "border-color:var(--text)!important; background:var(--text)!important; color:var(--bg)!important",
   "cc-chip-toggle": "padding:4px 12px; border-radius:20px; border:1.5px solid var(--border); background:transparent; color:var(--sub); font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0",
   "cc-divider": "height:1px; background:var(--border); flex-shrink:0",
   "cc-flex-center": "display:flex; align-items:center; justify-content:center",
-  "cc-icon-btn": "width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.15s,border-color 0.15s,color 0.15s; color:var(--sub); padding:0",
-  "cc-input": "width:100%; padding:9px 12px; border-radius:8px; border:0.5px solid var(--border); background:var(--surface2); color:var(--text); font-size:13px; font-family:inherit; box-sizing:border-box; outline:none; transition:border-color 0.15s",
+  "cc-icon-btn": "width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:var(--sub); padding:0",
+  "cc-input": "width:100%; padding:9px 12px; border-radius:8px; border:0.5px solid var(--border); background:var(--surface2); color:var(--text); font-size:13px; font-family:inherit; box-sizing:border-box; outline:none",
   "cc-main": "background:var(--bg)!important",
+  "cc-members-td": "padding:9px 12px; border-bottom:0.5px solid var(--border); font-size:13px; vertical-align:middle; color:var(--text)",
+  "cc-members-th": "padding:8px 12px; background:var(--surface2); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--sub); border-bottom:2px solid var(--cc-accent,#FFBF00)",
+  "cc-members-tr": "hover: background var(--cc-hover) auf allen cc-td Kinder",
+  "cc-multiselect": "position:relative; width:100%",
+  "cc-multiselect-trigger": "width:100%; padding:8px 12px; border:0.5px solid var(--border); border-radius:8px; background:var(--surface2); cursor:pointer; display:flex; align-items:center; gap:8px",
+  "cc-multiselect-chip": "display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:500; background:var(--surface); border:0.5px solid var(--border)",
+  "cc-multiselect-dropdown": "position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--surface); border:0.5px solid var(--border); border-radius:10px; z-index:300; overflow:hidden",
+  "cc-multiselect-item": "display:flex; align-items:center; gap:10px; padding:8px 12px; cursor:pointer; font-size:13px",
   "cc-page": "animation:cc-in 0.2s ease-out",
   "cc-seg": "display:flex; gap:2px; background:var(--surface2); border-radius:8px; padding:3px",
   "cc-seg-active": "background:var(--surface)!important; color:var(--text)!important; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,0.08)",
-  "cc-seg-item": "flex:1; padding:5px 8px; border-radius:6px; border:none; cursor:pointer; font-size:12px; font-weight:400; background:transparent; color:var(--sub); transition:all 0.15s; white-space:nowrap",
+  "cc-seg-item": "flex:1; padding:5px 8px; border-radius:6px; border:none; cursor:pointer; font-size:12px; background:transparent; color:var(--sub); transition:all 0.15s; white-space:nowrap",
   "cc-shimmer": "background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%); background-size:200% 100%; animation:cc-shimmer 1.4s ease-in-out infinite",
+  "cc-td": "padding:8px 10px; border-bottom:0.5px solid var(--border); vertical-align:middle; font-size:13px",
+  "cc-th": "padding:8px 10px; background:var(--surface2); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--sub); border-bottom:2px solid var(--cc-accent,#FFBF00)",
+  "cc-th-center": "text-align:center (kombiniert mit cc-th)",
   "cc-topbar": "background:var(--bg)!important; border-color:var(--border)!important",
+  "cc-tr": "hover: background var(--cc-hover); cursor:pointer",
+  "cc-tr-zebra": "nth-child(even): background var(--surface2); nth-child(odd): background var(--surface)",
   "cc-truncate": "overflow:hidden; text-overflow:ellipsis; white-space:nowrap",
-  "cc-unread-dot": "position:absolute; top:-2px; right:-2px; width:8px; height:8px; border-radius:50%; border:2px solid var(--surface)"
+  "cc-unread-dot": "position:absolute; top:-2px; right:-2px; width:8px; height:8px; border-radius:50%; border:2px solid var(--surface)",
 };
             const Row2=({label,children,code,usage})=>{
               const cssKey=code&&code.startsWith(".")?code.replace(/^\.([\w-]+).*/,"$1"):null;
@@ -2606,6 +2618,63 @@ function PortalverwaltungView(props){
                   </Row2>
                   <Row2 label="InfoBox" code="<InfoBox>">
                     <InfoBox text="Dies ist eine Informationsbox für Hinweise." color={BL}/>
+                  </Row2>
+                </Section>
+
+                {/* Tabellen */}
+                <Section title="Tabellen" desc="cc-th, cc-td, cc-tr — konsistentes Tabellendesign">
+                  <Row2 label="Tabellen-Header" code=".cc-th" usage={["Mitgliederliste","Portalverwaltung","Mitglieder-Konfiguration"]}>
+                    <table style={{width:"100%",borderCollapse:"collapse"}}>
+                      <thead><tr>
+                        <th className="cc-th" style={{textAlign:"left"}}>Name</th>
+                        <th className="cc-th cc-th-center">Rolle</th>
+                        <th className="cc-th cc-th-center">Status</th>
+                      </tr></thead>
+                    </table>
+                  </Row2>
+                  <Row2 label="Tabellen-Zeile + Zelle" code=".cc-tr .cc-td" usage={["Mitgliederliste","Portalverwaltung"]}>
+                    <table style={{width:"100%",borderCollapse:"collapse"}}>
+                      <tbody>
+                        <tr className="cc-tr"><td className="cc-td">Peter Müller</td><td className="cc-td">Trainer</td><td className="cc-td">Aktiv</td></tr>
+                        <tr className="cc-tr"><td className="cc-td">Maria Meier</td><td className="cc-td">Spieler</td><td className="cc-td">Aktiv</td></tr>
+                      </tbody>
+                    </table>
+                  </Row2>
+                  <Row2 label="Members-Header" code=".cc-members-th" usage={["Mitgliederliste"]}>
+                    <table style={{width:"100%",borderCollapse:"collapse"}}>
+                      <thead><tr>
+                        <th className="cc-members-th" style={{textAlign:"left"}}>Name</th>
+                        <th className="cc-members-th" style={{textAlign:"center"}}>Team</th>
+                      </tr></thead>
+                    </table>
+                  </Row2>
+                </Section>
+
+                {/* Multi-Select */}
+                <Section title="Multi-Select Dropdown" desc="FunktionenMultiSelect — Suchfeld + Checkboxen + Chips">
+                  <Row2 label="Trigger" code=".cc-multiselect-trigger" usage={["MitgliederModul"]}>
+                    <div className="cc-multiselect" style={{maxWidth:340}}>
+                      <button type="button" className="cc-multiselect-trigger">
+                        <div className="cc-multiselect-chips">
+                          <span className="cc-multiselect-chip">Materialwart <span className="cc-multiselect-chip-x">×</span></span>
+                          <span className="cc-multiselect-chip">Stufenleitung Bc <span className="cc-multiselect-chip-x">×</span></span>
+                        </div>
+                        <TI n="chevron-down" size={14} style={{color:"var(--sub)",flexShrink:0}}/>
+                      </button>
+                    </div>
+                  </Row2>
+                  <Row2 label="Dropdown-Item" code=".cc-multiselect-item" usage={["MitgliederModul"]}>
+                    <div style={{border:"0.5px solid var(--border)",borderRadius:8,overflow:"hidden",maxWidth:300}}>
+                      <div className="cc-multiselect-group">Stufenleitende</div>
+                      <div className="cc-multiselect-item">
+                        <div className="cc-multiselect-cb-on"><TI n="check" size={10} style={{color:"#15803d"}}/></div>
+                        <span>Stufenleitung Junioren B</span>
+                      </div>
+                      <div className="cc-multiselect-item">
+                        <div className="cc-multiselect-cb"></div>
+                        <span>Stufenleitung Senioren</span>
+                      </div>
+                    </div>
                   </Row2>
                 </Section>
 
