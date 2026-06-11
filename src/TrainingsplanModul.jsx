@@ -598,6 +598,50 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
     })();
   },[]);
 
+  // Wochentag-String → JS getDay() Zahl (Mo=1...So=0)
+  const WEEKDAY_MAP = {"Mo":1,"Di":2,"Mi":3,"Do":4,"Fr":5,"Sa":6,"So":0};
+
+  async function syncTrainingsFromSlot(slotId, slot, plan){
+    if(!supabase||!slotId||!plan?.valid_from) return;
+    try{
+      // 1. Bestehende Trainings für diesen Slot löschen
+      await supabase.from("trainings").delete().eq("trainingsplan_slot_id", slotId);
+
+      // 2. Neue Einträge für jeden Wochentag im Plan-Zeitraum erstellen
+      const from = new Date(plan.valid_from);
+      const until = plan.valid_until ? new Date(plan.valid_until) : new Date(from.getFullYear(), 11, 31);
+      const targetDay = WEEKDAY_MAP[slot.weekday];
+      if(targetDay === undefined) return;
+
+      const trainingsToInsert = [];
+      const cur = new Date(from);
+      // Zum ersten passenden Wochentag springen
+      while(cur.getDay() !== targetDay) cur.setDate(cur.getDate()+1);
+
+      while(cur <= until){
+        const dateStr = cur.getFullYear()+"-"+String(cur.getMonth()+1).padStart(2,"0")+"-"+String(cur.getDate()).padStart(2,"0");
+        const zeitVon = slot.start!=null ? String(Math.floor(slot.start)).padStart(2,"0")+":"+(slot.start%1===0?"00":"30")+":00" : null;
+        const zeitBis = slot.end!=null   ? String(Math.floor(slot.end)).padStart(2,"0")+":"+(slot.end%1===0?"00":"30")+":00"   : null;
+        trainingsToInsert.push({
+          team: slot.team,
+          date: dateStr,
+          zeit_von: zeitVon,
+          zeit_bis: zeitBis,
+          location: slot.location||null,
+          end_ort: slot.end_ort||null,
+          abgesagt: false,
+          trainingsplan_slot_id: slotId,
+        });
+        cur.setDate(cur.getDate()+7);
+      }
+
+      // In Batches von 50 einfügen
+      for(let i=0; i<trainingsToInsert.length; i+=50){
+        await supabase.from("trainings").insert(trainingsToInsert.slice(i,i+50));
+      }
+    }catch(e){ console.warn("[FCH] syncTrainingsFromSlot Fehler:", e.message); }
+  }
+
   async function savePlaene(p){
     setPlaene(p);
     if(supabase){
@@ -632,6 +676,8 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
                 valid_from_week_year: s.valid_from_week ? parseInt(s.valid_from_week.split("_")[0]) : null,
                 valid_from_week_nr: s.valid_from_week ? parseInt(s.valid_from_week.split("_")[1]) : null,
               });
+              // Trainings-Einträge synchronisieren
+              await syncTrainingsFromSlot(slotId, s, plan);
             }
           }
         }
@@ -834,6 +880,7 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
     // Slot aus Supabase löschen
     if(supabase && slot.id){
       try{
+        await supabase.from("trainings").delete().eq("trainingsplan_slot_id", slot.id);
         await supabase.from("trainingsplan_slots").delete().eq("id", slot.id);
       }catch(e){ console.warn("[FCH] Slot löschen Fehler:", e.message); }
     }
