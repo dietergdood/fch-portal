@@ -381,7 +381,7 @@ function ElternPortalSection({e,sb,onReload}){
   return(
     <div className="cc-eltern-portal-row">
       <div>
-        <div className="cc-text-bold" style={{fontSize:13}}>Portal-Zugang</div>
+        <div className="cc-text-bold cc-text-sm">Portal-Zugang</div>
         <div className={e.benutzer_id?"cc-status-active":"cc-status-inactive"}>
           {e.benutzer_id?"Aktiv":"Kein Zugang"}
         </div>
@@ -1030,9 +1030,9 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten}){
                       </Row>
                     </td>
                     <td className="cc-td" className="cc-td"><RolleChip rolle={m.role}/></td>
-                    <td className="cc-td" className="cc-td" style={{color:"var(--sub)"}}>{m.team}</td>
+                    <td className="cc-td cc-text-sub">{m.team}</td>
                     <td className="cc-td" className="cc-td"><Chip text={m.type} color={BL}/></td>
-                    <td className="cc-td" className="cc-td" style={{color:"var(--sub)"}}>{m.location}</td>
+                    <td className="cc-td cc-text-sub">{m.location}</td>
                     <td className="cc-td" className="cc-td">
                       <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
                     </td>
@@ -1716,9 +1716,9 @@ function MembersView({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=null,o
                       </div>
                     </td>
                     <td className="cc-td" className="cc-td"><RolleChip rolle={m.role}/></td>
-                    <td className="cc-td" className="cc-td" style={{color:"var(--sub)"}}>{m.team}</td>
+                    <td className="cc-td cc-text-sub">{m.team}</td>
                     <td className="cc-td" className="cc-td"><Chip text={m.type} color={BL}/></td>
-                    <td className="cc-td" className="cc-td" style={{color:"var(--sub)"}}>{m.location}</td>
+                    <td className="cc-td cc-text-sub">{m.location}</td>
                     <td className="cc-td" className="cc-td">
                       <Chip text={m.status} color={statusColor(m.status)} bg={statusBg(m.status)}/>
                     </td>
