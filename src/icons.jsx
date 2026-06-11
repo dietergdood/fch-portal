@@ -69,6 +69,17 @@ const TI_PATHS={
     "key":"<circle cx=\"8\" cy=\"15\" r=\"4\"/><path d=\"M11 12l5-5\"/><path d=\"M14 10l2 2\"/>",
     "shield-check":"<path d=\"M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1-8.5 15a12 12 0 0 1-8.5-15a12 12 0 0 0 8.5-3\"/><path d=\"M9 12l2 2l4-4\"/>",
     "star":"<path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87l1.18 6.88L12 17.77l-6.18 3.25L7 14.14L2 9.27l6.91-1.01L12 2z\"/>",
+    "shield-lock":"<path d=\"M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1-8.5 15a12 12 0 0 1-8.5-15a12 12 0 0 0 8.5-3\"/><circle cx=\"12\" cy=\"11\" r=\"1\"/><path d=\"M12 12v3\"/>",
+    "sitemap":"<rect x=\"3\" y=\"15\" width=\"4\" height=\"4\" rx=\"1\"/><rect x=\"10\" y=\"15\" width=\"4\" height=\"4\" rx=\"1\"/><rect x=\"17\" y=\"15\" width=\"4\" height=\"4\" rx=\"1\"/><rect x=\"10\" y=\"5\" width=\"4\" height=\"4\" rx=\"1\"/><path d=\"M12 9v3m-6 3V9h12v3\"/>",
+    "palette":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"9\" cy=\"10\" r=\"1.5\"/><circle cx=\"15\" cy=\"10\" r=\"1.5\"/><circle cx=\"17\" cy=\"14\" r=\"1.5\"/><circle cx=\"7\" cy=\"14\" r=\"1.5\"/><path d=\"M12 21a3 3 0 0 0 3-3h-6a3 3 0 0 0 3 3z\"/>",
+    "adjustments-horizontal":"<circle cx=\"14\" cy=\"6\" r=\"2\"/><path d=\"M4 6h8\"/><path d=\"M16 6h4\"/><circle cx=\"8\" cy=\"12\" r=\"2\"/><path d=\"M4 12h2\"/><path d=\"M10 12h10\"/><circle cx=\"14\" cy=\"18\" r=\"2\"/><path d=\"M4 18h8\"/><path d=\"M16 18h4\"/>",
+    "id-badge":"<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/><path d=\"M9 16h6\"/>",
+    "layout-2":"<rect x=\"4\" y=\"4\" width=\"7\" height=\"16\" rx=\"1\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"13\" y=\"13\" width=\"7\" height=\"7\" rx=\"1\"/>",
+    "code":"<polyline points=\"7 8 3 12 7 16\"/><polyline points=\"17 8 21 12 17 16\"/><line x1=\"14\" y1=\"4\" x2=\"10\" y2=\"20\"/>",
+    "list-check":"<path d=\"M3.5 5.5l1.5 1.5l2.5-2.5\"/><path d=\"M3.5 11.5l1.5 1.5l2.5-2.5\"/><path d=\"M3.5 17.5l1.5 1.5l2.5-2.5\"/><line x1=\"11\" y1=\"6\" x2=\"20\" y2=\"6\"/><line x1=\"11\" y1=\"12\" x2=\"20\" y2=\"12\"/><line x1=\"11\" y1=\"18\" x2=\"20\" y2=\"18\"/>",
+    "arrow-narrow-right":"<path d=\"M5 12h14\"/><path d=\"M15 8l4 4l-4 4\"/>",
+    "chevron-up":"<polyline points=\"18 15 12 9 6 15\"/>",
+    "chevron-down":"<polyline points=\"6 9 12 15 18 9\"/>",
 };
 function TI({n, size=16, style={}}){
   const p = TI_PATHS[n];
