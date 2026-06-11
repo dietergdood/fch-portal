@@ -453,6 +453,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
         geburtsdatum:m.geburtsdatum, position:m.position,
         fairgate_id:m.fairgate_id,
         hat_portal_zugang:m.hat_portal_zugang,
+        foto_url:m.foto_url||null,
       }))
     :MEMBERS;
 
@@ -1082,7 +1083,10 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                 {groupBy!=="none"&&<div className="cc-members-list-group-hdr">{key} <span className="cc-text-muted">({members.length})</span></div>}
                 {members.map(m=>(
                   <div key={m.id} className="cc-members-item" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
-                    <Av name={m.name} size={42}/>
+                    {m.foto_url
+                      ?<img src={m.foto_url} alt={m.name} style={{width:42,height:42,borderRadius:"50%",objectFit:"cover",flexShrink:0}}/>
+                      :<Av name={m.name} size={42}/>
+                    }
                     <div className="cc-members-item-meta">
                       <div className="cc-members-item-name">{m.name}</div>
                       <div className="cc-members-item-sub">
@@ -1150,7 +1154,7 @@ function MitgliederModul({role,dbMitglieder=[],kannSchreiben,kannVerwalten,sb=nu
                   )}
                   {members.map(m=>(
                     <tr key={m.id} className="cc-members-tr" onClick={()=>setSelectedMember({...m,_tab:"info"})}>
-                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8"><Av name={m.name} size={26}/><span className="cc-text-bold">{m.name}</span></div></td>}
+                      {visibleCols.includes("name")&&<td className="cc-members-td"><div className="cc-row cc-gap-8">{m.foto_url?<img src={m.foto_url} alt={m.name} style={{width:26,height:26,borderRadius:"50%",objectFit:"cover",flexShrink:0}}/>:<Av name={m.name} size={26}/>}<span className="cc-text-bold">{m.name}</span></div></td>}
                       {visibleCols.includes("type")&&<td className="cc-members-td cc-members-td-sub">{m.type||"—"}</td>}
                       {visibleCols.includes("role")&&<td className="cc-members-td"><RolleChip rolle={m.role}/></td>}
                       {visibleCols.includes("status")&&<td className="cc-members-td">
