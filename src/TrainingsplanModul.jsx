@@ -549,10 +549,8 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
             const aktiver = plaeneMitSlots.find(function(p){ return p.active; });
             if(aktiver) setAktiverPlan(aktiver.id);
           } else {
-            // Fallback: localStorage
-            const r = await window.storage.get("trainingsPlaene");
-            if(r) setPlaene(JSON.parse(r.value));
-            else setPlaene(INITIAL_PLAENE);  // Nur lokal anzeigen — NICHT in Supabase schreiben
+            // Supabase leer — mit leerer Liste starten
+            setPlaene([]);
           }
           // Ausnahmen laden
           const {data: ausnahmenData} = await supabase.from("trainingsplan_ausnahmen").select("*");
@@ -605,8 +603,9 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
     if(supabase){
       try{
         for(const plan of p){
+          const planId = plan.id && !plan.id.startsWith("plan_") ? plan.id : crypto.randomUUID();
           await supabase.from("trainingsplan_vorlagen").upsert({
-            id: plan.id,
+            id: planId,
             name: plan.name,
             valid_from: plan.valid_from,
             valid_until: plan.valid_until,
@@ -614,8 +613,10 @@ function TrainingsplanModul({team: teamProp, role, kannSchreiben, kannVerwalten,
           });
           if(plan.slots){
             for(const s of plan.slots){
+              // Lokale IDs (slot_x_y) oder fehlende IDs → neue UUID generieren
+              const slotId = s.id && !s.id.startsWith("slot_") ? s.id : crypto.randomUUID();
               await supabase.from("trainingsplan_slots").upsert({
-                id: s.id,
+                id: slotId,
                 template_id: s.template_id||plan.id,
                 weekday: s.weekday,
                 team: s.team,
