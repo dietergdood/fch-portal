@@ -147,6 +147,13 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
   const [editSaving,setEditSaving]=useState(false);
   const [editMsg,setEditMsg]=useState(null);
 
+  async function deleteMitglied(){
+    if(!sb||!window.confirm(`${m.name} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`)) return;
+    await sb.from("mitglieder").update({aktiv:false}).eq("id",raw.id);
+    if(onClose) onClose();
+    if(onReload) onReload();
+  }
+
   async function saveEdit(){
     if(!sb) return;
     setEditSaving(true); setEditMsg(null);
@@ -195,9 +202,11 @@ function MemberHero({m,raw,initials,age,canEdit,sb,onReload,onClose,statusColor,
             </div>
           </div>
           {canEdit&&(
-            <Btn small onClick={()=>{setEditForm({...raw});setEditOpen(true);}}>
-              <TI n="edit" size={13}/> Bearbeiten
-            </Btn>
+          <DropMenu items={[
+              {label:"Bearbeiten", icon:"edit",  onClick:()=>{setEditForm({...raw});setEditOpen(true);}},
+              "sep",
+              {label:"Löschen",    icon:"trash", danger:true, onClick:()=>deleteMitglied()},
+            ]}/>
           )}
         </div>
       </Card>
